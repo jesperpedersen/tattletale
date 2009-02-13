@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<project name="jboss-tattletale" default="dist" basedir=".">
+    <property name="build.dir" value="${basedir}/build"/>
+    <property name="lib.dir" value="${basedir}/lib"/>
+    <property name="doc.dir" value="${basedir}/doc"/>
+    <property name="doc.api.dir" value="${doc.dir}/api"/>
+    <property name="src.dir" value="${basedir}/src"/>
+    <property name="src.main.dir" value="${src.dir}/main"/>
+    <property name="etc.dir" value="${src.dir}/etc"/>
+    <property name="dist.dir" value="${basedir}/dist"/>
+
+    <property name="name" value="jboss-tattletale"/>
+    <property name="major" value="1"/>
+    <property name="minor" value="0"/>
+    <property name="type" value="Beta1"/>
+
+    <property name="jboss-tattletale.jar" value="jboss-tattletale.jar"/>
+
+    <!-- =================================================================== -->
+    <!-- Define the class path                                               -->
+    <!-- =================================================================== -->
+    <path id="class.path">
+        <fileset dir="${lib.dir}">
+            <include name="*.jar"/>
+        </fileset>
+    </path>
+
+    <path id="test.class.path">
+        <fileset dir="${lib.dir}">
+            <include name="*.jar"/>
+        </fileset>
+        <fileset dir="${dist.dir}">
+            <include name="*.jar"/>
+        </fileset>
+    </path>
+
+    <!-- =================================================================== -->
+    <!-- Initialize                                                          -->
+    <!-- =================================================================== -->
+    <target name="init">
+    </target>
+
+    <!-- =================================================================== -->
+    <!-- Prepares the directory structure                                    -->
+    <!-- =================================================================== -->
+    <target name="prepare" depends="init">
+        <mkdir dir="${build.dir}"/>
+        <mkdir dir="${dist.dir}"/>
+    </target>
+
+    <!-- =================================================================== -->
+    <!-- Jars                                                                -->
+    <!-- =================================================================== -->
+    <target name="jars" depends="prepare">
+        <delete dir="${build.dir}"/>
+        <mkdir dir="${build.dir}"/>
+        <javac
+            destdir="${build.dir}"
+            classpathref="class.path"
+            debug="on"
+            deprecation="on"
+            optimize="off"
+            source="1.5"
+            target="1.5"
+            >
+            <src path="${src.main.dir}"/>
+        </javac>
+        <copy todir="${build.dir}">
+            <fileset dir="${etc.dir}">
+               <include name="**/jboss-tattletale.properties"/>
+            </fileset>
+        </copy>
+        <jar destfile="${dist.dir}/${jboss-tattletale.jar}"
+             basedir="${build.dir}"
+             manifest="${etc.dir}/manifest.mf"
+             includes="org/jboss/tattletale/**,**/*.properties"
+             excludes="**/*.java"/>
+    </target>
+
+    <!-- =================================================================== -->
+    <!-- Doc                                                                 -->
+    <!-- =================================================================== -->
+    <target name="doc">
+        <mkdir dir="${doc.api.dir}"/>
+        <javadoc packagenames="org.*"
+                 sourcepath="${src.main.dir}"
+                 destdir="${doc.api.dir}"
+                 author="true"
+                 version="true"
+                 windowtitle="JBoss Tattletale"
+                 doctitle="JBoss Tattletale"
+                 use="true"
+                 classpathref="class.path"
+                 bottom="Copyright &#169; 2009 JBoss (http://www.jboss.com/)">
+             <link offline="true" href="http://java.sun.com/j2se/1.5/docs/api/" packagelistLoc="${java.home}/../docs/api"/>
+        </javadoc>
+
+    </target>
+
+    <!-- =================================================================== -->
+    <!-- Dist                                                                -->
+    <!-- =================================================================== -->
+    <target name="dist" depends="jars">
+        <copy todir="${dist.dir}">
+            <fileset dir="${lib.dir}">
+               <include name="**/*.jar"/>
+            </fileset>
+        </copy>
+        <copy todir="${dist.dir}">
+            <fileset dir="${etc.dir}">
+               <include name="**/log4j.xml"/>
+            </fileset>
+        </copy>
+        <copy todir="${dist.dir}">
+            <fileset dir="${etc.dir}">
+               <include name="**/*.properties"/>
+            </fileset>
+        </copy>
+        <copy todir="${dist.dir}">
+            <fileset dir="${doc.dir}">
+               <include name="**/*.txt"/>
+               <include name="**/*.html"/>
+            </fileset>
+        </copy>
+    </target>
+
+    <!-- =================================================================== -->
+    <!-- Release                                                             -->
+    <!-- =================================================================== -->
+    <target name="release" depends="clean,dist">
+        <delete dir="${build.dir}"/>
+        <mkdir dir="${build.dir}/${name}-${major}.${minor}.${type}"/>
+        <move todir="${build.dir}/${name}-${major}.${minor}.${type}"
+              includeEmptyDirs="false">
+            <fileset dir="${dist.dir}"/>
+        </move>
+        <zip destfile="${name}-${major}.${minor}.${type}.zip"
+             basedir="${build.dir}"/>
+
+        <tar destfile="${name}-${major}.${minor}.${type}.tar"
+             basedir="${build.dir}"/>
+
+        <gzip zipfile="${name}-${major}.${minor}.${type}.tar.gz" 
+              src="${name}-${major}.${minor}.${type}.tar"/>
+
+        <bzip2 zipfile="${name}-${major}.${minor}.${type}.bz2" 
+               src="${name}-${major}.${minor}.${type}.tar"/>
+
+        <delete file="${name}-${major}.${minor}.${type}.tar"/>
+
+    </target>
+
+    <!-- =================================================================== -->
+    <!-- Clean                                                               -->
+    <!-- =================================================================== -->
+    <target name="clean">
+        <delete>
+          <fileset dir="${basedir}" defaultexcludes="no">
+            <include name="**/*~" />
+            <include name="**/*.bak"/>
+          </fileset>
+        </delete>
+        <delete dir="${build.dir}"/>
+        <delete dir="${dist.dir}"/>
+        <delete dir="${doc.api.dir}"/>
+        <delete file="*.zip"/>
+        <delete file="*.tar.gz"/>
+        <delete file="*.tar.bz2"/>
+    </target>
+
+</project>
