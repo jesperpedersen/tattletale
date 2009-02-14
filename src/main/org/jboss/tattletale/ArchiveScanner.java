@@ -22,10 +22,11 @@
 package org.jboss.tattletale;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.Enumeration;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -60,6 +61,9 @@ public class ArchiveScanner
     */
    public static Archive scan(File file, Map<String, SortedSet<String>> gProvides)
    {
+      Archive archive = null;
+      JarFile jarFile = null;
+
       try
       {
          ClassPool classPool = new ClassPool();
@@ -69,7 +73,7 @@ public class ArchiveScanner
          SortedSet<String> requires = new TreeSet<String>();
          SortedSet<String> provides = new TreeSet<String>();
 
-         JarFile jarFile = new JarFile(file);
+         jarFile = new JarFile(file);
          Enumeration<JarEntry> e = jarFile.entries();
          
          while (e.hasMoreElements())
@@ -78,18 +82,36 @@ public class ArchiveScanner
 
             if (jarEntry.getName().endsWith(".class"))
             {
-               InputStream is = jarFile.getInputStream(jarEntry); 
-               CtClass clz = classPool.makeClass(is);
-
-               provides.add(clz.getName());
-
-               Collection c = clz.getRefClasses();
-               Iterator it = c.iterator();
-
-               while (it.hasNext())
+               InputStream is = null;
+               try
                {
-                  String s = (String)it.next();
-                  requires.add(s);
+                  is = jarFile.getInputStream(jarEntry); 
+                  CtClass clz = classPool.makeClass(is);
+
+                  provides.add(clz.getName());
+                  
+                  Collection c = clz.getRefClasses();
+                  Iterator it = c.iterator();
+
+                  while (it.hasNext())
+                  {
+                     String s = (String)it.next();
+                     requires.add(s);
+                  }
+               }
+               catch (Exception ie)
+               {
+               }
+               finally
+               {
+                  try
+                  {
+                     if (is != null)
+                        is.close();
+                  }
+                  catch (IOException ioe)
+                  {
+                  }
                }
             }
          }
@@ -98,7 +120,7 @@ public class ArchiveScanner
          if (version == null)
             version = jarFile.getManifest().getMainAttributes().getValue("Version");
 
-         Archive archive = new Archive(name, filename, requires, provides, version);
+         archive = new Archive(name, filename, requires, provides, version);
 
          Iterator<String> it = provides.iterator();
          while (it.hasNext())
@@ -119,15 +141,24 @@ public class ArchiveScanner
 
             requires.remove(provide);
          }
-
-         return archive;
       }
       catch (Exception e)
       {
          System.err.println("Scan: " + e.getMessage());
          e.printStackTrace(System.err);
       }
+      finally
+      {
+         try
+         {
+            if (jarFile != null)
+               jarFile.close();
+         }
+         catch (IOException ioe)
+         {
+         }
+      }
 
-      return null;
+      return archive;
    }
 }
