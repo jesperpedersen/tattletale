@@ -27,6 +27,7 @@ import org.jboss.tattletale.core.Archive;
 import org.jboss.tattletale.core.Location;
 import org.jboss.tattletale.reporting.Dump;
 import org.jboss.tattletale.reporting.SunJava5;
+import org.jboss.tattletale.reporting.SunJava6;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -143,6 +144,7 @@ public class Main
 
             Set<Archive> known = new HashSet<Archive>();
             known.add(new SunJava5());
+            known.add(new SunJava6());
 
             File f = new File(arg);
             if (f.isDirectory())
