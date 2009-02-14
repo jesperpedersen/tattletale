@@ -171,7 +171,7 @@ public class Dump
                
                if (lit.hasNext())
                {
-                  bw.write(",<br>");
+                  bw.write("<br>");
                }
             }
 
@@ -192,7 +192,7 @@ public class Dump
 
             if (rit.hasNext())
             {
-               bw.write(",<br>");
+               bw.write("<br>");
             }
          }
 
@@ -212,7 +212,7 @@ public class Dump
 
             if (pit.hasNext())
             {
-               bw.write(",<br>");
+               bw.write("<br>");
             }
          }
 
@@ -498,7 +498,7 @@ public class Dump
 
                   if (lit.hasNext())
                   {
-                     bw.write(",<br>");
+                     bw.write("<br>");
                   }
                }
 
