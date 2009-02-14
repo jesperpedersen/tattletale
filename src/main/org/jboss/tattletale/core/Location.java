@@ -29,6 +29,9 @@ import java.io.Serializable;
  */
 public class Location implements Serializable, Comparable
 {
+   /** SerialVersionUID */
+   static final long serialVersionUID = 5772882935036035107L;
+
    /** The filename */
    private String filename;
 

@@ -21,6 +21,7 @@
  */
 package org.jboss.tattletale.core;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.SortedMap;
@@ -31,8 +32,11 @@ import java.util.TreeSet;
  * Archive
  * @author Jesper Pedersen <jesper.pedersen@jboss.org>
  */
-public class Archive implements Comparable
+public class Archive implements Serializable, Comparable
 {
+   /** SerialVersionUID */
+   static final long serialVersionUID = -1101267607507289697L;
+
    /** Archve type */
    private int type;
 
