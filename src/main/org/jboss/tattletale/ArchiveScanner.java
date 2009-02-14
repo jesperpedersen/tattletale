@@ -120,7 +120,9 @@ public class ArchiveScanner
          if (version == null)
             version = jarFile.getManifest().getMainAttributes().getValue("Version");
 
-         archive = new Archive(name, filename, requires, provides, version);
+         Location location = new Location(filename, version);
+
+         archive = new Archive(name, requires, provides, location);
 
          Iterator<String> it = provides.iterator();
          while (it.hasNext())

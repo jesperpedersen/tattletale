@@ -138,46 +138,37 @@ public class Dump
          bw.write("  </tr>" + NEW_LINE);
 
          bw.write("  <tr>" + NEW_LINE);
-         bw.write("     <td>File</td>" + NEW_LINE);
-         bw.write("     <td>" + archive.getFilename() + "</td>" + NEW_LINE);
-         bw.write("  </tr>" + NEW_LINE);
-
-         bw.write("  <tr>" + NEW_LINE);
-         bw.write("     <td>Version</td>" + NEW_LINE);
+         bw.write("     <td>Locations</td>" + NEW_LINE);
          bw.write("     <td>");
-         if (archive.getVersion() != null)
+
+         bw.write("       <table border=\"1\">" + NEW_LINE);
+
+         Iterator<Location> lit = archive.getLocations().iterator();
+         while (lit.hasNext())
          {
-            bw.write(archive.getVersion());
+            Location location = lit.next();
+
+            bw.write("      <tr>" + NEW_LINE);
+
+            bw.write("        <td>" + location.getFilename() + "</td>" + NEW_LINE);
+            bw.write("        <td>");
+            if (location.getVersion() != null)
+            {
+               bw.write(location.getVersion());
+            }
+            else
+            {
+               bw.write("<i>Not listed</i>");
+            }
+            bw.write("</td>" + NEW_LINE);
+            
+            bw.write("      </tr>" + NEW_LINE);
          }
-         else
-         {
-            bw.write("<i>Not listed</i>");
-         }
+
+         bw.write("       </table>" + NEW_LINE);
+
          bw.write("</td>" + NEW_LINE);
          bw.write("  </tr>" + NEW_LINE);
-
-         if (archive.getLocations().size() > 1)
-         {
-            bw.write("  <tr>" + NEW_LINE);
-            bw.write("     <td>Locations</td>" + NEW_LINE);
-            bw.write("     <td>");
-
-            Iterator<String> lit = archive.getLocations().iterator();
-            while (lit.hasNext())
-            {
-               String location = lit.next();
-
-               bw.write(location);
-               
-               if (lit.hasNext())
-               {
-                  bw.write("<br>");
-               }
-            }
-
-            bw.write("</td>" + NEW_LINE);
-            bw.write("  </tr>" + NEW_LINE);
-         }
 
          bw.write("  <tr>" + NEW_LINE);
          bw.write("     <td>Requires</td>" + NEW_LINE);
@@ -491,10 +482,11 @@ public class Dump
                bw.write("     <td><a href=\"" + a.getName() + ".html\">" + a.getName() + "</a></td>" + NEW_LINE);
                bw.write("     <td>");
 
-               Iterator<String> lit = a.getLocations().iterator();
+               Iterator<Location> lit = a.getLocations().iterator();
                while (lit.hasNext())
                {
-                  bw.write(lit.next());
+                  Location location = lit.next();
+                  bw.write(location.getFilename());
 
                   if (lit.hasNext())
                   {

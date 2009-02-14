@@ -32,7 +32,10 @@ public class Java5 extends Archive
     */
    public Java5()
    {
-      super("Java 5", "rt.jar", null, null, null);
+      super("Java 5", null, null, null);
+
+      Location l = new Location("rt.jar", "JDK5");
+      addLocation(l);
    }
 
    /**

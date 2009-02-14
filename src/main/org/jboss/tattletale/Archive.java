@@ -21,8 +21,8 @@
  */
 package org.jboss.tattletale;
 
-import java.util.List;
 import java.util.SortedSet;
+import java.util.TreeSet;
 
 /**
  * Archive
@@ -33,36 +33,31 @@ public class Archive implements Comparable
    /** The name */
    private String name;
 
-   /** The filename */
-   private String filename;
-
    /** Requires */
    private SortedSet<String> requires;
 
    /** Provides */
    private SortedSet<String> provides;
 
-   /** Version */
-   private String version;
-
    /** Locations */
-   private List<String> locations;
+   private SortedSet<Location> locations;
 
    /**
     * Constructor
     * @param name The name
-    * @param filename The filename
     * @param requires The requires
     * @param provides The provides
-    * @param version The version
+    * @param location The location
     */
-   public Archive(String name, String filename, SortedSet<String> requires, SortedSet<String> provides, String version)
+   public Archive(String name, SortedSet<String> requires, SortedSet<String> provides, Location location)
    {
       this.name = name;
-      this.filename = filename;
       this.requires = requires;
       this.provides = provides;
-      this.version = version;
+      this.locations = new TreeSet<Location>();
+
+      if (location != null)
+         this.locations.add(location);
    }
 
    /**
@@ -72,15 +67,6 @@ public class Archive implements Comparable
    public String getName()
    {
       return name;
-   }
-
-   /**
-    * Get the filename
-    * @return The value
-    */
-   public String getFilename()
-   {
-      return filename;
    }
 
    /**
@@ -102,30 +88,21 @@ public class Archive implements Comparable
    }
 
    /**
-    * Get the version
-    * @return The value
-    */
-   public String getVersion()
-   {
-      return version;
-   }
-
-   /**
     * Get the locations
     * @return The value
     */
-   public List<String> getLocations()
+   public SortedSet<Location> getLocations()
    {
       return locations;
    }
 
    /**
-    * Set the locations
+    * Add a location
     * @param value The value
     */
-   public void setLocations(List<String> value)
+   public void addLocation(Location value)
    {
-      locations = value;
+      locations.add(value);
    }
 
    /**
@@ -164,7 +141,7 @@ public class Archive implements Comparable
 
       Archive a = (Archive)obj;
 
-      return name.equals(a.getName()) && (version != null ? version.equals(a.getVersion()) : true);
+      return name.equals(a.getName());
    }
 
    /**
@@ -173,14 +150,7 @@ public class Archive implements Comparable
     */
    public int hashCode()
    {
-      int hash = 7;
-
-      hash += 31 * name.hashCode();
-
-      if (version != null)
-         hash += 31 * version.hashCode();
-
-      return hash;
+      return 7 + 31 * name.hashCode();
    }
 
    /**
@@ -198,16 +168,16 @@ public class Archive implements Comparable
       sb = sb.append(name);
       sb = sb.append("\n");
 
-      sb = sb.append("filename=");
-      sb = sb.append(filename);
-      sb = sb.append("\n");
-
       sb = sb.append("requires=");
       sb = sb.append(requires);
       sb = sb.append("\n");
 
       sb = sb.append("provides=");
       sb = sb.append(provides);
+      sb = sb.append("\n");
+
+      sb = sb.append("locations=");
+      sb = sb.append(locations);
       sb = sb.append("\n");
 
       sb = sb.append(")");

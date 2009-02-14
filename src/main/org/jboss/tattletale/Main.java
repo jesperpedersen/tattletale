@@ -130,7 +130,7 @@ public class Main
             {
             }
 
-            Map<String, List<String>> locationsMap = new HashMap<String, List<String>>();
+            Map<String, SortedSet<Location>> locationsMap = new HashMap<String, SortedSet<Location>>();
             SortedSet<Archive> archives = new TreeSet<Archive>();
             SortedMap<String, SortedSet<String>> gProvides = new TreeMap<String, SortedSet<String>>();
 
@@ -140,18 +140,18 @@ public class Main
             File f = new File(arg);
             if (f.isDirectory())
             {
-               List<File> l = DirectoryScanner.scan(f);
+               List<File> fileList = DirectoryScanner.scan(f);
 
-               for (File file : l)
+               for (File file : fileList)
                {
                   Archive archive = ArchiveScanner.scan(file, gProvides);
                   
-                  List<String> locations = locationsMap.get(archive.getName());
+                  SortedSet<Location> locations = locationsMap.get(archive.getName());
                   if (locations == null)
                   {
-                     locations = new ArrayList<String>();
+                     locations = new TreeSet<Location>();
                   }
-                  locations.add(archive.getFilename());
+                  locations.addAll(archive.getLocations());
                   locationsMap.put(archive.getName(), locations);
 
                   if (!archives.contains(archive))
@@ -162,8 +162,12 @@ public class Main
 
                for (Archive a : archives)
                {
-                  List<String> locations = locationsMap.get(a.getName());
-                  a.setLocations(locations);
+                  SortedSet<Location> locations = locationsMap.get(a.getName());
+
+                  for (Location l : locations)
+                  {
+                     a.addLocation(l);
+                  }
                }
 
                Dump.generateDependencies(archives, known);
