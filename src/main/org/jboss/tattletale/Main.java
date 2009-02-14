@@ -26,7 +26,7 @@ import org.jboss.tattletale.analyzers.DirectoryScanner;
 import org.jboss.tattletale.core.Archive;
 import org.jboss.tattletale.core.Location;
 import org.jboss.tattletale.reporting.Dump;
-import org.jboss.tattletale.reporting.Java5;
+import org.jboss.tattletale.reporting.SunJava5;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -142,7 +142,7 @@ public class Main
             SortedMap<String, SortedSet<String>> gProvides = new TreeMap<String, SortedSet<String>>();
 
             Set<Archive> known = new HashSet<Archive>();
-            known.add(new Java5());
+            known.add(new SunJava5());
 
             File f = new File(arg);
             if (f.isDirectory())
