@@ -19,7 +19,11 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.tattletale;
+package org.jboss.tattletale.reporting;
+
+import org.jboss.tattletale.Version;
+import org.jboss.tattletale.core.Archive;
+import org.jboss.tattletale.core.Location;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;

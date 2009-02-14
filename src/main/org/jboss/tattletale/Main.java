@@ -21,6 +21,13 @@
  */
 package org.jboss.tattletale;
 
+import org.jboss.tattletale.analyzers.ArchiveScanner;
+import org.jboss.tattletale.analyzers.DirectoryScanner;
+import org.jboss.tattletale.core.Archive;
+import org.jboss.tattletale.core.Location;
+import org.jboss.tattletale.reporting.Dump;
+import org.jboss.tattletale.reporting.Java5;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
