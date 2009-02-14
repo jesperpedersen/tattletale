@@ -32,6 +32,9 @@ import java.util.TreeSet;
  */
 public class Archive implements Comparable
 {
+   /** Archve type */
+   private int type;
+
    /** The name */
    private String name;
 
@@ -49,13 +52,15 @@ public class Archive implements Comparable
 
    /**
     * Constructor
+    * @param type The type
     * @param name The name
     * @param requires The requires
     * @param provides The provides
     * @param location The location
     */
-   public Archive(String name, SortedSet<String> requires, SortedSet<String> provides, Location location)
+   public Archive(int type, String name, SortedSet<String> requires, SortedSet<String> provides, Location location)
    {
+      this.type = type;
       this.name = name;
       this.requires = requires;
       this.provides = provides;
@@ -64,6 +69,15 @@ public class Archive implements Comparable
 
       if (location != null)
          this.locations.add(location);
+   }
+
+   /**
+    * Get the type
+    * @return The value
+    */
+   public int getType()
+   {
+      return type;
    }
 
    /**

@@ -122,7 +122,7 @@ public class ArchiveScanner
 
          Location location = new Location(filename, version);
 
-         archive = new Archive(name, requires, provides, location);
+         archive = new Archive(ArchiveTypes.JAR, name, requires, provides, location);
 
          Iterator<String> it = provides.iterator();
          while (it.hasNext())
