@@ -23,6 +23,7 @@ package org.jboss.tattletale.core;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.SortedMap;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -42,7 +43,7 @@ public class Archive implements Comparable
    private SortedSet<String> requires;
 
    /** Provides */
-   private SortedSet<String> provides;
+   private SortedMap<String, Long> provides;
 
    /** Locations */
    private SortedSet<Location> locations;
@@ -58,7 +59,7 @@ public class Archive implements Comparable
     * @param provides The provides
     * @param location The location
     */
-   public Archive(int type, String name, SortedSet<String> requires, SortedSet<String> provides, Location location)
+   public Archive(int type, String name, SortedSet<String> requires, SortedMap<String, Long> provides, Location location)
    {
       this.type = type;
       this.name = name;
@@ -102,7 +103,7 @@ public class Archive implements Comparable
     * Get the provides
     * @return The value
     */
-   public SortedSet<String> getProvides()
+   public SortedMap<String, Long> getProvides()
    {
       return provides;
    }
@@ -153,7 +154,7 @@ public class Archive implements Comparable
     */
    public boolean doesProvide(String clz)
    {
-      return provides.contains(clz);
+      return provides.containsKey(clz);
    }
 
    /**

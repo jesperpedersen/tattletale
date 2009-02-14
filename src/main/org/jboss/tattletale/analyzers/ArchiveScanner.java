@@ -32,13 +32,17 @@ import java.util.Collection;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.SortedMap;
 import java.util.SortedSet;
+import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
 import javassist.ClassPool;
 import javassist.CtClass;
+import javassist.CtField;
+import javassist.NotFoundException;
 
 /**
  * Archive scanner
@@ -75,7 +79,7 @@ public class ArchiveScanner
          String name = file.getName();
          String filename = file.getCanonicalPath();
          SortedSet<String> requires = new TreeSet<String>();
-         SortedSet<String> provides = new TreeSet<String>();
+         SortedMap<String, Long> provides = new TreeMap<String, Long>();
 
          jarFile = new JarFile(file);
          Enumeration<JarEntry> e = jarFile.entries();
@@ -90,11 +94,21 @@ public class ArchiveScanner
                try
                {
                   is = jarFile.getInputStream(jarEntry); 
-                  CtClass clz = classPool.makeClass(is);
+                  CtClass ctClz = classPool.makeClass(is);
+                  Long serialVersionUID = null;
 
-                  provides.add(clz.getName());
+                  try
+                  {
+                     CtField field = ctClz.getField("serialVersionUID");
+                     serialVersionUID = (Long)field.getConstantValue();
+                  }
+                  catch (NotFoundException nfe)
+                  {
+                  }
+
+                  provides.put(ctClz.getName(), serialVersionUID);
                   
-                  Collection c = clz.getRefClasses();
+                  Collection c = ctClz.getRefClasses();
                   Iterator it = c.iterator();
 
                   while (it.hasNext())
@@ -128,7 +142,7 @@ public class ArchiveScanner
 
          archive = new Archive(ArchiveTypes.JAR, name, requires, provides, location);
 
-         Iterator<String> it = provides.iterator();
+         Iterator<String> it = provides.keySet().iterator();
          while (it.hasNext())
          {
             String provide = it.next();

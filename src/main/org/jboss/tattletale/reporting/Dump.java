@@ -198,18 +198,30 @@ public class Dump
          bw.write("     <td>Provides</td>" + NEW_LINE);
          bw.write("     <td>");
 
-         Iterator<String> pit = archive.getProvides().iterator();
+         bw.write("       <table border=\"1\">");
+
+         Iterator pit = archive.getProvides().entrySet().iterator();
          while (pit.hasNext())
          {
-            String provide = pit.next();
+            Map.Entry entry = (Map.Entry)pit.next();
+            
+            String name = (String)entry.getKey();
+            Long serialVersionUID = (Long)entry.getValue();
 
-            bw.write(provide);
+            bw.write("         <tr>" + NEW_LINE);
+            bw.write("           <td>" + name + "</td>" + NEW_LINE);
 
-            if (pit.hasNext())
+            if (serialVersionUID != null)
             {
-               bw.write("<br>");
+               bw.write("           <td>" + serialVersionUID + "</td>" + NEW_LINE);
             }
+            else
+            {
+               bw.write("           <td>&nbsp;</td>" + NEW_LINE);
+            }
+            bw.write("         </tr>" + NEW_LINE);
          }
+         bw.write("       </table>");
 
          bw.write("</td>" + NEW_LINE);
          bw.write("  </tr>" + NEW_LINE);
