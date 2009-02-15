@@ -11,6 +11,7 @@ The tool will provide you with reports that can help you
 * Spot if a class is located in multiple JAR files
 * Spot if the same JAR file is located in multiple locations
 * With a list of what each JAR file requires and provides
+* Verify the SerialVersionUID of a class
 
 JBoss Tattletale will recursive scan the directory pass as the argument for JAR files and then
 build the reports as HTML files.
