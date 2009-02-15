@@ -33,10 +33,10 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 /**
- * Sun: Java 5
+ * Sun: Java 5 (JCE)
  * @author Jesper Pedersen <jesper.pedersen@jboss.org>
  */
-public class SunJava5 extends Archive
+public class SunJava5JCE extends Archive
 {
    /** Class set */
    private static SortedSet<String> classSet = new TreeSet<String>();
@@ -46,7 +46,7 @@ public class SunJava5 extends Archive
       InputStream is = null;
       try
       {
-         is = Thread.currentThread().getContextClassLoader().getResourceAsStream("sunjdk5.clz");
+         is = Thread.currentThread().getContextClassLoader().getResourceAsStream("sunjdk5-jce.clz");
 
          InputStreamReader isr = new InputStreamReader(is);
          BufferedReader br = new BufferedReader(isr);
@@ -77,15 +77,12 @@ public class SunJava5 extends Archive
    /**
     * Constructor
     */
-   public SunJava5()
+   public SunJava5JCE()
    {
-      super(ArchiveTypes.JAR, "Sun Java 5", null, null, null);
+      super(ArchiveTypes.JAR, "Sun Java 5 (JCE)", null, null, null);
 
-      Location l = new Location("rt.jar", "Sun JDK5");
+      Location l = new Location("jce.jar", "Sun JDK5 JCE");
       addLocation(l);
-
-      addSubArchive(new SunJava5JCE());
-      addSubArchive(new SunJava5JSSE());
    }
 
    /**
@@ -96,18 +93,6 @@ public class SunJava5 extends Archive
    @Override
    public boolean doesProvide(String clz)
    {
-      if (classSet.contains(clz))
-         return true;
-
-      if (getSubArchives() != null)
-      {
-         for (Archive a : getSubArchives())
-         {
-            if (a.doesProvide(clz))
-               return true;
-         }
-      }
-      
-      return false;
+      return classSet.contains(clz);
    }
 }
