@@ -189,6 +189,7 @@ public class Main
                }
 
                Dump.generateIndex(archives);
+               Dump.generateCSS();
             }
 
          }

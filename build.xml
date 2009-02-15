@@ -73,11 +73,14 @@
             <fileset dir="${etc.dir}">
                <include name="**/*.clz"/>
             </fileset>
+            <fileset dir="${etc.dir}">
+               <include name="**/*.css"/>
+            </fileset>
         </copy>
         <jar destfile="${dist.dir}/${jboss-tattletale.jar}"
              basedir="${build.dir}"
              manifest="${etc.dir}/manifest.mf"
-             includes="org/jboss/tattletale/**,**/*.properties,**/*.clz"
+             includes="org/jboss/tattletale/**,**/*.properties,**/*.clz,**/*.css"
              excludes="**/*.java"/>
     </target>
 

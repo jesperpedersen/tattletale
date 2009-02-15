@@ -26,14 +26,18 @@ import org.jboss.tattletale.core.Archive;
 import org.jboss.tattletale.core.Location;
 
 import java.io.BufferedWriter;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
-import java.util.TreeSet;
-import java.util.SortedSet;
 import java.util.SortedMap;
+import java.util.SortedSet;
+import java.util.TreeSet;
 import java.util.jar.Attributes;
 
 /**
@@ -45,6 +49,55 @@ public class Dump
    /** New line character */
    protected static final String NEW_LINE = System.getProperty("line.separator");
    
+   /**
+    * Generate CSS files
+    */
+   public static void generateCSS()
+   {
+      byte buffer[] = new byte[8192];
+      int bytesRead;
+
+      InputStream is = null;
+      OutputStream os = null;
+      try
+      {
+         is = Thread.currentThread().getContextClassLoader().getResourceAsStream("style.css");
+         os = new FileOutputStream("style.css");
+               
+         while ((bytesRead = is.read(buffer)) != -1)
+         {
+            os.write(buffer, 0, bytesRead);
+         }
+
+         os.flush();
+      }
+      catch (Exception e)
+      {
+         System.err.println("GenerateCSS: " + e.getMessage());
+         e.printStackTrace(System.err);
+      }
+      finally
+      {
+         try
+         {
+            if (is != null)
+               is.close();
+         }
+         catch (IOException ioe)
+         {
+         }
+
+         try
+         {
+            if (os != null)
+               os.close();
+         }
+         catch (IOException ioe)
+         {
+         }
+      }
+   }
+
    /**
     * Generate index.html
     * @param archives The archivess
@@ -61,6 +114,7 @@ public class Dump
          bw.write("<head>" + NEW_LINE);
          bw.write("  <title>" + Version.FULL_VERSION + ": Index</title>" + NEW_LINE);
          bw.write("  <meta http-equiv=\"Content-Type\" content=\"text/html;charset=utf-8\">" + NEW_LINE);
+         bw.write("  <link rel=\"stylesheet\" type=\"text/css\" href=\"style.css\">" + NEW_LINE);
          bw.write("</head>" + NEW_LINE);
          bw.write("<body>" + NEW_LINE);
          bw.write(NEW_LINE);
@@ -125,6 +179,7 @@ public class Dump
          bw.write("<head>" + NEW_LINE);
          bw.write("  <title>" + Version.FULL_VERSION + ": " + archive.getName() + "</title>" + NEW_LINE);
          bw.write("  <meta http-equiv=\"Content-Type\" content=\"text/html;charset=utf-8\">" + NEW_LINE);
+         bw.write("  <link rel=\"stylesheet\" type=\"text/css\" href=\"style.css\">" + NEW_LINE);
          bw.write("</head>" + NEW_LINE);
          bw.write("<body>" + NEW_LINE);
          bw.write(NEW_LINE);
@@ -134,18 +189,18 @@ public class Dump
          bw.write("<a href=\"index.html\">Main</a>" + NEW_LINE);
          bw.write("<p>" + NEW_LINE);
 
-         bw.write("<table border=\"1\">" + NEW_LINE);
+         bw.write("<table>" + NEW_LINE);
          
-         bw.write("  <tr>" + NEW_LINE);
+         bw.write("  <tr class=\"rowodd\">" + NEW_LINE);
          bw.write("     <td>Name</td>" + NEW_LINE);
          bw.write("     <td>" + archive.getName() + "</td>" + NEW_LINE);
          bw.write("  </tr>" + NEW_LINE);
 
-         bw.write("  <tr>" + NEW_LINE);
+         bw.write("  <tr class=\"roweven\">" + NEW_LINE);
          bw.write("     <td>Locations</td>" + NEW_LINE);
          bw.write("     <td>");
 
-         bw.write("       <table border=\"1\">" + NEW_LINE);
+         bw.write("       <table>" + NEW_LINE);
 
          Iterator<Location> lit = archive.getLocations().iterator();
          while (lit.hasNext())
@@ -174,7 +229,7 @@ public class Dump
          bw.write("</td>" + NEW_LINE);
          bw.write("  </tr>" + NEW_LINE);
 
-         bw.write("  <tr>" + NEW_LINE);
+         bw.write("  <tr class=\"rowodd\">" + NEW_LINE);
          bw.write("     <td>Requires</td>" + NEW_LINE);
          bw.write("     <td>");
 
@@ -194,11 +249,11 @@ public class Dump
          bw.write("</td>" + NEW_LINE);
          bw.write("  </tr>" + NEW_LINE);
 
-         bw.write("  <tr>" + NEW_LINE);
+         bw.write("  <tr class=\"roweven\">" + NEW_LINE);
          bw.write("     <td>Provides</td>" + NEW_LINE);
          bw.write("     <td>");
 
-         bw.write("       <table border=\"1\">");
+         bw.write("       <table>");
 
          Iterator pit = archive.getProvides().entrySet().iterator();
          while (pit.hasNext())
@@ -262,6 +317,7 @@ public class Dump
          bw.write("<head>" + NEW_LINE);
          bw.write("  <title>" + Version.FULL_VERSION + ": Dependencies</title>" + NEW_LINE);
          bw.write("  <meta http-equiv=\"Content-Type\" content=\"text/html;charset=utf-8\">" + NEW_LINE);
+         bw.write("  <link rel=\"stylesheet\" type=\"text/css\" href=\"style.css\">" + NEW_LINE);
          bw.write("</head>" + NEW_LINE);
          bw.write("<body>" + NEW_LINE);
          bw.write(NEW_LINE);
@@ -271,19 +327,28 @@ public class Dump
          bw.write("<a href=\"index.html\">Main</a>" + NEW_LINE);
          bw.write("<p>" + NEW_LINE);
 
-         bw.write("<table border=\"1\">" + NEW_LINE);
+         bw.write("<table>" + NEW_LINE);
          
          bw.write("  <tr>" + NEW_LINE);
          bw.write("     <th>Jar file</th>" + NEW_LINE);
          bw.write("     <th>Dependencies</th>" + NEW_LINE);
          bw.write("  </tr>" + NEW_LINE);
 
+         boolean odd = true;
+
          Iterator<Archive> it = archives.iterator();
          while (it.hasNext())
          {
             Archive archive = it.next();
 
-            bw.write("  <tr>" + NEW_LINE);
+            if (odd)
+            {
+               bw.write("  <tr class=\"rowodd\">" + NEW_LINE);
+            }
+            else
+            {
+               bw.write("  <tr class=\"roweven\">" + NEW_LINE);
+            }
             bw.write("     <td><a href=\"" + archive.getName() + ".html\">" + archive.getName() + "</a></td>" + NEW_LINE);
             bw.write("     <td>");
 
@@ -355,6 +420,8 @@ public class Dump
 
             bw.write("</td>" + NEW_LINE);
             bw.write("  </tr>" + NEW_LINE);
+
+            odd = !odd;
          }
 
          bw.write("</table>" + NEW_LINE);
@@ -392,6 +459,7 @@ public class Dump
          bw.write("<head>" + NEW_LINE);
          bw.write("  <title>" + Version.FULL_VERSION + ": Multiple Jar files</title>" + NEW_LINE);
          bw.write("  <meta http-equiv=\"Content-Type\" content=\"text/html;charset=utf-8\">" + NEW_LINE);
+         bw.write("  <link rel=\"stylesheet\" type=\"text/css\" href=\"style.css\">" + NEW_LINE);
          bw.write("</head>" + NEW_LINE);
          bw.write("<body>" + NEW_LINE);
          bw.write(NEW_LINE);
@@ -401,12 +469,14 @@ public class Dump
          bw.write("<a href=\"index.html\">Main</a>" + NEW_LINE);
          bw.write("<p>" + NEW_LINE);
 
-         bw.write("<table border=\"1\">" + NEW_LINE);
+         bw.write("<table>" + NEW_LINE);
 
          bw.write("  <tr>" + NEW_LINE);
          bw.write("     <th>Class</th>" + NEW_LINE);
          bw.write("     <th>Jar files</th>" + NEW_LINE);
          bw.write("  </tr>" + NEW_LINE);
+
+         boolean odd = true;
 
          Iterator it = gProvides.entrySet().iterator();
          while (it.hasNext())
@@ -418,7 +488,14 @@ public class Dump
 
             if (archives.size() > 1)
             {
-               bw.write("  <tr>" + NEW_LINE);
+               if (odd)
+               {
+                  bw.write("  <tr class=\"rowodd\">" + NEW_LINE);
+               }
+               else
+               {
+                  bw.write("  <tr class=\"roweven\">" + NEW_LINE);
+               }
                bw.write("     <td>" + clz + "</td>" + NEW_LINE);
                bw.write("     <td>");
 
@@ -436,6 +513,8 @@ public class Dump
 
                bw.write("</td>" + NEW_LINE);
                bw.write("  </tr>" + NEW_LINE);
+
+               odd = !odd;
             }
          }
 
@@ -474,6 +553,7 @@ public class Dump
          bw.write("<head>" + NEW_LINE);
          bw.write("  <title>" + Version.FULL_VERSION + ": Multiple Locations</title>" + NEW_LINE);
          bw.write("  <meta http-equiv=\"Content-Type\" content=\"text/html;charset=utf-8\">" + NEW_LINE);
+         bw.write("  <link rel=\"stylesheet\" type=\"text/css\" href=\"style.css\">" + NEW_LINE);
          bw.write("</head>" + NEW_LINE);
          bw.write("<body>" + NEW_LINE);
          bw.write(NEW_LINE);
@@ -483,18 +563,27 @@ public class Dump
          bw.write("<a href=\"index.html\">Main</a>" + NEW_LINE);
          bw.write("<p>" + NEW_LINE);
 
-         bw.write("<table border=\"1\">" + NEW_LINE);
+         bw.write("<table>" + NEW_LINE);
 
          bw.write("  <tr>" + NEW_LINE);
          bw.write("     <th>Name</th>" + NEW_LINE);
          bw.write("     <th>Location</th>" + NEW_LINE);
          bw.write("  </tr>" + NEW_LINE);
 
+         boolean odd = true;
+
          for (Archive a : archives)
          {
             if (a.getLocations().size() > 1)
             {
-               bw.write("  <tr>" + NEW_LINE);
+               if (odd)
+               {
+                  bw.write("  <tr class=\"rowodd\">" + NEW_LINE);
+               }
+               else
+               {
+                  bw.write("  <tr class=\"roweven\">" + NEW_LINE);
+               }
                bw.write("     <td><a href=\"" + a.getName() + ".html\">" + a.getName() + "</a></td>" + NEW_LINE);
                bw.write("     <td>");
 
@@ -512,6 +601,8 @@ public class Dump
 
                bw.write("</td>" + NEW_LINE);
                bw.write("  </tr>" + NEW_LINE);
+
+               odd = !odd;
             }
          }
 
