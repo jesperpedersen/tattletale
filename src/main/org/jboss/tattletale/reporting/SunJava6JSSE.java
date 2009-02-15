@@ -33,10 +33,10 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 /**
- * Sun: Java 6
+ * Sun: Java 6 (JSSE)
  * @author Jesper Pedersen <jesper.pedersen@jboss.org>
  */
-public class SunJava6 extends Archive
+public class SunJava6JSSE extends Archive
 {
    /** Class set */
    private static SortedSet<String> classSet = new TreeSet<String>();
@@ -46,7 +46,7 @@ public class SunJava6 extends Archive
       InputStream is = null;
       try
       {
-         is = Thread.currentThread().getContextClassLoader().getResourceAsStream("sunjdk6.clz");
+         is = Thread.currentThread().getContextClassLoader().getResourceAsStream("sunjdk6-jsse.clz");
 
          InputStreamReader isr = new InputStreamReader(is);
          BufferedReader br = new BufferedReader(isr);
@@ -77,15 +77,12 @@ public class SunJava6 extends Archive
    /**
     * Constructor
     */
-   public SunJava6()
+   public SunJava6JSSE()
    {
-      super(ArchiveTypes.JAR, "Sun Java 6", null, null, null);
+      super(ArchiveTypes.JAR, "Sun Java 6 (JSSE)", null, null, null);
 
-      Location l = new Location("rt.jar", "Sun JDK6");
+      Location l = new Location("jsse.jar", "Sun JDK6 JSSE");
       addLocation(l);
-
-      addSubArchive(new SunJava6JCE());
-      addSubArchive(new SunJava6JSSE());
    }
 
    /**
@@ -96,18 +93,6 @@ public class SunJava6 extends Archive
    @Override
    public boolean doesProvide(String clz)
    {
-      if (classSet.contains(clz))
-         return true;
-
-      if (getSubArchives() != null)
-      {
-         for (Archive a : getSubArchives())
-         {
-            if (a.doesProvide(clz))
-               return true;
-         }
-      }
-      
-      return false;
+      return classSet.contains(clz);
    }
 }
