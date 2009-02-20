@@ -48,6 +48,7 @@ import java.util.TreeSet;
 /**
  * Main
  * @author Jesper Pedersen <jesper.pedersen@jboss.org>
+ * @author Jay Balunas <jbalunas@jboss.org>
  */
 public class Main
 {
@@ -235,18 +236,11 @@ public class Main
 
    /**
     * Generate the basic report.
-    * @param outputDir
-    * @param properties
-    * @param loaded
-    * @param classloaderStructure
-    * @param archives
-    * @param gProvides
-    * @param known
     */
    private static void outputReport(String outputDir, String classloaderStructure,
          SortedSet<Archive> archives, SortedMap<String, 
-         SortedSet<String>> gProvides, Set<Archive> known) {
-       
+         SortedSet<String>> gProvides, Set<Archive> known) 
+   {   
       Dump.generateDependencies(archives, known, classloaderStructure, outputDir);
       Dump.generateMultipleJars(gProvides, outputDir);
       Dump.generateMultipleLocations(archives, outputDir);
@@ -262,13 +256,10 @@ public class Main
 
    /**
     * Validate and create the outputDir.
-    * @param outputDir
-    * @param properties
-    * @param loaded
-    * @return
     */
    private static String setupOutputDir(String outputDir,
-         Properties properties, boolean loaded) {
+         Properties properties, boolean loaded) 
+   {
       //Set output directory from props if it is set
       outputDir = loaded && properties.containsKey("output.dir") ?
                   properties.getProperty("output.dir") : outputDir;

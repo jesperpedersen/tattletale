@@ -44,6 +44,7 @@ import java.util.jar.Attributes;
 /**
  * Dump
  * @author Jesper Pedersen <jesper.pedersen@jboss.org>
+ * @author Jay Balunas <jbalunas@jboss.org>
  */
 public class Dump
 {
