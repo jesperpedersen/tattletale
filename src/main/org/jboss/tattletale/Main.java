@@ -106,6 +106,34 @@ public class Main
             }
             if (!loaded) 
             {
+               FileInputStream fis = null;
+               try
+               {
+                  fis = new FileInputStream("jboss-tattletale.properties");
+                  properties.load(fis);
+                  loaded = true;
+               } 
+               catch (IOException ignore) 
+               {
+                  //
+               } 
+               finally 
+               {
+                  if (fis != null) 
+                  {
+                     try
+                     {
+                        fis.close();
+                     } 
+                     catch (IOException ioe) 
+                     {
+                        // Nothing to do
+                     }
+                  }
+               }
+            }
+            if (!loaded) 
+            {
                InputStream is = null;
                try 
                {
@@ -134,8 +162,16 @@ public class Main
                }
             }
 
+            String classloaderStructure = null;
+
             if (loaded)
             {
+               classloaderStructure = properties.getProperty("classloader");
+            }
+
+            if (classloaderStructure == null || classloaderStructure.trim().equals(""))
+            {
+               classloaderStructure = "org.jboss.tattletale.reporting.classloader.NoopClassLoaderStructure";
             }
 
             Map<String, SortedSet<Location>> locationsMap = new HashMap<String, SortedSet<Location>>();
@@ -179,7 +215,7 @@ public class Main
                   }
                }
 
-               Dump.generateDependencies(archives, known);
+               Dump.generateDependencies(archives, known, classloaderStructure);
                Dump.generateMultipleJars(gProvides);
                Dump.generateMultipleLocations(archives);
 

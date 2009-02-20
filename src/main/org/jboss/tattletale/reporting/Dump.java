@@ -24,6 +24,7 @@ package org.jboss.tattletale.reporting;
 import org.jboss.tattletale.Version;
 import org.jboss.tattletale.core.Archive;
 import org.jboss.tattletale.core.Location;
+import org.jboss.tattletale.reporting.classloader.ClassLoaderStructure;
 
 import java.io.BufferedWriter;
 import java.io.FileOutputStream;
@@ -305,11 +306,23 @@ public class Dump
     * Dump dependencies
     * @param archives The archives
     * @param known Known archives
+    * @param classloaderStructure The classloader structure
     */
-   public static void generateDependencies(SortedSet<Archive> archives, Set<Archive> known)
+   public static void generateDependencies(SortedSet<Archive> archives, Set<Archive> known, String classloaderStructure)
    {
       try
       {
+         ClassLoaderStructure cls = null;
+
+         try
+         {
+            Class c = Thread.currentThread().getContextClassLoader().loadClass(classloaderStructure);
+            cls = (ClassLoaderStructure)c.newInstance();
+         }
+         catch (Exception ntd)
+         {
+         }
+
          FileWriter fw = new FileWriter("dependencies.html");
          BufferedWriter bw = new BufferedWriter(fw, 8192);
          bw.write("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\" \"http://www.w3.org/TR/html4/loose.dtd\">" + NEW_LINE);
@@ -365,7 +378,7 @@ public class Dump
                {
                   Archive a = ait.next();
 
-                  if (a.doesProvide(require))
+                  if (a.doesProvide(require) && cls.isVisible(archive, a))
                   {
                      result.add(a.getName());
                      found = true;
