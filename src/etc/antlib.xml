@@ -1,0 +1,3 @@
+<antlib >
+  <taskdef name="report" classname="org.jboss.tattletale.ant.ReportTask"/>
+</antlib>

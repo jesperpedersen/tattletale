@@ -77,6 +77,11 @@
                <include name="**/*.css"/>
             </fileset>
         </copy>
+        <copy todir="${build.dir}/org/jboss/tattletale/ant">
+            <fileset dir="${etc.dir}">
+               <include name="antlib.xml"/>
+            </fileset>
+        </copy>
         <jar destfile="${dist.dir}/${jboss-tattletale.jar}"
              basedir="${build.dir}"
              manifest="${etc.dir}/manifest.mf"
