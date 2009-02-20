@@ -53,6 +53,7 @@ public class Dump
    
    /**
     * Generate CSS files
+    * @param outputDir where the reports go
     */
    public static void generateCSS(String outputDir)
    {
@@ -103,6 +104,7 @@ public class Dump
    /**
     * Generate index.html
     * @param archives The archivess
+    * @param outputDir where the reports go
     */
    public static void generateIndex(SortedSet<Archive> archives, String outputDir)
    {
@@ -169,6 +171,7 @@ public class Dump
    /**
     * Generate archive report
     * @param archive The archives
+    * @param outputDir where the reports go
     */
    public static void generateArchiveReport(Archive archive, String outputDir)
    {
@@ -308,6 +311,7 @@ public class Dump
     * @param archives The archives
     * @param known Known archives
     * @param classloaderStructure The classloader structure
+    * @param outputDir where the reports go
     */
    public static void generateDependencies(SortedSet<Archive> archives, Set<Archive> known, String classloaderStructure, String outputDir)
    {
@@ -461,6 +465,7 @@ public class Dump
    /**
     * Dump multiple jars
     * @param gProvides The global provides map
+    * @param outputDir where the reports go
     */
    public static void generateMultipleJars(SortedMap<String, SortedSet<String>> gProvides, String outputDir)
    {
@@ -555,6 +560,7 @@ public class Dump
    /**
     * Dump multiple locations
     * @param archives The archives
+    * @param outputDir where the reports go
     */
    public static void generateMultipleLocations(SortedSet<Archive> archives, String outputDir)
    {

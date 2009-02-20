@@ -236,8 +236,8 @@ public class Main
 
    /**
     * Generate the basic reports to the output directory
-    * @param outputDir
-    * @param classloaderStructure
+    * @param outputDir Where the reports go
+    * @param classloaderStructure 
     * @param archives
     * @param gProvides
     * @param known
@@ -261,10 +261,10 @@ public class Main
 
    /**
     * Validate and create the outputDir if needed.
-    * @param outputDir
-    * @param properties
-    * @param loaded
-    * @return
+    * @param outputDir Where reports go
+    * @param properties From the optional jboss-tattletale.properties file
+    * @param loaded Whether or not the properties file was loaded
+    * @return The verified output path for the reports
     */
    private static String setupOutputDir(String outputDir,
          Properties properties, boolean loaded) 
