@@ -29,6 +29,13 @@ java -Xmx512m -jar jboss-tattletale.jar <scan-directory> [output-directory]
 
 Output: Analysis reports generate in current directory if no output-directory set.
 
+Ant Integration:
+-----------------
+TattleTale can be executed in ant build scripts.
+
+* Add jboss-tattletale.jar and javassist.jar to the ant classpath
+* Add xmlns:tattletale="antlib:org.jboss.tattletale.ant"> to your <project.. tag
+* Usage: <tattletale:report scanDir="" outputDir=""/>
 
 Development:
 ------------
