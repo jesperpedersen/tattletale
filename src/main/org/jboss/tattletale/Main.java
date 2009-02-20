@@ -72,7 +72,7 @@ public class Main
          try 
          {
             String scanDir = args[0];
-            String outputDir = args.length >1 ? args[1] : ""; 
+            String outputDir = args.length > 1 ? args[1] : "."; 
 
             Properties properties = new Properties();
             String propertiesFile = System.getProperty("jboss-tattletale.properties");
@@ -235,7 +235,12 @@ public class Main
    }
 
    /**
-    * Generate the basic report.
+    * Generate the basic reports to the output directory
+    * @param outputDir
+    * @param classloaderStructure
+    * @param archives
+    * @param gProvides
+    * @param known
     */
    private static void outputReport(String outputDir, String classloaderStructure,
          SortedSet<Archive> archives, SortedMap<String, 
@@ -255,7 +260,11 @@ public class Main
    }
 
    /**
-    * Validate and create the outputDir.
+    * Validate and create the outputDir if needed.
+    * @param outputDir
+    * @param properties
+    * @param loaded
+    * @return
     */
    private static String setupOutputDir(String outputDir,
          Properties properties, boolean loaded) 
