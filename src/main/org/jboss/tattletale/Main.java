@@ -57,7 +57,7 @@ public class Main
     */
    private static void usage() 
    {
-      System.out.println("Usage: Tattletale <directory>");
+      System.out.println("Usage: Tattletale <scan-directory> [output-directory]");
    }
 
    /**
@@ -70,7 +70,8 @@ public class Main
       {
          try 
          {
-            String arg = args[0];
+            String scanDir = args[0];
+            String outputDir = args.length >1 ? args[1] : ""; 
 
             Properties properties = new Properties();
             String propertiesFile = System.getProperty("jboss-tattletale.properties");
@@ -182,7 +183,7 @@ public class Main
             known.add(new SunJava5());
             known.add(new SunJava6());
 
-            File f = new File(arg);
+            File f = new File(scanDir);
             if (f.isDirectory())
             {
                List<File> fileList = DirectoryScanner.scan(f);
@@ -214,18 +215,10 @@ public class Main
                      a.addLocation(l);
                   }
                }
-
-               Dump.generateDependencies(archives, known, classloaderStructure);
-               Dump.generateMultipleJars(gProvides);
-               Dump.generateMultipleLocations(archives);
-
-               for (Archive a : archives)
-               {
-                  Dump.generateArchiveReport(a);
-               }
-
-               Dump.generateIndex(archives);
-               Dump.generateCSS();
+               
+               //Write out report     
+               outputDir = setupOutputDir(outputDir, properties, loaded);
+               outputReport(outputDir, classloaderStructure, archives, gProvides, known);
             }
 
          }
@@ -238,5 +231,60 @@ public class Main
       {
          usage();
       }
+   }
+
+   /**
+    * Generate the basic report.
+    * @param outputDir
+    * @param properties
+    * @param loaded
+    * @param classloaderStructure
+    * @param archives
+    * @param gProvides
+    * @param known
+    */
+   private static void outputReport(String outputDir, String classloaderStructure,
+         SortedSet<Archive> archives, SortedMap<String, 
+         SortedSet<String>> gProvides, Set<Archive> known) {
+       
+      Dump.generateDependencies(archives, known, classloaderStructure, outputDir);
+      Dump.generateMultipleJars(gProvides, outputDir);
+      Dump.generateMultipleLocations(archives, outputDir);
+
+      for (Archive a : archives)
+      {
+         Dump.generateArchiveReport(a, outputDir);
+      }
+
+      Dump.generateIndex(archives, outputDir);
+      Dump.generateCSS(outputDir);
+   }
+
+   /**
+    * Validate and create the outputDir.
+    * @param outputDir
+    * @param properties
+    * @param loaded
+    * @return
+    */
+   private static String setupOutputDir(String outputDir,
+         Properties properties, boolean loaded) {
+      //Set output directory from props if it is set
+      outputDir = loaded && properties.containsKey("output.dir") ?
+                  properties.getProperty("output.dir") : outputDir;
+                  
+      //verify ending slash
+      outputDir = !outputDir.substring(outputDir.length() - 1)
+                  .equals(File.separator)?
+                   outputDir + File.separator: outputDir;
+                   
+      //verify output directory exists & create if it does not
+      File outputDirFile = new File(outputDir);
+      
+      if (!outputDirFile.exists())
+      {
+         outputDirFile.mkdirs();
+      }
+      return outputDir;
    }
 }

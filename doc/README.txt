@@ -25,9 +25,9 @@ We hope that JBoss Tattletale will help you in your development tasks !
 
 Running the client:
 -------------------
-java -Xmx512m -jar jboss-tattletale.jar <directory>
+java -Xmx512m -jar jboss-tattletale.jar <scan-directory> [output-directory]
 
-Output: Analysis reports in current working directory
+Output: Analysis reports generate in current directory if no output-directory set.
 
 
 Development:

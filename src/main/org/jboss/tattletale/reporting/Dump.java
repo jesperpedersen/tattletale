@@ -53,7 +53,7 @@ public class Dump
    /**
     * Generate CSS files
     */
-   public static void generateCSS()
+   public static void generateCSS(String outputDir)
    {
       byte buffer[] = new byte[8192];
       int bytesRead;
@@ -63,7 +63,7 @@ public class Dump
       try
       {
          is = Thread.currentThread().getContextClassLoader().getResourceAsStream("style.css");
-         os = new FileOutputStream("style.css");
+         os = new FileOutputStream(outputDir + "style.css");
                
          while ((bytesRead = is.read(buffer)) != -1)
          {
@@ -103,11 +103,11 @@ public class Dump
     * Generate index.html
     * @param archives The archivess
     */
-   public static void generateIndex(SortedSet<Archive> archives)
+   public static void generateIndex(SortedSet<Archive> archives, String outputDir)
    {
       try
       {
-         FileWriter fw = new FileWriter("index.html");
+         FileWriter fw = new FileWriter(outputDir + "index.html");
          BufferedWriter bw = new BufferedWriter(fw, 8192);
 
          bw.write("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\" \"http://www.w3.org/TR/html4/loose.dtd\">" + NEW_LINE);
@@ -169,11 +169,11 @@ public class Dump
     * Generate archive report
     * @param archive The archives
     */
-   public static void generateArchiveReport(Archive archive)
+   public static void generateArchiveReport(Archive archive, String outputDir)
    {
       try
       {
-         FileWriter fw = new FileWriter(archive.getName() + ".html");
+         FileWriter fw = new FileWriter(outputDir + archive.getName() + ".html");
          BufferedWriter bw = new BufferedWriter(fw, 8192);
          bw.write("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\" \"http://www.w3.org/TR/html4/loose.dtd\">" + NEW_LINE);
          bw.write("<html>" + NEW_LINE);
@@ -308,7 +308,7 @@ public class Dump
     * @param known Known archives
     * @param classloaderStructure The classloader structure
     */
-   public static void generateDependencies(SortedSet<Archive> archives, Set<Archive> known, String classloaderStructure)
+   public static void generateDependencies(SortedSet<Archive> archives, Set<Archive> known, String classloaderStructure, String outputDir)
    {
       try
       {
@@ -323,7 +323,7 @@ public class Dump
          {
          }
 
-         FileWriter fw = new FileWriter("dependencies.html");
+         FileWriter fw = new FileWriter(outputDir + "dependencies.html");
          BufferedWriter bw = new BufferedWriter(fw, 8192);
          bw.write("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\" \"http://www.w3.org/TR/html4/loose.dtd\">" + NEW_LINE);
          bw.write("<html>" + NEW_LINE);
@@ -461,11 +461,11 @@ public class Dump
     * Dump multiple jars
     * @param gProvides The global provides map
     */
-   public static void generateMultipleJars(SortedMap<String, SortedSet<String>> gProvides)
+   public static void generateMultipleJars(SortedMap<String, SortedSet<String>> gProvides, String outputDir)
    {
       try
       {
-         FileWriter fw = new FileWriter("multiplejars.html");
+         FileWriter fw = new FileWriter(outputDir + "multiplejars.html");
          BufferedWriter bw = new BufferedWriter(fw, 8192);
          bw.write("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\" \"http://www.w3.org/TR/html4/loose.dtd\">" + NEW_LINE);
          bw.write("<html>" + NEW_LINE);
@@ -555,11 +555,11 @@ public class Dump
     * Dump multiple locations
     * @param archives The archives
     */
-   public static void generateMultipleLocations(SortedSet<Archive> archives)
+   public static void generateMultipleLocations(SortedSet<Archive> archives, String outputDir)
    {
       try
       {
-         FileWriter fw = new FileWriter("multiplelocations.html");
+         FileWriter fw = new FileWriter(outputDir + "multiplelocations.html");
          BufferedWriter bw = new BufferedWriter(fw, 8192);
          bw.write("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\" \"http://www.w3.org/TR/html4/loose.dtd\">" + NEW_LINE);
          bw.write("<html>" + NEW_LINE);
