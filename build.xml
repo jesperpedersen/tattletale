@@ -116,6 +116,7 @@
         <copy todir="${dist.dir}">
             <fileset dir="${lib.dir}">
                <include name="**/*.jar"/>
+               <exclude name="**/ant.jar"/>
             </fileset>
         </copy>
         <copy todir="${dist.dir}">
