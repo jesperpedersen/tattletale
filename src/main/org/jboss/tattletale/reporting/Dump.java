@@ -383,7 +383,7 @@ public class Dump
                {
                   Archive a = ait.next();
 
-                  if (a.doesProvide(require) && cls.isVisible(archive, a))
+                  if (a.doesProvide(require) && (cls == null || (cls != null && cls.isVisible(archive, a))))
                   {
                      result.add(a.getName());
                      found = true;
