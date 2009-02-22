@@ -37,6 +37,37 @@ TattleTale can be executed in ant build scripts.
 * Add xmlns:tattletale="antlib:org.jboss.tattletale.ant"> to your <project.. tag
 * Usage: <tattletale:report scanDir="" outputDir=""/>
 
+ClassLoader structure:
+----------------------
+JBoss Tattletale include functionality to identify certain classloader structures.
+The plugins must implement the 
+
+ org.jboss.tattletale.reporting.classloader.ClassLoaderStructure
+
+interface and contain a default no-argument constructor.
+
+
+Current plugins:
+
+* org.jboss.tattletale.reporting.classloader.NoopClassLoaderStructure
+
+  A no operation plugin that always will include the queried archive in the report
+
+* org.jboss.tattletale.reporting.classloader.JBossAS4ClassLoaderStructure
+
+  Plugin for the JBoss Application Server 4.x series
+
+* org.jboss.tattletale.reporting.classloader.JBossAS5ClassLoaderStructure
+
+  Plugin for the JBoss Application Server 5.x series
+
+
+The plugin is loaded through the 'classloader' key in jboss-tattletale.properties file.
+
+NOTE: This feature is currently based on directory structures and may therefore fail to
+identify archives that should be included in the reports. If you want to be sure that all
+archives are included use the NoopClassLoaderStructure plugin.
+
 Development:
 ------------
 Home          : http://www.jboss.org/projects/tattletale
