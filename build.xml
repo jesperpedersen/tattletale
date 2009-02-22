@@ -156,7 +156,7 @@
         <gzip zipfile="${name}-${major}.${minor}.${type}.tar.gz" 
               src="${name}-${major}.${minor}.${type}.tar"/>
 
-        <bzip2 zipfile="${name}-${major}.${minor}.${type}.bz2" 
+        <bzip2 zipfile="${name}-${major}.${minor}.${type}.tar.bz2" 
                src="${name}-${major}.${minor}.${type}.tar"/>
 
         <delete file="${name}-${major}.${minor}.${type}.tar"/>
