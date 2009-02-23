@@ -36,8 +36,10 @@ import java.util.SortedMap;
 import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
+import java.util.jar.Attributes;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
+import java.util.jar.Manifest;
 
 import javassist.ClassPool;
 import javassist.CtClass;
@@ -134,10 +136,15 @@ public class ArchiveScanner
             }
          }
 
-         String version = jarFile.getManifest().getMainAttributes().getValue("Implementation-Version");
-         if (version == null)
-            version = jarFile.getManifest().getMainAttributes().getValue("Version");
-
+         String version = null;
+         Manifest manifest = jarFile.getManifest();
+         if (manifest != null)
+         {
+            Attributes mainAttributes = manifest.getMainAttributes();
+            version = mainAttributes.getValue("Implementation-Version");
+            if (version == null)
+               version = mainAttributes.getValue("Version");
+         }
          Location location = new Location(filename, version);
 
          archive = new Archive(ArchiveTypes.JAR, name, requires, provides, location);
