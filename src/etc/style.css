@@ -133,6 +133,7 @@ tr th {
 tr td {
     font-size: 10pt;
     font-weight: bold;
+    vertical-align: top;
     text-align: left;
     padding: 3px;
 }
