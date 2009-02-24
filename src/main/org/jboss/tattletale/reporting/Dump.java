@@ -27,6 +27,7 @@ import org.jboss.tattletale.core.Location;
 import org.jboss.tattletale.reporting.classloader.ClassLoaderStructure;
 
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -127,25 +128,21 @@ public class Dump
          
          bw.write("<h2>Dependencies</h2>" + NEW_LINE);
          bw.write("<ul>" + NEW_LINE);
-         bw.write("<li><a href=\"dependencies.html\">Report</a></li>" + NEW_LINE);
+         bw.write("<li><a href=\"dependencies/index.html\">Report</a></li>" + NEW_LINE);
          bw.write("</ul>" + NEW_LINE);
 
-         bw.write("<h2>Multiple Jar files</h2>" + NEW_LINE);
+         bw.write("<h2>Reports</h2>" + NEW_LINE);
          bw.write("<ul>" + NEW_LINE);
-         bw.write("<li><a href=\"multiplejars.html\">Report</a></li>" + NEW_LINE);
+         bw.write("<li><a href=\"multiplejars/index.html\">Multiple Jar files</a></li>" + NEW_LINE);
+         bw.write("<li><a href=\"multiplelocations/index.html\">Multiple Locations</a></li>" + NEW_LINE);
          bw.write("</ul>" + NEW_LINE);
 
-         bw.write("<h2>Multiple Locations</h2>" + NEW_LINE);
-         bw.write("<ul>" + NEW_LINE);
-         bw.write("<li><a href=\"multiplelocations.html\">Report</a></li>" + NEW_LINE);
-         bw.write("</ul>" + NEW_LINE);
-
-         bw.write("<h2>Jar files</h2>" + NEW_LINE);
+         bw.write("<h2>Archives</h2>" + NEW_LINE);
          bw.write("<ul>" + NEW_LINE);
 
          for (Archive a : archives)
          {
-            bw.write("<li><a href=\"" + a.getName() + ".html\">" + a.getName() + "</a></li>" + NEW_LINE);
+            bw.write("<li><a href=\"jar/" + a.getName() + ".html\">" + a.getName() + "</a></li>" + NEW_LINE);
          }
 
          bw.write("</ul>" + NEW_LINE);
@@ -177,21 +174,24 @@ public class Dump
    {
       try
       {
-         FileWriter fw = new FileWriter(outputDir + archive.getName() + ".html");
+         File output = new File(outputDir, "jar");
+         output.mkdirs();
+
+         FileWriter fw = new FileWriter(output.getAbsolutePath() + File.separator + archive.getName() + ".html");
          BufferedWriter bw = new BufferedWriter(fw, 8192);
          bw.write("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\" \"http://www.w3.org/TR/html4/loose.dtd\">" + NEW_LINE);
          bw.write("<html>" + NEW_LINE);
          bw.write("<head>" + NEW_LINE);
          bw.write("  <title>" + Version.FULL_VERSION + ": " + archive.getName() + "</title>" + NEW_LINE);
          bw.write("  <meta http-equiv=\"Content-Type\" content=\"text/html;charset=utf-8\">" + NEW_LINE);
-         bw.write("  <link rel=\"stylesheet\" type=\"text/css\" href=\"style.css\">" + NEW_LINE);
+         bw.write("  <link rel=\"stylesheet\" type=\"text/css\" href=\"../style.css\">" + NEW_LINE);
          bw.write("</head>" + NEW_LINE);
          bw.write("<body>" + NEW_LINE);
          bw.write(NEW_LINE);
 
          bw.write("<h1>" + archive.getName() + "</h1>" + NEW_LINE);
 
-         bw.write("<a href=\"index.html\">Main</a>" + NEW_LINE);
+         bw.write("<a href=\"../index.html\">Main</a>" + NEW_LINE);
          bw.write("<p>" + NEW_LINE);
 
          bw.write("<table>" + NEW_LINE);
@@ -328,21 +328,24 @@ public class Dump
          {
          }
 
-         FileWriter fw = new FileWriter(outputDir + "dependencies.html");
+         File output = new File(outputDir, "dependencies");
+         output.mkdirs();
+
+         FileWriter fw = new FileWriter(output.getAbsolutePath() + File.separator +  "index.html");
          BufferedWriter bw = new BufferedWriter(fw, 8192);
          bw.write("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\" \"http://www.w3.org/TR/html4/loose.dtd\">" + NEW_LINE);
          bw.write("<html>" + NEW_LINE);
          bw.write("<head>" + NEW_LINE);
          bw.write("  <title>" + Version.FULL_VERSION + ": Dependencies</title>" + NEW_LINE);
          bw.write("  <meta http-equiv=\"Content-Type\" content=\"text/html;charset=utf-8\">" + NEW_LINE);
-         bw.write("  <link rel=\"stylesheet\" type=\"text/css\" href=\"style.css\">" + NEW_LINE);
+         bw.write("  <link rel=\"stylesheet\" type=\"text/css\" href=\"../style.css\">" + NEW_LINE);
          bw.write("</head>" + NEW_LINE);
          bw.write("<body>" + NEW_LINE);
          bw.write(NEW_LINE);
 
          bw.write("<h1>Dependencies</h1>" + NEW_LINE);
 
-         bw.write("<a href=\"index.html\">Main</a>" + NEW_LINE);
+         bw.write("<a href=\"../index.html\">Main</a>" + NEW_LINE);
          bw.write("<p>" + NEW_LINE);
 
          bw.write("<table>" + NEW_LINE);
@@ -367,7 +370,7 @@ public class Dump
             {
                bw.write("  <tr class=\"roweven\">" + NEW_LINE);
             }
-            bw.write("     <td><a href=\"" + archive.getName() + ".html\">" + archive.getName() + "</a></td>" + NEW_LINE);
+            bw.write("     <td><a href=\"../jar/" + archive.getName() + ".html\">" + archive.getName() + "</a></td>" + NEW_LINE);
             bw.write("     <td>");
 
             SortedSet<String> result = new TreeSet<String>();
@@ -383,7 +386,7 @@ public class Dump
                {
                   Archive a = ait.next();
 
-                  if (a.doesProvide(require) && (cls == null || (cls != null && cls.isVisible(archive, a))))
+                  if (a.doesProvide(require) && (cls == null || cls.isVisible(archive, a)))
                   {
                      result.add(a.getName());
                      found = true;
@@ -422,7 +425,7 @@ public class Dump
                   String r = resultIt.next();
                   if (r.endsWith(".jar"))
                   {
-                     bw.write("<a href=\"" + r + ".html\">" + r + "</a>");
+                     bw.write("<a href=\"../jar/" + r + ".html\">" + r + "</a>");
                   }
                   else
                   {
@@ -471,21 +474,24 @@ public class Dump
    {
       try
       {
-         FileWriter fw = new FileWriter(outputDir + "multiplejars.html");
+         File output = new File(outputDir, "multiplejars");
+         output.mkdirs();
+
+         FileWriter fw = new FileWriter(output.getAbsolutePath() + File.separator +  "index.html");
          BufferedWriter bw = new BufferedWriter(fw, 8192);
          bw.write("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\" \"http://www.w3.org/TR/html4/loose.dtd\">" + NEW_LINE);
          bw.write("<html>" + NEW_LINE);
          bw.write("<head>" + NEW_LINE);
          bw.write("  <title>" + Version.FULL_VERSION + ": Multiple Jar files</title>" + NEW_LINE);
          bw.write("  <meta http-equiv=\"Content-Type\" content=\"text/html;charset=utf-8\">" + NEW_LINE);
-         bw.write("  <link rel=\"stylesheet\" type=\"text/css\" href=\"style.css\">" + NEW_LINE);
+         bw.write("  <link rel=\"stylesheet\" type=\"text/css\" href=\"../style.css\">" + NEW_LINE);
          bw.write("</head>" + NEW_LINE);
          bw.write("<body>" + NEW_LINE);
          bw.write(NEW_LINE);
 
          bw.write("<h1>Multiple Jar files</h1>" + NEW_LINE);
 
-         bw.write("<a href=\"index.html\">Main</a>" + NEW_LINE);
+         bw.write("<a href=\"../index.html\">Main</a>" + NEW_LINE);
          bw.write("<p>" + NEW_LINE);
 
          bw.write("<table>" + NEW_LINE);
@@ -522,7 +528,7 @@ public class Dump
                while (sit.hasNext())
                {
                   String archive = (String)sit.next();
-                  bw.write("<a href=\"" + archive + ".html\">" + archive + "</a>" + NEW_LINE);
+                  bw.write("<a href=\"../jar/" + archive + ".html\">" + archive + "</a>" + NEW_LINE);
 
                   if (sit.hasNext())
                   {
@@ -566,21 +572,24 @@ public class Dump
    {
       try
       {
-         FileWriter fw = new FileWriter(outputDir + "multiplelocations.html");
+         File output = new File(outputDir, "multiplelocations");
+         output.mkdirs();
+
+         FileWriter fw = new FileWriter(output.getAbsolutePath() + File.separator +  "index.html");
          BufferedWriter bw = new BufferedWriter(fw, 8192);
          bw.write("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\" \"http://www.w3.org/TR/html4/loose.dtd\">" + NEW_LINE);
          bw.write("<html>" + NEW_LINE);
          bw.write("<head>" + NEW_LINE);
          bw.write("  <title>" + Version.FULL_VERSION + ": Multiple Locations</title>" + NEW_LINE);
          bw.write("  <meta http-equiv=\"Content-Type\" content=\"text/html;charset=utf-8\">" + NEW_LINE);
-         bw.write("  <link rel=\"stylesheet\" type=\"text/css\" href=\"style.css\">" + NEW_LINE);
+         bw.write("  <link rel=\"stylesheet\" type=\"text/css\" href=\"../style.css\">" + NEW_LINE);
          bw.write("</head>" + NEW_LINE);
          bw.write("<body>" + NEW_LINE);
          bw.write(NEW_LINE);
 
          bw.write("<h1>Multiple locations</h1>" + NEW_LINE);
 
-         bw.write("<a href=\"index.html\">Main</a>" + NEW_LINE);
+         bw.write("<a href=\"../index.html\">Main</a>" + NEW_LINE);
          bw.write("<p>" + NEW_LINE);
 
          bw.write("<table>" + NEW_LINE);
@@ -604,7 +613,7 @@ public class Dump
                {
                   bw.write("  <tr class=\"roweven\">" + NEW_LINE);
                }
-               bw.write("     <td><a href=\"" + a.getName() + ".html\">" + a.getName() + "</a></td>" + NEW_LINE);
+               bw.write("     <td><a href=\"../jar/" + a.getName() + ".html\">" + a.getName() + "</a></td>" + NEW_LINE);
                bw.write("     <td>");
 
                Iterator<Location> lit = a.getLocations().iterator();
