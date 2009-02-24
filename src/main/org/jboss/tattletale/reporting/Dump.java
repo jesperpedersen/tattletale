@@ -22,25 +22,14 @@
 package org.jboss.tattletale.reporting;
 
 import org.jboss.tattletale.Version;
-import org.jboss.tattletale.core.Archive;
-import org.jboss.tattletale.core.Location;
-import org.jboss.tattletale.reporting.classloader.ClassLoaderStructure;
 
 import java.io.BufferedWriter;
-import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
-import java.util.SortedMap;
 import java.util.SortedSet;
-import java.util.TreeSet;
-import java.util.jar.Attributes;
 
 /**
  * Dump
@@ -104,10 +93,12 @@ public class Dump
 
    /**
     * Generate index.html
-    * @param archives The archivess
+    * @param dependenciesReports The dependencies reports
+    * @param generalReports The general reports
+    * @param archiveReports The archive reports
     * @param outputDir where the reports go
     */
-   public static void generateIndex(SortedSet<Archive> archives, String outputDir)
+   public static void generateIndex(SortedSet<Report> dependenciesReports, SortedSet<Report> generalReports, SortedSet<Report> archiveReports, String outputDir)
    {
       try
       {
@@ -128,21 +119,39 @@ public class Dump
          
          bw.write("<h2>Dependencies</h2>" + NEW_LINE);
          bw.write("<ul>" + NEW_LINE);
-         bw.write("<li><a href=\"dependencies/index.html\">Report</a></li>" + NEW_LINE);
+
+         if (dependenciesReports != null)
+         {
+            for (Report r : dependenciesReports)
+            {
+               bw.write("<li><a href=\"" + r.getDirectory() + "/index.html\">" + r.getName() + "</a></li>" + NEW_LINE);
+            }
+         }
+
          bw.write("</ul>" + NEW_LINE);
 
          bw.write("<h2>Reports</h2>" + NEW_LINE);
          bw.write("<ul>" + NEW_LINE);
-         bw.write("<li><a href=\"multiplejars/index.html\">Multiple Jar files</a></li>" + NEW_LINE);
-         bw.write("<li><a href=\"multiplelocations/index.html\">Multiple Locations</a></li>" + NEW_LINE);
+
+         if (generalReports != null)
+         {
+            for (Report r : generalReports)
+            {
+               bw.write("<li><a href=\"" + r.getDirectory() + "/index.html\">" + r.getName() + "</a></li>" + NEW_LINE);
+            }
+         }
+
          bw.write("</ul>" + NEW_LINE);
 
          bw.write("<h2>Archives</h2>" + NEW_LINE);
          bw.write("<ul>" + NEW_LINE);
 
-         for (Archive a : archives)
+         if (archiveReports != null)
          {
-            bw.write("<li><a href=\"jar/" + a.getName() + ".html\">" + a.getName() + "</a></li>" + NEW_LINE);
+            for (Report r : archiveReports)
+            {
+               bw.write("<li><a href=\"" + r.getDirectory() + "/" + r.getName() + ".html\">" + r.getName() + "</a></li>" + NEW_LINE);
+            }
          }
 
          bw.write("</ul>" + NEW_LINE);
@@ -161,496 +170,6 @@ public class Dump
       catch (Exception e)
       {
          System.err.println("GenerateIndex: " + e.getMessage());
-         e.printStackTrace(System.err);
-      }
-   }
-
-   /**
-    * Generate archive report
-    * @param archive The archives
-    * @param outputDir where the reports go
-    */
-   public static void generateArchiveReport(Archive archive, String outputDir)
-   {
-      try
-      {
-         File output = new File(outputDir, "jar");
-         output.mkdirs();
-
-         FileWriter fw = new FileWriter(output.getAbsolutePath() + File.separator + archive.getName() + ".html");
-         BufferedWriter bw = new BufferedWriter(fw, 8192);
-         bw.write("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\" \"http://www.w3.org/TR/html4/loose.dtd\">" + NEW_LINE);
-         bw.write("<html>" + NEW_LINE);
-         bw.write("<head>" + NEW_LINE);
-         bw.write("  <title>" + Version.FULL_VERSION + ": " + archive.getName() + "</title>" + NEW_LINE);
-         bw.write("  <meta http-equiv=\"Content-Type\" content=\"text/html;charset=utf-8\">" + NEW_LINE);
-         bw.write("  <link rel=\"stylesheet\" type=\"text/css\" href=\"../style.css\">" + NEW_LINE);
-         bw.write("</head>" + NEW_LINE);
-         bw.write("<body>" + NEW_LINE);
-         bw.write(NEW_LINE);
-
-         bw.write("<h1>" + archive.getName() + "</h1>" + NEW_LINE);
-
-         bw.write("<a href=\"../index.html\">Main</a>" + NEW_LINE);
-         bw.write("<p>" + NEW_LINE);
-
-         bw.write("<table>" + NEW_LINE);
-         
-         bw.write("  <tr class=\"rowodd\">" + NEW_LINE);
-         bw.write("     <td>Name</td>" + NEW_LINE);
-         bw.write("     <td>" + archive.getName() + "</td>" + NEW_LINE);
-         bw.write("  </tr>" + NEW_LINE);
-
-         bw.write("  <tr class=\"roweven\">" + NEW_LINE);
-         bw.write("     <td>Locations</td>" + NEW_LINE);
-         bw.write("     <td>");
-
-         bw.write("       <table>" + NEW_LINE);
-
-         Iterator<Location> lit = archive.getLocations().iterator();
-         while (lit.hasNext())
-         {
-            Location location = lit.next();
-
-            bw.write("      <tr>" + NEW_LINE);
-
-            bw.write("        <td>" + location.getFilename() + "</td>" + NEW_LINE);
-            bw.write("        <td>");
-            if (location.getVersion() != null)
-            {
-               bw.write(location.getVersion());
-            }
-            else
-            {
-               bw.write("<i>Not listed</i>");
-            }
-            bw.write("</td>" + NEW_LINE);
-            
-            bw.write("      </tr>" + NEW_LINE);
-         }
-
-         bw.write("       </table>" + NEW_LINE);
-
-         bw.write("</td>" + NEW_LINE);
-         bw.write("  </tr>" + NEW_LINE);
-
-         bw.write("  <tr class=\"rowodd\">" + NEW_LINE);
-         bw.write("     <td>Requires</td>" + NEW_LINE);
-         bw.write("     <td>");
-
-         Iterator<String> rit = archive.getRequires().iterator();
-         while (rit.hasNext())
-         {
-            String require = rit.next();
-
-            bw.write(require);
-
-            if (rit.hasNext())
-            {
-               bw.write("<br>");
-            }
-         }
-
-         bw.write("</td>" + NEW_LINE);
-         bw.write("  </tr>" + NEW_LINE);
-
-         bw.write("  <tr class=\"roweven\">" + NEW_LINE);
-         bw.write("     <td>Provides</td>" + NEW_LINE);
-         bw.write("     <td>");
-
-         bw.write("       <table>");
-
-         Iterator pit = archive.getProvides().entrySet().iterator();
-         while (pit.hasNext())
-         {
-            Map.Entry entry = (Map.Entry)pit.next();
-            
-            String name = (String)entry.getKey();
-            Long serialVersionUID = (Long)entry.getValue();
-
-            bw.write("         <tr>" + NEW_LINE);
-            bw.write("           <td>" + name + "</td>" + NEW_LINE);
-
-            if (serialVersionUID != null)
-            {
-               bw.write("           <td>" + serialVersionUID + "</td>" + NEW_LINE);
-            }
-            else
-            {
-               bw.write("           <td>&nbsp;</td>" + NEW_LINE);
-            }
-            bw.write("         </tr>" + NEW_LINE);
-         }
-         bw.write("       </table>");
-
-         bw.write("</td>" + NEW_LINE);
-         bw.write("  </tr>" + NEW_LINE);
-
-         bw.write("</table>" + NEW_LINE);
-
-         bw.write(NEW_LINE);
-         bw.write("<p>" + NEW_LINE);
-         bw.write("<hr>" + NEW_LINE);
-         bw.write("Generated by: <a href=\"http://www.jboss.org/projects/tattletale\">" + Version.FULL_VERSION + "</a>" + NEW_LINE);
-         bw.write(NEW_LINE);
-         bw.write("</body>" + NEW_LINE);
-         bw.write("</html>" + NEW_LINE);
-
-         bw.flush();
-         bw.close();
-      }
-      catch (Exception e)
-      {
-         System.err.println("GenerateArchiveReport: " + e.getMessage());
-         e.printStackTrace(System.err);
-      }
-   }
-
-   /**
-    * Dump dependencies
-    * @param archives The archives
-    * @param known Known archives
-    * @param classloaderStructure The classloader structure
-    * @param outputDir where the reports go
-    */
-   public static void generateDependencies(SortedSet<Archive> archives, Set<Archive> known, String classloaderStructure, String outputDir)
-   {
-      try
-      {
-         ClassLoaderStructure cls = null;
-
-         try
-         {
-            Class c = Thread.currentThread().getContextClassLoader().loadClass(classloaderStructure);
-            cls = (ClassLoaderStructure)c.newInstance();
-         }
-         catch (Exception ntd)
-         {
-         }
-
-         File output = new File(outputDir, "dependencies");
-         output.mkdirs();
-
-         FileWriter fw = new FileWriter(output.getAbsolutePath() + File.separator +  "index.html");
-         BufferedWriter bw = new BufferedWriter(fw, 8192);
-         bw.write("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\" \"http://www.w3.org/TR/html4/loose.dtd\">" + NEW_LINE);
-         bw.write("<html>" + NEW_LINE);
-         bw.write("<head>" + NEW_LINE);
-         bw.write("  <title>" + Version.FULL_VERSION + ": Dependencies</title>" + NEW_LINE);
-         bw.write("  <meta http-equiv=\"Content-Type\" content=\"text/html;charset=utf-8\">" + NEW_LINE);
-         bw.write("  <link rel=\"stylesheet\" type=\"text/css\" href=\"../style.css\">" + NEW_LINE);
-         bw.write("</head>" + NEW_LINE);
-         bw.write("<body>" + NEW_LINE);
-         bw.write(NEW_LINE);
-
-         bw.write("<h1>Dependencies</h1>" + NEW_LINE);
-
-         bw.write("<a href=\"../index.html\">Main</a>" + NEW_LINE);
-         bw.write("<p>" + NEW_LINE);
-
-         bw.write("<table>" + NEW_LINE);
-         
-         bw.write("  <tr>" + NEW_LINE);
-         bw.write("     <th>Jar file</th>" + NEW_LINE);
-         bw.write("     <th>Dependencies</th>" + NEW_LINE);
-         bw.write("  </tr>" + NEW_LINE);
-
-         boolean odd = true;
-
-         Iterator<Archive> it = archives.iterator();
-         while (it.hasNext())
-         {
-            Archive archive = it.next();
-
-            if (odd)
-            {
-               bw.write("  <tr class=\"rowodd\">" + NEW_LINE);
-            }
-            else
-            {
-               bw.write("  <tr class=\"roweven\">" + NEW_LINE);
-            }
-            bw.write("     <td><a href=\"../jar/" + archive.getName() + ".html\">" + archive.getName() + "</a></td>" + NEW_LINE);
-            bw.write("     <td>");
-
-            SortedSet<String> result = new TreeSet<String>();
-
-            Iterator<String> rit = archive.getRequires().iterator();
-            while (rit.hasNext())
-            {
-               String require = rit.next();
-
-               boolean found = false;
-               Iterator<Archive> ait = archives.iterator();
-               while (!found && ait.hasNext())
-               {
-                  Archive a = ait.next();
-
-                  if (a.doesProvide(require) && (cls == null || cls.isVisible(archive, a)))
-                  {
-                     result.add(a.getName());
-                     found = true;
-                  }
-               }
-
-               if (!found)
-               {
-                  Iterator<Archive> kit = known.iterator();
-                  while (!found && kit.hasNext())
-                  {
-                     Archive a = kit.next();
-
-                     if (a.doesProvide(require))
-                     {
-                        found = true;
-                     }
-                  }
-               }
-
-               if (!found)
-               {
-                  result.add(require);
-               }
-            }
-
-            if (result.size() == 0)
-            {
-               bw.write("&nbsp;");
-            }
-            else
-            {
-               Iterator<String> resultIt = result.iterator();
-               while (resultIt.hasNext())
-               {
-                  String r = resultIt.next();
-                  if (r.endsWith(".jar"))
-                  {
-                     bw.write("<a href=\"../jar/" + r + ".html\">" + r + "</a>");
-                  }
-                  else
-                  {
-                     bw.write("<i>" + r + "</i>");                  
-                  }
-               
-                  if (resultIt.hasNext())
-                  {
-                     bw.write(", ");
-                  }
-               }
-            }
-
-            bw.write("</td>" + NEW_LINE);
-            bw.write("  </tr>" + NEW_LINE);
-
-            odd = !odd;
-         }
-
-         bw.write("</table>" + NEW_LINE);
-
-         bw.write(NEW_LINE);
-         bw.write("<p>" + NEW_LINE);
-         bw.write("<hr>" + NEW_LINE);
-         bw.write("Generated by: <a href=\"http://www.jboss.org/projects/tattletale\">" + Version.FULL_VERSION + "</a>" + NEW_LINE);
-         bw.write(NEW_LINE);
-         bw.write("</body>" + NEW_LINE);
-         bw.write("</html>" + NEW_LINE);
-
-         bw.flush();
-         bw.close();
-      }
-      catch (Exception e)
-      {
-         System.err.println("GenerateDependencies: " + e.getMessage());
-         e.printStackTrace(System.err);
-      }
-   }
-
-   /**
-    * Dump multiple jars
-    * @param gProvides The global provides map
-    * @param outputDir where the reports go
-    */
-   public static void generateMultipleJars(SortedMap<String, SortedSet<String>> gProvides, String outputDir)
-   {
-      try
-      {
-         File output = new File(outputDir, "multiplejars");
-         output.mkdirs();
-
-         FileWriter fw = new FileWriter(output.getAbsolutePath() + File.separator +  "index.html");
-         BufferedWriter bw = new BufferedWriter(fw, 8192);
-         bw.write("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\" \"http://www.w3.org/TR/html4/loose.dtd\">" + NEW_LINE);
-         bw.write("<html>" + NEW_LINE);
-         bw.write("<head>" + NEW_LINE);
-         bw.write("  <title>" + Version.FULL_VERSION + ": Multiple Jar files</title>" + NEW_LINE);
-         bw.write("  <meta http-equiv=\"Content-Type\" content=\"text/html;charset=utf-8\">" + NEW_LINE);
-         bw.write("  <link rel=\"stylesheet\" type=\"text/css\" href=\"../style.css\">" + NEW_LINE);
-         bw.write("</head>" + NEW_LINE);
-         bw.write("<body>" + NEW_LINE);
-         bw.write(NEW_LINE);
-
-         bw.write("<h1>Multiple Jar files</h1>" + NEW_LINE);
-
-         bw.write("<a href=\"../index.html\">Main</a>" + NEW_LINE);
-         bw.write("<p>" + NEW_LINE);
-
-         bw.write("<table>" + NEW_LINE);
-
-         bw.write("  <tr>" + NEW_LINE);
-         bw.write("     <th>Class</th>" + NEW_LINE);
-         bw.write("     <th>Jar files</th>" + NEW_LINE);
-         bw.write("  </tr>" + NEW_LINE);
-
-         boolean odd = true;
-
-         Iterator it = gProvides.entrySet().iterator();
-         while (it.hasNext())
-         {
-            Map.Entry entry = (Map.Entry)it.next();
-            
-            String clz = (String)entry.getKey();
-            SortedSet archives = (SortedSet)entry.getValue();
-
-            if (archives.size() > 1)
-            {
-               if (odd)
-               {
-                  bw.write("  <tr class=\"rowodd\">" + NEW_LINE);
-               }
-               else
-               {
-                  bw.write("  <tr class=\"roweven\">" + NEW_LINE);
-               }
-               bw.write("     <td>" + clz + "</td>" + NEW_LINE);
-               bw.write("     <td>");
-
-               Iterator sit = archives.iterator();
-               while (sit.hasNext())
-               {
-                  String archive = (String)sit.next();
-                  bw.write("<a href=\"../jar/" + archive + ".html\">" + archive + "</a>" + NEW_LINE);
-
-                  if (sit.hasNext())
-                  {
-                     bw.write(", ");
-                  }
-               }
-
-               bw.write("</td>" + NEW_LINE);
-               bw.write("  </tr>" + NEW_LINE);
-
-               odd = !odd;
-            }
-         }
-
-         bw.write("</table>" + NEW_LINE);
-
-         bw.write(NEW_LINE);
-         bw.write("<p>" + NEW_LINE);
-         bw.write("<hr>" + NEW_LINE);
-         bw.write("Generated by: <a href=\"http://www.jboss.org/projects/tattletale\">" + Version.FULL_VERSION + "</a>" + NEW_LINE);
-         bw.write(NEW_LINE);
-         bw.write("</body>" + NEW_LINE);
-         bw.write("</html>" + NEW_LINE);
-
-         bw.flush();
-         bw.close();
-      }
-      catch (Exception e)
-      {
-         System.err.println("GenerateMultipleJars: " + e.getMessage());
-         e.printStackTrace(System.err);
-      }
-   }
-
-   /**
-    * Dump multiple locations
-    * @param archives The archives
-    * @param outputDir where the reports go
-    */
-   public static void generateMultipleLocations(SortedSet<Archive> archives, String outputDir)
-   {
-      try
-      {
-         File output = new File(outputDir, "multiplelocations");
-         output.mkdirs();
-
-         FileWriter fw = new FileWriter(output.getAbsolutePath() + File.separator +  "index.html");
-         BufferedWriter bw = new BufferedWriter(fw, 8192);
-         bw.write("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\" \"http://www.w3.org/TR/html4/loose.dtd\">" + NEW_LINE);
-         bw.write("<html>" + NEW_LINE);
-         bw.write("<head>" + NEW_LINE);
-         bw.write("  <title>" + Version.FULL_VERSION + ": Multiple Locations</title>" + NEW_LINE);
-         bw.write("  <meta http-equiv=\"Content-Type\" content=\"text/html;charset=utf-8\">" + NEW_LINE);
-         bw.write("  <link rel=\"stylesheet\" type=\"text/css\" href=\"../style.css\">" + NEW_LINE);
-         bw.write("</head>" + NEW_LINE);
-         bw.write("<body>" + NEW_LINE);
-         bw.write(NEW_LINE);
-
-         bw.write("<h1>Multiple locations</h1>" + NEW_LINE);
-
-         bw.write("<a href=\"../index.html\">Main</a>" + NEW_LINE);
-         bw.write("<p>" + NEW_LINE);
-
-         bw.write("<table>" + NEW_LINE);
-
-         bw.write("  <tr>" + NEW_LINE);
-         bw.write("     <th>Name</th>" + NEW_LINE);
-         bw.write("     <th>Location</th>" + NEW_LINE);
-         bw.write("  </tr>" + NEW_LINE);
-
-         boolean odd = true;
-
-         for (Archive a : archives)
-         {
-            if (a.getLocations().size() > 1)
-            {
-               if (odd)
-               {
-                  bw.write("  <tr class=\"rowodd\">" + NEW_LINE);
-               }
-               else
-               {
-                  bw.write("  <tr class=\"roweven\">" + NEW_LINE);
-               }
-               bw.write("     <td><a href=\"../jar/" + a.getName() + ".html\">" + a.getName() + "</a></td>" + NEW_LINE);
-               bw.write("     <td>");
-
-               Iterator<Location> lit = a.getLocations().iterator();
-               while (lit.hasNext())
-               {
-                  Location location = lit.next();
-                  bw.write(location.getFilename());
-
-                  if (lit.hasNext())
-                  {
-                     bw.write("<br>");
-                  }
-               }
-
-               bw.write("</td>" + NEW_LINE);
-               bw.write("  </tr>" + NEW_LINE);
-
-               odd = !odd;
-            }
-         }
-
-         bw.write("</table>" + NEW_LINE);
-
-         bw.write(NEW_LINE);
-         bw.write("<p>" + NEW_LINE);
-         bw.write("<hr>" + NEW_LINE);
-         bw.write("Generated by: <a href=\"http://www.jboss.org/projects/tattletale\">" + Version.FULL_VERSION + "</a>" + NEW_LINE);
-         bw.write(NEW_LINE);
-         bw.write("</body>" + NEW_LINE);
-         bw.write("</html>" + NEW_LINE);
-
-         bw.flush();
-         bw.close();
-      }
-      catch (Exception e)
-      {
-         System.err.println("GenerateMultipleLocations: " + e.getMessage());
          e.printStackTrace(System.err);
       }
    }

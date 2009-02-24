@@ -25,7 +25,13 @@ import org.jboss.tattletale.analyzers.ArchiveScanner;
 import org.jboss.tattletale.analyzers.DirectoryScanner;
 import org.jboss.tattletale.core.Archive;
 import org.jboss.tattletale.core.Location;
+import org.jboss.tattletale.reporting.DependenciesReport;
 import org.jboss.tattletale.reporting.Dump;
+import org.jboss.tattletale.reporting.EliminateJarsReport;
+import org.jboss.tattletale.reporting.MultipleJarsReport;
+import org.jboss.tattletale.reporting.MultipleLocationsReport;
+import org.jboss.tattletale.reporting.JarReport;
+import org.jboss.tattletale.reporting.Report;
 import org.jboss.tattletale.reporting.SunJava5;
 import org.jboss.tattletale.reporting.SunJava6;
 
@@ -242,20 +248,40 @@ public class Main
     * @param gProvides
     * @param known
     */
-   private static void outputReport(String outputDir, String classloaderStructure,
-         SortedSet<Archive> archives, SortedMap<String, 
-         SortedSet<String>> gProvides, Set<Archive> known) 
+   private static void outputReport(String outputDir, 
+                                    String classloaderStructure,
+                                    SortedSet<Archive> archives, 
+                                    SortedMap<String, SortedSet<String>> gProvides, 
+                                    Set<Archive> known) 
    {   
-      Dump.generateDependencies(archives, known, classloaderStructure, outputDir);
-      Dump.generateMultipleJars(gProvides, outputDir);
-      Dump.generateMultipleLocations(archives, outputDir);
+      SortedSet<Report> dependenciesReports = new TreeSet<Report>();
+      SortedSet<Report> generalReports = new TreeSet<Report>();
+      SortedSet<Report> archiveReports = new TreeSet<Report>();
+
+      Report dependencies = new DependenciesReport(archives, known, classloaderStructure);
+      dependencies.generate(outputDir);
+      dependenciesReports.add(dependencies);
 
       for (Archive a : archives)
       {
-         Dump.generateArchiveReport(a, outputDir);
+         Report jar = new JarReport(a);
+         jar.generate(outputDir);
+         archiveReports.add(jar);
       }
 
-      Dump.generateIndex(archives, outputDir);
+      Report multipleJars = new MultipleJarsReport(archives, gProvides);
+      multipleJars.generate(outputDir);
+      generalReports.add(multipleJars);
+
+      Report multipleLocations = new MultipleLocationsReport(archives);
+      multipleLocations.generate(outputDir);
+      generalReports.add(multipleLocations);
+
+      Report eliminateJars = new EliminateJarsReport(archives);
+      eliminateJars.generate(outputDir);
+      generalReports.add(eliminateJars);
+
+      Dump.generateIndex(dependenciesReports, generalReports, archiveReports, outputDir);
       Dump.generateCSS(outputDir);
    }
 
