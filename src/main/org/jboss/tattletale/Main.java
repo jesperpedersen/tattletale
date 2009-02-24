@@ -28,9 +28,10 @@ import org.jboss.tattletale.core.Location;
 import org.jboss.tattletale.reporting.DependenciesReport;
 import org.jboss.tattletale.reporting.Dump;
 import org.jboss.tattletale.reporting.EliminateJarsReport;
+import org.jboss.tattletale.reporting.JarReport;
 import org.jboss.tattletale.reporting.MultipleJarsReport;
 import org.jboss.tattletale.reporting.MultipleLocationsReport;
-import org.jboss.tattletale.reporting.JarReport;
+import org.jboss.tattletale.reporting.NoVersionReport;
 import org.jboss.tattletale.reporting.Report;
 import org.jboss.tattletale.reporting.SunJava5;
 import org.jboss.tattletale.reporting.SunJava6;
@@ -280,6 +281,10 @@ public class Main
       Report eliminateJars = new EliminateJarsReport(archives);
       eliminateJars.generate(outputDir);
       generalReports.add(eliminateJars);
+
+      Report noVersion = new NoVersionReport(archives);
+      noVersion.generate(outputDir);
+      generalReports.add(noVersion);
 
       Dump.generateIndex(dependenciesReports, generalReports, archiveReports, outputDir);
       Dump.generateCSS(outputDir);
