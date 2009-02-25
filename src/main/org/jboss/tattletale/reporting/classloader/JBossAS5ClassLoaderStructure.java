@@ -107,9 +107,10 @@ public class JBossAS5ClassLoaderStructure extends JBossASClassLoaderStructure
                         if (!f.endsWith("lib" + File.separator))
                         {
                            int deploy = f.indexOf("deploy");
+                           int deployers = f.indexOf("deployers");
 
                            // server/xxx/deploy
-                           if (deploy != -1)
+                           if (deploy != -1 && deployers == -1)
                            {
                               String config = f.substring(0, deploy);
 
