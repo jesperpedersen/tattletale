@@ -126,6 +126,16 @@ public class JBossAS5ClassLoaderStructure extends JBossASClassLoaderStructure
                                  return true;
                               }
                            }
+                           else if (deployers != -1)
+                           {
+                              String config = f.substring(0, deployers);
+
+                              // server/xxx/lib
+                              if (t.equals(config + "lib" + File.separator))
+                              {
+                                 return true;
+                              }
+                           }
                         }
                      }
                   }
