@@ -35,16 +35,16 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 /**
- * Dependencies report
+ * Depends On report
  * @author Jesper Pedersen <jesper.pedersen@jboss.org>
  */
-public class DependenciesReport extends Report
+public class DependsOnReport extends Report
 {
    /** NAME */
-   private static final String NAME = "Report";
+   private static final String NAME = "Depends On";
 
    /** DIRECTORY */
-   private static final String DIRECTORY = "dependencies";
+   private static final String DIRECTORY = "dependson";
 
    /** Known archives */
    private Set<Archive> known;
@@ -56,7 +56,7 @@ public class DependenciesReport extends Report
     * Constructor
     * @param archives The archives
     */
-   public DependenciesReport(SortedSet<Archive> archives, Set<Archive> known, String classloaderStructure)
+   public DependsOnReport(SortedSet<Archive> archives, Set<Archive> known, String classloaderStructure)
    {
       super(ReportSeverity.INFO, archives);
       this.known = known;
@@ -108,14 +108,14 @@ public class DependenciesReport extends Report
          bw.write("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\" \"http://www.w3.org/TR/html4/loose.dtd\">" + Dump.NEW_LINE);
          bw.write("<html>" + Dump.NEW_LINE);
          bw.write("<head>" + Dump.NEW_LINE);
-         bw.write("  <title>" + Version.FULL_VERSION + ": Dependencies</title>" + Dump.NEW_LINE);
+         bw.write("  <title>" + Version.FULL_VERSION + ": " + NAME + "</title>" + Dump.NEW_LINE);
          bw.write("  <meta http-equiv=\"Content-Type\" content=\"text/html;charset=utf-8\">" + Dump.NEW_LINE);
          bw.write("  <link rel=\"stylesheet\" type=\"text/css\" href=\"../style.css\">" + Dump.NEW_LINE);
          bw.write("</head>" + Dump.NEW_LINE);
          bw.write("<body>" + Dump.NEW_LINE);
          bw.write(Dump.NEW_LINE);
 
-         bw.write("<h1>Dependencies</h1>" + Dump.NEW_LINE);
+         bw.write("<h1>" + NAME + "</h1>" + Dump.NEW_LINE);
 
          bw.write("<a href=\"../index.html\">Main</a>" + Dump.NEW_LINE);
          bw.write("<p>" + Dump.NEW_LINE);
@@ -124,7 +124,7 @@ public class DependenciesReport extends Report
          
          bw.write("  <tr>" + Dump.NEW_LINE);
          bw.write("     <th>Jar file</th>" + Dump.NEW_LINE);
-         bw.write("     <th>Dependencies</th>" + Dump.NEW_LINE);
+         bw.write("     <th>Depends On</th>" + Dump.NEW_LINE);
          bw.write("  </tr>" + Dump.NEW_LINE);
 
          boolean odd = true;
@@ -232,7 +232,7 @@ public class DependenciesReport extends Report
       }
       catch (Exception e)
       {
-         System.err.println("DependenciesReport: " + e.getMessage());
+         System.err.println("DependsOnReport: " + e.getMessage());
          e.printStackTrace(System.err);
       }
    }

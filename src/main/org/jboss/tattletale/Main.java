@@ -25,7 +25,7 @@ import org.jboss.tattletale.analyzers.ArchiveScanner;
 import org.jboss.tattletale.analyzers.DirectoryScanner;
 import org.jboss.tattletale.core.Archive;
 import org.jboss.tattletale.core.Location;
-import org.jboss.tattletale.reporting.DependenciesReport;
+import org.jboss.tattletale.reporting.DependsOnReport;
 import org.jboss.tattletale.reporting.Dump;
 import org.jboss.tattletale.reporting.EliminateJarsReport;
 import org.jboss.tattletale.reporting.JarReport;
@@ -259,7 +259,7 @@ public class Main
       SortedSet<Report> generalReports = new TreeSet<Report>();
       SortedSet<Report> archiveReports = new TreeSet<Report>();
 
-      Report dependencies = new DependenciesReport(archives, known, classloaderStructure);
+      Report dependencies = new DependsOnReport(archives, known, classloaderStructure);
       dependencies.generate(outputDir);
       dependenciesReports.add(dependencies);
 
