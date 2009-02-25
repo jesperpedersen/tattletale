@@ -86,7 +86,7 @@ public class MultipleLocationsReport extends Report
          bw.write("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\" \"http://www.w3.org/TR/html4/loose.dtd\">" + Dump.NEW_LINE);
          bw.write("<html>" + Dump.NEW_LINE);
          bw.write("<head>" + Dump.NEW_LINE);
-         bw.write("  <title>" + Version.FULL_VERSION + ": Multiple Locations</title>" + Dump.NEW_LINE);
+         bw.write("  <title>" + Version.FULL_VERSION + ": " + NAME + "</title>" + Dump.NEW_LINE);
          bw.write("  <meta http-equiv=\"Content-Type\" content=\"text/html;charset=utf-8\">" + Dump.NEW_LINE);
          bw.write("  <link rel=\"stylesheet\" type=\"text/css\" href=\"../style.css\">" + Dump.NEW_LINE);
          bw.write("</head>" + Dump.NEW_LINE);
