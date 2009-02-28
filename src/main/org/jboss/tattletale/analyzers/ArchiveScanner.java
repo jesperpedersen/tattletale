@@ -144,6 +144,8 @@ public class ArchiveScanner
             version = mainAttributes.getValue("Implementation-Version");
             if (version == null)
                version = mainAttributes.getValue("Version");
+            if (version == null)
+               version = mainAttributes.getValue("Specification-Version");
          }
          Location location = new Location(filename, version);
 
