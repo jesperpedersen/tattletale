@@ -14,6 +14,7 @@ The tool will provide you with reports that can help you
 * Verify the SerialVersionUID of a class
 * Find similar JAR files that have different version numbers
 * Find JAR files without a version number
+* Locate a class in a JAR file
 
 JBoss Tattletale will recursive scan the directory pass as the argument for JAR files and then
 build the reports as HTML files.

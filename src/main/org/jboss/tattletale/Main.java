@@ -25,6 +25,7 @@ import org.jboss.tattletale.analyzers.ArchiveScanner;
 import org.jboss.tattletale.analyzers.DirectoryScanner;
 import org.jboss.tattletale.core.Archive;
 import org.jboss.tattletale.core.Location;
+import org.jboss.tattletale.reporting.ClassLocationReport;
 import org.jboss.tattletale.reporting.DependantsReport;
 import org.jboss.tattletale.reporting.DependsOnReport;
 import org.jboss.tattletale.reporting.Dump;
@@ -290,6 +291,10 @@ public class Main
       Report noVersion = new NoVersionReport(archives);
       noVersion.generate(outputDir);
       generalReports.add(noVersion);
+
+      Report classLocation = new ClassLocationReport(archives, gProvides);
+      classLocation.generate(outputDir);
+      generalReports.add(classLocation);
 
       Dump.generateIndex(dependenciesReports, generalReports, archiveReports, outputDir);
       Dump.generateCSS(outputDir);
