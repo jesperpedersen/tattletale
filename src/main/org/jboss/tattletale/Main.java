@@ -37,6 +37,7 @@ import org.jboss.tattletale.reporting.NoVersionReport;
 import org.jboss.tattletale.reporting.Report;
 import org.jboss.tattletale.reporting.SunJava5;
 import org.jboss.tattletale.reporting.SunJava6;
+import org.jboss.tattletale.reporting.TransitiveDependsOnReport;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -246,10 +247,10 @@ public class Main
    /**
     * Generate the basic reports to the output directory
     * @param outputDir Where the reports go
-    * @param classloaderStructure 
-    * @param archives
-    * @param gProvides
-    * @param known
+    * @param classloaderStructure The class loader structure
+    * @param archives The archives
+    * @param gProvides The global provides
+    * @param known The known archives
     */
    private static void outputReport(String outputDir, 
                                     String classloaderStructure,
@@ -268,6 +269,10 @@ public class Main
       Report dependants = new DependantsReport(archives, classloaderStructure);
       dependants.generate(outputDir);
       dependenciesReports.add(dependants);
+
+      Report transitiveDependsOn = new TransitiveDependsOnReport(archives, known, classloaderStructure);
+      transitiveDependsOn.generate(outputDir);
+      dependenciesReports.add(transitiveDependsOn);
 
       for (Archive a : archives)
       {
