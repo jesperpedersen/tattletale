@@ -37,6 +37,7 @@ import org.jboss.tattletale.reporting.NoVersionReport;
 import org.jboss.tattletale.reporting.Report;
 import org.jboss.tattletale.reporting.SunJava5;
 import org.jboss.tattletale.reporting.SunJava6;
+import org.jboss.tattletale.reporting.TransitiveDependantsReport;
 import org.jboss.tattletale.reporting.TransitiveDependsOnReport;
 
 import java.io.File;
@@ -273,6 +274,10 @@ public class Main
       Report transitiveDependsOn = new TransitiveDependsOnReport(archives, known, classloaderStructure);
       transitiveDependsOn.generate(outputDir);
       dependenciesReports.add(transitiveDependsOn);
+
+      Report transitiveDependants = new TransitiveDependantsReport(archives, classloaderStructure);
+      transitiveDependants.generate(outputDir);
+      dependenciesReports.add(transitiveDependants);
 
       for (Archive a : archives)
       {
