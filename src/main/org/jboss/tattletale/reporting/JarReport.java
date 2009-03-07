@@ -128,6 +128,29 @@ public class JarReport extends ArchiveReport
          bw.write("  </tr>" + Dump.NEW_LINE);
 
          bw.write("  <tr class=\"rowodd\">" + Dump.NEW_LINE);
+         bw.write("     <td>Manifest</td>" + Dump.NEW_LINE);
+         bw.write("     <td>");
+
+         if (archive.getManifest() != null)
+         {
+            Iterator<String> mit = archive.getManifest().iterator();
+            while (mit.hasNext())
+            {
+               String m = mit.next();
+
+               bw.write(m);
+
+               if (mit.hasNext())
+               {
+                  bw.write("<br>");
+               }
+            }
+         }
+
+         bw.write("</td>" + Dump.NEW_LINE);
+         bw.write("  </tr>" + Dump.NEW_LINE);
+
+         bw.write("  <tr class=\"roweven\">" + Dump.NEW_LINE);
          bw.write("     <td>Requires</td>" + Dump.NEW_LINE);
          bw.write("     <td>");
 
@@ -147,7 +170,7 @@ public class JarReport extends ArchiveReport
          bw.write("</td>" + Dump.NEW_LINE);
          bw.write("  </tr>" + Dump.NEW_LINE);
 
-         bw.write("  <tr class=\"roweven\">" + Dump.NEW_LINE);
+         bw.write("  <tr class=\"rowodd\">" + Dump.NEW_LINE);
          bw.write("     <td>Provides</td>" + Dump.NEW_LINE);
          bw.write("     <td>");
 

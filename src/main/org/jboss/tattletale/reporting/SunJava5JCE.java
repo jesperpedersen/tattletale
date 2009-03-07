@@ -79,7 +79,7 @@ public class SunJava5JCE extends Archive
     */
    public SunJava5JCE()
    {
-      super(ArchiveTypes.JAR, "Sun Java 5 (JCE)", null, null, null);
+      super(ArchiveTypes.JAR, "Sun Java 5 (JCE)", null, null, null, null);
 
       Location l = new Location("jce.jar", "Sun JDK5 JCE");
       addLocation(l);

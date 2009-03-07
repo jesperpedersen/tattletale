@@ -25,12 +25,15 @@ import org.jboss.tattletale.core.Archive;
 import org.jboss.tattletale.core.ArchiveTypes;
 import org.jboss.tattletale.core.Location;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Enumeration;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.SortedMap;
 import java.util.SortedSet;
@@ -137,6 +140,7 @@ public class ArchiveScanner
          }
 
          String version = null;
+         List<String> lManifest = null;
          Manifest manifest = jarFile.getManifest();
          if (manifest != null)
          {
@@ -146,10 +150,12 @@ public class ArchiveScanner
                version = mainAttributes.getValue("Version");
             if (version == null)
                version = mainAttributes.getValue("Specification-Version");
+
+            lManifest = readManifest(manifest);
          }
          Location location = new Location(filename, version);
 
-         archive = new Archive(ArchiveTypes.JAR, name, requires, provides, location);
+         archive = new Archive(ArchiveTypes.JAR, name, lManifest, requires, provides, location);
 
          Iterator<String> it = provides.keySet().iterator();
          while (it.hasNext())
@@ -189,5 +195,49 @@ public class ArchiveScanner
       }
 
       return archive;
+   }
+
+   /**
+    * Read the manifest
+    * @param manifest The manifest
+    * @return The manifest as strings
+    */
+   private static List<String> readManifest(Manifest manifest)
+   {
+      List<String> result = new ArrayList<String>();
+
+      try
+      {
+         ByteArrayOutputStream baos = new ByteArrayOutputStream();
+         manifest.write(baos);
+
+         String s = baos.toString();
+
+         StringBuffer sb = new StringBuffer();
+      
+         for (int i = 0; i < s.length(); i++)
+         {
+            char c = s.charAt(i);
+            if (c != '\n' && c != '\r')
+            {
+               sb = sb.append(c);
+            }
+            else
+            {
+               if (sb.length() > 0)
+               {
+                  result.add(sb.toString());
+                  sb = new StringBuffer();
+               }
+            }
+         }
+         if (sb.length() > 0)
+            result.add(sb.toString());
+      }
+      catch (IOException ioe)
+      {
+      }
+
+      return result;
    }
 }

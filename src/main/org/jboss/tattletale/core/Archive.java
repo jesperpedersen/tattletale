@@ -35,13 +35,16 @@ import java.util.TreeSet;
 public class Archive implements Serializable, Comparable
 {
    /** SerialVersionUID */
-   static final long serialVersionUID = -1101267607507289697L;
+   static final long serialVersionUID = 2365132930357115125L;
 
    /** Archve type */
    private int type;
 
    /** The name */
    private String name;
+
+   /** Manifest */
+   private List<String> manifest;
 
    /** Requires */
    private SortedSet<String> requires;
@@ -59,14 +62,16 @@ public class Archive implements Serializable, Comparable
     * Constructor
     * @param type The type
     * @param name The name
+    * @param manifest The manifest
     * @param requires The requires
     * @param provides The provides
     * @param location The location
     */
-   public Archive(int type, String name, SortedSet<String> requires, SortedMap<String, Long> provides, Location location)
+   public Archive(int type, String name, List<String> manifest, SortedSet<String> requires, SortedMap<String, Long> provides, Location location)
    {
       this.type = type;
       this.name = name;
+      this.manifest = manifest;
       this.requires = requires;
       this.provides = provides;
       this.locations = new TreeSet<Location>();
@@ -92,6 +97,15 @@ public class Archive implements Serializable, Comparable
    public String getName()
    {
       return name;
+   }
+
+   /**
+    * Get the manifest
+    * @return The value
+    */
+   public List<String> getManifest()
+   {
+      return manifest;
    }
 
    /**
@@ -210,8 +224,16 @@ public class Archive implements Serializable, Comparable
       sb = sb.append(getClass().getName());
       sb = sb.append("(\n");
 
+      sb = sb.append("type=");
+      sb = sb.append(type);
+      sb = sb.append("\n");
+
       sb = sb.append("name=");
       sb = sb.append(name);
+      sb = sb.append("\n");
+
+      sb = sb.append("manifest=");
+      sb = sb.append(manifest);
       sb = sb.append("\n");
 
       sb = sb.append("requires=");
