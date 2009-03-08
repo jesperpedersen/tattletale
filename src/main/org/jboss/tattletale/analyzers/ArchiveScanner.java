@@ -145,11 +145,26 @@ public class ArchiveScanner
          if (manifest != null)
          {
             Attributes mainAttributes = manifest.getMainAttributes();
-            version = mainAttributes.getValue("Implementation-Version");
+            version = mainAttributes.getValue("Specification-Version");
+            if (version == null)
+               version = mainAttributes.getValue("Implementation-Version");
             if (version == null)
                version = mainAttributes.getValue("Version");
-            if (version == null)
-               version = mainAttributes.getValue("Specification-Version");
+
+            if (version == null && manifest.getEntries() != null)
+            {
+               Iterator ait = manifest.getEntries().values().iterator();
+               while (version == null && ait.hasNext())
+               {
+                  Attributes attributes = (Attributes)ait.next();
+
+                  version = attributes.getValue("Specification-Version");
+                  if (version == null)
+                     version = attributes.getValue("Implementation-Version");
+                  if (version == null)
+                     version = attributes.getValue("Version");
+               }
+            }
 
             lManifest = readManifest(manifest);
          }
