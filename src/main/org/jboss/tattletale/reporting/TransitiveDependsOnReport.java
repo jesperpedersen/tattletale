@@ -23,6 +23,7 @@ package org.jboss.tattletale.reporting;
 
 import org.jboss.tattletale.Version;
 import org.jboss.tattletale.core.Archive;
+import org.jboss.tattletale.core.ArchiveTypes;
 import org.jboss.tattletale.core.Location;
 import org.jboss.tattletale.reporting.classloader.ClassLoaderStructure;
 
@@ -137,56 +138,61 @@ public class TransitiveDependsOnReport extends Report
          {
             Archive archive = it.next();
 
-            SortedSet<String> result = dependsOnMap.get(archive.getName());
-            if (result == null)
+            if (archive.getType() == ArchiveTypes.JAR)
             {
-               result = new TreeSet<String>();
-            }
-
-            Iterator<String> rit = archive.getRequires().iterator();
-            while (rit.hasNext())
-            {
-               String require = rit.next();
-
-               boolean found = false;
-               Iterator<Archive> ait = archives.iterator();
-               while (!found && ait.hasNext())
+               SortedSet<String> result = dependsOnMap.get(archive.getName());
+               if (result == null)
                {
-                  Archive a = ait.next();
-
-                  if (a.doesProvide(require) && (cls == null || cls.isVisible(archive, a)))
-                  {
-                     result.add(a.getName());
-                     found = true;
-                  }
+                  result = new TreeSet<String>();
                }
 
-               if (!found)
+               Iterator<String> rit = archive.getRequires().iterator();
+               while (rit.hasNext())
                {
-                  Iterator<Archive> kit = known.iterator();
-                  while (!found && kit.hasNext())
-                  {
-                     Archive a = kit.next();
+                  String require = rit.next();
 
-                     if (a.doesProvide(require))
+                  boolean found = false;
+                  Iterator<Archive> ait = archives.iterator();
+                  while (!found && ait.hasNext())
+                  {
+                     Archive a = ait.next();
+
+                     if (a.getType() == ArchiveTypes.JAR)
                      {
-                        found = true;
+                        if (a.doesProvide(require) && (cls == null || cls.isVisible(archive, a)))
+                        {
+                           result.add(a.getName());
+                           found = true;
+                        }
                      }
                   }
+
+                  if (!found)
+                  {
+                     Iterator<Archive> kit = known.iterator();
+                     while (!found && kit.hasNext())
+                     {
+                        Archive a = kit.next();
+
+                        if (a.doesProvide(require))
+                        {
+                           found = true;
+                        }
+                     }
+                  }
+
+                  if (!found)
+                  {
+                     result.add(require);
+                  }
                }
 
-               if (!found)
-               {
-                  result.add(require);
-               }
+               dependsOnMap.put(archive.getName(), result);
             }
-
-            dependsOnMap.put(archive.getName(), result);
          }
 
 
          SortedMap<String, SortedSet<String>> transitiveDependsOnMap = new TreeMap<String, SortedSet<String>>();
-
 
          Iterator mit = dependsOnMap.entrySet().iterator();
          while (mit.hasNext())

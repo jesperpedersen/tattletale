@@ -23,6 +23,7 @@ package org.jboss.tattletale.reporting;
 
 import org.jboss.tattletale.Version;
 import org.jboss.tattletale.core.Archive;
+import org.jboss.tattletale.core.ArchiveTypes;
 import org.jboss.tattletale.core.Location;
 import org.jboss.tattletale.reporting.classloader.ClassLoaderStructure;
 
@@ -133,27 +134,33 @@ public class TransitiveDependantsReport extends Report
          {
             Archive archive = it.next();
 
-            SortedSet<String> result = new TreeSet<String>();
-
-            Iterator<Archive> ait = archives.iterator();
-            while (ait.hasNext())
+            if (archive.getType() == ArchiveTypes.JAR)
             {
-               Archive a = ait.next();
+               SortedSet<String> result = new TreeSet<String>();
 
-               boolean found = false;
-               Iterator<String> rit = a.getRequires().iterator();
-               while (!found && rit.hasNext())
+               Iterator<Archive> ait = archives.iterator();
+               while (ait.hasNext())
                {
-                  String require = rit.next();
+                  Archive a = ait.next();
 
-                  if (archive.doesProvide(require) && (cls == null || cls.isVisible(a, archive)))
+                  if (a.getType() == ArchiveTypes.JAR)
                   {
-                     result.add(a.getName());
+                     boolean found = false;
+                     Iterator<String> rit = a.getRequires().iterator();
+                     while (!found && rit.hasNext())
+                     {
+                        String require = rit.next();
+
+                        if (archive.doesProvide(require) && (cls == null || cls.isVisible(a, archive)))
+                        {
+                           result.add(a.getName());
+                        }
+                     }
                   }
                }
-            }
 
-            dependantsMap.put(archive.getName(), result);
+               dependantsMap.put(archive.getName(), result);
+            }
          }
 
          SortedMap<String, SortedSet<String>> transitiveDependantsMap = new TreeMap<String, SortedSet<String>>();

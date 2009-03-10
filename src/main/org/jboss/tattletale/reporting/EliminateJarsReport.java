@@ -23,6 +23,7 @@ package org.jboss.tattletale.reporting;
 
 import org.jboss.tattletale.Version;
 import org.jboss.tattletale.core.Archive;
+import org.jboss.tattletale.core.ArchiveTypes;
 import org.jboss.tattletale.core.Location;
 
 import java.io.BufferedWriter;
@@ -112,71 +113,74 @@ public class EliminateJarsReport extends Report
          {
             Archive a = it.next();
 
-            SortedSet<Location> locations = a.getLocations();
-            Iterator<Location> lit = locations.iterator();
-
-            Location location = lit.next();
-
-            boolean include = false;
-            String version = location.getVersion();
-
-            while (!include && lit.hasNext())
+            if (a.getType() == ArchiveTypes.JAR)
             {
-               location = lit.next();
+               SortedSet<Location> locations = a.getLocations();
+               Iterator<Location> lit = locations.iterator();
+               
+               Location location = lit.next();
+               
+               boolean include = false;
+               String version = location.getVersion();
 
-               if (version == location.getVersion() || version.equals(location.getVersion()))
-               {
-                  // Same version identifier - just continue
-               }
-               else
-               {
-                  include = true;
-               }
-            }
-
-            if (include)
-            {
-               if (odd)
-               {
-                  bw.write("  <tr class=\"rowodd\">" + Dump.NEW_LINE);
-               }
-               else
-               {
-                  bw.write("  <tr class=\"roweven\">" + Dump.NEW_LINE);
-               }
-               bw.write("     <td><a href=\"../jar/" + a.getName() + ".html\">" + a.getName() + "</a></td>" + Dump.NEW_LINE);
-               bw.write("     <td>");
-
-               bw.write("       <table>" + Dump.NEW_LINE);
-            
-               lit = locations.iterator();
-               while (lit.hasNext())
+               while (!include && lit.hasNext())
                {
                   location = lit.next();
 
-                  bw.write("      <tr>" + Dump.NEW_LINE);
-                  
-                  bw.write("        <td>" + location.getFilename() + "</td>" + Dump.NEW_LINE);
-                  bw.write("        <td>");
-                  if (location.getVersion() != null)
+                  if (version == location.getVersion() || version.equals(location.getVersion()))
                   {
-                     bw.write(location.getVersion());
+                     // Same version identifier - just continue
                   }
                   else
                   {
-                     bw.write("<i>Not listed</i>");
+                     include = true;
                   }
-                  bw.write("</td>" + Dump.NEW_LINE);
-            
-                  bw.write("      </tr>" + Dump.NEW_LINE);
                }
-               
-               bw.write("       </table>" + Dump.NEW_LINE);
-               
-               bw.write("</td>" + Dump.NEW_LINE);
-               bw.write("  </tr>" + Dump.NEW_LINE);
-               
-               odd = !odd;
+
+               if (include)
+               {
+                  if (odd)
+                  {
+                     bw.write("  <tr class=\"rowodd\">" + Dump.NEW_LINE);
+                  }
+                  else
+                  {
+                     bw.write("  <tr class=\"roweven\">" + Dump.NEW_LINE);
+                  }
+                  bw.write("     <td><a href=\"../jar/" + a.getName() + ".html\">" + a.getName() + "</a></td>" + Dump.NEW_LINE);
+                  bw.write("     <td>");
+
+                  bw.write("       <table>" + Dump.NEW_LINE);
+            
+                  lit = locations.iterator();
+                  while (lit.hasNext())
+                  {
+                     location = lit.next();
+
+                     bw.write("      <tr>" + Dump.NEW_LINE);
+                     
+                     bw.write("        <td>" + location.getFilename() + "</td>" + Dump.NEW_LINE);
+                     bw.write("        <td>");
+                     if (location.getVersion() != null)
+                     {
+                        bw.write(location.getVersion());
+                     }
+                     else
+                     {
+                        bw.write("<i>Not listed</i>");
+                     }
+                     bw.write("</td>" + Dump.NEW_LINE);
+            
+                     bw.write("      </tr>" + Dump.NEW_LINE);
+                  }
+                  
+                  bw.write("       </table>" + Dump.NEW_LINE);
+                  
+                  bw.write("</td>" + Dump.NEW_LINE);
+                  bw.write("  </tr>" + Dump.NEW_LINE);
+                  
+                  odd = !odd;
+               }
             }
          }
 

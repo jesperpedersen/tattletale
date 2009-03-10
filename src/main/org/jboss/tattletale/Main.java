@@ -24,6 +24,7 @@ package org.jboss.tattletale;
 import org.jboss.tattletale.analyzers.ArchiveScanner;
 import org.jboss.tattletale.analyzers.DirectoryScanner;
 import org.jboss.tattletale.core.Archive;
+import org.jboss.tattletale.core.ArchiveTypes;
 import org.jboss.tattletale.core.Location;
 import org.jboss.tattletale.reporting.ClassLocationReport;
 import org.jboss.tattletale.reporting.DependantsReport;
@@ -281,9 +282,12 @@ public class Main
 
       for (Archive a : archives)
       {
-         Report jar = new JarReport(a);
-         jar.generate(outputDir);
-         archiveReports.add(jar);
+         if (a.getType() == ArchiveTypes.JAR)
+         {
+            Report jar = new JarReport(a);
+            jar.generate(outputDir);
+            archiveReports.add(jar);
+         }
       }
 
       Report multipleJars = new MultipleJarsReport(archives, gProvides);

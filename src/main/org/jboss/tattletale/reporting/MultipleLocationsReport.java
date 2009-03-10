@@ -23,6 +23,7 @@ package org.jboss.tattletale.reporting;
 
 import org.jboss.tattletale.Version;
 import org.jboss.tattletale.core.Archive;
+import org.jboss.tattletale.core.ArchiveTypes;
 import org.jboss.tattletale.core.Location;
 
 import java.io.BufferedWriter;
@@ -109,7 +110,7 @@ public class MultipleLocationsReport extends Report
 
          for (Archive a : archives)
          {
-            if (a.getLocations().size() > 1)
+            if (a.getType() == ArchiveTypes.JAR && a.getLocations().size() > 1)
             {
                if (odd)
                {

@@ -24,6 +24,7 @@ package org.jboss.tattletale.reporting;
 import org.jboss.tattletale.core.Archive;
 import org.jboss.tattletale.core.ArchiveTypes;
 import org.jboss.tattletale.core.Location;
+import org.jboss.tattletale.core.NestableArchive;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -36,7 +37,7 @@ import java.util.TreeSet;
  * Sun: Java 5
  * @author Jesper Pedersen <jesper.pedersen@jboss.org>
  */
-public class SunJava5 extends Archive
+public class SunJava5 extends NestableArchive
 {
    /** Class set */
    private static SortedSet<String> classSet = new TreeSet<String>();

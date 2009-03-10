@@ -23,6 +23,7 @@ package org.jboss.tattletale.reporting;
 
 import org.jboss.tattletale.Version;
 import org.jboss.tattletale.core.Archive;
+import org.jboss.tattletale.core.ArchiveTypes;
 import org.jboss.tattletale.core.Location;
 import org.jboss.tattletale.reporting.classloader.ClassLoaderStructure;
 
@@ -134,87 +135,90 @@ public class DependsOnReport extends Report
          {
             Archive archive = it.next();
 
-            if (odd)
+            if (archive.getType() == ArchiveTypes.JAR)
             {
-               bw.write("  <tr class=\"rowodd\">" + Dump.NEW_LINE);
-            }
-            else
-            {
-               bw.write("  <tr class=\"roweven\">" + Dump.NEW_LINE);
-            }
-            bw.write("     <td><a href=\"../jar/" + archive.getName() + ".html\">" + archive.getName() + "</a></td>" + Dump.NEW_LINE);
-            bw.write("     <td>");
-
-            SortedSet<String> result = new TreeSet<String>();
-
-            Iterator<String> rit = archive.getRequires().iterator();
-            while (rit.hasNext())
-            {
-               String require = rit.next();
-
-               boolean found = false;
-               Iterator<Archive> ait = archives.iterator();
-               while (!found && ait.hasNext())
+               if (odd)
                {
-                  Archive a = ait.next();
-
-                  if (a.doesProvide(require) && (cls == null || cls.isVisible(archive, a)))
-                  {
-                     result.add(a.getName());
-                     found = true;
-                  }
+                  bw.write("  <tr class=\"rowodd\">" + Dump.NEW_LINE);
                }
-
-               if (!found)
+               else
                {
-                  Iterator<Archive> kit = known.iterator();
-                  while (!found && kit.hasNext())
-                  {
-                     Archive a = kit.next();
+                  bw.write("  <tr class=\"roweven\">" + Dump.NEW_LINE);
+               }
+               bw.write("     <td><a href=\"../jar/" + archive.getName() + ".html\">" + archive.getName() + "</a></td>" + Dump.NEW_LINE);
+               bw.write("     <td>");
+               
+               SortedSet<String> result = new TreeSet<String>();
+               
+               Iterator<String> rit = archive.getRequires().iterator();
+               while (rit.hasNext())
+               {
+                  String require = rit.next();
 
-                     if (a.doesProvide(require))
+                  boolean found = false;
+                  Iterator<Archive> ait = archives.iterator();
+                  while (!found && ait.hasNext())
+                  {
+                     Archive a = ait.next();
+                     
+                     if (a.doesProvide(require) && (cls == null || cls.isVisible(archive, a)))
                      {
+                        result.add(a.getName());
                         found = true;
                      }
                   }
+
+                  if (!found)
+                  {
+                     Iterator<Archive> kit = known.iterator();
+                     while (!found && kit.hasNext())
+                     {
+                        Archive a = kit.next();
+
+                        if (a.doesProvide(require))
+                        {
+                           found = true;
+                        }
+                     }
+                  }
+
+                  if (!found)
+                  {
+                     result.add(require);
+                  }
                }
 
-               if (!found)
+               if (result.size() == 0)
                {
-                  result.add(require);
+                  bw.write("&nbsp;");
                }
-            }
-
-            if (result.size() == 0)
-            {
-               bw.write("&nbsp;");
-            }
-            else
-            {
-               Iterator<String> resultIt = result.iterator();
-               while (resultIt.hasNext())
+               else
                {
-                  String r = resultIt.next();
-                  if (r.endsWith(".jar"))
+                  Iterator<String> resultIt = result.iterator();
+                  while (resultIt.hasNext())
                   {
-                     bw.write("<a href=\"../jar/" + r + ".html\">" + r + "</a>");
-                  }
-                  else
-                  {
-                     bw.write("<i>" + r + "</i>");                  
-                  }
+                     String r = resultIt.next();
+                     if (r.endsWith(".jar"))
+                     {
+                        bw.write("<a href=\"../jar/" + r + ".html\">" + r + "</a>");
+                     }
+                     else
+                     {
+                        bw.write("<i>" + r + "</i>");                  
+                     }
                
-                  if (resultIt.hasNext())
-                  {
-                     bw.write(", ");
+                     if (resultIt.hasNext())
+                     {
+                        bw.write(", ");
+                     }
                   }
                }
+               
+               bw.write("</td>" + Dump.NEW_LINE);
+               bw.write("  </tr>" + Dump.NEW_LINE);
+               
+               odd = !odd;
             }
-
-            bw.write("</td>" + Dump.NEW_LINE);
-            bw.write("  </tr>" + Dump.NEW_LINE);
-
-            odd = !odd;
          }
 
          bw.write("</table>" + Dump.NEW_LINE);

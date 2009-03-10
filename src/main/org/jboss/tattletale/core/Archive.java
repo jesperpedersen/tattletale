@@ -22,7 +22,6 @@
 package org.jboss.tattletale.core;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.SortedMap;
 import java.util.SortedSet;
@@ -32,10 +31,10 @@ import java.util.TreeSet;
  * Archive
  * @author Jesper Pedersen <jesper.pedersen@jboss.org>
  */
-public class Archive implements Serializable, Comparable
+public abstract class Archive implements Serializable, Comparable
 {
    /** SerialVersionUID */
-   static final long serialVersionUID = 2365132930357115125L;
+   static final long serialVersionUID = 6584569765298595390L;
 
    /** Archve type */
    private int type;
@@ -55,9 +54,6 @@ public class Archive implements Serializable, Comparable
    /** Locations */
    private SortedSet<Location> locations;
 
-   /** Sub-archives */
-   private List<Archive> subArchives;
-
    /**
     * Constructor
     * @param type The type
@@ -75,7 +71,6 @@ public class Archive implements Serializable, Comparable
       this.requires = requires;
       this.provides = provides;
       this.locations = new TreeSet<Location>();
-      this.subArchives = null;
 
       if (location != null)
          this.locations.add(location);
@@ -142,27 +137,6 @@ public class Archive implements Serializable, Comparable
    public void addLocation(Location value)
    {
       locations.add(value);
-   }
-
-   /**
-    * Get the sub-archives
-    * @return The value
-    */
-   public List<Archive> getSubArchives()
-   {
-      return subArchives;
-   }
-
-   /**
-    * Add a sub-archive
-    * @param value The value
-    */
-   public void addSubArchive(Archive value)
-   {
-      if (subArchives == null)
-         subArchives = new ArrayList<Archive>();
-
-      subArchives.add(value);
    }
 
    /**

@@ -23,6 +23,7 @@ package org.jboss.tattletale.reporting;
 
 import org.jboss.tattletale.Version;
 import org.jboss.tattletale.core.Archive;
+import org.jboss.tattletale.core.ArchiveTypes;
 import org.jboss.tattletale.core.Location;
 import org.jboss.tattletale.reporting.classloader.ClassLoaderStructure;
 
@@ -130,68 +131,71 @@ public class DependantsReport extends Report
          {
             Archive archive = it.next();
 
-            if (odd)
+            if (archive.getType() == ArchiveTypes.JAR)
             {
-               bw.write("  <tr class=\"rowodd\">" + Dump.NEW_LINE);
-            }
-            else
-            {
-               bw.write("  <tr class=\"roweven\">" + Dump.NEW_LINE);
-            }
-            bw.write("     <td><a href=\"../jar/" + archive.getName() + ".html\">" + archive.getName() + "</a></td>" + Dump.NEW_LINE);
-            bw.write("     <td>");
-
-
-            SortedSet<String> result = new TreeSet<String>();
-
-            Iterator<Archive> ait = archives.iterator();
-            while (ait.hasNext())
-            {
-               Archive a = ait.next();
-
-               boolean found = false;
-               Iterator<String> rit = a.getRequires().iterator();
-               while (!found && rit.hasNext())
+               if (odd)
                {
-                  String require = rit.next();
-
-                  if (archive.doesProvide(require) && (cls == null || cls.isVisible(a, archive)))
-                  {
-                     result.add(a.getName());
-                  }
+                  bw.write("  <tr class=\"rowodd\">" + Dump.NEW_LINE);
                }
-            }
-
-            if (result.size() == 0)
-            {
-               bw.write("&nbsp;");
-            }
-            else
-            {
-               Iterator<String> resultIt = result.iterator();
-               while (resultIt.hasNext())
+               else
                {
-                  String r = resultIt.next();
-                  if (r.endsWith(".jar"))
-                  {
-                     bw.write("<a href=\"../jar/" + r + ".html\">" + r + "</a>");
-                  }
-                  else
-                  {
-                     bw.write("<i>" + r + "</i>");                  
-                  }
+                  bw.write("  <tr class=\"roweven\">" + Dump.NEW_LINE);
+               }
+               bw.write("     <td><a href=\"../jar/" + archive.getName() + ".html\">" + archive.getName() + "</a></td>" + Dump.NEW_LINE);
+               bw.write("     <td>");
+
+
+               SortedSet<String> result = new TreeSet<String>();
                
-                  if (resultIt.hasNext())
+               Iterator<Archive> ait = archives.iterator();
+               while (ait.hasNext())
+               {
+                  Archive a = ait.next();
+
+                  boolean found = false;
+                  Iterator<String> rit = a.getRequires().iterator();
+                  while (!found && rit.hasNext())
                   {
-                     bw.write(", ");
+                     String require = rit.next();
+
+                     if (archive.doesProvide(require) && (cls == null || cls.isVisible(a, archive)))
+                     {
+                        result.add(a.getName());
+                     }
                   }
                }
+               
+               if (result.size() == 0)
+               {
+                  bw.write("&nbsp;");
+               }
+               else
+               {
+                  Iterator<String> resultIt = result.iterator();
+                  while (resultIt.hasNext())
+                  {
+                     String r = resultIt.next();
+                     if (r.endsWith(".jar"))
+                     {
+                        bw.write("<a href=\"../jar/" + r + ".html\">" + r + "</a>");
+                     }
+                     else
+                        {
+                           bw.write("<i>" + r + "</i>");                  
+                        }
+                     
+                     if (resultIt.hasNext())
+                        {
+                           bw.write(", ");
+                        }
+                  }
+               }
+
+               bw.write("</td>" + Dump.NEW_LINE);
+               bw.write("  </tr>" + Dump.NEW_LINE);
+               
+               odd = !odd;
             }
-
-            bw.write("</td>" + Dump.NEW_LINE);
-            bw.write("  </tr>" + Dump.NEW_LINE);
-
-            odd = !odd;
          }
 
          bw.write("</table>" + Dump.NEW_LINE);

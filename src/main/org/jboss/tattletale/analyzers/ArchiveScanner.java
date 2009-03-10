@@ -22,7 +22,7 @@
 package org.jboss.tattletale.analyzers;
 
 import org.jboss.tattletale.core.Archive;
-import org.jboss.tattletale.core.ArchiveTypes;
+import org.jboss.tattletale.core.JarArchive;
 import org.jboss.tattletale.core.Location;
 
 import java.io.ByteArrayOutputStream;
@@ -170,7 +170,7 @@ public class ArchiveScanner
          }
          Location location = new Location(filename, version);
 
-         archive = new Archive(ArchiveTypes.JAR, name, lManifest, requires, provides, location);
+         archive = new JarArchive(name, lManifest, requires, provides, location);
 
          Iterator<String> it = provides.keySet().iterator();
          while (it.hasNext())
