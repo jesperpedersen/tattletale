@@ -206,17 +206,20 @@ public class Main
                {
                   Archive archive = ArchiveScanner.scan(file, gProvides);
                   
-                  SortedSet<Location> locations = locationsMap.get(archive.getName());
-                  if (locations == null)
+                  if (archive != null)
                   {
-                     locations = new TreeSet<Location>();
-                  }
-                  locations.addAll(archive.getLocations());
-                  locationsMap.put(archive.getName(), locations);
+                     SortedSet<Location> locations = locationsMap.get(archive.getName());
+                     if (locations == null)
+                     {
+                        locations = new TreeSet<Location>();
+                     }
+                     locations.addAll(archive.getLocations());
+                     locationsMap.put(archive.getName(), locations);
 
-                  if (!archives.contains(archive))
-                  {
-                     archives.add(archive);
+                     if (!archives.contains(archive))
+                     {
+                        archives.add(archive);
+                     }
                   }
                }
 

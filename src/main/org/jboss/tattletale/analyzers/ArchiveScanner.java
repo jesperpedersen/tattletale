@@ -215,6 +215,10 @@ public class ArchiveScanner
             requires.remove(provide);
          }
       }
+      catch (IOException ioe)
+      {
+         // Probably not a JAR archive
+      }
       catch (Exception e)
       {
          System.err.println("Scan: " + e.getMessage());
