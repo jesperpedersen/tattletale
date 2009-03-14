@@ -35,6 +35,7 @@ import org.jboss.tattletale.reporting.JarReport;
 import org.jboss.tattletale.reporting.MultipleJarsReport;
 import org.jboss.tattletale.reporting.MultipleLocationsReport;
 import org.jboss.tattletale.reporting.NoVersionReport;
+import org.jboss.tattletale.reporting.OSGiReport;
 import org.jboss.tattletale.reporting.Report;
 import org.jboss.tattletale.reporting.SunJava5;
 import org.jboss.tattletale.reporting.SunJava6;
@@ -309,6 +310,10 @@ public class Main
       Report classLocation = new ClassLocationReport(archives, gProvides);
       classLocation.generate(outputDir);
       generalReports.add(classLocation);
+
+      Report osgi = new OSGiReport(archives, known);
+      osgi.generate(outputDir);
+      generalReports.add(osgi);
 
       Dump.generateIndex(dependenciesReports, generalReports, archiveReports, outputDir);
       Dump.generateCSS(outputDir);

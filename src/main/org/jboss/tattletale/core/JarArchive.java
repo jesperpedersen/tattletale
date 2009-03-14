@@ -40,10 +40,16 @@ public class JarArchive extends Archive
     * @param manifest The manifest
     * @param requires The requires
     * @param provides The provides
+    * @param packageDependencies The package dependencies
     * @param location The location
     */
-   public JarArchive(String name, List<String> manifest, SortedSet<String> requires, SortedMap<String, Long> provides, Location location)
+   public JarArchive(String name, 
+                     List<String> manifest, 
+                     SortedSet<String> requires, 
+                     SortedMap<String, Long> provides, 
+                     SortedMap<String, SortedSet<String>> packageDependencies,
+                     Location location)
    {
-      super(ArchiveTypes.JAR, name, manifest, requires, provides, location);
+      super(ArchiveTypes.JAR, name, manifest, requires, provides, packageDependencies, location);
    }
 }

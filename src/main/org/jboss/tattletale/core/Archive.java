@@ -22,6 +22,7 @@
 package org.jboss.tattletale.core;
 
 import java.io.Serializable;
+import java.util.Iterator;
 import java.util.List;
 import java.util.SortedMap;
 import java.util.SortedSet;
@@ -34,7 +35,7 @@ import java.util.TreeSet;
 public abstract class Archive implements Serializable, Comparable
 {
    /** SerialVersionUID */
-   static final long serialVersionUID = 6584569765298595390L;
+   //static final long serialVersionUID = 6584569765298595390L;
 
    /** Archve type */
    private int type;
@@ -51,8 +52,14 @@ public abstract class Archive implements Serializable, Comparable
    /** Provides */
    private SortedMap<String, Long> provides;
 
+   /** Package dependencies */
+   private SortedMap<String, SortedSet<String>> packageDependencies;
+
    /** Locations */
    private SortedSet<Location> locations;
+
+   /** OSGi archive */
+   private transient Boolean osgi;
 
    /**
     * Constructor
@@ -61,16 +68,25 @@ public abstract class Archive implements Serializable, Comparable
     * @param manifest The manifest
     * @param requires The requires
     * @param provides The provides
+    * @param packageDependencies The package dependencies
     * @param location The location
     */
-   public Archive(int type, String name, List<String> manifest, SortedSet<String> requires, SortedMap<String, Long> provides, Location location)
+   public Archive(int type, 
+                  String name, 
+                  List<String> manifest, 
+                  SortedSet<String> requires, 
+                  SortedMap<String, Long> provides, 
+                  SortedMap<String, SortedSet<String>> packageDependencies,
+                  Location location)
    {
       this.type = type;
       this.name = name;
       this.manifest = manifest;
       this.requires = requires;
       this.provides = provides;
+      this.packageDependencies = packageDependencies;
       this.locations = new TreeSet<Location>();
+      this.osgi = null;
 
       if (location != null)
          this.locations.add(location);
@@ -104,6 +120,65 @@ public abstract class Archive implements Serializable, Comparable
    }
 
    /**
+    * Has manifest key
+    * @param key The manifest key
+    * @return True if the key is found; otherwise false
+    */
+   public boolean hasManifestKey(String key)
+   {
+      if (manifest != null)
+      {
+         for (String s : manifest)
+         {
+            if (s.startsWith(key))
+               return true;
+         }
+      }
+
+      return false;
+   }
+
+   /**
+    * Get manifest value
+    * @param key The manifest key
+    * @return The value; <code>null</code> if not found
+    */
+   public String getManifestValue(String key)
+   {
+      if (manifest != null)
+      {
+         StringBuffer value = new StringBuffer();
+         boolean found = false;
+
+         Iterator<String> it = manifest.iterator();
+         while (it.hasNext())
+         {
+            String s = it.next();
+            if (s.startsWith(key))
+            {
+               int idx = s.indexOf(":");
+               value = value.append(s.substring(idx + 1).trim());
+               found = true;
+            } 
+            else if (found)
+            {
+               int idx = s.indexOf(":");
+               if (idx != -1)
+               {
+                  return value.toString().trim();
+               }
+               else
+               {
+                  value = value.append(s.trim());
+               }
+            }
+         }
+      }
+
+      return null;
+   }
+
+   /**
     * Get the requires
     * @return The value
     */
@@ -119,6 +194,15 @@ public abstract class Archive implements Serializable, Comparable
    public SortedMap<String, Long> getProvides()
    {
       return provides;
+   }
+
+   /**
+    * Get the package dependencies
+    * @return The value
+    */
+   public SortedMap<String, SortedSet<String>> getPackageDependencies()
+   {
+      return packageDependencies;
    }
 
    /**
@@ -147,6 +231,33 @@ public abstract class Archive implements Serializable, Comparable
    public boolean doesProvide(String clz)
    {
       return provides.containsKey(clz);
+   }
+
+   /**
+    * Is this an OSGi archive ?
+    * @return True if OSGi; otherwise false
+    */
+   public boolean isOSGi()
+   {
+      if (osgi == null)
+         initOSGi();
+
+      return osgi.booleanValue();
+   }
+
+   /**
+    * Init OSGi
+    */
+   private void initOSGi()
+   {
+      if (hasManifestKey("Bundle-SymbolicName"))
+      {
+         osgi = Boolean.TRUE;
+      }
+      else
+      {
+         osgi = Boolean.FALSE;
+      }
    }
 
    /**
@@ -216,6 +327,10 @@ public abstract class Archive implements Serializable, Comparable
 
       sb = sb.append("provides=");
       sb = sb.append(provides);
+      sb = sb.append("\n");
+
+      sb = sb.append("packagedependencies=");
+      sb = sb.append(packageDependencies);
       sb = sb.append("\n");
 
       sb = sb.append("locations=");

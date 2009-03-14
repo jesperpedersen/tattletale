@@ -80,7 +80,7 @@ public class SunJava6 extends NestableArchive
     */
    public SunJava6()
    {
-      super(ArchiveTypes.JAR, "Sun Java 6", null, null, null, null);
+      super(ArchiveTypes.JAR, "Sun Java 6", null, null, null, null, null);
 
       Location l = new Location("rt.jar", "Sun JDK6");
       addLocation(l);

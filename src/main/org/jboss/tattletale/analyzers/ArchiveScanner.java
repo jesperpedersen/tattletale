@@ -85,6 +85,7 @@ public class ArchiveScanner
          String filename = file.getCanonicalPath();
          SortedSet<String> requires = new TreeSet<String>();
          SortedMap<String, Long> provides = new TreeMap<String, Long>();
+         SortedMap<String, SortedSet<String>> packageDependencies = new TreeMap<String, SortedSet<String>>();
 
          jarFile = new JarFile(file);
          Enumeration<JarEntry> e = jarFile.entries();
@@ -112,7 +113,13 @@ public class ArchiveScanner
                   }
 
                   provides.put(ctClz.getName(), serialVersionUID);
+
+                  int pkgIdx = ctClz.getName().lastIndexOf(".");
+                  String pkg = null;
                   
+                  if (pkgIdx != -1)
+                     pkg = ctClz.getName().substring(0, pkgIdx);
+
                   Collection c = ctClz.getRefClasses();
                   Iterator it = c.iterator();
 
@@ -120,6 +127,22 @@ public class ArchiveScanner
                   {
                      String s = (String)it.next();
                      requires.add(s);
+
+                     int rPkgIdx = s.lastIndexOf(".");
+                     String rPkg = null;
+                  
+                     if (rPkgIdx != -1)
+                        rPkg = s.substring(0, rPkgIdx);
+
+                     if (pkg != null && rPkg != null && !pkg.equals(rPkg))
+                     {
+                        SortedSet<String> pd = packageDependencies.get(pkg);
+                        if (pd == null)
+                           pd = new TreeSet<String>();
+
+                        pd.add(rPkg);
+                        packageDependencies.put(pkg, pd);
+                     }
                   }
                }
                catch (Exception ie)
@@ -170,7 +193,7 @@ public class ArchiveScanner
          }
          Location location = new Location(filename, version);
 
-         archive = new JarArchive(name, lManifest, requires, provides, location);
+         archive = new JarArchive(name, lManifest, requires, provides, packageDependencies, location);
 
          Iterator<String> it = provides.keySet().iterator();
          while (it.hasNext())
