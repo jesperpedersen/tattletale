@@ -36,21 +36,21 @@ import java.util.SortedSet;
  * Multiple locations report
  * @author Jesper Pedersen <jesper.pedersen@jboss.org>
  */
-public class NoVersionReport extends Report
+public class InvalidVersionReport extends Report
 {
    /** NAME */
-   private static final String NAME = "No version";
+   private static final String NAME = "Invalid version";
 
    /** DIRECTORY */
-   private static final String DIRECTORY = "noversion";
+   private static final String DIRECTORY = "invalidversion";
 
    /**
     * Constructor
     * @param archives The archives
     */
-   public NoVersionReport(SortedSet<Archive> archives)
+   public InvalidVersionReport(SortedSet<Archive> archives)
    {
-      super(ReportSeverity.ERROR, archives);
+      super(ReportSeverity.WARNING, archives);
    }
 
    /**
@@ -119,20 +119,9 @@ public class NoVersionReport extends Report
                Iterator<Location> lit = locations.iterator();
 
                Location location = lit.next();
-            
-               boolean include = false;
+               String version = location.getVersion();
 
-               while (!include && lit.hasNext())
-               {
-                  location = lit.next();
-
-                  if (location.getVersion() == null)
-                  {
-                     include = true;
-                  }
-               }
-
-               if (include)
+               if (version != null && !version.matches("\\d+(\\.\\d+(\\.\\d+(\\.[0-9a-zA-Z\\_\\-]+)?)?)?"))
                {
                   if (odd)
                   {
@@ -194,7 +183,7 @@ public class NoVersionReport extends Report
       }
       catch (Exception e)
       {
-         System.err.println("NoVersionReport: " + e.getMessage());
+         System.err.println("InvalidVersionReport: " + e.getMessage());
          e.printStackTrace(System.err);
       }
    }

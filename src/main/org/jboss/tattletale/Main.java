@@ -31,6 +31,7 @@ import org.jboss.tattletale.reporting.DependantsReport;
 import org.jboss.tattletale.reporting.DependsOnReport;
 import org.jboss.tattletale.reporting.Dump;
 import org.jboss.tattletale.reporting.EliminateJarsReport;
+import org.jboss.tattletale.reporting.InvalidVersionReport;
 import org.jboss.tattletale.reporting.JarReport;
 import org.jboss.tattletale.reporting.MultipleJarsReport;
 import org.jboss.tattletale.reporting.MultipleLocationsReport;
@@ -317,6 +318,10 @@ public class Main
       Report osgi = new OSGiReport(archives, known);
       osgi.generate(outputDir);
       generalReports.add(osgi);
+
+      Report invalidversion = new InvalidVersionReport(archives);
+      invalidversion.generate(outputDir);
+      generalReports.add(invalidversion);
 
       Dump.generateIndex(dependenciesReports, generalReports, archiveReports, outputDir);
       Dump.generateCSS(outputDir);
