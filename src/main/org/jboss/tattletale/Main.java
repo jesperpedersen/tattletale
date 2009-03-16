@@ -205,7 +205,7 @@ public class Main
 
                for (File file : fileList)
                {
-                  Archive archive = ArchiveScanner.scan(file, gProvides);
+                  Archive archive = ArchiveScanner.scan(file, gProvides, known);
                   
                   if (archive != null)
                   {

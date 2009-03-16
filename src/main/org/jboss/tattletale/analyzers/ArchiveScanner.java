@@ -35,6 +35,7 @@ import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.SortedMap;
 import java.util.SortedSet;
 import java.util.TreeMap;
@@ -63,16 +64,17 @@ public class ArchiveScanner
     */
    public static Archive scan(File file)
    {
-      return scan(file, null);
+      return scan(file, null, null);
    }
 
    /**
     * Scan an archive
     * @param file The file
     * @param gProvides The global provides map
+    * @param known The set of known archives
     * @return The archive
     */
-   public static Archive scan(File file, Map<String, SortedSet<String>> gProvides)
+   public static Archive scan(File file, Map<String, SortedSet<String>> gProvides, Set<Archive> known)
    {
       Archive archive = null;
       JarFile jarFile = null;
@@ -134,7 +136,20 @@ public class ArchiveScanner
                      if (rPkgIdx != -1)
                         rPkg = s.substring(0, rPkgIdx);
 
-                     if (pkg != null && rPkg != null && !pkg.equals(rPkg))
+                     boolean include = true;
+
+                     if (known != null)
+                     {
+                        Iterator<Archive> kit = known.iterator();
+                        while (include && kit.hasNext())
+                        {
+                           Archive a = kit.next();
+                           if (a.doesProvide(s))
+                              include = false;
+                        }
+                     }
+
+                     if (pkg != null && rPkg != null && !pkg.equals(rPkg) && include)
                      {
                         SortedSet<String> pd = packageDependencies.get(pkg);
                         if (pd == null)
