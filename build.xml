@@ -7,6 +7,7 @@
     <property name="doc.api.dir" value="${doc.dir}/api"/>
     <property name="src.dir" value="${basedir}/src"/>
     <property name="src.main.dir" value="${src.dir}/main"/>
+    <property name="src.java.dir" value="${src.main.dir}/java"/>
     <property name="etc.dir" value="${src.dir}/etc"/>
     <property name="dist.dir" value="${basedir}/dist"/>
 
@@ -64,7 +65,7 @@
             source="1.5"
             target="1.5"
             >
-            <src path="${src.main.dir}"/>
+            <src path="${src.java.dir}"/>
         </javac>
         <copy todir="${build.dir}">
             <fileset dir="${etc.dir}">
@@ -95,7 +96,7 @@
     <target name="doc">
         <mkdir dir="${doc.api.dir}"/>
         <javadoc packagenames="org.*"
-                 sourcepath="${src.main.dir}"
+                 sourcepath="${src.java.dir}"
                  destdir="${doc.api.dir}"
                  author="true"
                  version="true"

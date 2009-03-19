@@ -29,7 +29,7 @@
   </organization>
 
   <properties>
-    <version.jboss.javassist>3.9.0.GA</version.jboss.javassist>
+    <version.jboss.javassist>3.10.0.GA</version.jboss.javassist>
     <version.apache.ant>1.7.0</version.apache.ant>
     <version.jboss.test>1.1.0.GA</version.jboss.test>
     <version.junit>4.4</version.junit>
@@ -96,7 +96,7 @@
 
   <dependencies>
     <dependency>
-      <groupId>org.jboss</groupId>
+      <groupId>javassist</groupId>
       <artifactId>javassist</artifactId>
       <version>${version.jboss.javassist}</version>
     </dependency>
