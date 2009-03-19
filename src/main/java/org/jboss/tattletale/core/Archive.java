@@ -250,14 +250,7 @@ public abstract class Archive implements Serializable, Comparable
     */
    private void initOSGi()
    {
-      if (hasManifestKey("Bundle-SymbolicName"))
-      {
-         osgi = Boolean.TRUE;
-      }
-      else
-      {
-         osgi = Boolean.FALSE;
-      }
+      osgi = hasManifestKey("Bundle-SymbolicName");
    }
 
    /**
