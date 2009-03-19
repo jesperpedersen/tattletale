@@ -35,7 +35,7 @@ import java.util.TreeSet;
 public abstract class Archive implements Serializable, Comparable
 {
    /** SerialVersionUID */
-   //static final long serialVersionUID = 6584569765298595390L;
+   static final long serialVersionUID = -6526839068771149482L;
 
    /** Archve type */
    private int type;
