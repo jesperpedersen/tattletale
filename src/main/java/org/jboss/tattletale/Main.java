@@ -31,6 +31,7 @@ import org.jboss.tattletale.reporting.DependantsReport;
 import org.jboss.tattletale.reporting.DependsOnReport;
 import org.jboss.tattletale.reporting.Dump;
 import org.jboss.tattletale.reporting.EliminateJarsReport;
+import org.jboss.tattletale.reporting.GraphvizReport;
 import org.jboss.tattletale.reporting.InvalidVersionReport;
 import org.jboss.tattletale.reporting.JarReport;
 import org.jboss.tattletale.reporting.MultipleJarsReport;
@@ -284,6 +285,10 @@ public class Main
       Report transitiveDependants = new TransitiveDependantsReport(archives, classloaderStructure);
       transitiveDependants.generate(outputDir);
       dependenciesReports.add(transitiveDependants);
+
+      Report graphviz = new GraphvizReport(archives, known, classloaderStructure);
+      graphviz.generate(outputDir);
+      dependenciesReports.add(graphviz);
 
       for (Archive a : archives)
       {
