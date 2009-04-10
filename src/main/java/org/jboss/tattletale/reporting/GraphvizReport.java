@@ -31,6 +31,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -128,7 +129,8 @@ public class GraphvizReport extends Report
          
          bw.write("  <tr>" + Dump.NEW_LINE);
          bw.write("     <th>Jar file</th>" + Dump.NEW_LINE);
-         bw.write("     <th>File</th>" + Dump.NEW_LINE);
+         bw.write("     <th>Archives</th>" + Dump.NEW_LINE);
+         bw.write("     <th>Packages</th>" + Dump.NEW_LINE);
          bw.write("  </tr>" + Dump.NEW_LINE);
 
          boolean odd = true;
@@ -155,6 +157,8 @@ public class GraphvizReport extends Report
                   bw.write("  <tr class=\"roweven\">" + Dump.NEW_LINE);
                }
                bw.write("     <td><a href=\"../jar/" + archive.getName() + ".html\">" + archive.getName() + "</a></td>" + Dump.NEW_LINE);
+
+               // Archive level dependencies
                bw.write("     <td>");
                
                SortedSet<String> result = new TreeSet<String>();
@@ -211,6 +215,49 @@ public class GraphvizReport extends Report
                }
                
                bw.write("</td>" + Dump.NEW_LINE);
+
+               // Package level dependencies
+               bw.write("     <td>");
+
+               if (archive.getPackageDependencies().size() == 0)
+               {
+                  bw.write("&nbsp;");
+               }
+               else
+               {
+                  bw.write("<a href=\"" + archive.getName() + "/" + archive.getName() + "-package.dot\">.dot</a>");
+
+                  File doutput = new File(output, archive.getName());
+                  doutput.mkdirs();
+                  
+                  FileWriter dotfw = new FileWriter(doutput.getAbsolutePath() + File.separator + archive.getName() + "-package.dot");
+                  BufferedWriter dotw = new BufferedWriter(dotfw, 8192);
+
+                  dotw.write("digraph " + dotName(archive.getName()) + "_package_dependencies {" + Dump.NEW_LINE);
+                  dotw.write("  node [shape = box, fontsize=10.0];" + Dump.NEW_LINE);
+
+                  Iterator<Map.Entry<String, SortedSet<String>>> resultIt = archive.getPackageDependencies().entrySet().iterator();
+                  while (resultIt.hasNext())
+                  {
+                     Map.Entry<String, SortedSet<String>> entry = resultIt.next();
+
+                     String pkg = dotName(entry.getKey());
+                     SortedSet<String> deps = entry.getValue();
+
+                     for (String dep : deps)
+                     {
+                        dotw.write("  " + pkg + " -> " + dotName(dep) + ";" + Dump.NEW_LINE);
+                     }
+                  }
+
+                  dotw.write("}" + Dump.NEW_LINE);
+
+                  dotw.flush();
+                  dotw.close();
+               }
+               
+               bw.write("</td>" + Dump.NEW_LINE);
+
                bw.write("  </tr>" + Dump.NEW_LINE);
                
                odd = !odd;
