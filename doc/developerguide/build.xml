@@ -1,0 +1,27 @@
+<project name="developerguide" default="all" basedir=".">
+
+  <property name="build.dir" value="${basedir}/../../dist/developerguide"/>
+  <property name="pdf.name"  value="JBossTattletale-DevelopersGuide.pdf"/>
+  <import file="${basedir}/../../tools/docbook/support.xml"/>
+
+  <target name="all" depends="clean">
+    <mkdir dir="en/images" />
+    <antcall inheritRefs="true" target="lang.all"><param name="lang" value="en"/></antcall>
+  </target>
+
+  <target name="pdf">
+    <mkdir dir="en/images" />
+    <antcall inheritRefs="true" target="lang.docpdf"><param name="lang" value="en"/></antcall>
+  </target>
+
+  <target name="html">
+    <mkdir dir="en/images" />
+    <antcall inheritRefs="true" target="lang.dochtml"><param name="lang" value="en"/></antcall>
+  </target>
+
+  <target name="htmlsingle">
+    <mkdir dir="en/images" />
+    <antcall inheritRefs="true" target="lang.dochtmlsingle"><param name="lang" value="en"/></antcall>
+  </target>
+
+</project>
