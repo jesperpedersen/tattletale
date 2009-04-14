@@ -14,7 +14,8 @@
     <property name="name" value="jboss-tattletale"/>
     <property name="major" value="1"/>
     <property name="minor" value="0"/>
-    <property name="type" value="Beta4"/>
+    <property name="patch" value="0"/>
+    <property name="type" value="CR1"/>
 
     <property name="jboss-tattletale.jar" value="jboss-tattletale.jar"/>
 
@@ -143,24 +144,24 @@
     <!-- =================================================================== -->
     <target name="release" depends="clean,dist">
         <delete dir="${build.dir}"/>
-        <mkdir dir="${build.dir}/${name}-${major}.${minor}.${type}"/>
-        <move todir="${build.dir}/${name}-${major}.${minor}.${type}"
+        <mkdir dir="${build.dir}/${name}-${major}.${minor}.${patch}.${type}"/>
+        <move todir="${build.dir}/${name}-${major}.${minor}.${patch}.${type}"
               includeEmptyDirs="false">
             <fileset dir="${dist.dir}"/>
         </move>
-        <zip destfile="${name}-${major}.${minor}.${type}.zip"
+        <zip destfile="${name}-${major}.${minor}.${patch}.${type}.zip"
              basedir="${build.dir}"/>
 
-        <tar destfile="${name}-${major}.${minor}.${type}.tar"
+        <tar destfile="${name}-${major}.${minor}.${patch}.${type}.tar"
              basedir="${build.dir}"/>
 
-        <gzip zipfile="${name}-${major}.${minor}.${type}.tar.gz" 
-              src="${name}-${major}.${minor}.${type}.tar"/>
+        <gzip zipfile="${name}-${major}.${minor}.${patch}.${type}.tar.gz" 
+              src="${name}-${major}.${minor}.${patch}.${type}.tar"/>
 
-        <bzip2 zipfile="${name}-${major}.${minor}.${type}.tar.bz2" 
-               src="${name}-${major}.${minor}.${type}.tar"/>
+        <bzip2 zipfile="${name}-${major}.${minor}.${patch}.${type}.tar.bz2" 
+               src="${name}-${major}.${minor}.${patch}.${type}.tar"/>
 
-        <delete file="${name}-${major}.${minor}.${type}.tar"/>
+        <delete file="${name}-${major}.${minor}.${patch}.${type}.tar"/>
 
     </target>
 
