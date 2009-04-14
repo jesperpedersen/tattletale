@@ -71,7 +71,7 @@ public abstract class Report implements Comparable
 
    /**
     * Generate the report(s)
-    * @param outputDirectoru The top-level output directory
+    * @param outputDirectory The top-level output directory
     */
    public abstract void generate(String outputDirectory);
 

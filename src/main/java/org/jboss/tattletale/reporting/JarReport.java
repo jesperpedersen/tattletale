@@ -43,7 +43,7 @@ public class JarReport extends ArchiveReport
 
    /**
     * Constructor
-    * @param archives The archives
+    * @param archive The archive
     */
    public JarReport(Archive archive)
    {
@@ -61,7 +61,7 @@ public class JarReport extends ArchiveReport
 
    /**
     * Generate the report(s)
-    * @param outputDirectoru The top-level output directory
+    * @param outputDirectory The top-level output directory
     */
    public void generate(String outputDirectory)
    {

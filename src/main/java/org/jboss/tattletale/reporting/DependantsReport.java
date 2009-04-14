@@ -80,7 +80,7 @@ public class DependantsReport extends Report
 
    /**
     * Generate the report(s)
-    * @param outputDirectoru The top-level output directory
+    * @param outputDirectory The top-level output directory
     */
    public void generate(String outputDirectory)
    {
