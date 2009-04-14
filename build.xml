@@ -108,7 +108,8 @@
                  bottom="Copyright &#169; 2009 JBoss (http://www.jboss.com/)">
              <link offline="true" href="http://java.sun.com/j2se/1.5/docs/api/" packagelistLoc="${java.home}/../docs/api"/>
         </javadoc>
-
+        <ant dir="doc/userguide" target="pdf"/>
+        <ant dir="doc/developerguide" target="pdf"/>
     </target>
 
     <!-- =================================================================== -->
@@ -133,8 +134,8 @@
         </copy>
         <copy todir="${dist.dir}">
             <fileset dir="${doc.dir}">
-               <include name="**/*.txt"/>
-               <include name="**/*.html"/>
+               <include name="*.txt"/>
+               <include name="*.html"/>
             </fileset>
         </copy>
     </target>
@@ -144,11 +145,23 @@
     <!-- =================================================================== -->
     <target name="release" depends="clean,dist">
         <delete dir="${build.dir}"/>
+
+        <ant dir="doc/userguide" target="pdf"/>
+        <ant dir="doc/developerguide" target="pdf"/>
+
         <mkdir dir="${build.dir}/${name}-${major}.${minor}.${patch}.${type}"/>
+
+        <move flatten="true" todir="${build.dir}/${name}-${major}.${minor}.${patch}.${type}">
+          <fileset dir="${build.dir}">
+            <include name="**/*.pdf"/>
+          </fileset>
+        </move>
+
         <move todir="${build.dir}/${name}-${major}.${minor}.${patch}.${type}"
               includeEmptyDirs="false">
             <fileset dir="${dist.dir}"/>
         </move>
+
         <zip destfile="${name}-${major}.${minor}.${patch}.${type}.zip"
              basedir="${build.dir}"/>
 
@@ -162,7 +175,6 @@
                src="${name}-${major}.${minor}.${patch}.${type}.tar"/>
 
         <delete file="${name}-${major}.${minor}.${patch}.${type}.tar"/>
-
     </target>
 
     <!-- =================================================================== -->

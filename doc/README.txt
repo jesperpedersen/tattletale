@@ -15,6 +15,7 @@ The tool will provide you with reports that can help you
 * Find similar JAR files that have different version numbers
 * Find JAR files without a version number
 * Locate a class in a JAR file
+* Get the OSGi status of your project
 
 JBoss Tattletale will recursive scan the directory pass as the argument for JAR files and then
 build the reports as HTML files.
@@ -26,50 +27,22 @@ JBoss Tattletale is licensed under GNU Lesser General Public License (LGPL) vers
 We hope that JBoss Tattletale will help you in your development tasks ! 
 
 
-Running the client:
--------------------
+Quick start:
+------------
 java -Xmx512m -jar jboss-tattletale.jar <scan-directory> [output-directory]
 
 Output: Analysis reports generate in current directory if no output-directory set.
 
-Ant Integration:
------------------
-TattleTale can be executed in ant build scripts.
 
-* Add jboss-tattletale.jar and javassist.jar to the ant classpath
-* Add xmlns:tattletale="antlib:org.jboss.tattletale.ant"> to your <project.. tag
-* Usage: <tattletale:report scanDir="" outputDir=""/>
-
-ClassLoader structure:
-----------------------
-JBoss Tattletale include functionality to identify certain classloader structures.
-The plugins must implement the 
-
- org.jboss.tattletale.reporting.classloader.ClassLoaderStructure
-
-interface and contain a default no-argument constructor.
+User guide:
+-----------
+The JBoss Tattletale user guide is located in JBossTattletale-UsersGuide.pdf.
 
 
-Current plugins:
+Developer guide:
+----------------
+The JBoss Tattletale developer guide is located in JBossTattletale-DevelopersGuide.pdf.
 
-* org.jboss.tattletale.reporting.classloader.NoopClassLoaderStructure
-
-  A no operation plugin that always will include the queried archive in the report
-
-* org.jboss.tattletale.reporting.classloader.JBossAS4ClassLoaderStructure
-
-  Plugin for the JBoss Application Server 4.x series
-
-* org.jboss.tattletale.reporting.classloader.JBossAS5ClassLoaderStructure
-
-  Plugin for the JBoss Application Server 5.x series
-
-
-The plugin is loaded through the 'classloader' key in jboss-tattletale.properties file.
-
-NOTE: This feature is currently based on directory structures and may therefore fail to
-identify archives that should be included in the reports. If you want to be sure that all
-archives are included use the NoopClassLoaderStructure plugin.
 
 Development:
 ------------
