@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.3CR3//EN"
+        "../../../tools/docbook/support/docbook-dtd/docbookx.dtd" [
+        <!ENTITY about SYSTEM "modules/about.xml">
+        <!ENTITY introduction SYSTEM "modules/introduction.xml">
+        <!ENTITY gettingstarted SYSTEM "modules/gettingstarted.xml">
+        <!ENTITY reports SYSTEM "modules/reports.xml">
+        <!ENTITY troubleshooting SYSTEM "modules/troubleshooting.xml">
+        ]>
+<book lang="en">
+   <bookinfo>
+      <authorgroup>
+        <author><firstname>Jesper</firstname><surname>Pedersen</surname></author>
+      </authorgroup>
+
+      <copyright>
+        <year>2009</year>
+        <holder>Red Hat Middleware</holder>
+      </copyright>
+
+      <title>JBoss Tattletale 1.0 User's Guide</title>
+
+   </bookinfo>
+
+   <toc></toc>
+
+   &about;
+
+   &introduction;
+
+   &gettingstarted;
+
+   &reports;
+
+   &troubleshooting;
+
+</book>

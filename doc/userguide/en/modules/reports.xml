@@ -1,0 +1,407 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter id="reports">
+   <title>Reports</title>
+
+   <section id="dependency">
+      <title>Dependency reports</title>
+
+      <!-- Dependants report -->
+      <section id="dependants">
+        <title>Dependants</title>
+
+        <para>The dependants report will lists which archives depends on a specific archive.</para>
+
+        <table frame="all">
+          <title>Dependants report</title>
+          <tgroup cols="2" align="left" colsep="1" rowsep="1">
+            <colspec colname="c1"/>
+            <colspec colname="c2" colwidth="4*"/>
+            <thead>
+              <row>
+                <entry align="left">Archive</entry>
+                <entry align="left">Dependants</entry>
+              </row>
+            </thead>
+            <tbody>
+              <row>
+                <entry>The archive</entry>
+                <entry>A list of archives that depends on this archive</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </table>
+      </section>
+
+      <!-- Depends On report -->
+      <section id="dependson">
+        <title>Depends On report</title>
+
+        <para>The depends on report will lists which archives that an archive depends on.</para>
+
+        <table frame="all">
+          <title>Depends On report</title>
+          <tgroup cols="2" align="left" colsep="1" rowsep="1">
+            <colspec colname="c1"/>
+            <colspec colname="c2" colwidth="4*"/>
+            <thead>
+              <row>
+                <entry align="left">Archive</entry>
+                <entry align="left">Depends On</entry>
+              </row>
+            </thead>
+            <tbody>
+              <row>
+                <entry>The archive</entry>
+                <entry>A list of archives which the archive depends on. Classes which can't be found are listed
+                  in italic</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </table>
+      </section>
+
+      <!-- Graphical dependencies report -->
+      <section id="graphicaldependencies">
+        <title>Graphical dependencies report</title>
+
+        <para>The graphical dependencies report will create GraphViz dot files that show the dependencies as graphics.</para>
+
+        <para>As an example you can generate a PNG image using</para>
+     <programlisting>
+dot -Tpng myarchive.dot &gt; myarchive.png
+     </programlisting>
+
+        <para>See the GraphViz documentation for a full description on how to generate these images.</para>
+
+        <table frame="all">
+          <title>Depends On report</title>
+          <tgroup cols="3" align="left" colsep="1" rowsep="1">
+            <colspec colname="c1"/>
+            <colspec colname="c2"/>
+            <colspec colname="c3"/>
+            <thead>
+              <row>
+                <entry align="left">Archive</entry>
+                <entry align="left">Archives</entry>
+                <entry align="left">Packages</entry>
+              </row>
+            </thead>
+            <tbody>
+              <row>
+                <entry>The archive</entry>
+                <entry>GraphViz file that shows inter-archive dependencies</entry>
+                <entry>GraphViz file that shows inter-package dependencies</entry>
+              </row>
+            </tbody> 
+          </tgroup>
+        </table>
+      </section>
+
+      <!-- Transitive Dependants report -->
+      <section id="transitivedependants">
+        <title>Transitive Dependants</title>
+
+        <para>The transitive dependants report will lists all archives depends on a specific archive.</para>
+
+        <table frame="all">
+          <title>Transitive Dependants report</title>
+          <tgroup cols="2" align="left" colsep="1" rowsep="1">
+            <colspec colname="c1"/>
+            <colspec colname="c2" colwidth="4*"/>
+            <thead>
+              <row>
+                <entry align="left">Archive</entry>
+                <entry align="left">Dependants</entry>
+              </row>
+            </thead>
+            <tbody>
+              <row>
+                <entry>The archive</entry>
+                <entry>A list of all archives that depends on this archive</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </table>
+      </section>
+
+      <!-- Transitive Depends On report -->
+      <section id="transitivedependson">
+        <title>Transitive Depends On report</title>
+
+        <para>The transitive depends on report will lists all archives that an archive depends on.</para>
+
+        <table frame="all">
+          <title>Depends On report</title>
+          <tgroup cols="2" align="left" colsep="1" rowsep="1">
+            <colspec colname="c1"/>
+            <colspec colname="c2" colwidth="4*"/>
+            <thead>
+              <row>
+                <entry align="left">Archive</entry>
+                <entry align="left">Depends On</entry>
+              </row>
+            </thead>
+            <tbody>
+              <row>
+                <entry>The archive</entry>
+                <entry>A list of all archives which the archive depends on. Classes which can't be found are listed
+                  in italic</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </table>
+      </section>
+
+   </section>
+
+   <section id="general">
+      <title>General reports</title>
+
+      <!-- Class Location report -->
+      <section id="classlocation">
+        <title>Class Location</title>
+
+        <para>The class location will lists which archives that contain a specific class file.</para>
+
+        <table frame="all">
+          <title>Class Location report</title>
+          <tgroup cols="2" align="left" colsep="1" rowsep="1">
+            <colspec colname="c1"/>
+            <colspec colname="c2" colwidth="4*"/>
+            <thead>
+              <row>
+                <entry align="left">Class</entry>
+                <entry align="left">Jar file</entry>
+              </row>
+            </thead>
+            <tbody>
+              <row>
+                <entry>The class</entry>
+                <entry>The list of archives that contains the class</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </table>
+      </section>
+
+      <!-- OSGi report -->
+      <section id="osgi">
+        <title>OSGi</title>
+
+        <para>The OSGi report will display the OSGi state of your project.</para>
+
+        <table frame="all">
+          <title>OSGi report</title>
+          <tgroup cols="4" align="left" colsep="1" rowsep="1">
+            <colspec colname="c1"/>
+            <colspec colname="c2"/>
+            <colspec colname="c3"/>
+            <colspec colname="c4"/>
+            <thead>
+              <row>
+                <entry align="left">Archive</entry>
+                <entry align="left">OSGi</entry>
+                <entry align="left">Report</entry>
+                <entry align="left">Manifest</entry>
+              </row>
+            </thead>
+            <tbody>
+              <row>
+                <entry>The archive</entry>
+                <entry>The OSGi state of the archive</entry>
+                <entry>The OSGi report for the archive</entry>
+                <entry>A sample OSGi enabled MANIFEST file</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </table>
+      </section>
+
+      <!-- Eliminate Jar report -->
+      <section id="eliminatejar">
+        <title>Eliminate Jar files with different versions</title>
+
+        <para>The eliminate jar files with different versions lists archives that have the same name but
+          has a different version identifier.</para>
+
+        <table frame="all">
+          <title>Eliminate Jar report</title>
+          <tgroup cols="2" align="left" colsep="1" rowsep="1">
+            <colspec colname="c1"/>
+            <colspec colname="c2" colwidth="4*"/>
+            <thead>
+              <row>
+                <entry align="left">Archive</entry>
+                <entry align="left">Location</entry>
+              </row>
+            </thead>
+            <tbody>
+              <row>
+                <entry>The archive</entry>
+                <entry>The list of locations that the archive is found</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </table>
+      </section>
+
+      <!-- Invalid version report -->
+      <section id="invalidversion">
+        <title>Invalid version</title>
+
+        <para>The invalid version report lists archives that doesn't have a valid OSGi version identifier.</para>
+
+        <table frame="all">
+          <title>Invalid version report</title>
+          <tgroup cols="2" align="left" colsep="1" rowsep="1">
+            <colspec colname="c1"/>
+            <colspec colname="c2" colwidth="4*"/>
+            <thead>
+              <row>
+                <entry align="left">Name</entry>
+                <entry align="left">Location</entry>
+              </row>
+            </thead>
+            <tbody>
+              <row>
+                <entry>The archive name</entry>
+                <entry>The location and version identifier for the archive</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </table>
+      </section>
+
+      <!-- Multiple Jar files report -->
+      <section id="multiplejarfiles">
+        <title>Multiple Jar files</title>
+
+        <para>The multiple jar files report will list classes that appear in multiple jar files.</para>
+
+        <table frame="all">
+          <title>Multiple Jar files report</title>
+          <tgroup cols="2" align="left" colsep="1" rowsep="1">
+            <colspec colname="c1"/>
+            <colspec colname="c2" colwidth="4*"/>
+            <thead>
+              <row>
+                <entry align="left">Class</entry>
+                <entry align="left">Jar files</entry>
+              </row>
+            </thead>
+            <tbody>
+              <row>
+                <entry>The class</entry>
+                <entry>The list of archives where this class is found</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </table>
+      </section>
+
+      <!-- Multiple Locations report -->
+      <section id="multiplelocations">
+        <title>Multiple Locations</title>
+
+        <para>The multiple locations report will list archives that appear in multiple locations under the scanned source directory.</para>
+
+        <table frame="all">
+          <title>Multiple Locations report</title>
+          <tgroup cols="2" align="left" colsep="1" rowsep="1">
+            <colspec colname="c1"/>
+            <colspec colname="c2" colwidth="4*"/>
+            <thead>
+              <row>
+                <entry align="left">Name</entry>
+                <entry align="left">Location</entry>
+              </row>
+            </thead>
+            <tbody>
+              <row>
+                <entry>The archive name</entry>
+                <entry>The list of locations where the archive is found</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </table>
+      </section>
+
+      <!-- No version report -->
+      <section id="noversion">
+        <title>No version</title>
+
+        <para>The no version report will list archives that doesn't have a version identifier.</para>
+
+        <table frame="all">
+          <title>No version report</title>
+          <tgroup cols="2" align="left" colsep="1" rowsep="1">
+            <colspec colname="c1"/>
+            <colspec colname="c2" colwidth="4*"/>
+            <thead>
+              <row>
+                <entry align="left">Name</entry>
+                <entry align="left">Location</entry>
+              </row>
+            </thead>
+            <tbody>
+              <row>
+                <entry>The archive name</entry>
+                <entry>The list of locations where the archive is found</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </table>
+      </section>
+
+   </section>
+
+   <section id="archive">
+      <title>Archive reports</title>
+
+      <!-- JAR -->
+      <section id="jar">
+        <title>Java ARchive (JAR)</title>
+
+        <para>The Java ARchive (JAR) report will provide you with an overview of the archive.</para>
+
+        <table frame="all">
+          <title>No version report</title>
+          <tgroup cols="2" align="left" colsep="1" rowsep="1">
+            <colspec colname="c1"/>
+            <colspec colname="c2" colwidth="4*"/>
+            <thead>
+              <row>
+                <entry align="left">Key</entry>
+                <entry align="left">Value</entry>
+              </row>
+            </thead>
+            <tbody>
+              <row>
+                <entry>Name</entry>
+                <entry>The archive name</entry>
+              </row>
+              <row>
+                <entry>Locations</entry>
+                <entry>The list of locations for the archive</entry>
+              </row>
+              <row>
+                <entry>Manifest</entry>
+                <entry>The manifest file</entry>
+              </row>
+              <row>
+                <entry>Requires</entry>
+                <entry>The list of required classes</entry>
+              </row>
+              <row>
+                <entry>Provides</entry>
+                <entry>The list of provided classes - including SerialVersionUID (if present)</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </table>
+      </section>
+
+
+   </section>
+
+</chapter>
