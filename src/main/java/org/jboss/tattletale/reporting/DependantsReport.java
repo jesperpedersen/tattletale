@@ -120,7 +120,7 @@ public class DependantsReport extends Report
          bw.write("<table>" + Dump.NEW_LINE);
          
          bw.write("  <tr>" + Dump.NEW_LINE);
-         bw.write("     <th>Jar file</th>" + Dump.NEW_LINE);
+         bw.write("     <th>Archive</th>" + Dump.NEW_LINE);
          bw.write("     <th>Dependants</th>" + Dump.NEW_LINE);
          bw.write("  </tr>" + Dump.NEW_LINE);
 
