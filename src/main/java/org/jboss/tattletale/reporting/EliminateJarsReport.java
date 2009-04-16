@@ -134,6 +134,7 @@ public class EliminateJarsReport extends Report
                   else
                   {
                      include = true;
+                     status = ReportStatus.RED;
                   }
                }
 

@@ -147,6 +147,7 @@ public class OSGiReport extends Report
             {
                bw.write("     <td style=\"color: red;\">No</td>" + Dump.NEW_LINE);
                osgiNotReady++;
+               status = ReportStatus.RED;
             }
             bw.write("     <td><a href=\"" + archive.getName() + "/index.html\">Report</a></td>" + Dump.NEW_LINE);
             bw.write("     <td><a href=\"" + archive.getName() + "/MANIFEST.MF\">Manifest</a></td>" + Dump.NEW_LINE);

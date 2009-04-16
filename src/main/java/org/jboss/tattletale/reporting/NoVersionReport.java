@@ -129,6 +129,7 @@ public class NoVersionReport extends Report
                   if (location.getVersion() == null)
                   {
                      include = true;
+                     status = ReportStatus.RED;
                   }
                }
 

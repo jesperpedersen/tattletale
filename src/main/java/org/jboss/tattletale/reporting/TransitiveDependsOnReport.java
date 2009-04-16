@@ -254,7 +254,8 @@ public class TransitiveDependsOnReport extends Report
                   }
                   else
                   {
-                     bw.write("<i>" + r + "</i>");                  
+                     bw.write("<i>" + r + "</i>");
+                     status = ReportStatus.YELLOW;
                   }
                
                   if (valueIt.hasNext())

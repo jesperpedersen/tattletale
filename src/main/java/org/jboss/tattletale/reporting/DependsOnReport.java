@@ -204,7 +204,8 @@ public class DependsOnReport extends Report
                      }
                      else
                      {
-                        bw.write("<i>" + r + "</i>");                  
+                        bw.write("<i>" + r + "</i>");
+                        status = ReportStatus.YELLOW;
                      }
                
                      if (resultIt.hasNext())

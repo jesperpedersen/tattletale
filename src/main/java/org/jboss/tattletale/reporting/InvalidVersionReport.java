@@ -123,6 +123,8 @@ public class InvalidVersionReport extends Report
 
                if (version != null && !version.matches("\\d+(\\.\\d+(\\.\\d+(\\.[0-9a-zA-Z\\_\\-]+)?)?)?"))
                {
+                  status = ReportStatus.RED;
+
                   if (odd)
                   {
                      bw.write("  <tr class=\"rowodd\">" + Dump.NEW_LINE);

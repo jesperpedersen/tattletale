@@ -34,6 +34,9 @@ public abstract class Report implements Comparable
    /** The severity */
    protected int severity;
 
+   /** The status */
+   protected int status;
+
    /** The actions */
    protected SortedSet<Archive> archives;
 
@@ -46,6 +49,7 @@ public abstract class Report implements Comparable
    {
       this.severity = severity;
       this.archives = archives;
+      this.status = ReportStatus.GREEN;
    }
 
    /**
@@ -55,6 +59,15 @@ public abstract class Report implements Comparable
    public int getSeverity()
    {
       return severity;
+   }
+
+   /**
+    * Get the status
+    * @return The value
+    */
+   public int getStatus()
+   {
+      return status;
    }
 
    /**

@@ -124,7 +124,39 @@ public class Dump
          {
             for (Report r : dependenciesReports)
             {
-               bw.write("<li><a href=\"" + r.getDirectory() + "/index.html\">" + r.getName() + "</a></li>" + NEW_LINE);
+               bw.write("<li>");
+               bw.write("<a href=\"" + r.getDirectory() + "/index.html\">" + r.getName() + "</a> (");
+
+               bw.write("<span");
+               if (r.getStatus() == ReportStatus.GREEN)
+               {
+                  bw.write(" style=\"color: green;\"");
+               }
+               else if (r.getStatus() == ReportStatus.YELLOW)
+               {
+                  bw.write(" style=\"color: yellow;\"");
+               }
+               else if (r.getStatus() == ReportStatus.RED)
+               {
+                  bw.write(" style=\"color: red;\"");
+               }
+               bw.write(">");
+
+               if (r.getSeverity() == ReportSeverity.INFO)
+               {
+                  bw.write("INFO");
+               }
+               else if (r.getSeverity() == ReportSeverity.WARNING)
+               {
+                  bw.write("WARNING");
+               }
+               else if (r.getSeverity() == ReportSeverity.ERROR)
+               {
+                  bw.write("ERROR");
+               }
+
+               bw.write("</span>");
+               bw.write(")</li>" + NEW_LINE);
             }
          }
 
@@ -137,7 +169,39 @@ public class Dump
          {
             for (Report r : generalReports)
             {
-               bw.write("<li><a href=\"" + r.getDirectory() + "/index.html\">" + r.getName() + "</a></li>" + NEW_LINE);
+               bw.write("<li>");
+               bw.write("<a href=\"" + r.getDirectory() + "/index.html\">" + r.getName() + "</a> (");
+
+               bw.write("<span");
+               if (r.getStatus() == ReportStatus.GREEN)
+               {
+                  bw.write(" style=\"color: green;\"");
+               }
+               else if (r.getStatus() == ReportStatus.YELLOW)
+               {
+                  bw.write(" style=\"color: yellow;\"");
+               }
+               else if (r.getStatus() == ReportStatus.RED)
+               {
+                  bw.write(" style=\"color: red;\"");
+               }
+               bw.write(">");
+
+               if (r.getSeverity() == ReportSeverity.INFO)
+               {
+                  bw.write("INFO");
+               }
+               else if (r.getSeverity() == ReportSeverity.WARNING)
+               {
+                  bw.write("WARNING");
+               }
+               else if (r.getSeverity() == ReportSeverity.ERROR)
+               {
+                  bw.write("ERROR");
+               }
+
+               bw.write("</span>");
+               bw.write(")</li>" + NEW_LINE);
             }
          }
 
@@ -150,7 +214,39 @@ public class Dump
          {
             for (Report r : archiveReports)
             {
-               bw.write("<li><a href=\"" + r.getDirectory() + "/" + r.getName() + ".html\">" + r.getName() + "</a></li>" + NEW_LINE);
+               bw.write("<li>");
+               bw.write("<a href=\"" + r.getDirectory() + "/" + r.getName() + ".html\">" + r.getName() + "</a> (");
+
+               bw.write("<span");
+               if (r.getStatus() == ReportStatus.GREEN)
+               {
+                  bw.write(" style=\"color: green;\"");
+               }
+               else if (r.getStatus() == ReportStatus.YELLOW)
+               {
+                  bw.write(" style=\"color: yellow;\"");
+               }
+               else if (r.getStatus() == ReportStatus.RED)
+               {
+                  bw.write(" style=\"color: red;\"");
+               }
+               bw.write(">");
+
+               if (r.getSeverity() == ReportSeverity.INFO)
+               {
+                  bw.write("INFO");
+               }
+               else if (r.getSeverity() == ReportSeverity.WARNING)
+               {
+                  bw.write("WARNING");
+               }
+               else if (r.getSeverity() == ReportSeverity.ERROR)
+               {
+                  bw.write("ERROR");
+               }
+
+               bw.write("</span>");
+               bw.write(")</li>" + NEW_LINE);
             }
          }
 

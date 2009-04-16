@@ -121,6 +121,11 @@ public class ClassLocationReport extends Report
             String clz = (String)entry.getKey();
             SortedSet archives = (SortedSet)entry.getValue();
 
+            if (archives.size() > 1)
+            {
+               status = ReportStatus.YELLOW;
+            }
+
             if (odd)
             {
                bw.write("  <tr class=\"rowodd\">" + Dump.NEW_LINE);

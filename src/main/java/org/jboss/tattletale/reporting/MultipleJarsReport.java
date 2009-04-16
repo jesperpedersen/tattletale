@@ -123,6 +123,8 @@ public class MultipleJarsReport extends Report
 
             if (archives.size() > 1)
             {
+               status = ReportStatus.RED;
+
                if (odd)
                {
                   bw.write("  <tr class=\"rowodd\">" + Dump.NEW_LINE);

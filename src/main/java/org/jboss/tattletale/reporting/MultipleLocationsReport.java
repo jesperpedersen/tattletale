@@ -112,6 +112,8 @@ public class MultipleLocationsReport extends Report
          {
             if (a.getType() == ArchiveTypes.JAR && a.getLocations().size() > 1)
             {
+               status = ReportStatus.YELLOW;
+
                if (odd)
                {
                   bw.write("  <tr class=\"rowodd\">" + Dump.NEW_LINE);
