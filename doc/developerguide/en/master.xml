@@ -19,6 +19,13 @@
 
       <subtitle>Betraying all your project's nasty little secrets</subtitle>
       <title>JBoss Tattletale 1.0 Developer's Guide</title>
+
+      <mediaobject>
+        <imageobject>
+          <imagedata fileref="images/tattletale_mark_200px.png" align="center" valign="middle"/>
+        </imageobject>
+      </mediaobject>
+
    </bookinfo>
 
    <toc></toc>
