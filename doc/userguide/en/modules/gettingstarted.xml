@@ -127,6 +127,12 @@ jboss-tattletale.properties
                <para>The output directory where the report gets generated.</para>
              </entry>
            </row>
+           <row>
+             <entry>blacklisted</entry>
+             <entry>
+               <para>A comma separated list of black listed classes or packages. F.ex. com.mycompany.forinternaluseonly, com.partner.forinternaluseonly</para>
+             </entry>
+           </row>
          </tbody>
        </tgroup>
      </table>

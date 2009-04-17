@@ -64,7 +64,7 @@ public class ArchiveScanner
     */
    public static Archive scan(File file)
    {
-      return scan(file, null, null);
+      return scan(file, null, null, null);
    }
 
    /**
@@ -72,9 +72,10 @@ public class ArchiveScanner
     * @param file The file
     * @param gProvides The global provides map
     * @param known The set of known archives
+    * @param blacklisted The set of black listed packages
     * @return The archive
     */
-   public static Archive scan(File file, Map<String, SortedSet<String>> gProvides, Set<Archive> known)
+   public static Archive scan(File file, Map<String, SortedSet<String>> gProvides, Set<Archive> known, Set<String> blacklisted)
    {
       Archive archive = null;
       JarFile jarFile = null;
@@ -88,6 +89,7 @@ public class ArchiveScanner
          SortedSet<String> requires = new TreeSet<String>();
          SortedMap<String, Long> provides = new TreeMap<String, Long>();
          SortedMap<String, SortedSet<String>> packageDependencies = new TreeMap<String, SortedSet<String>>();
+         SortedMap<String, SortedSet<String>> blacklistedDependencies = new TreeMap<String, SortedSet<String>>();
 
          jarFile = new JarFile(file);
          Enumeration<JarEntry> e = jarFile.entries();
@@ -158,6 +160,34 @@ public class ArchiveScanner
                         pd.add(rPkg);
                         packageDependencies.put(pkg, pd);
                      }
+
+                     if (blacklisted != null)
+                     {
+                        boolean bl = false;
+
+                        Iterator<String> bit = blacklisted.iterator();
+                        while (!bl && bit.hasNext())
+                        {
+                           String blp = bit.next();
+                           if (s.startsWith(blp))
+                              bl = true;
+                        }
+
+                        if (bl)
+                        {
+                           String key = pkg;
+
+                           if (key == null)
+                              key = "";
+
+                           SortedSet<String> bld = blacklistedDependencies.get(key);
+                           if (bld == null)
+                              bld = new TreeSet<String>();
+
+                           bld.add(rPkg);
+                           blacklistedDependencies.put(key, bld);
+                        }
+                     }
                   }
                }
                catch (Exception ie)
@@ -208,7 +238,8 @@ public class ArchiveScanner
          }
          Location location = new Location(filename, version);
 
-         archive = new JarArchive(name, lManifest, requires, provides, packageDependencies, location);
+         archive = new JarArchive(name, lManifest, requires, provides, 
+                                  packageDependencies, blacklistedDependencies, location);
 
          Iterator<String> it = provides.keySet().iterator();
          while (it.hasNext())

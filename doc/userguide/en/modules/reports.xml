@@ -326,6 +326,33 @@ dot -Tpng myarchive.dot &gt; myarchive.png
         </table>
       </section>
 
+      <!-- Black listed report -->
+      <section id="blacklisted">
+        <title>Black listed</title>
+
+        <para>The black listed report will list archives that uses black listed APIs.</para>
+
+        <table frame="all">
+          <title>Black listed report</title>
+          <tgroup cols="2" align="left" colsep="1" rowsep="1">
+            <colspec colname="c1"/>
+            <colspec colname="c2" colwidth="4*"/>
+            <thead>
+              <row>
+                <entry align="left">Archive</entry>
+                <entry align="left">Usage</entry>
+              </row>
+            </thead>
+            <tbody>
+              <row>
+                <entry>The archive name</entry>
+                <entry>The list of packages that uses black listed APIs</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </table>
+      </section>
+
       <!-- No version report -->
       <section id="noversion">
         <title>No version</title>

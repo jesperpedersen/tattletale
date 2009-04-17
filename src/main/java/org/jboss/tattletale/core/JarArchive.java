@@ -41,6 +41,7 @@ public class JarArchive extends Archive
     * @param requires The requires
     * @param provides The provides
     * @param packageDependencies The package dependencies
+    * @param blacklistedDependencies The blacklisted dependencies
     * @param location The location
     */
    public JarArchive(String name, 
@@ -48,8 +49,10 @@ public class JarArchive extends Archive
                      SortedSet<String> requires, 
                      SortedMap<String, Long> provides, 
                      SortedMap<String, SortedSet<String>> packageDependencies,
+                     SortedMap<String, SortedSet<String>> blacklistedDependencies,
                      Location location)
    {
-      super(ArchiveTypes.JAR, name, manifest, requires, provides, packageDependencies, location);
+      super(ArchiveTypes.JAR, name, manifest, requires, provides, 
+            packageDependencies, blacklistedDependencies, location);
    }
 }

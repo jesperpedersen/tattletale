@@ -26,6 +26,7 @@ import org.jboss.tattletale.analyzers.DirectoryScanner;
 import org.jboss.tattletale.core.Archive;
 import org.jboss.tattletale.core.ArchiveTypes;
 import org.jboss.tattletale.core.Location;
+import org.jboss.tattletale.reporting.BlackListedReport;
 import org.jboss.tattletale.reporting.ClassLocationReport;
 import org.jboss.tattletale.reporting.DependantsReport;
 import org.jboss.tattletale.reporting.DependsOnReport;
@@ -57,6 +58,7 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.SortedMap;
 import java.util.SortedSet;
+import java.util.StringTokenizer;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
@@ -180,10 +182,34 @@ public class Main
             }
 
             String classloaderStructure = null;
+            Set<String> blacklisted = null;
 
             if (loaded)
             {
                classloaderStructure = properties.getProperty("classloader");
+
+               if (properties.getProperty("blacklisted") != null)
+               {
+                  blacklisted = new HashSet<String>();
+
+                  StringTokenizer st = new StringTokenizer(properties.getProperty("blacklisted"), ",");
+                  while (st.hasMoreTokens())
+                  {
+                     String token = st.nextToken().trim();
+
+                     if (token.endsWith(".*"))
+                     {
+                        token.substring(0, token.indexOf(".*"));
+                     }
+
+                     if (token.endsWith(".class"))
+                     {
+                        token.substring(0, token.indexOf(".class"));
+                     }
+                     
+                     blacklisted.add(token);
+                  }
+               }
             }
 
             if (classloaderStructure == null || classloaderStructure.trim().equals(""))
@@ -206,7 +232,7 @@ public class Main
 
                for (File file : fileList)
                {
-                  Archive archive = ArchiveScanner.scan(file, gProvides, known);
+                  Archive archive = ArchiveScanner.scan(file, gProvides, known, blacklisted);
                   
                   if (archive != null)
                   {
@@ -327,6 +353,10 @@ public class Main
       Report invalidversion = new InvalidVersionReport(archives);
       invalidversion.generate(outputDir);
       generalReports.add(invalidversion);
+
+      Report blacklisted = new BlackListedReport(archives);
+      blacklisted.generate(outputDir);
+      generalReports.add(blacklisted);
 
       Dump.generateIndex(dependenciesReports, generalReports, archiveReports, outputDir);
       Dump.generateCSS(outputDir);

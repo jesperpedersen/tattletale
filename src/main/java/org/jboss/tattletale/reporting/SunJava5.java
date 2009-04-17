@@ -80,7 +80,7 @@ public class SunJava5 extends NestableArchive
     */
    public SunJava5()
    {
-      super(ArchiveTypes.JAR, "Sun Java 5", null, null, null, null, null);
+      super(ArchiveTypes.JAR, "Sun Java 5", null, null, null, null, null, null);
 
       Location l = new Location("rt.jar", "Sun JDK5");
       addLocation(l);

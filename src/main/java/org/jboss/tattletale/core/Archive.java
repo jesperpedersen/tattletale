@@ -35,7 +35,7 @@ import java.util.TreeSet;
 public abstract class Archive implements Serializable, Comparable
 {
    /** SerialVersionUID */
-   static final long serialVersionUID = -6526839068771149482L;
+   //static final long serialVersionUID = -6526839068771149482L;
 
    /** Archve type */
    private int type;
@@ -55,6 +55,9 @@ public abstract class Archive implements Serializable, Comparable
    /** Package dependencies */
    private SortedMap<String, SortedSet<String>> packageDependencies;
 
+   /** Blacklisted dependencies */
+   private SortedMap<String, SortedSet<String>> blacklistedDependencies;
+
    /** Locations */
    private SortedSet<Location> locations;
 
@@ -69,6 +72,7 @@ public abstract class Archive implements Serializable, Comparable
     * @param requires The requires
     * @param provides The provides
     * @param packageDependencies The package dependencies
+    * @param blacklistedDependencies The blacklisted dependencies
     * @param location The location
     */
    public Archive(int type, 
@@ -77,6 +81,7 @@ public abstract class Archive implements Serializable, Comparable
                   SortedSet<String> requires, 
                   SortedMap<String, Long> provides, 
                   SortedMap<String, SortedSet<String>> packageDependencies,
+                  SortedMap<String, SortedSet<String>> blacklistedDependencies,
                   Location location)
    {
       this.type = type;
@@ -85,6 +90,7 @@ public abstract class Archive implements Serializable, Comparable
       this.requires = requires;
       this.provides = provides;
       this.packageDependencies = packageDependencies;
+      this.blacklistedDependencies = blacklistedDependencies;
       this.locations = new TreeSet<Location>();
       this.osgi = null;
 
@@ -206,6 +212,15 @@ public abstract class Archive implements Serializable, Comparable
    }
 
    /**
+    * Get the blacklisted dependencies
+    * @return The value
+    */
+   public SortedMap<String, SortedSet<String>> getBlackListedDependencies()
+   {
+      return blacklistedDependencies;
+   }
+
+   /**
     * Get the locations
     * @return The value
     */
@@ -324,6 +339,10 @@ public abstract class Archive implements Serializable, Comparable
 
       sb = sb.append("packagedependencies=");
       sb = sb.append(packageDependencies);
+      sb = sb.append("\n");
+
+      sb = sb.append("blacklisteddependencies=");
+      sb = sb.append(blacklistedDependencies);
       sb = sb.append("\n");
 
       sb = sb.append("locations=");
