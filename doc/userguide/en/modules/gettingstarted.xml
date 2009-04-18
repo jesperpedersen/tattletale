@@ -159,6 +159,8 @@ java -Xmx512m -jar jboss-tattletale.jar &lt;sourcedir&gt; [&lt;outputdir&gt;]
 
      <para>JBoss Tattletale will scan for Java Archives (.JAR) files.</para>
 
+     <para>JBoss Tattletale requires Java Runtime Environment 5 or higher.</para>
+
    </section>
 
    <section id="ant">
