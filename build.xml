@@ -13,9 +13,9 @@
 
     <property name="name" value="jboss-tattletale"/>
     <property name="major" value="1"/>
-    <property name="minor" value="0"/>
+    <property name="minor" value="1"/>
     <property name="patch" value="0"/>
-    <property name="type" value="CR1"/>
+    <property name="type" value="Beta1"/>
 
     <property name="jboss-tattletale.jar" value="jboss-tattletale.jar"/>
 
