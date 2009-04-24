@@ -412,11 +412,14 @@ public class OSGiReport extends Report
             rbw.write("     <td>Manifest</td>" + Dump.NEW_LINE);
             rbw.write("     <td><pre>");
 
-            Iterator<String> mit = archive.getManifest().iterator();
-            while (mit.hasNext())
+            if (archive.getManifest() != null)
             {
-               rbw.write(mit.next());
-               rbw.write("<br>");
+               Iterator<String> mit = archive.getManifest().iterator();
+               while (mit.hasNext())
+               {
+                  rbw.write(mit.next());
+                  rbw.write("<br>");
+               }
             }
 
             rbw.write("</pre></td>" + Dump.NEW_LINE);
@@ -458,11 +461,14 @@ public class OSGiReport extends Report
             FileWriter mfw = new FileWriter(archiveOutput.getAbsolutePath() + File.separator +  "MANIFEST.MF");
             BufferedWriter mbw = new BufferedWriter(mfw, 8192);
 
-            mit = archive.getManifest().iterator();
-            while (mit.hasNext())
+            if (archive.getManifest() != null)
             {
-               mbw.write(mit.next());
-               mbw.write(Dump.NEW_LINE);
+               Iterator<String> mit = archive.getManifest().iterator();
+               while (mit.hasNext())
+               {
+                  mbw.write(mit.next());
+                  mbw.write(Dump.NEW_LINE);
+               }
             }
 
             if (!archive.isOSGi() && osgiInformation != null && osgiInformation.size() > 0)
