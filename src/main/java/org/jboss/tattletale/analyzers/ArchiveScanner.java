@@ -75,7 +75,10 @@ public class ArchiveScanner
     * @param blacklisted The set of black listed packages
     * @return The archive
     */
-   public static Archive scan(File file, Map<String, SortedSet<String>> gProvides, Set<Archive> known, Set<String> blacklisted)
+   public static Archive scan(File file, 
+                              Map<String, SortedSet<String>> gProvides, 
+                              Set<Archive> known, 
+                              Set<String> blacklisted)
    {
       Archive archive = null;
       JarFile jarFile = null;
@@ -114,6 +117,7 @@ public class ArchiveScanner
                   }
                   catch (NotFoundException nfe)
                   {
+                     // Ignore - not serializable
                   }
 
                   provides.put(ctClz.getName(), serialVersionUID);
@@ -192,6 +196,7 @@ public class ArchiveScanner
                }
                catch (Exception ie)
                {
+                  // Ignore
                }
                finally
                {
@@ -202,6 +207,7 @@ public class ArchiveScanner
                   }
                   catch (IOException ioe)
                   {
+                     // Ignore
                   }
                }
             }
@@ -279,6 +285,7 @@ public class ArchiveScanner
          }
          catch (IOException ioe)
          {
+            // Ignore
          }
       }
 
@@ -324,6 +331,7 @@ public class ArchiveScanner
       }
       catch (IOException ioe)
       {
+         // Ignore
       }
 
       return result;

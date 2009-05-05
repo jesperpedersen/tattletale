@@ -23,8 +23,6 @@ package org.jboss.tattletale.reporting;
 
 import org.jboss.tattletale.core.Archive;
 
-import java.util.SortedSet;
-
 /**
  * Represents an archive report (JAR, WAR, EAR, ...)
  * @author Jesper Pedersen <jesper.pedersen@jboss.org>

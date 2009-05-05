@@ -26,9 +26,9 @@ import org.jboss.tattletale.core.ArchiveTypes;
 import org.jboss.tattletale.core.Location;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.IOException;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -60,6 +60,7 @@ public class SunJava6JSSE extends Archive
       }
       catch (Exception e)
       {
+         // Ignore
       }
       finally
       {
@@ -70,6 +71,7 @@ public class SunJava6JSSE extends Archive
          }
          catch (IOException ioe)
          {
+            // Ignore
          }
       }
    }

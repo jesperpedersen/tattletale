@@ -21,12 +21,9 @@
  */
 package org.jboss.tattletale.core;
 
-import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.SortedMap;
 import java.util.SortedSet;
-import java.util.TreeSet;
 
 /**
  * JAR Archive

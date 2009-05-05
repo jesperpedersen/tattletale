@@ -27,9 +27,9 @@ import org.jboss.tattletale.core.Location;
 import org.jboss.tattletale.core.NestableArchive;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.IOException;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -61,6 +61,7 @@ public class SunJava5 extends NestableArchive
       }
       catch (Exception e)
       {
+         // Ignore
       }
       finally
       {
@@ -71,6 +72,7 @@ public class SunJava5 extends NestableArchive
          }
          catch (IOException ioe)
          {
+            // Ignore
          }
       }
    }

@@ -29,7 +29,8 @@ import org.apache.tools.ant.Task;
  * @author Jay Balunas jbalunas@jboss.org
  *
  */
-public abstract class AbstractReportTask extends Task {
+public abstract class AbstractReportTask extends Task
+{
    
    /**
     * Directory to scan
@@ -47,8 +48,8 @@ public abstract class AbstractReportTask extends Task {
     */
    public AbstractReportTask()
    {
-      scanDir=".";
-      outputDir=".";
+      scanDir = ".";
+      outputDir = ".";
    }
 
    /**

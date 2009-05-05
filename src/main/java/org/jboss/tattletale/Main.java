@@ -49,7 +49,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -378,8 +377,8 @@ public class Main
                   
       //verify ending slash
       outputDir = !outputDir.substring(outputDir.length() - 1)
-                  .equals(File.separator)?
-                   outputDir + File.separator: outputDir;
+                  .equals(File.separator) ?
+                   outputDir + File.separator : outputDir;
                    
       //verify output directory exists & create if it does not
       File outputDirFile = new File(outputDir);

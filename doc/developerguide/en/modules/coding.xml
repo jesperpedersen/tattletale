@@ -5,30 +5,39 @@
   <section id="sourcecodestyle">
     <title>Source code formatting</title>
     
-    <para>JBoss Tattletale uses 2 spaces for indentation with curly brakets on the same line
+    <para>JBoss Tattletale uses 3 spaces for indentation with curly brakets on the next line
       as the class or the statement.</para>
 
     <programlisting>
 /**
  * My class
  */
-public class MyClass {
-
+public class MyClass
+{
   /**
    * My method
    */
-  public void myMethod() {
-    if (value) {
+  public void myMethod()
+  {
+    if (value)
+    {
       // Do something
-    } else {
+    }
+    else
+    {
       // Do something else
     }
   }
-
 }
     </programlisting>
 
     <para>Remember to add JavaDoc for all classes and methods.</para>
+
+    <para>You can verify the formatting rules by running checkstyle on the source code:</para>
+
+    <programlisting>
+ant checkstyle
+    </programlisting>
 
     <para>See the source code for more examples of the source code formatting rules.</para>
 

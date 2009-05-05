@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE module PUBLIC
+  "-//Puppy Crawl//DTD Check Configuration 1.2//EN"
+  "http://www.puppycrawl.com/dtds/configuration_1_2.dtd">
+
+<module name="Checker">
+  <property name="basedir" value="${basedir}"/>
+
+  <module name="TreeWalker">
+
+    <!-- Naming conventions -->
+    <module name="ConstantName">
+      <property name="format" value="^[A-Z](_?[A-Z0-9]+)*$"/>
+      <property name="applyToPublic" value="true"/>
+      <property name="applyToProtected" value="true"/>
+      <property name="applyToPackage" value="true"/>
+      <property name="applyToPrivate" value="false"/>
+    </module>
+    <module name="MethodName">
+      <property name="format" value="^[a-z]([a-zA-Z0-9]+)*$"/>
+    </module>
+    <module name="LocalFinalVariableName">
+      <property name="format" value="^[a-z]([a-zA-Z0-9]+)*$"/>
+    </module>
+    <module name="LocalVariableName">
+      <property name="format" value="^[a-z]([a-zA-Z0-9]+)*$"/>
+    </module>
+    <module name="MemberName">
+      <property name="format" value="^[a-z]([a-zA-Z0-9])*$"/>
+    </module>
+    <module name="ParameterName">
+      <property name="format" value="^[a-z]([a-zA-Z0-9]+)*$"/>
+    </module>
+    <module name="TypeName">
+      <property name="format" value="^[A-Z][a-zA-Z0-9]*$"/>
+    </module>
+    <module name="StaticVariableName">
+      <property name="format" value="^[a-z]([a-zA-Z0-9])*$"/>
+    </module>
+    <module name="PackageName">
+      <property name="format" value="^[a-z]+(\.[a-zA-Z_][a-zA-Z_0-9]*)*$"/>
+    </module>
+
+    <!-- Code layout -->
+    <module name="LeftCurly">
+      <property name="option" value="nl"/>
+    </module>
+    <module name="RightCurly">
+      <property name="option" value="alone"/>
+    </module>
+    <module name="ParenPad"/>
+
+    <!-- Whitespace settings -->
+    <module name="NoWhitespaceAfter"/>
+    <module name="NoWhitespaceBefore"/>
+    <module name="WhitespaceAfter">
+      <property name="tokens" value="COMMA, SEMI"/>
+    </module>
+    <module name="WhitespaceAround"/>
+
+    <!-- JavaDoc guidelines -->
+    <module name="JavadocMethod">
+      <property name="allowUndeclaredRTE" value="true"/>
+      <property name="allowThrowsTagsForSubclasses" value="true"/>
+      <property name="scope" value="package"/>
+    </module>
+    <module name="JavadocVariable">
+      <property name="scope" value="package"/>
+    </module>
+    <module name="JavadocType">
+      <property name="scope" value="package"/>
+    </module>
+
+    <!-- JLS -->
+    <module name="ModifierOrder"/>
+    <module name="UpperEll"/>
+
+    <!-- Override hashCode whenever you override equals() -->
+    <module name="EqualsHashCode"/>
+
+    <!-- Illegal instantiations -->
+    <module name="IllegalInstantiation">
+      <property name="classes" value="java.lang.Boolean"/>
+    </module>
+
+    <!-- Don't allow empty blocks -->
+    <module name="EmptyBlock">
+      <property name="option" value="text"/>
+    </module>
+
+    <!-- Avoid inner assignments -->
+    <module name="InnerAssignment"/>
+
+    <!-- Don't allow imports from the sun.* package hierarchy -->
+    <module name="IllegalImport"/>
+
+    <!-- Visibility modifiers -->
+    <module name="VisibilityModifier">
+      <property name="packageAllowed" value ="true"/>
+      <property name="protectedAllowed" value ="true"/>
+    </module>
+
+    <!-- Simplify your code -->
+    <module name="AvoidStarImport"/>
+    <module name="RedundantImport"/>
+    <module name="UnusedImports"/>
+    <module name="SimplifyBooleanExpression"/>
+    <module name="SimplifyBooleanReturn"/>
+
+    <module name="ImportOrder">
+      <property name="groups" value="org.jboss.tattletale,java,javax,org.jboss"/>
+      <property name="ordered" value="true"/>
+      <property name="separated" value="true"/>
+    </module>
+
+    <!-- Flag reminder comments -->
+    <module name="TodoComment"/>
+
+    <!-- Enforce length limits -->
+    <module name="LineLength">
+      <property name="max" value="120"/>
+    </module>
+    <module name="MethodLength">
+      <property name="tokens" value="METHOD_DEF"/>
+      <property name="max" value="1000"/>
+    </module>
+    <module name="MethodLength">
+      <property name="tokens" value="CTOR_DEF"/>
+      <property name="max" value="150"/>
+    </module>
+    <module name="ParameterNumber">
+      <property name="max" value="20"/>
+    </module>
+
+    <!-- Indentation -->
+    <module name="Indentation">
+      <property name="basicOffset" value="3"/>
+      <property name="caseIndent" value="3"/>
+    </module>
+
+    <!-- StringLiteralEquality -->
+    <module name="StringLiteralEquality"/>
+
+  </module>
+
+  <!-- Enforce License Header -->
+  <module name="RegexpHeader">
+    <property name="headerFile" value="${basedir}/tools/checkstyle/HEADER"/>
+  </module>
+
+  <!-- Enforce file length -->
+  <module name="FileLength">
+    <property name="max" value="10000"/>
+  </module>
+
+  <!-- Don't allow tabs -->
+  <module name="FileTabCharacter">
+    <property name="eachLine" value="true"/>
+  </module>
+
+  <!-- Enforce package documentation -->
+  <module name="JavadocPackage">
+    <property name="allowLegacy" value="true"/>
+  </module>
+
+  <!-- NewlineAtEndOfFile -->
+  <module name="NewlineAtEndOfFile">
+    <property name="lineSeparator" value="lf"/>
+  </module>
+
+</module>

@@ -10,6 +10,8 @@
     <property name="src.java.dir" value="${src.main.dir}/java"/>
     <property name="etc.dir" value="${src.dir}/etc"/>
     <property name="dist.dir" value="${basedir}/dist"/>
+    <property name="reports.dir" value="${basedir}/reports"/>
+    <property name="tools.dir" value="${basedir}/tools"/>
 
     <property name="name" value="jboss-tattletale"/>
     <property name="major" value="1"/>
@@ -34,6 +36,16 @@
         </fileset>
         <fileset dir="${dist.dir}">
             <include name="*.jar"/>
+        </fileset>
+    </path>
+
+    <path id="checkstyle.class.path">
+        <fileset dir="${tools.dir}/checkstyle/lib"/>
+        <fileset dir="${lib.dir}">
+            <include name="**/*.jar"/>
+        </fileset>
+        <fileset dir="${dist.dir}">
+            <include name="**/*.jar"/>
         </fileset>
     </path>
 
@@ -175,6 +187,26 @@
                src="${name}-${major}.${minor}.${patch}.${type}.tar"/>
 
         <delete file="${name}-${major}.${minor}.${patch}.${type}.tar"/>
+    </target>
+
+    <!-- ================================= 
+         Target: checkstyle
+         ================================= -->
+    <target name="checkstyle" depends="jars">
+      <taskdef name="checkstyle"
+               classname="com.puppycrawl.tools.checkstyle.CheckStyleTask"
+               classpathref="checkstyle.class.path"/>
+      
+      <mkdir dir="${reports.dir}/checkstyle" />
+      
+      <checkstyle config="${tools.dir}/checkstyle/checkstyle.xml"
+                  failOnViolation="false"
+                  classpathref="checkstyle.class.path">
+        <fileset dir="${basedir}"
+                 includes="**/*.java"/>
+        <formatter type="plain"/>
+        <formatter type="xml" toFile="${reports.dir}/checkstyle/checkstyle-result.xml"/>
+      </checkstyle>
     </target>
 
     <!-- =================================================================== -->
