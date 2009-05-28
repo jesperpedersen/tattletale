@@ -128,7 +128,8 @@ public class EliminateJarsReport extends Report
                {
                   location = lit.next();
 
-                  if (version == location.getVersion() || version.equals(location.getVersion()))
+                  if (version == location.getVersion() || 
+                      (version != null && version.equals(location.getVersion())))
                   {
                      // Same version identifier - just continue
                   }
