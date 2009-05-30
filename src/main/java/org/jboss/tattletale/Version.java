@@ -34,7 +34,7 @@ public class Version {
   public static final String PRODUCT = "Tattletale"; 
 
   /** The version */
-  public static final String VERSION = "1.0.0.GA";
+  public static final String VERSION = "1.0.1.GA";
 
   /** Full version */
   public static final String FULL_VERSION = VENDOR + " " + PRODUCT + " " + VERSION;
