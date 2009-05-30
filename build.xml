@@ -169,6 +169,8 @@
           </fileset>
         </move>
 
+        <delete dir="${build.dir}/en"/>
+
         <move todir="${build.dir}/${name}-${major}.${minor}.${patch}.${type}"
               includeEmptyDirs="false">
             <fileset dir="${dist.dir}"/>
