@@ -21,14 +21,11 @@
  */
 package org.jboss.tattletale.reporting;
 
-import org.jboss.tattletale.Version;
 import org.jboss.tattletale.core.Archive;
 import org.jboss.tattletale.core.ArchiveTypes;
-import org.jboss.tattletale.reporting.classloader.ClassLoaderStructure;
 
 import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
@@ -40,8 +37,9 @@ import java.util.TreeSet;
 /**
  * Transitive Depends On report
  * @author Jesper Pedersen <jesper.pedersen@jboss.org>
+ * @author <a href="mailto:torben.jaeger@jit-consulting.de">Torben Jaeger</a>
  */
-public class TransitiveDependsOnReport extends Report
+public class TransitiveDependsOnReport extends CLSReport
 {
    /** NAME */
    private static final String NAME = "Transitive Depends On";
@@ -49,252 +47,184 @@ public class TransitiveDependsOnReport extends Report
    /** DIRECTORY */
    private static final String DIRECTORY = "transitivedependson";
 
-   /** Known archives */
-   private Set<Archive> known;
-
-   /** Class loader structure */
-   private String classloaderStructure;
-
    /**
     * Constructor
     * @param archives The archives
     * @param known The set of known archives
     * @param classloaderStructure The classloader structure
     */
-   public TransitiveDependsOnReport(SortedSet<Archive> archives, 
-                                    Set<Archive> known, 
+   public TransitiveDependsOnReport(SortedSet<Archive> archives,
+                                    Set<Archive> known,
                                     String classloaderStructure)
    {
-      super(ReportSeverity.INFO, archives);
-      this.known = known;
-      this.classloaderStructure = classloaderStructure;
+      super(ReportSeverity.INFO, archives, NAME, DIRECTORY, classloaderStructure, known);
    }
 
    /**
-    * Get the name of the report
-    * @return The name
+    * write out the report's content
+    * @param bw the writer to use
+    * @exception IOException if an error occurs
     */
-   public String getName()
+   void writeHtmlBodyContent(BufferedWriter bw) throws IOException
    {
-      return NAME;
-   }
+      bw.write("<table>" + Dump.NEW_LINE);
 
-   /**
-    * Get the name of the directory
-    * @return The directory
-    */
-   public String getDirectory()
-   {
-      return DIRECTORY;
-   }
+      bw.write("  <tr>" + Dump.NEW_LINE);
+      bw.write("     <th>Archive</th>" + Dump.NEW_LINE);
+      bw.write("     <th>Depends On</th>" + Dump.NEW_LINE);
+      bw.write("  </tr>" + Dump.NEW_LINE);
 
-   /**
-    * Generate the report(s)
-    * @param outputDirectory The top-level output directory
-    */
-   public void generate(String outputDirectory)
-   {
-      try
+      SortedMap<String, SortedSet<String>> dependsOnMap = new TreeMap<String, SortedSet<String>>();
+
+      for (Archive archive : archives)
       {
-         ClassLoaderStructure cls = null;
 
-         try
+         if (archive.getType() == ArchiveTypes.JAR)
          {
-            Class c = Thread.currentThread().getContextClassLoader().loadClass(classloaderStructure);
-            cls = (ClassLoaderStructure)c.newInstance();
+            SortedSet<String> result = dependsOnMap.get(archive.getName());
+            if (result == null)
+            {
+               result = new TreeSet<String>();
+            }
+
+            for (String require : archive.getRequires())
+            {
+
+               boolean found = false;
+               Iterator<Archive> ait = archives.iterator();
+               while (!found && ait.hasNext())
+               {
+                  Archive a = ait.next();
+
+                  if (a.getType() == ArchiveTypes.JAR)
+                  {
+                     if (a.doesProvide(require) && (getCLS() == null || getCLS().isVisible(archive, a)))
+                     {
+                        result.add(a.getName());
+                        found = true;
+                     }
+                  }
+               }
+
+               if (!found)
+               {
+                  Iterator<Archive> kit = getKnown().iterator();
+                  while (!found && kit.hasNext())
+                  {
+                     Archive a = kit.next();
+
+                     if (a.doesProvide(require))
+                     {
+                        found = true;
+                     }
+                  }
+               }
+
+               if (!found)
+               {
+                  result.add(require);
+               }
+            }
+
+            dependsOnMap.put(archive.getName(), result);
          }
-         catch (Exception ntd)
+      }
+
+
+      SortedMap<String, SortedSet<String>> transitiveDependsOnMap = new TreeMap<String, SortedSet<String>>();
+
+      Iterator mit = dependsOnMap.entrySet().iterator();
+      while (mit.hasNext())
+      {
+         Map.Entry entry = (Map.Entry)mit.next();
+
+         String archive = (String)entry.getKey();
+         SortedSet<String> value = (SortedSet<String>)entry.getValue();
+
+         SortedSet<String> result = new TreeSet<String>();
+
+         if (value != null && value.size() > 0)
          {
-            // Ignore
+            for (String aValue : value)
+            {
+               resolveDependsOn(aValue, archive, dependsOnMap, result);
+            }
          }
 
-         File output = new File(outputDirectory, DIRECTORY);
-         output.mkdirs();
+         transitiveDependsOnMap.put(archive, result);
+      }
 
-         FileWriter fw = new FileWriter(output.getAbsolutePath() + File.separator +  "index.html");
-         BufferedWriter bw = new BufferedWriter(fw, 8192);
-         bw.write("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\"" +
-                  "\"http://www.w3.org/TR/html4/loose.dtd\">" + Dump.NEW_LINE);
-         bw.write("<html>" + Dump.NEW_LINE);
-         bw.write("<head>" + Dump.NEW_LINE);
-         bw.write("  <title>" + Version.FULL_VERSION + ": " + NAME + "</title>" + Dump.NEW_LINE);
-         bw.write("  <meta http-equiv=\"Content-Type\" content=\"text/html;charset=utf-8\">" + Dump.NEW_LINE);
-         bw.write("  <link rel=\"stylesheet\" type=\"text/css\" href=\"../style.css\">" + Dump.NEW_LINE);
-         bw.write("</head>" + Dump.NEW_LINE);
-         bw.write("<body>" + Dump.NEW_LINE);
-         bw.write(Dump.NEW_LINE);
+      boolean odd = true;
 
-         bw.write("<h1>" + NAME + "</h1>" + Dump.NEW_LINE);
+      mit = transitiveDependsOnMap.entrySet().iterator();
+      while (mit.hasNext())
+      {
+         Map.Entry entry = (Map.Entry)mit.next();
 
-         bw.write("<a href=\"../index.html\">Main</a>" + Dump.NEW_LINE);
-         bw.write("<p>" + Dump.NEW_LINE);
+         String archive = (String)entry.getKey();
+         SortedSet<String> value = (SortedSet<String>)entry.getValue();
 
-         bw.write("<table>" + Dump.NEW_LINE);
-         
-         bw.write("  <tr>" + Dump.NEW_LINE);
-         bw.write("     <th>Archive</th>" + Dump.NEW_LINE);
-         bw.write("     <th>Depends On</th>" + Dump.NEW_LINE);
+         if (odd)
+         {
+            bw.write("  <tr class=\"rowodd\">" + Dump.NEW_LINE);
+         }
+         else
+         {
+            bw.write("  <tr class=\"roweven\">" + Dump.NEW_LINE);
+         }
+         bw.write("     <td><a href=\"../jar/" + archive + ".html\">" + archive + "</a></td>" + Dump.NEW_LINE);
+         bw.write("     <td>");
+
+         if (value.size() == 0)
+         {
+            bw.write("&nbsp;");
+         }
+         else
+         {
+            Iterator<String> valueIt = value.iterator();
+            while (valueIt.hasNext())
+            {
+               String r = valueIt.next();
+               if (r.endsWith(".jar"))
+               {
+                  bw.write("<a href=\"../jar/" + r + ".html\">" + r + "</a>");
+               }
+               else
+               {
+                  bw.write("<i>" + r + "</i>");
+                  status = ReportStatus.YELLOW;
+               }
+
+               if (valueIt.hasNext())
+               {
+                  bw.write(", ");
+               }
+            }
+         }
+
+         bw.write("</td>" + Dump.NEW_LINE);
          bw.write("  </tr>" + Dump.NEW_LINE);
 
-         SortedMap<String, SortedSet<String>> dependsOnMap = new TreeMap<String, SortedSet<String>>();
-
-         Iterator<Archive> it = archives.iterator();
-         while (it.hasNext())
-         {
-            Archive archive = it.next();
-
-            if (archive.getType() == ArchiveTypes.JAR)
-            {
-               SortedSet<String> result = dependsOnMap.get(archive.getName());
-               if (result == null)
-               {
-                  result = new TreeSet<String>();
-               }
-
-               Iterator<String> rit = archive.getRequires().iterator();
-               while (rit.hasNext())
-               {
-                  String require = rit.next();
-
-                  boolean found = false;
-                  Iterator<Archive> ait = archives.iterator();
-                  while (!found && ait.hasNext())
-                  {
-                     Archive a = ait.next();
-
-                     if (a.getType() == ArchiveTypes.JAR)
-                     {
-                        if (a.doesProvide(require) && (cls == null || cls.isVisible(archive, a)))
-                        {
-                           result.add(a.getName());
-                           found = true;
-                        }
-                     }
-                  }
-
-                  if (!found)
-                  {
-                     Iterator<Archive> kit = known.iterator();
-                     while (!found && kit.hasNext())
-                     {
-                        Archive a = kit.next();
-
-                        if (a.doesProvide(require))
-                        {
-                           found = true;
-                        }
-                     }
-                  }
-
-                  if (!found)
-                  {
-                     result.add(require);
-                  }
-               }
-
-               dependsOnMap.put(archive.getName(), result);
-            }
-         }
-
-
-         SortedMap<String, SortedSet<String>> transitiveDependsOnMap = new TreeMap<String, SortedSet<String>>();
-
-         Iterator mit = dependsOnMap.entrySet().iterator();
-         while (mit.hasNext())
-         {
-            Map.Entry entry = (Map.Entry)mit.next();
-
-            String archive = (String)entry.getKey();
-            SortedSet<String> value = (SortedSet<String>)entry.getValue();
-
-            SortedSet<String> result = new TreeSet<String>();
-
-            if (value != null && value.size() > 0)
-            {
-               Iterator<String> sit = value.iterator();
-               while (sit.hasNext())
-               {
-                  String a = sit.next();
-                  resolveDependsOn(a, archive, dependsOnMap, result);
-               }
-            }
-
-            transitiveDependsOnMap.put(archive, result);
-         }
-
-         boolean odd = true;
-
-         mit = transitiveDependsOnMap.entrySet().iterator();
-         while (mit.hasNext())
-         {
-            Map.Entry entry = (Map.Entry)mit.next();
-
-            String archive = (String)entry.getKey();
-            SortedSet<String> value = (SortedSet<String>)entry.getValue();
-
-            if (odd)
-            {
-               bw.write("  <tr class=\"rowodd\">" + Dump.NEW_LINE);
-            }
-            else
-            {
-               bw.write("  <tr class=\"roweven\">" + Dump.NEW_LINE);
-            }
-            bw.write("     <td><a href=\"../jar/" + archive + ".html\">" + archive + "</a></td>" + Dump.NEW_LINE);
-            bw.write("     <td>");
-
-            if (value.size() == 0)
-            {
-               bw.write("&nbsp;");
-            }
-            else
-            {
-               Iterator<String> valueIt = value.iterator();
-               while (valueIt.hasNext())
-               {
-                  String r = valueIt.next();
-                  if (r.endsWith(".jar"))
-                  {
-                     bw.write("<a href=\"../jar/" + r + ".html\">" + r + "</a>");
-                  }
-                  else
-                  {
-                     bw.write("<i>" + r + "</i>");
-                     status = ReportStatus.YELLOW;
-                  }
-               
-                  if (valueIt.hasNext())
-                  {
-                     bw.write(", ");
-                  }
-               }
-            }
-
-            bw.write("</td>" + Dump.NEW_LINE);
-            bw.write("  </tr>" + Dump.NEW_LINE);
-
-            odd = !odd;
-         }
-
-         bw.write("</table>" + Dump.NEW_LINE);
-
-         bw.write(Dump.NEW_LINE);
-         bw.write("<p>" + Dump.NEW_LINE);
-         bw.write("<hr>" + Dump.NEW_LINE);
-         bw.write("Generated by: <a href=\"http://www.jboss.org/projects/tattletale\">" + 
-                  Version.FULL_VERSION + "</a>" + Dump.NEW_LINE);
-         bw.write(Dump.NEW_LINE);
-         bw.write("</body>" + Dump.NEW_LINE);
-         bw.write("</html>" + Dump.NEW_LINE);
-
-         bw.flush();
-         bw.close();
+         odd = !odd;
       }
-      catch (Exception e)
-      {
-         System.err.println("TransitiveDependsOnReport: " + e.getMessage());
-         e.printStackTrace(System.err);
-      }
+
+      bw.write("</table>" + Dump.NEW_LINE);
+   }
+
+   /**
+    * write out the header of the report's content
+    * @param bw the writer to use
+    * @throws IOException if an errror occurs
+    */
+   void writeHtmlBodyHeader(BufferedWriter bw) throws IOException
+   {
+      bw.write("<body>" + Dump.NEW_LINE);
+      bw.write(Dump.NEW_LINE);
+
+      bw.write("<h1>" + NAME + "</h1>" + Dump.NEW_LINE);
+
+      bw.write("<a href=\"../index.html\">Main</a>" + Dump.NEW_LINE);
+      bw.write("<p>" + Dump.NEW_LINE);
    }
 
    /**
@@ -304,9 +234,9 @@ public class TransitiveDependsOnReport extends Report
     * @param map The depends on map
     * @param result The result
     */
-   private void resolveDependsOn(String scanArchive, 
-                                 String archive, 
-                                 SortedMap<String, SortedSet<String>> map, 
+   private void resolveDependsOn(String scanArchive,
+                                 String archive,
+                                 SortedMap<String, SortedSet<String>> map,
                                  SortedSet<String> result)
    {
       if (!archive.equals(scanArchive) && !result.contains(scanArchive))
@@ -316,11 +246,9 @@ public class TransitiveDependsOnReport extends Report
          SortedSet<String> value = map.get(scanArchive);
          if (value != null)
          {
-            Iterator<String> sit = value.iterator();
-            while (sit.hasNext())
+            for (String aValue : value)
             {
-               String a = sit.next();
-               resolveDependsOn(a, archive, map, result);
+               resolveDependsOn(aValue, archive, map, result);
             }
          }
       }

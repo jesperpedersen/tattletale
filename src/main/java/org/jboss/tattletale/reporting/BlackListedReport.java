@@ -21,20 +21,18 @@
  */
 package org.jboss.tattletale.reporting;
 
-import org.jboss.tattletale.Version;
 import org.jboss.tattletale.core.Archive;
 import org.jboss.tattletale.core.ArchiveTypes;
 
 import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.util.Iterator;
+import java.io.IOException;
 import java.util.Map;
 import java.util.SortedSet;
 
 /**
  * Blacklisted report
  * @author Jesper Pedersen <jesper.pedersen@jboss.org>
+ * @author <a href="mailto:torben.jaeger@jit-consulting.de">Torben Jaeger</a>
  */
 public class BlackListedReport extends Report
 {
@@ -50,150 +48,104 @@ public class BlackListedReport extends Report
     */
    public BlackListedReport(SortedSet<Archive> archives)
    {
-      super(ReportSeverity.ERROR, archives);
+      super(ReportSeverity.ERROR, archives, NAME, DIRECTORY);
    }
 
    /**
-    * Get the name of the report
-    * @return The name
+    * write out the report's content
+    * @param bw the writer to use
+    * @exception IOException if an error occurs
     */
-   public String getName()
+   void writeHtmlBodyContent(BufferedWriter bw) throws IOException
    {
-      return NAME;
-   }
+      bw.write("<table>" + Dump.NEW_LINE);
 
-   /**
-    * Get the name of the directory
-    * @return The directory
-    */
-   public String getDirectory()
-   {
-      return DIRECTORY;
-   }
+      bw.write("  <tr>" + Dump.NEW_LINE);
+      bw.write("     <th>Archive</th>" + Dump.NEW_LINE);
+      bw.write("     <th>Usage</th>" + Dump.NEW_LINE);
+      bw.write("  </tr>" + Dump.NEW_LINE);
 
-   /**
-    * Generate the report(s)
-    * @param outputDirectory The top-level output directory
-    */
-   public void generate(String outputDirectory)
-   {
-      try
+      boolean odd = true;
+
+      for (Archive archive : archives)
       {
-         File output = new File(outputDirectory, DIRECTORY);
-         output.mkdirs();
 
-         FileWriter fw = new FileWriter(output.getAbsolutePath() + File.separator +  "index.html");
-         BufferedWriter bw = new BufferedWriter(fw, 8192);
-         bw.write("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\"" +
-                  "\"http://www.w3.org/TR/html4/loose.dtd\">" + Dump.NEW_LINE);
-         bw.write("<html>" + Dump.NEW_LINE);
-         bw.write("<head>" + Dump.NEW_LINE);
-         bw.write("  <title>" + Version.FULL_VERSION + ": " + NAME + "</title>" + Dump.NEW_LINE);
-         bw.write("  <meta http-equiv=\"Content-Type\" content=\"text/html;charset=utf-8\">" + Dump.NEW_LINE);
-         bw.write("  <link rel=\"stylesheet\" type=\"text/css\" href=\"../style.css\">" + Dump.NEW_LINE);
-         bw.write("</head>" + Dump.NEW_LINE);
-         bw.write("<body>" + Dump.NEW_LINE);
-         bw.write(Dump.NEW_LINE);
-
-         bw.write("<h1>" + NAME + "</h1>" + Dump.NEW_LINE);
-
-         bw.write("<a href=\"../index.html\">Main</a>" + Dump.NEW_LINE);
-         bw.write("<p>" + Dump.NEW_LINE);
-
-         bw.write("<table>" + Dump.NEW_LINE);
-
-         bw.write("  <tr>" + Dump.NEW_LINE);
-         bw.write("     <th>Archive</th>" + Dump.NEW_LINE);
-         bw.write("     <th>Usage</th>" + Dump.NEW_LINE);
-         bw.write("  </tr>" + Dump.NEW_LINE);
-
-         boolean odd = true;
-
-         Iterator<Archive> it = archives.iterator();
-         while (it.hasNext())
+         if (archive.getType() == ArchiveTypes.JAR)
          {
-            Archive a = it.next();
+            boolean include = false;
 
-            if (a.getType() == ArchiveTypes.JAR)
+            if (archive.getBlackListedDependencies() != null && archive.getBlackListedDependencies().size() > 0)
             {
-               boolean include = false;
+               include = true;
+               status = ReportStatus.RED;
+            }
 
-               if (a.getBlackListedDependencies() != null && a.getBlackListedDependencies().size() > 0)
+            if (include)
+            {
+               if (odd)
                {
-                  include = true;
-                  status = ReportStatus.RED;
+                  bw.write("  <tr class=\"rowodd\">" + Dump.NEW_LINE);
                }
-
-               if (include)
+               else
                {
-                  if (odd)
+                  bw.write("  <tr class=\"roweven\">" + Dump.NEW_LINE);
+               }
+               bw.write(
+                     "     <td><a href=\"../jar/" + archive.getName() + ".html\">" + archive.getName() + "</a></td>" +
+                     Dump.NEW_LINE);
+               bw.write("     <td>");
+
+               bw.write("       <table>" + Dump.NEW_LINE);
+
+               for (Map.Entry<String, SortedSet<String>> stringSortedSetEntry : archive.getBlackListedDependencies()
+                     .entrySet())
+               {
+
+                  String pkg = stringSortedSetEntry.getKey();
+                  SortedSet<String> blpkgs = stringSortedSetEntry.getValue();
+
+                  bw.write("      <tr>" + Dump.NEW_LINE);
+
+                  bw.write("        <td>" + pkg + "</td>" + Dump.NEW_LINE);
+
+                  bw.write("        <td>");
+
+                  for (String blp : blpkgs)
                   {
-                     bw.write("  <tr class=\"rowodd\">" + Dump.NEW_LINE);
+                     bw.write(blp + "<br>");
                   }
-                  else
-                  {
-                     bw.write("  <tr class=\"roweven\">" + Dump.NEW_LINE);
-                  }
-                  bw.write("     <td><a href=\"../jar/" + a.getName() + ".html\">" + a.getName() + "</a></td>" + 
-                           Dump.NEW_LINE);
-                  bw.write("     <td>");
-
-                  bw.write("       <table>" + Dump.NEW_LINE);
-            
-                  Iterator<Map.Entry<String, SortedSet<String>>> blit = 
-                     a.getBlackListedDependencies().entrySet().iterator();
-
-                  while (blit.hasNext())
-                  {
-                     Map.Entry<String, SortedSet<String>> entry = blit.next();
-
-                     String pkg = entry.getKey();
-                     SortedSet<String> blpkgs = entry.getValue();
-
-                     bw.write("      <tr>" + Dump.NEW_LINE);
-                     
-                     bw.write("        <td>" + pkg + "</td>" + Dump.NEW_LINE);
-
-                     bw.write("        <td>");
-
-                     for (String blp : blpkgs)
-                     {
-                        bw.write(blp + "<br>");
-                     }
-
-                     bw.write("</td>" + Dump.NEW_LINE);
-            
-                     bw.write("      </tr>" + Dump.NEW_LINE);
-                  }
-               
-                  bw.write("       </table>" + Dump.NEW_LINE);
 
                   bw.write("</td>" + Dump.NEW_LINE);
-                  bw.write("  </tr>" + Dump.NEW_LINE);
-                  
-                  odd = !odd;
+
+                  bw.write("      </tr>" + Dump.NEW_LINE);
                }
+
+               bw.write("       </table>" + Dump.NEW_LINE);
+
+               bw.write("</td>" + Dump.NEW_LINE);
+               bw.write("  </tr>" + Dump.NEW_LINE);
+
+               odd = !odd;
             }
          }
-
-         bw.write("</table>" + Dump.NEW_LINE);
-
-         bw.write(Dump.NEW_LINE);
-         bw.write("<p>" + Dump.NEW_LINE);
-         bw.write("<hr>" + Dump.NEW_LINE);
-         bw.write("Generated by: <a href=\"http://www.jboss.org/projects/tattletale\">" + 
-                  Version.FULL_VERSION + "</a>" + Dump.NEW_LINE);
-         bw.write(Dump.NEW_LINE);
-         bw.write("</body>" + Dump.NEW_LINE);
-         bw.write("</html>" + Dump.NEW_LINE);
-
-         bw.flush();
-         bw.close();
       }
-      catch (Exception e)
-      {
-         System.err.println("NoVersionReport: " + e.getMessage());
-         e.printStackTrace(System.err);
-      }
+
+      bw.write("</table>" + Dump.NEW_LINE);
+   }
+
+   /**
+    * write out the header of the report's content
+    * @param bw the writer to use
+    * @exception IOException if an errror occurs
+    */
+   void writeHtmlBodyHeader(BufferedWriter bw) throws IOException
+   {
+      bw.write("<body>" + Dump.NEW_LINE);
+      bw.write(Dump.NEW_LINE);
+
+      bw.write("<h1>" + NAME + "</h1>" + Dump.NEW_LINE);
+
+      bw.write("<a href=\"../index.html\">Main</a>" + Dump.NEW_LINE);
+      bw.write("<p>" + Dump.NEW_LINE);
    }
 }

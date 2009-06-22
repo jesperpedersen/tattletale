@@ -21,12 +21,10 @@
  */
 package org.jboss.tattletale.reporting;
 
-import org.jboss.tattletale.Version;
 import org.jboss.tattletale.core.Archive;
 
 import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.SortedMap;
@@ -35,6 +33,7 @@ import java.util.SortedSet;
 /**
  * Multiple jars report
  * @author Jesper Pedersen <jesper.pedersen@jboss.org>
+ * @author <a href="mailto:torben.jaeger@jit-consulting.de">Torben Jaeger</a>
  */
 public class MultipleJarsReport extends Report
 {
@@ -52,128 +51,85 @@ public class MultipleJarsReport extends Report
     * @param archives The archives
     * @param gProvides The global provides
     */
-   public MultipleJarsReport(SortedSet<Archive> archives, SortedMap<String, SortedSet<String>> gProvides)
+   public MultipleJarsReport(SortedSet<Archive> archives,
+                             SortedMap<String, SortedSet<String>> gProvides)
    {
-      super(ReportSeverity.WARNING, archives);
+      super(ReportSeverity.WARNING, archives, NAME, DIRECTORY);
       this.gProvides = gProvides;
    }
 
    /**
-    * Get the name of the report
-    * @return The name
+    * write out the report's content
+    * @param bw the writer to use
+    * @exception IOException if an error occurs
     */
-   public String getName()
+   void writeHtmlBodyContent(BufferedWriter bw) throws IOException
    {
-      return NAME;
-   }
+      bw.write("<table>" + Dump.NEW_LINE);
 
-   /**
-    * Get the name of the directory
-    * @return The directory
-    */
-   public String getDirectory()
-   {
-      return DIRECTORY;
-   }
+      bw.write("  <tr>" + Dump.NEW_LINE);
+      bw.write("     <th>Class</th>" + Dump.NEW_LINE);
+      bw.write("     <th>Jar files</th>" + Dump.NEW_LINE);
+      bw.write("  </tr>" + Dump.NEW_LINE);
 
-   /**
-    * Generate the report(s)
-    * @param outputDirectory The top-level output directory
-    */
-   public void generate(String outputDirectory)
-   {
-      try
+      boolean odd = true;
+
+      for (Map.Entry<String, SortedSet<String>> entry : gProvides.entrySet())
       {
-         File output = new File(outputDirectory, DIRECTORY);
-         output.mkdirs();
 
-         FileWriter fw = new FileWriter(output.getAbsolutePath() + File.separator +  "index.html");
-         BufferedWriter bw = new BufferedWriter(fw, 8192);
-         bw.write("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\"" +
-                  "\"http://www.w3.org/TR/html4/loose.dtd\">" + Dump.NEW_LINE);
-         bw.write("<html>" + Dump.NEW_LINE);
-         bw.write("<head>" + Dump.NEW_LINE);
-         bw.write("  <title>" + Version.FULL_VERSION + ": " + NAME + "</title>" + Dump.NEW_LINE);
-         bw.write("  <meta http-equiv=\"Content-Type\" content=\"text/html;charset=utf-8\">" + Dump.NEW_LINE);
-         bw.write("  <link rel=\"stylesheet\" type=\"text/css\" href=\"../style.css\">" + Dump.NEW_LINE);
-         bw.write("</head>" + Dump.NEW_LINE);
-         bw.write("<body>" + Dump.NEW_LINE);
-         bw.write(Dump.NEW_LINE);
+         String clz = entry.getKey();
+         SortedSet archives = entry.getValue();
 
-         bw.write("<h1>" + NAME + "</h1>" + Dump.NEW_LINE);
-
-         bw.write("<a href=\"../index.html\">Main</a>" + Dump.NEW_LINE);
-         bw.write("<p>" + Dump.NEW_LINE);
-
-         bw.write("<table>" + Dump.NEW_LINE);
-
-         bw.write("  <tr>" + Dump.NEW_LINE);
-         bw.write("     <th>Class</th>" + Dump.NEW_LINE);
-         bw.write("     <th>Jar files</th>" + Dump.NEW_LINE);
-         bw.write("  </tr>" + Dump.NEW_LINE);
-
-         boolean odd = true;
-
-         Iterator it = gProvides.entrySet().iterator();
-         while (it.hasNext())
+         if (archives.size() > 1)
          {
-            Map.Entry entry = (Map.Entry)it.next();
-            
-            String clz = (String)entry.getKey();
-            SortedSet archives = (SortedSet)entry.getValue();
+            status = ReportStatus.RED;
 
-            if (archives.size() > 1)
+            if (odd)
             {
-               status = ReportStatus.RED;
-
-               if (odd)
-               {
-                  bw.write("  <tr class=\"rowodd\">" + Dump.NEW_LINE);
-               }
-               else
-               {
-                  bw.write("  <tr class=\"roweven\">" + Dump.NEW_LINE);
-               }
-               bw.write("     <td>" + clz + "</td>" + Dump.NEW_LINE);
-               bw.write("     <td>");
-
-               Iterator sit = archives.iterator();
-               while (sit.hasNext())
-               {
-                  String archive = (String)sit.next();
-                  bw.write("<a href=\"../jar/" + archive + ".html\">" + archive + "</a>" + Dump.NEW_LINE);
-
-                  if (sit.hasNext())
-                  {
-                     bw.write(", ");
-                  }
-               }
-
-               bw.write("</td>" + Dump.NEW_LINE);
-               bw.write("  </tr>" + Dump.NEW_LINE);
-
-               odd = !odd;
+               bw.write("  <tr class=\"rowodd\">" + Dump.NEW_LINE);
             }
+            else
+            {
+               bw.write("  <tr class=\"roweven\">" + Dump.NEW_LINE);
+            }
+            bw.write("     <td>" + clz + "</td>" + Dump.NEW_LINE);
+            bw.write("     <td>");
+
+            Iterator sit = archives.iterator();
+            while (sit.hasNext())
+            {
+               String archive = (String)sit.next();
+               bw.write("<a href=\"../jar/" + archive + ".html\">" + archive + "</a>" + Dump.NEW_LINE);
+
+               if (sit.hasNext())
+               {
+                  bw.write(", ");
+               }
+            }
+
+            bw.write("</td>" + Dump.NEW_LINE);
+            bw.write("  </tr>" + Dump.NEW_LINE);
+
+            odd = !odd;
          }
-
-         bw.write("</table>" + Dump.NEW_LINE);
-
-         bw.write(Dump.NEW_LINE);
-         bw.write("<p>" + Dump.NEW_LINE);
-         bw.write("<hr>" + Dump.NEW_LINE);
-         bw.write("Generated by: <a href=\"http://www.jboss.org/projects/tattletale\">" + 
-                  Version.FULL_VERSION + "</a>" + Dump.NEW_LINE);
-         bw.write(Dump.NEW_LINE);
-         bw.write("</body>" + Dump.NEW_LINE);
-         bw.write("</html>" + Dump.NEW_LINE);
-
-         bw.flush();
-         bw.close();
       }
-      catch (Exception e)
-      {
-         System.err.println("GenerateMultipleJars: " + e.getMessage());
-         e.printStackTrace(System.err);
-      }
+
+      bw.write("</table>" + Dump.NEW_LINE);
+   }
+
+   /**
+    * write out the header of the report's content
+    * @param bw the writer to use
+    * @throws IOException if an errror occurs
+    */
+   void writeHtmlBodyHeader(BufferedWriter bw) throws IOException
+   {
+      bw.write("<body>" + Dump.NEW_LINE);
+      bw.write(Dump.NEW_LINE);
+
+      bw.write("<h1>" + NAME + "</h1>" + Dump.NEW_LINE);
+
+      bw.write("<a href=\"../index.html\">Main</a>" + Dump.NEW_LINE);
+      bw.write("<p>" + Dump.NEW_LINE);
    }
 }

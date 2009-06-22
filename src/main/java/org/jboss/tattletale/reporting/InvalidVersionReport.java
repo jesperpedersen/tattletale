@@ -21,20 +21,19 @@
  */
 package org.jboss.tattletale.reporting;
 
-import org.jboss.tattletale.Version;
 import org.jboss.tattletale.core.Archive;
 import org.jboss.tattletale.core.ArchiveTypes;
 import org.jboss.tattletale.core.Location;
 
 import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Iterator;
 import java.util.SortedSet;
 
 /**
  * Multiple locations report
  * @author Jesper Pedersen <jesper.pedersen@jboss.org>
+ * @author <a href="mailto:torben.jaeger@jit-consulting.de">Torben Jaeger</a>
  */
 public class InvalidVersionReport extends Report
 {
@@ -50,146 +49,103 @@ public class InvalidVersionReport extends Report
     */
    public InvalidVersionReport(SortedSet<Archive> archives)
    {
-      super(ReportSeverity.WARNING, archives);
+      super(ReportSeverity.WARNING, archives, NAME, DIRECTORY);
    }
 
    /**
-    * Get the name of the report
-    * @return The name
+    * write out the report's content
+    * @param bw the writer to use
+    * @exception IOException if an error occurs
     */
-   public String getName()
+   void writeHtmlBodyContent(BufferedWriter bw) throws IOException
    {
-      return NAME;
-   }
+      bw.write("<table>" + Dump.NEW_LINE);
 
-   /**
-    * Get the name of the directory
-    * @return The directory
-    */
-   public String getDirectory()
-   {
-      return DIRECTORY;
-   }
+      bw.write("  <tr>" + Dump.NEW_LINE);
+      bw.write("     <th>Name</th>" + Dump.NEW_LINE);
+      bw.write("     <th>Location</th>" + Dump.NEW_LINE);
+      bw.write("  </tr>" + Dump.NEW_LINE);
 
-   /**
-    * Generate the report(s)
-    * @param outputDirectory The top-level output directory
-    */
-   public void generate(String outputDirectory)
-   {
-      try
+      boolean odd = true;
+
+      for (Archive archive : archives)
       {
-         File output = new File(outputDirectory, DIRECTORY);
-         output.mkdirs();
 
-         FileWriter fw = new FileWriter(output.getAbsolutePath() + File.separator +  "index.html");
-         BufferedWriter bw = new BufferedWriter(fw, 8192);
-         bw.write("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\"" +
-                  "\"http://www.w3.org/TR/html4/loose.dtd\">" + Dump.NEW_LINE);
-         bw.write("<html>" + Dump.NEW_LINE);
-         bw.write("<head>" + Dump.NEW_LINE);
-         bw.write("  <title>" + Version.FULL_VERSION + ": " + NAME + "</title>" + Dump.NEW_LINE);
-         bw.write("  <meta http-equiv=\"Content-Type\" content=\"text/html;charset=utf-8\">" + Dump.NEW_LINE);
-         bw.write("  <link rel=\"stylesheet\" type=\"text/css\" href=\"../style.css\">" + Dump.NEW_LINE);
-         bw.write("</head>" + Dump.NEW_LINE);
-         bw.write("<body>" + Dump.NEW_LINE);
-         bw.write(Dump.NEW_LINE);
-
-         bw.write("<h1>" + NAME + "</h1>" + Dump.NEW_LINE);
-
-         bw.write("<a href=\"../index.html\">Main</a>" + Dump.NEW_LINE);
-         bw.write("<p>" + Dump.NEW_LINE);
-
-         bw.write("<table>" + Dump.NEW_LINE);
-
-         bw.write("  <tr>" + Dump.NEW_LINE);
-         bw.write("     <th>Name</th>" + Dump.NEW_LINE);
-         bw.write("     <th>Location</th>" + Dump.NEW_LINE);
-         bw.write("  </tr>" + Dump.NEW_LINE);
-
-         boolean odd = true;
-
-         Iterator<Archive> it = archives.iterator();
-         while (it.hasNext())
+         if (archive.getType() == ArchiveTypes.JAR)
          {
-            Archive a = it.next();
+            SortedSet<Location> locations = archive.getLocations();
+            Iterator<Location> lit = locations.iterator();
 
-            if (a.getType() == ArchiveTypes.JAR)
+            Location location = lit.next();
+            String version = location.getVersion();
+
+            if (version != null && !version.matches("\\d+(\\.\\d+(\\.\\d+(\\.[0-9a-zA-Z\\_\\-]+)?)?)?"))
             {
-               SortedSet<Location> locations = a.getLocations();
-               Iterator<Location> lit = locations.iterator();
+               status = ReportStatus.RED;
 
-               Location location = lit.next();
-               String version = location.getVersion();
-
-               if (version != null && !version.matches("\\d+(\\.\\d+(\\.\\d+(\\.[0-9a-zA-Z\\_\\-]+)?)?)?"))
+               if (odd)
                {
-                  status = ReportStatus.RED;
+                  bw.write("  <tr class=\"rowodd\">" + Dump.NEW_LINE);
+               }
+               else
+               {
+                  bw.write("  <tr class=\"roweven\">" + Dump.NEW_LINE);
+               }
+               bw.write(
+                     "     <td><a href=\"../jar/" + archive.getName() + ".html\">" + archive.getName() + "</a></td>" +
+                     Dump.NEW_LINE);
+               bw.write("     <td>");
 
-                  if (odd)
+               bw.write("       <table>" + Dump.NEW_LINE);
+
+               lit = locations.iterator();
+               while (lit.hasNext())
+               {
+                  location = lit.next();
+
+                  bw.write("      <tr>" + Dump.NEW_LINE);
+
+                  bw.write("        <td>" + location.getFilename() + "</td>" + Dump.NEW_LINE);
+                  bw.write("        <td>");
+                  if (location.getVersion() != null)
                   {
-                     bw.write("  <tr class=\"rowodd\">" + Dump.NEW_LINE);
+                     bw.write(location.getVersion());
                   }
                   else
                   {
-                     bw.write("  <tr class=\"roweven\">" + Dump.NEW_LINE);
+                     bw.write("<i>Not listed</i>");
                   }
-                  bw.write("     <td><a href=\"../jar/" + a.getName() + ".html\">" + a.getName() + "</a></td>" + 
-                           Dump.NEW_LINE);
-                  bw.write("     <td>");
-                  
-                  bw.write("       <table>" + Dump.NEW_LINE);
-            
-                  lit = locations.iterator();
-                  while (lit.hasNext())
-                  {
-                     location = lit.next();
-
-                     bw.write("      <tr>" + Dump.NEW_LINE);
-                     
-                     bw.write("        <td>" + location.getFilename() + "</td>" + Dump.NEW_LINE);
-                     bw.write("        <td>");
-                     if (location.getVersion() != null)
-                     {
-                        bw.write(location.getVersion());
-                     }
-                     else
-                     {
-                        bw.write("<i>Not listed</i>");
-                     }
-                     bw.write("</td>" + Dump.NEW_LINE);
-            
-                     bw.write("      </tr>" + Dump.NEW_LINE);
-                  }
-               
-                  bw.write("       </table>" + Dump.NEW_LINE);
-                  
                   bw.write("</td>" + Dump.NEW_LINE);
-                  bw.write("  </tr>" + Dump.NEW_LINE);
-                  
-                  odd = !odd;
+
+                  bw.write("      </tr>" + Dump.NEW_LINE);
                }
+
+               bw.write("       </table>" + Dump.NEW_LINE);
+
+               bw.write("</td>" + Dump.NEW_LINE);
+               bw.write("  </tr>" + Dump.NEW_LINE);
+
+               odd = !odd;
             }
          }
-
-         bw.write("</table>" + Dump.NEW_LINE);
-
-         bw.write(Dump.NEW_LINE);
-         bw.write("<p>" + Dump.NEW_LINE);
-         bw.write("<hr>" + Dump.NEW_LINE);
-         bw.write("Generated by: <a href=\"http://www.jboss.org/projects/tattletale\">" + 
-                  Version.FULL_VERSION + "</a>" + Dump.NEW_LINE);
-         bw.write(Dump.NEW_LINE);
-         bw.write("</body>" + Dump.NEW_LINE);
-         bw.write("</html>" + Dump.NEW_LINE);
-
-         bw.flush();
-         bw.close();
       }
-      catch (Exception e)
-      {
-         System.err.println("InvalidVersionReport: " + e.getMessage());
-         e.printStackTrace(System.err);
-      }
+
+      bw.write("</table>" + Dump.NEW_LINE);
+   }
+
+   /**
+    * write out the header of the report's content
+    * @param bw the writer to use
+    * @throws IOException if an errror occurs
+    */
+   void writeHtmlBodyHeader(BufferedWriter bw) throws IOException
+   {
+      bw.write("<body>" + Dump.NEW_LINE);
+      bw.write(Dump.NEW_LINE);
+
+      bw.write("<h1>" + NAME + "</h1>" + Dump.NEW_LINE);
+
+      bw.write("<a href=\"../index.html\">Main</a>" + Dump.NEW_LINE);
+      bw.write("<p>" + Dump.NEW_LINE);
    }
 }

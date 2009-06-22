@@ -21,14 +21,11 @@
  */
 package org.jboss.tattletale.reporting;
 
-import org.jboss.tattletale.Version;
 import org.jboss.tattletale.core.Archive;
 import org.jboss.tattletale.core.ArchiveTypes;
-import org.jboss.tattletale.reporting.classloader.ClassLoaderStructure;
 
 import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Iterator;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -36,8 +33,9 @@ import java.util.TreeSet;
 /**
  * Dependants report
  * @author Jesper Pedersen <jesper.pedersen@jboss.org>
+ * @author <a href="mailto:torben.jaeger@jit-consulting.de">Torben Jaeger</a>
  */
-public class DependantsReport extends Report
+public class DependantsReport extends CLSReport
 {
    /** NAME */
    private static final String NAME = "Dependants";
@@ -45,179 +43,116 @@ public class DependantsReport extends Report
    /** DIRECTORY */
    private static final String DIRECTORY = "dependants";
 
-   /** Class loader structure */
-   private String classloaderStructure;
 
    /**
     * Constructor
     * @param archives The archives
     * @param classloaderStructure The classloader structure
     */
-   public DependantsReport(SortedSet<Archive> archives, String classloaderStructure)
+   public DependantsReport(SortedSet<Archive> archives,
+                           String classloaderStructure)
    {
-      super(ReportSeverity.INFO, archives);
-      this.classloaderStructure = classloaderStructure;
+      super(ReportSeverity.INFO, archives, NAME, DIRECTORY, classloaderStructure);
    }
 
    /**
-    * Get the name of the report
-    * @return The name
+    * write out the report's content
+    * @param bw the writer to use
+    * @exception IOException if an error occurs
     */
-   public String getName()
+   void writeHtmlBodyContent(BufferedWriter bw) throws IOException
    {
-      return NAME;
-   }
+      bw.write("<table>" + Dump.NEW_LINE);
 
-   /**
-    * Get the name of the directory
-    * @return The directory
-    */
-   public String getDirectory()
-   {
-      return DIRECTORY;
-   }
+      bw.write("  <tr>" + Dump.NEW_LINE);
+      bw.write("     <th>Archive</th>" + Dump.NEW_LINE);
+      bw.write("     <th>Dependants</th>" + Dump.NEW_LINE);
+      bw.write("  </tr>" + Dump.NEW_LINE);
 
-   /**
-    * Generate the report(s)
-    * @param outputDirectory The top-level output directory
-    */
-   public void generate(String outputDirectory)
-   {
-      try
+      boolean odd = true;
+
+      for (Archive archive : archives)
       {
-         ClassLoaderStructure cls = null;
 
-         try
+         if (archive.getType() == ArchiveTypes.JAR)
          {
-            Class c = Thread.currentThread().getContextClassLoader().loadClass(classloaderStructure);
-            cls = (ClassLoaderStructure)c.newInstance();
-         }
-         catch (Exception ntd)
-         {
-            // Ignore
-         }
-
-         File output = new File(outputDirectory, DIRECTORY);
-         output.mkdirs();
-
-         FileWriter fw = new FileWriter(output.getAbsolutePath() + File.separator +  "index.html");
-         BufferedWriter bw = new BufferedWriter(fw, 8192);
-         bw.write("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\"" + 
-                  "\"http://www.w3.org/TR/html4/loose.dtd\">" + Dump.NEW_LINE);
-         bw.write("<html>" + Dump.NEW_LINE);
-         bw.write("<head>" + Dump.NEW_LINE);
-         bw.write("  <title>" + Version.FULL_VERSION + ": " + NAME + "</title>" + Dump.NEW_LINE);
-         bw.write("  <meta http-equiv=\"Content-Type\" content=\"text/html;charset=utf-8\">" + Dump.NEW_LINE);
-         bw.write("  <link rel=\"stylesheet\" type=\"text/css\" href=\"../style.css\">" + Dump.NEW_LINE);
-         bw.write("</head>" + Dump.NEW_LINE);
-         bw.write("<body>" + Dump.NEW_LINE);
-         bw.write(Dump.NEW_LINE);
-
-         bw.write("<h1>" + NAME + "</h1>" + Dump.NEW_LINE);
-
-         bw.write("<a href=\"../index.html\">Main</a>" + Dump.NEW_LINE);
-         bw.write("<p>" + Dump.NEW_LINE);
-
-         bw.write("<table>" + Dump.NEW_LINE);
-         
-         bw.write("  <tr>" + Dump.NEW_LINE);
-         bw.write("     <th>Archive</th>" + Dump.NEW_LINE);
-         bw.write("     <th>Dependants</th>" + Dump.NEW_LINE);
-         bw.write("  </tr>" + Dump.NEW_LINE);
-
-         boolean odd = true;
-
-         Iterator<Archive> it = archives.iterator();
-         while (it.hasNext())
-         {
-            Archive archive = it.next();
-
-            if (archive.getType() == ArchiveTypes.JAR)
+            if (odd)
             {
-               if (odd)
-               {
-                  bw.write("  <tr class=\"rowodd\">" + Dump.NEW_LINE);
-               }
-               else
-               {
-                  bw.write("  <tr class=\"roweven\">" + Dump.NEW_LINE);
-               }
-               bw.write("     <td><a href=\"../jar/" + archive.getName() + ".html\">" + 
-                        archive.getName() + "</a></td>" + Dump.NEW_LINE);
-               bw.write("     <td>");
-
-
-               SortedSet<String> result = new TreeSet<String>();
-               
-               Iterator<Archive> ait = archives.iterator();
-               while (ait.hasNext())
-               {
-                  Archive a = ait.next();
-
-                  boolean found = false;
-                  Iterator<String> rit = a.getRequires().iterator();
-                  while (!found && rit.hasNext())
-                  {
-                     String require = rit.next();
-
-                     if (archive.doesProvide(require) && (cls == null || cls.isVisible(a, archive)))
-                     {
-                        result.add(a.getName());
-                     }
-                  }
-               }
-               
-               if (result.size() == 0)
-               {
-                  bw.write("&nbsp;");
-               }
-               else
-               {
-                  Iterator<String> resultIt = result.iterator();
-                  while (resultIt.hasNext())
-                  {
-                     String r = resultIt.next();
-                     if (r.endsWith(".jar"))
-                     {
-                        bw.write("<a href=\"../jar/" + r + ".html\">" + r + "</a>");
-                     }
-                     else
-                     {
-                        bw.write("<i>" + r + "</i>");                  
-                     }
-                     
-                     if (resultIt.hasNext())
-                     {
-                        bw.write(", ");
-                     }
-                  }
-               }
-
-               bw.write("</td>" + Dump.NEW_LINE);
-               bw.write("  </tr>" + Dump.NEW_LINE);
-               
-               odd = !odd;
+               bw.write("  <tr class=\"rowodd\">" + Dump.NEW_LINE);
             }
+            else
+            {
+               bw.write("  <tr class=\"roweven\">" + Dump.NEW_LINE);
+            }
+            bw.write("     <td><a href=\"../jar/" + archive.getName() + ".html\">" + archive.getName() + "</a></td>" +
+                     Dump.NEW_LINE);
+            bw.write("     <td>");
+
+
+            SortedSet<String> result = new TreeSet<String>();
+
+            for (Archive a : archives)
+            {
+
+               for (String require : a.getRequires())
+               {
+
+                  if (archive.doesProvide(require) && (getCLS() == null || getCLS().isVisible(a, archive)))
+                  {
+                     result.add(a.getName());
+                  }
+               }
+            }
+
+            if (result.size() == 0)
+            {
+               bw.write("&nbsp;");
+            }
+            else
+            {
+               Iterator<String> resultIt = result.iterator();
+               while (resultIt.hasNext())
+               {
+                  String r = resultIt.next();
+                  if (r.endsWith(".jar"))
+                  {
+                     bw.write("<a href=\"../jar/" + r + ".html\">" + r + "</a>");
+                  }
+                  else
+                  {
+                     bw.write("<i>" + r + "</i>");
+                  }
+
+                  if (resultIt.hasNext())
+                  {
+                     bw.write(", ");
+                  }
+               }
+            }
+
+            bw.write("</td>" + Dump.NEW_LINE);
+            bw.write("  </tr>" + Dump.NEW_LINE);
+
+            odd = !odd;
          }
-
-         bw.write("</table>" + Dump.NEW_LINE);
-
-         bw.write(Dump.NEW_LINE);
-         bw.write("<p>" + Dump.NEW_LINE);
-         bw.write("<hr>" + Dump.NEW_LINE);
-         bw.write("Generated by: <a href=\"http://www.jboss.org/projects/tattletale\">" + 
-                  Version.FULL_VERSION + "</a>" + Dump.NEW_LINE);
-         bw.write(Dump.NEW_LINE);
-         bw.write("</body>" + Dump.NEW_LINE);
-         bw.write("</html>" + Dump.NEW_LINE);
-
-         bw.flush();
-         bw.close();
       }
-      catch (Exception e)
-      {
-         System.err.println("DependantsReport: " + e.getMessage());
-         e.printStackTrace(System.err);
-      }
+
+      bw.write("</table>" + Dump.NEW_LINE);
+   }
+
+   /**
+    * write out the header of the report's content
+    * @param bw the writer to use
+    * @throws IOException if an errror occurs
+    */
+   void writeHtmlBodyHeader(BufferedWriter bw) throws IOException
+   {
+      bw.write("<body>" + Dump.NEW_LINE);
+      bw.write(Dump.NEW_LINE);
+
+      bw.write("<h1>" + NAME + "</h1>" + Dump.NEW_LINE);
+
+      bw.write("<a href=\"../index.html\">Main</a>" + Dump.NEW_LINE);
+      bw.write("<p>" + Dump.NEW_LINE);
    }
 }
