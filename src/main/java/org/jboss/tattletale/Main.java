@@ -39,6 +39,7 @@ import org.jboss.tattletale.reporting.MultipleJarsReport;
 import org.jboss.tattletale.reporting.MultipleLocationsReport;
 import org.jboss.tattletale.reporting.NoVersionReport;
 import org.jboss.tattletale.reporting.OSGiReport;
+import org.jboss.tattletale.reporting.PackageMultipleJarsReport;
 import org.jboss.tattletale.reporting.Report;
 import org.jboss.tattletale.reporting.SunJava5;
 import org.jboss.tattletale.reporting.SunJava6;
@@ -332,6 +333,10 @@ public class Main
       Report multipleLocations = new MultipleLocationsReport(archives);
       multipleLocations.generate(outputDir);
       generalReports.add(multipleLocations);
+
+      Report packageMultipleJars = new PackageMultipleJarsReport(archives, gProvides);
+      packageMultipleJars.generate(outputDir);
+      generalReports.add(packageMultipleJars);
 
       Report eliminateJars = new EliminateJarsReport(archives);
       eliminateJars.generate(outputDir);

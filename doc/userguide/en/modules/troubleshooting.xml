@@ -30,7 +30,7 @@ java -Xmx1024m -jar jboss-tattletale.jar &lt;sourcedir&gt; [&lt;outputdir&gt;]
       <para>We can't cover every single issue in this guide, so feel free to drop by our forums to see if a solution
         has already been provided. Otherwise feel free to ask your question there.</para>
 
-      <para>Our forum is located at <ulink url="http://www.jboss.org/index.html?module=bb&amp;op=viewforum&amp;f=306">http://www.jboss.org/index.html?module=bb&amp;op=viewforum&amp;f=306</ulink></para>
+      <para>Our forum is located at <ulink url="http://www.jboss.org/index.html?module=bb&amp;op=viewforum&amp;f=306">http://www.jboss.org/index.html?module=bb&amp;op=viewforum&amp;f=320</ulink></para>
 
    </section>
    
