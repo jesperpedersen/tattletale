@@ -217,6 +217,33 @@ dot -Tpng myarchive.dot &gt; myarchive.png
         </table>
       </section>
 
+      <!-- Signing information report -->
+      <section id="sign">
+        <title>Signing information</title>
+
+        <para>The signing information report will display the signing status of your project.</para>
+
+        <table frame="all">
+          <title>Signing information report</title>
+          <tgroup cols="4" align="left" colsep="1" rowsep="1">
+            <colspec colname="c1"/>
+            <colspec colname="c2"/>
+            <thead>
+              <row>
+                <entry align="left">Archive</entry>
+                <entry align="left">Status</entry>
+              </row>
+            </thead>
+            <tbody>
+              <row>
+                <entry>The archive</entry>
+                <entry>The status if the archive is signed or unsigned</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </table>
+      </section>
+
       <!-- Eliminate Jar report -->
       <section id="eliminatejar">
         <title>Eliminate Jar files with different versions</title>
