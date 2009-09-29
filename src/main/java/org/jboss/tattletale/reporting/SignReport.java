@@ -109,6 +109,9 @@ public class SignReport extends Report
 
       bw.write("</table>" + Dump.NEW_LINE);
 
+      if (signed > 0 && unsigned > 0)
+         status = ReportStatus.YELLOW;
+
       bw.write(Dump.NEW_LINE);
       bw.write("<p>" + Dump.NEW_LINE);
 
