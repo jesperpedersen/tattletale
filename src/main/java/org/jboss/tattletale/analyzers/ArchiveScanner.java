@@ -29,6 +29,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.LineNumberReader;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Enumeration;
@@ -93,6 +95,8 @@ public class ArchiveScanner
          SortedMap<String, Long> provides = new TreeMap<String, Long>();
          SortedMap<String, SortedSet<String>> packageDependencies = new TreeMap<String, SortedSet<String>>();
          SortedMap<String, SortedSet<String>> blacklistedDependencies = new TreeMap<String, SortedSet<String>>();
+
+         List<String> lSign = null;
 
          jarFile = new JarFile(file);
          Enumeration<JarEntry> e = jarFile.entries();
@@ -211,6 +215,43 @@ public class ArchiveScanner
                   }
                }
             }
+            else if (jarEntry.getName().indexOf("META-INF") != -1 && jarEntry.getName().endsWith(".SF"))
+            {
+               InputStream is = null;
+               try
+               {
+                  is = jarFile.getInputStream(jarEntry); 
+
+                  InputStreamReader isr = new InputStreamReader(is);
+                  LineNumberReader lnr = new LineNumberReader(isr);
+
+                  if (lSign == null)
+                     lSign = new ArrayList<String>();
+
+                  String s = lnr.readLine();
+                  while (s != null)
+                  {
+                     lSign.add(s);
+                     s = lnr.readLine();
+                  }
+               }
+               catch (Exception ie)
+               {
+                  // Ignore
+               }
+               finally
+               {
+                  try
+                  {
+                     if (is != null)
+                        is.close();
+                  }
+                  catch (IOException ioe)
+                  {
+                     // Ignore
+                  }
+               }
+            }
          }
 
          String version = null;
@@ -244,7 +285,7 @@ public class ArchiveScanner
          }
          Location location = new Location(filename, version);
 
-         archive = new JarArchive(name, lManifest, requires, provides, 
+         archive = new JarArchive(name, lManifest, lSign, requires, provides, 
                                   packageDependencies, blacklistedDependencies, location);
 
          Iterator<String> it = provides.keySet().iterator();

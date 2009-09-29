@@ -54,7 +54,7 @@ public class Dump
       OutputStream os = null;
       try
       {
-         is = Thread.currentThread().getContextClassLoader().getResourceAsStream("style.css");
+         is = Dump.class.getClassLoader().getResourceAsStream("style.css");
          os = new FileOutputStream(outputDir + "style.css");
                
          while ((bytesRead = is.read(buffer)) != -1)

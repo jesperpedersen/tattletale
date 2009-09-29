@@ -41,6 +41,7 @@ import org.jboss.tattletale.reporting.NoVersionReport;
 import org.jboss.tattletale.reporting.OSGiReport;
 import org.jboss.tattletale.reporting.PackageMultipleJarsReport;
 import org.jboss.tattletale.reporting.Report;
+import org.jboss.tattletale.reporting.SignReport;
 import org.jboss.tattletale.reporting.SunJava5;
 import org.jboss.tattletale.reporting.SunJava6;
 import org.jboss.tattletale.reporting.TransitiveDependantsReport;
@@ -353,6 +354,10 @@ public class Main
       Report osgi = new OSGiReport(archives, known);
       osgi.generate(outputDir);
       generalReports.add(osgi);
+
+      Report sign = new SignReport(archives);
+      sign.generate(outputDir);
+      generalReports.add(sign);
 
       Report invalidversion = new InvalidVersionReport(archives);
       invalidversion.generate(outputDir);

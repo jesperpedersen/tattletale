@@ -46,6 +46,9 @@ public abstract class Archive implements Serializable, Comparable
    /** Manifest */
    private List<String> manifest;
 
+   /** Signing information */
+   private List<String> sign;
+
    /** Requires */
    private SortedSet<String> requires;
 
@@ -69,6 +72,7 @@ public abstract class Archive implements Serializable, Comparable
     * @param type The type
     * @param name The name
     * @param manifest The manifest
+    * @param sign The signing information
     * @param requires The requires
     * @param provides The provides
     * @param packageDependencies The package dependencies
@@ -78,6 +82,7 @@ public abstract class Archive implements Serializable, Comparable
    public Archive(int type, 
                   String name, 
                   List<String> manifest, 
+                  List<String> sign, 
                   SortedSet<String> requires, 
                   SortedMap<String, Long> provides, 
                   SortedMap<String, SortedSet<String>> packageDependencies,
@@ -87,6 +92,7 @@ public abstract class Archive implements Serializable, Comparable
       this.type = type;
       this.name = name;
       this.manifest = manifest;
+      this.sign = sign;
       this.requires = requires;
       this.provides = provides;
       this.packageDependencies = packageDependencies;
@@ -182,6 +188,15 @@ public abstract class Archive implements Serializable, Comparable
       }
 
       return null;
+   }
+
+   /**
+    * Get the signing information
+    * @return The value
+    */
+   public List<String> getSign()
+   {
+      return sign;
    }
 
    /**
@@ -327,6 +342,10 @@ public abstract class Archive implements Serializable, Comparable
 
       sb = sb.append("manifest=");
       sb = sb.append(manifest);
+      sb = sb.append("\n");
+
+      sb = sb.append("sign=");
+      sb = sb.append(sign);
       sb = sb.append("\n");
 
       sb = sb.append("requires=");
