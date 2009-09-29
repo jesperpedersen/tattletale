@@ -244,6 +244,33 @@ dot -Tpng myarchive.dot &gt; myarchive.png
         </table>
       </section>
 
+      <!-- Sealed report -->
+      <section id="sign">
+        <title>Sealed information</title>
+
+        <para>The sealed information report will display the sealed status of your project.</para>
+
+        <table frame="all">
+          <title>Sealed information report</title>
+          <tgroup cols="4" align="left" colsep="1" rowsep="1">
+            <colspec colname="c1"/>
+            <colspec colname="c2"/>
+            <thead>
+              <row>
+                <entry align="left">Archive</entry>
+                <entry align="left">Status</entry>
+              </row>
+            </thead>
+            <tbody>
+              <row>
+                <entry>The archive</entry>
+                <entry>The status if the archive is sealed or unsealed</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </table>
+      </section>
+
       <!-- Eliminate Jar report -->
       <section id="eliminatejar">
         <title>Eliminate Jar files with different versions</title>

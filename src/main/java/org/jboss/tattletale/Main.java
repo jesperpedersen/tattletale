@@ -41,6 +41,7 @@ import org.jboss.tattletale.reporting.NoVersionReport;
 import org.jboss.tattletale.reporting.OSGiReport;
 import org.jboss.tattletale.reporting.PackageMultipleJarsReport;
 import org.jboss.tattletale.reporting.Report;
+import org.jboss.tattletale.reporting.SealedReport;
 import org.jboss.tattletale.reporting.SignReport;
 import org.jboss.tattletale.reporting.SunJava5;
 import org.jboss.tattletale.reporting.SunJava6;
@@ -358,6 +359,10 @@ public class Main
       Report sign = new SignReport(archives);
       sign.generate(outputDir);
       generalReports.add(sign);
+
+      Report sealed = new SealedReport(archives);
+      sealed.generate(outputDir);
+      generalReports.add(sealed);
 
       Report invalidversion = new InvalidVersionReport(archives);
       invalidversion.generate(outputDir);
