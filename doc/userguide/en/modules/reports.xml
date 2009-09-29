@@ -245,7 +245,7 @@ dot -Tpng myarchive.dot &gt; myarchive.png
       </section>
 
       <!-- Sealed report -->
-      <section id="sign">
+      <section id="sealed">
         <title>Sealed information</title>
 
         <para>The sealed information report will display the sealed status of your project.</para>
