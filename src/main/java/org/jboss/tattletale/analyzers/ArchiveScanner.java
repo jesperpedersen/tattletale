@@ -25,6 +25,7 @@ import org.jboss.tattletale.core.Archive;
 import org.jboss.tattletale.core.JarArchive;
 import org.jboss.tattletale.core.Location;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
@@ -347,28 +348,16 @@ public class ArchiveScanner
          ByteArrayOutputStream baos = new ByteArrayOutputStream();
          manifest.write(baos);
 
-         String s = baos.toString();
-
-         StringBuffer sb = new StringBuffer();
-      
-         for (int i = 0; i < s.length(); i++)
+         ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
+         InputStreamReader isr = new InputStreamReader(bais);
+         LineNumberReader lnr = new LineNumberReader(isr);
+         
+         String s = lnr.readLine();
+         while (s != null)
          {
-            char c = s.charAt(i);
-            if (c != '\n' && c != '\r')
-            {
-               sb = sb.append(c);
-            }
-            else
-            {
-               if (sb.length() > 0)
-               {
-                  result.add(sb.toString());
-                  sb = new StringBuffer();
-               }
-            }
+            result.add(s);
+            s = lnr.readLine();
          }
-         if (sb.length() > 0)
-            result.add(sb.toString());
       }
       catch (IOException ioe)
       {
