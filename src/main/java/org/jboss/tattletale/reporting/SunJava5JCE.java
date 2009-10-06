@@ -32,6 +32,8 @@ import java.io.InputStreamReader;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import javassist.bytecode.ClassFile;
+
 /**
  * Sun: Java 5 (JCE)
  * @author Jesper Pedersen <jesper.pedersen@jboss.org>
@@ -81,7 +83,7 @@ public class SunJava5JCE extends Archive
     */
    public SunJava5JCE()
    {
-      super(ArchiveTypes.JAR, "Sun Java 5 (JCE)", null, null, null, null, null, null, null, null);
+      super(ArchiveTypes.JAR, "Sun Java 5 (JCE)", ClassFile.JAVA_5, null, null, null, null, null, null, null, null);
 
       Location l = new Location("jce.jar", "Sun JDK5 JCE");
       addLocation(l);

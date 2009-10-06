@@ -35,13 +35,16 @@ import java.util.TreeSet;
 public abstract class Archive implements Serializable, Comparable
 {
    /** SerialVersionUID */
-   static final long serialVersionUID = -8686147349417746215L;
+   static final long serialVersionUID = 8349128019949046037L;
 
    /** Archve type */
    private int type;
 
    /** The name */
    private String name;
+
+   /** The version */
+   private int version;
 
    /** Manifest */
    private List<String> manifest;
@@ -74,6 +77,7 @@ public abstract class Archive implements Serializable, Comparable
     * Constructor
     * @param type The type
     * @param name The name
+    * @param version The version number
     * @param manifest The manifest
     * @param sign The signing information
     * @param requires The requires
@@ -85,6 +89,7 @@ public abstract class Archive implements Serializable, Comparable
     */
    public Archive(int type, 
                   String name, 
+                  int version,
                   List<String> manifest, 
                   List<String> sign, 
                   SortedSet<String> requires, 
@@ -96,6 +101,7 @@ public abstract class Archive implements Serializable, Comparable
    {
       this.type = type;
       this.name = name;
+      this.version = version;
       this.manifest = manifest;
       this.sign = sign;
       this.requires = requires;
@@ -126,6 +132,15 @@ public abstract class Archive implements Serializable, Comparable
    public String getName()
    {
       return name;
+   }
+
+   /**
+    * Get the version
+    * @return The value
+    */
+   public int getVersion()
+   {
+      return version;
    }
 
    /**
@@ -353,6 +368,10 @@ public abstract class Archive implements Serializable, Comparable
 
       sb = sb.append("name=");
       sb = sb.append(name);
+      sb = sb.append("\n");
+
+      sb = sb.append("version=");
+      sb = sb.append(version);
       sb = sb.append("\n");
 
       sb = sb.append("manifest=");

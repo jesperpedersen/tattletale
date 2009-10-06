@@ -32,6 +32,8 @@ import java.io.InputStreamReader;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import javassist.bytecode.ClassFile;
+
 /**
  * Sun: Java 6 (JSSE)
  * @author Jesper Pedersen <jesper.pedersen@jboss.org>
@@ -81,7 +83,7 @@ public class SunJava6JSSE extends Archive
     */
    public SunJava6JSSE()
    {
-      super(ArchiveTypes.JAR, "Sun Java 6 (JSSE)", null, null, null, null, null, null, null, null);
+      super(ArchiveTypes.JAR, "Sun Java 6 (JSSE)", ClassFile.JAVA_6, null, null, null, null, null, null, null, null);
 
       Location l = new Location("jsse.jar", "Sun JDK6 JSSE");
       addLocation(l);

@@ -42,6 +42,7 @@ public abstract class NestableArchive extends Archive
     * Constructor
     * @param type The type
     * @param name The name
+    * @param version The version number
     * @param manifest The manifest
     * @param sign The signing information
     * @param requires The requires
@@ -53,6 +54,7 @@ public abstract class NestableArchive extends Archive
     */
    public NestableArchive(int type, 
                           String name, 
+                          int version,
                           List<String> manifest, 
                           List<String> sign, 
                           SortedSet<String> requires, 
@@ -62,7 +64,7 @@ public abstract class NestableArchive extends Archive
                           SortedMap<String, SortedSet<String>> blacklistedDependencies,
                           Location location)
    {
-      super(type, name, manifest, sign, requires, provides, 
+      super(type, name, version, manifest, sign, requires, provides, 
             classDependencies, packageDependencies, blacklistedDependencies, location);
 
       this.subArchives = null;

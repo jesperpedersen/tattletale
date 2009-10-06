@@ -33,6 +33,8 @@ import java.io.InputStreamReader;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import javassist.bytecode.ClassFile;
+
 /**
  * Sun: Java 5
  * @author Jesper Pedersen <jesper.pedersen@jboss.org>
@@ -82,7 +84,7 @@ public class SunJava5 extends NestableArchive
     */
    public SunJava5()
    {
-      super(ArchiveTypes.JAR, "Sun Java 5", null, null, null, null, null, null, null, null);
+      super(ArchiveTypes.JAR, "Sun Java 5", ClassFile.JAVA_5, null, null, null, null, null, null, null, null);
 
       Location l = new Location("rt.jar", "Sun JDK5");
       addLocation(l);

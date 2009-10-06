@@ -32,6 +32,8 @@ import java.io.InputStreamReader;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import javassist.bytecode.ClassFile;
+
 /**
  * Sun: Java 5 (JSSE)
  * @author Jesper Pedersen <jesper.pedersen@jboss.org>
@@ -81,7 +83,7 @@ public class SunJava5JSSE extends Archive
     */
    public SunJava5JSSE()
    {
-      super(ArchiveTypes.JAR, "Sun Java 5 (JSSE)", null, null, null, null, null, null, null, null);
+      super(ArchiveTypes.JAR, "Sun Java 5 (JSSE)", ClassFile.JAVA_5, null, null, null, null, null, null, null, null);
 
       Location l = new Location("jsse.jar", "Sun JDK5 JSSE");
       addLocation(l);

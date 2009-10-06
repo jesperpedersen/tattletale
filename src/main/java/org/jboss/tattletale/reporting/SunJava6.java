@@ -33,6 +33,8 @@ import java.io.InputStreamReader;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import javassist.bytecode.ClassFile;
+
 /**
  * Sun: Java 6
  * @author Jesper Pedersen <jesper.pedersen@jboss.org>
@@ -82,7 +84,7 @@ public class SunJava6 extends NestableArchive
     */
    public SunJava6()
    {
-      super(ArchiveTypes.JAR, "Sun Java 6", null, null, null, null, null, null, null, null);
+      super(ArchiveTypes.JAR, "Sun Java 6", ClassFile.JAVA_6, null, null, null, null, null, null, null, null);
 
       Location l = new Location("rt.jar", "Sun JDK6");
       addLocation(l);

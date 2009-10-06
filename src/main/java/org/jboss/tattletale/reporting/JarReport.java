@@ -29,6 +29,8 @@ import java.io.IOException;
 import java.util.Iterator;
 import java.util.Map;
 
+import javassist.bytecode.ClassFile;
+
 /**
  * JAR report
  * @author Jesper Pedersen <jesper.pedersen@jboss.org>
@@ -89,6 +91,38 @@ public class JarReport extends ArchiveReport
       bw.write("  </tr>" + Dump.NEW_LINE);
 
       bw.write("  <tr class=\"roweven\">" + Dump.NEW_LINE);
+      bw.write("     <td>Class Version</td>" + Dump.NEW_LINE);
+      bw.write("     <td>");
+
+      if (ClassFile.JAVA_6 == archive.getVersion())
+      {
+         bw.write("Java 6");
+      }
+      else if (ClassFile.JAVA_5 == archive.getVersion())
+      {
+         bw.write("Java 5");
+      }
+      else if (ClassFile.JAVA_4 == archive.getVersion())
+      {
+         bw.write("J2SE 1.4");
+      }
+      else if (ClassFile.JAVA_3 == archive.getVersion())
+      {
+         bw.write("J2SE 1.3");
+      }
+      else if (ClassFile.JAVA_2 == archive.getVersion())
+      {
+         bw.write("J2SE 1.2");
+      }
+      else if (ClassFile.JAVA_1 == archive.getVersion())
+      {
+         bw.write("JSE 1.0 / JSE 1.1");
+      }
+
+      bw.write("</td>" + Dump.NEW_LINE);
+      bw.write("  </tr>" + Dump.NEW_LINE);
+
+      bw.write("  <tr class=\"rowodd\">" + Dump.NEW_LINE);
       bw.write("     <td>Locations</td>" + Dump.NEW_LINE);
       bw.write("     <td>");
 
@@ -119,7 +153,7 @@ public class JarReport extends ArchiveReport
       bw.write("</td>" + Dump.NEW_LINE);
       bw.write("  </tr>" + Dump.NEW_LINE);
 
-      bw.write("  <tr class=\"rowodd\">" + Dump.NEW_LINE);
+      bw.write("  <tr class=\"roweven\">" + Dump.NEW_LINE);
       bw.write("     <td>Manifest</td>" + Dump.NEW_LINE);
       bw.write("     <td>");
 
@@ -142,7 +176,7 @@ public class JarReport extends ArchiveReport
       bw.write("</td>" + Dump.NEW_LINE);
       bw.write("  </tr>" + Dump.NEW_LINE);
 
-      bw.write("  <tr class=\"roweven\">" + Dump.NEW_LINE);
+      bw.write("  <tr class=\"rowodd\">" + Dump.NEW_LINE);
       bw.write("     <td>Signing information</td>" + Dump.NEW_LINE);
       bw.write("     <td>");
 
@@ -165,7 +199,7 @@ public class JarReport extends ArchiveReport
       bw.write("</td>" + Dump.NEW_LINE);
       bw.write("  </tr>" + Dump.NEW_LINE);
 
-      bw.write("  <tr class=\"rowodd\">" + Dump.NEW_LINE);
+      bw.write("  <tr class=\"roweven\">" + Dump.NEW_LINE);
       bw.write("     <td>Requires</td>" + Dump.NEW_LINE);
       bw.write("     <td>");
 
@@ -185,7 +219,7 @@ public class JarReport extends ArchiveReport
       bw.write("</td>" + Dump.NEW_LINE);
       bw.write("  </tr>" + Dump.NEW_LINE);
 
-      bw.write("  <tr class=\"roweven\">" + Dump.NEW_LINE);
+      bw.write("  <tr class=\"rowodd\">" + Dump.NEW_LINE);
       bw.write("     <td>Provides</td>" + Dump.NEW_LINE);
       bw.write("     <td>");
 

@@ -52,6 +52,7 @@ import javassist.ClassPool;
 import javassist.CtClass;
 import javassist.CtField;
 import javassist.NotFoundException;
+import javassist.bytecode.ClassFile;
 
 /**
  * Archive scanner
@@ -92,6 +93,7 @@ public class ArchiveScanner
 
          String name = file.getName();
          String filename = file.getCanonicalPath();
+         Integer classVersion = null;
          SortedSet<String> requires = new TreeSet<String>();
          SortedMap<String, Long> provides = new TreeMap<String, Long>();
          SortedMap<String, SortedSet<String>> classDependencies = new TreeMap<String, SortedSet<String>>();
@@ -114,8 +116,11 @@ public class ArchiveScanner
                {
                   is = jarFile.getInputStream(jarEntry); 
                   CtClass ctClz = classPool.makeClass(is);
-                  Long serialVersionUID = null;
 
+                  if (classVersion == null)
+                     classVersion = Integer.valueOf(ctClz.getClassFile2().getMajorVersion());
+
+                  Long serialVersionUID = null;
                   try
                   {
                      CtField field = ctClz.getField("serialVersionUID");
@@ -294,7 +299,7 @@ public class ArchiveScanner
          }
          Location location = new Location(filename, version);
 
-         archive = new JarArchive(name, lManifest, lSign, requires, provides, 
+         archive = new JarArchive(name, classVersion.intValue(), lManifest, lSign, requires, provides, 
                                   classDependencies, packageDependencies, blacklistedDependencies, location);
 
          Iterator<String> it = provides.keySet().iterator();

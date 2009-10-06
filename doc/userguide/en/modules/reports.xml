@@ -489,12 +489,20 @@ dot -Tpng myarchive.dot &gt; myarchive.png
                 <entry>The archive name</entry>
               </row>
               <row>
+                <entry>Class Version</entry>
+                <entry>The version identifier for the class files</entry>
+              </row>
+              <row>
                 <entry>Locations</entry>
                 <entry>The list of locations for the archive</entry>
               </row>
               <row>
                 <entry>Manifest</entry>
                 <entry>The manifest file</entry>
+              </row>
+              <row>
+                <entry>Signing information</entry>
+                <entry>The signing information for the archive</entry>
               </row>
               <row>
                 <entry>Requires</entry>
