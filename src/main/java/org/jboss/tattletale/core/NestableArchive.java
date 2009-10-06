@@ -46,6 +46,7 @@ public abstract class NestableArchive extends Archive
     * @param sign The signing information
     * @param requires The requires
     * @param provides The provides
+    * @param classDependencies The class dependencies
     * @param packageDependencies The package dependencies
     * @param blacklistedDependencies The blacklisted dependencies
     * @param location The location
@@ -56,12 +57,13 @@ public abstract class NestableArchive extends Archive
                           List<String> sign, 
                           SortedSet<String> requires, 
                           SortedMap<String, Long> provides, 
+                          SortedMap<String, SortedSet<String>> classDependencies,
                           SortedMap<String, SortedSet<String>> packageDependencies,
                           SortedMap<String, SortedSet<String>> blacklistedDependencies,
                           Location location)
    {
       super(type, name, manifest, sign, requires, provides, 
-            packageDependencies, blacklistedDependencies, location);
+            classDependencies, packageDependencies, blacklistedDependencies, location);
 
       this.subArchives = null;
    }
@@ -82,7 +84,7 @@ public abstract class NestableArchive extends Archive
    public void addSubArchive(Archive value)
    {
       if (subArchives == null)
-         subArchives = new ArrayList<Archive>();
+         subArchives = new ArrayList<Archive>(1);
 
       subArchives.add(value);
    }

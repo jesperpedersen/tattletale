@@ -81,7 +81,7 @@ public class SunJava6JCE extends Archive
     */
    public SunJava6JCE()
    {
-      super(ArchiveTypes.JAR, "Sun Java 6 (JCE)", null, null, null, null, null, null, null);
+      super(ArchiveTypes.JAR, "Sun Java 6 (JCE)", null, null, null, null, null, null, null, null);
 
       Location l = new Location("jce.jar", "Sun JDK6 JCE");
       addLocation(l);

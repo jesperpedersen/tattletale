@@ -35,7 +35,7 @@ import java.util.TreeSet;
 public abstract class Archive implements Serializable, Comparable
 {
    /** SerialVersionUID */
-   static final long serialVersionUID = -1091667466012774721L;
+   static final long serialVersionUID = -8686147349417746215L;
 
    /** Archve type */
    private int type;
@@ -54,6 +54,9 @@ public abstract class Archive implements Serializable, Comparable
 
    /** Provides */
    private SortedMap<String, Long> provides;
+
+   /** Package dependencies */
+   private SortedMap<String, SortedSet<String>> classDependencies;
 
    /** Package dependencies */
    private SortedMap<String, SortedSet<String>> packageDependencies;
@@ -75,6 +78,7 @@ public abstract class Archive implements Serializable, Comparable
     * @param sign The signing information
     * @param requires The requires
     * @param provides The provides
+    * @param classDependencies The class dependencies
     * @param packageDependencies The package dependencies
     * @param blacklistedDependencies The blacklisted dependencies
     * @param location The location
@@ -85,6 +89,7 @@ public abstract class Archive implements Serializable, Comparable
                   List<String> sign, 
                   SortedSet<String> requires, 
                   SortedMap<String, Long> provides, 
+                  SortedMap<String, SortedSet<String>> classDependencies,
                   SortedMap<String, SortedSet<String>> packageDependencies,
                   SortedMap<String, SortedSet<String>> blacklistedDependencies,
                   Location location)
@@ -95,6 +100,7 @@ public abstract class Archive implements Serializable, Comparable
       this.sign = sign;
       this.requires = requires;
       this.provides = provides;
+      this.classDependencies = classDependencies;
       this.packageDependencies = packageDependencies;
       this.blacklistedDependencies = blacklistedDependencies;
       this.locations = new TreeSet<Location>();
@@ -215,6 +221,15 @@ public abstract class Archive implements Serializable, Comparable
    public SortedMap<String, Long> getProvides()
    {
       return provides;
+   }
+
+   /**
+    * Get the class dependencies
+    * @return The value
+    */
+   public SortedMap<String, SortedSet<String>> getClassDependencies()
+   {
+      return classDependencies;
    }
 
    /**
@@ -354,6 +369,10 @@ public abstract class Archive implements Serializable, Comparable
 
       sb = sb.append("provides=");
       sb = sb.append(provides);
+      sb = sb.append("\n");
+
+      sb = sb.append("classdependencies=");
+      sb = sb.append(classDependencies);
       sb = sb.append("\n");
 
       sb = sb.append("packagedependencies=");

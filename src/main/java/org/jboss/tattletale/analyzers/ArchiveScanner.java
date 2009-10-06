@@ -94,6 +94,7 @@ public class ArchiveScanner
          String filename = file.getCanonicalPath();
          SortedSet<String> requires = new TreeSet<String>();
          SortedMap<String, Long> provides = new TreeMap<String, Long>();
+         SortedMap<String, SortedSet<String>> classDependencies = new TreeMap<String, SortedSet<String>>();
          SortedMap<String, SortedSet<String>> packageDependencies = new TreeMap<String, SortedSet<String>>();
          SortedMap<String, SortedSet<String>> blacklistedDependencies = new TreeMap<String, SortedSet<String>>();
 
@@ -140,6 +141,13 @@ public class ArchiveScanner
                   {
                      String s = (String)it.next();
                      requires.add(s);
+
+                     SortedSet<String> cd = classDependencies.get(ctClz.getName());
+                     if (cd == null)
+                        cd = new TreeSet<String>();
+
+                     cd.add(s);
+                     classDependencies.put(ctClz.getName(), cd);
 
                      int rPkgIdx = s.lastIndexOf(".");
                      String rPkg = null;
@@ -287,7 +295,7 @@ public class ArchiveScanner
          Location location = new Location(filename, version);
 
          archive = new JarArchive(name, lManifest, lSign, requires, provides, 
-                                  packageDependencies, blacklistedDependencies, location);
+                                  classDependencies, packageDependencies, blacklistedDependencies, location);
 
          Iterator<String> it = provides.keySet().iterator();
          while (it.hasNext())

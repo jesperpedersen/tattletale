@@ -38,6 +38,7 @@ public class JarArchive extends Archive
     * @param sign The signing information
     * @param requires The requires
     * @param provides The provides
+    * @param classDependencies The class dependencies
     * @param packageDependencies The package dependencies
     * @param blacklistedDependencies The blacklisted dependencies
     * @param location The location
@@ -47,11 +48,12 @@ public class JarArchive extends Archive
                      List<String> sign, 
                      SortedSet<String> requires, 
                      SortedMap<String, Long> provides, 
+                     SortedMap<String, SortedSet<String>> classDependencies,
                      SortedMap<String, SortedSet<String>> packageDependencies,
                      SortedMap<String, SortedSet<String>> blacklistedDependencies,
                      Location location)
    {
       super(ArchiveTypes.JAR, name, manifest, sign, requires, provides, 
-            packageDependencies, blacklistedDependencies, location);
+            classDependencies, packageDependencies, blacklistedDependencies, location);
    }
 }

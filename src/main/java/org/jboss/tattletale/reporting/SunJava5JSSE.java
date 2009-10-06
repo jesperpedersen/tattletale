@@ -81,7 +81,7 @@ public class SunJava5JSSE extends Archive
     */
    public SunJava5JSSE()
    {
-      super(ArchiveTypes.JAR, "Sun Java 5 (JSSE)", null, null, null, null, null, null, null);
+      super(ArchiveTypes.JAR, "Sun Java 5 (JSSE)", null, null, null, null, null, null, null, null);
 
       Location l = new Location("jsse.jar", "Sun JDK5 JSSE");
       addLocation(l);

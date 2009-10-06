@@ -81,7 +81,7 @@ public class SunJava6JSSE extends Archive
     */
    public SunJava6JSSE()
    {
-      super(ArchiveTypes.JAR, "Sun Java 6 (JSSE)", null, null, null, null, null, null, null);
+      super(ArchiveTypes.JAR, "Sun Java 6 (JSSE)", null, null, null, null, null, null, null, null);
 
       Location l = new Location("jsse.jar", "Sun JDK6 JSSE");
       addLocation(l);
