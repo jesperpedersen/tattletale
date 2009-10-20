@@ -93,7 +93,7 @@ public class ArchiveScanner
 
          String name = file.getName();
          String filename = file.getCanonicalPath();
-         Integer classVersion = null;
+         Integer classVersion = ClassFile.JAVA_1;
          SortedSet<String> requires = new TreeSet<String>();
          SortedMap<String, Long> provides = new TreeMap<String, Long>();
          SortedMap<String, SortedSet<String>> classDependencies = new TreeMap<String, SortedSet<String>>();
@@ -267,6 +267,9 @@ public class ArchiveScanner
                }
             }
          }
+
+         if (provides.size() == 0)
+            return null;
 
          String version = null;
          List<String> lManifest = null;
