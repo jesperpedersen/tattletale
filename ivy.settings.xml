@@ -1,0 +1,45 @@
+<!--
+ * JBoss, Home of Professional Open Source.
+ * Copyright 2008, Red Hat Middleware LLC, and individual contributors
+ * as indicated by the @author tags. See the copyright.txt file in the
+ * distribution for a full listing of individual contributors.
+ *
+ * This is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation; either version 2.1 of
+ * the License, or (at your option) any later version.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this software; if not, write to the Free
+ * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+-->
+<ivysettings>
+  <settings defaultResolver="default"/>
+  <caches defaultCacheDir="${user.home}/.ivy2/cache"
+          artifactPattern="[organisation]/[module]/[type]s/[artifact]-[revision](-[classifier]).[ext]" 
+          checkUpToDate="true"/>
+  <resolvers>
+    <filesystem name="local">
+      <ivy pattern="${ivy.cache.dir}/[module]/ivy-[revision].xml"/>
+      <artifact pattern="${ivy.cache.dir}/[module]/[artifact]-[revision](-[classifier]).[ext]"/>
+    </filesystem>
+    <ibiblio name="jboss" m2compatible="true" usepoms="false" root="${jboss.repo}"
+             pattern="[organisation]/[module]/[revision]/[artifact]-[revision](-[classifier]).[ext]"/>
+    <ibiblio name="snapshots" m2compatible="true" usepoms="false" root="${snapshots.repo}"
+             pattern="[organisation]/[module]/[revision]/[artifact]-[snapshotrevision](-[classifier]).[ext]"/>
+    <ibiblio name="central" m2compatible="true" usepoms="false" root="${central.repo}"
+             pattern="[organisation]/[module]/[revision]/[artifact]-[revision](-[classifier]).[ext]"/>
+    <chain name="default" returnFirst="true">
+      <resolver ref="local"/>
+      <resolver ref="jboss"/>
+      <resolver ref="snapshots"/>
+      <resolver ref="central"/>
+    </chain>
+  </resolvers>
+</ivysettings>

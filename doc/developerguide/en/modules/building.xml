@@ -45,6 +45,16 @@ export PATH
 
     </section>
 
+    <section id="ivy">
+      <title>Apache Ivy</title>
+      <para>You must have Apache Ivy 2.1+ installed in your Apache Ant installation.</para>
+
+      <programlisting>
+cp ivy.jar $ANT_HOME/lib
+      </programlisting>
+
+    </section>
+
     <section id="subversion">
       <title>Subversion</title>
       <para>You must have Subversion 1.5+ installed on your system.</para>
