@@ -52,6 +52,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -184,11 +185,24 @@ public class Main
             }
 
             String classloaderStructure = null;
+            Set<String> profiles = null;
             Set<String> blacklisted = null;
 
             if (loaded)
             {
                classloaderStructure = properties.getProperty("classloader");
+
+               if (properties.getProperty("profiles") != null)
+               {
+                  profiles = new HashSet<String>();
+
+                  StringTokenizer st = new StringTokenizer(properties.getProperty("profiles"), ",");
+                  while (st.hasMoreTokens())
+                  {
+                     String token = st.nextToken().trim();
+                     profiles.add(token);
+                  }
+               }
 
                if (properties.getProperty("blacklisted") != null)
                {
@@ -223,9 +237,13 @@ public class Main
             SortedSet<Archive> archives = new TreeSet<Archive>();
             SortedMap<String, SortedSet<String>> gProvides = new TreeMap<String, SortedSet<String>>();
 
-            Set<Archive> known = new HashSet<Archive>();
-            known.add(new SunJava5());
-            known.add(new SunJava6());
+            List<Archive> known = new ArrayList<Archive>();
+
+            if (profiles == null || profiles.contains("java5") || profiles.contains("Sun Java 5"))
+               known.add(new SunJava5());
+
+            if (profiles == null || profiles.contains("java6") || profiles.contains("Sun Java 6"))
+               known.add(new SunJava6());
 
             File f = new File(scanDir);
             if (f.isDirectory())
@@ -292,7 +310,7 @@ public class Main
                                     String classloaderStructure,
                                     SortedSet<Archive> archives, 
                                     SortedMap<String, SortedSet<String>> gProvides, 
-                                    Set<Archive> known) 
+                                    List<Archive> known)
    {   
       SortedSet<Report> dependenciesReports = new TreeSet<Report>();
       SortedSet<Report> generalReports = new TreeSet<Report>();

@@ -28,7 +28,7 @@ import org.jboss.tattletale.core.ArchiveTypes;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.util.Iterator;
-import java.util.Set;
+import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -53,7 +53,7 @@ public class DependsOnReport extends CLSReport
     * @param classloaderStructure The classloader structure
     */
    public DependsOnReport(SortedSet<Archive> archives,
-                          Set<Archive> known,
+                          List<Archive> known,
                           String classloaderStructure)
    {
       super(ReportSeverity.INFO, archives, NAME, DIRECTORY, classloaderStructure, known);

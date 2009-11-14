@@ -33,7 +33,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.SortedMap;
 import java.util.SortedSet;
 import java.util.TreeMap;
@@ -57,7 +56,7 @@ public class OSGiReport extends Report
     * @param known The known archives
     */
    public OSGiReport(SortedSet<Archive> archives,
-                     Set<Archive> known)
+                     List<Archive> known)
    {
       super(ReportSeverity.INFO, archives, NAME, DIRECTORY);
    }

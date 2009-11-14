@@ -72,7 +72,8 @@ svn co http://anonsvn.jboss.org/repos/tattletale/trunk/ tattletale-trunk
 svn co https://svn.jboss.org/repos/tattletale/trunk/ tattletale-trunk
        </programlisting>
 
-       <para>The project is compiled using Java Development Kit 1.5 or higher and Apache Ant 1.7 or higher. Using</para>
+       <para>The project is compiled using Java Development Kit 1.5 or higher, Apache Ant 1.7 or higher and
+          Apache Ivy 2.1 or higher. Using</para>
 
        <programlisting>
 ant &lt;target&gt;
@@ -119,7 +120,7 @@ jboss-tattletale.properties
        <title>JBoss Tattletale configuration</title>
        <tgroup cols="2" align="left" colsep="1" rowsep="1">
          <colspec colname="c1"/>
-         <colspec colname="c2" colwidth="4*"/>
+         <colspec colname="c2" colwidth="5*"/>
          <thead>
            <row>
              <entry align="left">Key</entry>
@@ -134,16 +135,33 @@ jboss-tattletale.properties
                  Can be one of the following:</para>
                <itemizedlist>
                  <listitem>
-                   <para>org.jboss.tattletale.reporting.classloader.NoopClassLoaderStructure</para>
+                   <para><code>org.jboss.tattletale.reporting.classloader.NoopClassLoaderStructure</code></para>
                    <para>A no-operation classloader structure implementation that doesn't scope any archives.</para>
                  </listitem>
                  <listitem>
-                   <para>org.jboss.tattletale.reporting.classloader.JBossAS4ClassLoaderStructure</para>
+                   <para><code>org.jboss.tattletale.reporting.classloader.JBossAS4ClassLoaderStructure</code></para>
                    <para>A classloader structure implementation that scopes based on JBoss Application Server 4.x directory structures.</para>
                  </listitem>
                  <listitem>
-                   <para>org.jboss.tattletale.reporting.classloader.JBossAS5ClassLoaderStructure</para>
+                   <para><code>org.jboss.tattletale.reporting.classloader.JBossAS5ClassLoaderStructure</code></para>
                    <para>A classloader structure implementation that scopes based on JBoss Application Server 5.x directory structures.</para>
+                 </listitem>
+               </itemizedlist>
+             </entry>
+           </row>
+           <row>
+             <entry>profiles</entry>
+             <entry>
+               <para>Specifies a comma separated list of profiles to resolve against. 
+                 The following profiles are supported:</para>
+               <itemizedlist>
+                 <listitem>
+                   <para><code>java5</code></para>
+                   <para>The Java 5 API.</para>
+                 </listitem>
+                 <listitem>
+                   <para><code>java6</code></para>
+                   <para>The Java 6 API.</para>
                  </listitem>
                </itemizedlist>
              </entry>
@@ -157,7 +175,7 @@ jboss-tattletale.properties
            <row>
              <entry>blacklisted</entry>
              <entry>
-               <para>A comma separated list of black listed classes or packages. F.ex. com.mycompany.forinternaluseonly, com.partner.forinternaluseonly</para>
+               <para>A comma separated list of black listed classes or packages. F.ex. <code>com.mycompany.forinternaluseonly, com.partner.forinternaluseonly</code></para>
              </entry>
            </row>
          </tbody>
