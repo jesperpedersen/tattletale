@@ -27,6 +27,7 @@ import org.jboss.tattletale.core.Archive;
 import org.jboss.tattletale.core.ArchiveTypes;
 import org.jboss.tattletale.core.Location;
 import org.jboss.tattletale.reporting.BlackListedReport;
+import org.jboss.tattletale.reporting.CDI10;
 import org.jboss.tattletale.reporting.ClassLocationReport;
 import org.jboss.tattletale.reporting.DependantsReport;
 import org.jboss.tattletale.reporting.DependsOnReport;
@@ -253,6 +254,9 @@ public class Main
 
             if (profiles != null && (profiles.contains("seam22") || profiles.contains("Seam 2.2")))
                known.add(new Seam22());
+
+            if (profiles != null && (profiles.contains("cdi10") || profiles.contains("CDI 1.0")))
+               known.add(new CDI10());
 
             File f = new File(scanDir);
             if (f.isDirectory())
