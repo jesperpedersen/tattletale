@@ -14,18 +14,45 @@
      <para>Once downloaded extract the files by executing:</para>
 
      <programlisting>
-unzip jboss-tattletale-1.0.0.GA.zip
+unzip jboss-tattletale-1.1.0.GA.zip
      </programlisting>
 
      <para>or</para>
 
      <programlisting>
-tar xzf jboss-tattletale-1.0.0.GA.tar.gz
+tar xzf jboss-tattletale-1.1.0.GA.tar.gz
      </programlisting>
 
      <para>depending on which archive type you downloaded.</para>
 
      <para>JBoss Tattletale is now located in a folder under the directory you extracted the files into.</para>
+     
+     <section id="maven">
+       <title>Maven</title>
+       
+       <para>The JBoss Tattletale project is published in the JBoss Maven2 repository:</para>
+       
+       <programlisting>
+repository.jboss.org
+       </programlisting>
+
+       <para>under the group id of: org.jboss.tattletale</para>
+       
+       <para>The artifacts for the project are</para>
+       
+       <itemizedlist spacing="compact">
+         <listitem>
+           tattletale: The core library
+         </listitem>
+       </itemizedlist>
+       
+       <para>Developer snapshots are published on the JBoss Snapshots Maven2 server:</para>
+
+       <programlisting>
+snapshots.jboss.org
+       </programlisting>
+
+     </section>
 
      <section id="sourcecode">
        <title>Source code</title>
