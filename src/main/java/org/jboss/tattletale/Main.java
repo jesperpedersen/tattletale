@@ -239,7 +239,8 @@ public class Main
 
             List<Archive> known = new ArrayList<Archive>();
 
-            if (profiles == null || profiles.contains("java5") || profiles.contains("Sun Java 5"))
+            if (profiles == null || profiles.size() == 0 || 
+                profiles.contains("java5") || profiles.contains("Sun Java 5"))
                known.add(new SunJava5());
 
             if (profiles == null || profiles.contains("java6") || profiles.contains("Sun Java 6"))
