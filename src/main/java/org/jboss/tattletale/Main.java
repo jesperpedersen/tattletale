@@ -35,6 +35,7 @@ import org.jboss.tattletale.reporting.EliminateJarsReport;
 import org.jboss.tattletale.reporting.GraphvizReport;
 import org.jboss.tattletale.reporting.InvalidVersionReport;
 import org.jboss.tattletale.reporting.JarReport;
+import org.jboss.tattletale.reporting.JavaEE5;
 import org.jboss.tattletale.reporting.MultipleJarsReport;
 import org.jboss.tattletale.reporting.MultipleLocationsReport;
 import org.jboss.tattletale.reporting.NoVersionReport;
@@ -245,6 +246,9 @@ public class Main
 
             if (profiles == null || profiles.contains("java6") || profiles.contains("Sun Java 6"))
                known.add(new SunJava6());
+
+            if (profiles != null && (profiles.contains("ee5") || profiles.contains("Java Enterprise 5")))
+               known.add(new JavaEE5());
 
             File f = new File(scanDir);
             if (f.isDirectory())

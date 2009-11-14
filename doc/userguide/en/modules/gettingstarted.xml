@@ -163,6 +163,10 @@ jboss-tattletale.properties
                    <para><code>java6</code></para>
                    <para>The Java 6 API.</para>
                  </listitem>
+                 <listitem>
+                   <para><code>ee5</code></para>
+                   <para>The Java Enterprise Edition 5 API.</para>
+                 </listitem>
                </itemizedlist>
              </entry>
            </row>
