@@ -111,6 +111,7 @@
             </fileset>
             <fileset dir="${etc.dir}">
                <include name="**/*.clz"/>
+               <include name="**/*.clz.gz"/>
             </fileset>
             <fileset dir="${etc.dir}">
                <include name="**/*.css"/>
@@ -124,7 +125,7 @@
         <jar destfile="${dist.dir}/${jboss-tattletale.jar}"
              basedir="${build.dir}"
              manifest="${etc.dir}/manifest.mf"
-             includes="org/jboss/tattletale/**,**/*.properties,**/*.clz,**/*.css"
+             includes="org/jboss/tattletale/**,**/*.properties,**/*.clz,**/*.clz.gz,**/*.css"
              excludes="**/*.java"/>
     </target>
 
