@@ -43,6 +43,7 @@ import org.jboss.tattletale.reporting.OSGiReport;
 import org.jboss.tattletale.reporting.PackageMultipleJarsReport;
 import org.jboss.tattletale.reporting.Report;
 import org.jboss.tattletale.reporting.SealedReport;
+import org.jboss.tattletale.reporting.Seam22;
 import org.jboss.tattletale.reporting.SignReport;
 import org.jboss.tattletale.reporting.SunJava5;
 import org.jboss.tattletale.reporting.SunJava6;
@@ -249,6 +250,9 @@ public class Main
 
             if (profiles != null && (profiles.contains("ee5") || profiles.contains("Java Enterprise 5")))
                known.add(new JavaEE5());
+
+            if (profiles != null && (profiles.contains("seam22") || profiles.contains("Seam 2.2")))
+               known.add(new Seam22());
 
             File f = new File(scanDir);
             if (f.isDirectory())
