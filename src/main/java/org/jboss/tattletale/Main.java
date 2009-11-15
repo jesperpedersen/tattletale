@@ -81,7 +81,7 @@ public class Main
     */
    private static void usage() 
    {
-      System.out.println("Usage: Tattletale <scan-directory> [output-directory]");
+      System.out.println("Usage: Tattletale [-exclude=<excludes>] <scan-directory> [output-directory]");
    }
 
    /**
@@ -94,8 +94,19 @@ public class Main
       {
          try 
          {
-            String scanDir = args[0];
-            String outputDir = args.length > 1 ? args[1] : "."; 
+            int arg = 0;
+
+            Set<String> excludes = null;
+
+            if (args[arg].startsWith("-exclude="))
+            {
+               excludes = new HashSet<String>();
+               excludes.addAll(parseExcludes(args[arg].substring(args[arg].indexOf("=") + 1)));
+               arg++;
+            }
+
+            String scanDir = args[arg];
+            String outputDir = args.length > arg + 1 ? args[arg + 1] : "."; 
 
             Properties properties = new Properties();
             String propertiesFile = System.getProperty("jboss-tattletale.properties");
@@ -229,6 +240,14 @@ public class Main
                      blacklisted.add(token);
                   }
                }
+
+               if (properties.getProperty("excludes") != null)
+               {
+                  if (excludes == null)
+                     excludes = new HashSet<String>();
+
+                  excludes.addAll(parseExcludes(properties.getProperty("excludes")));
+               }
             }
 
             if (classloaderStructure == null || classloaderStructure.trim().equals(""))
@@ -261,7 +280,7 @@ public class Main
             File f = new File(scanDir);
             if (f.isDirectory())
             {
-               List<File> fileList = DirectoryScanner.scan(f);
+               List<File> fileList = DirectoryScanner.scan(f, excludes);
 
                for (File file : fileList)
                {
@@ -434,5 +453,31 @@ public class Main
          outputDirFile.mkdirs();
       }
       return outputDir;
+   }
+
+   /**
+    * Parse excludes
+    * @param s The input string
+    * @return The set of excludes
+    */
+   private static Set<String> parseExcludes(String s)
+   {
+      Set<String> result = new HashSet<String>();
+
+      StringTokenizer st = new StringTokenizer(s, ",");
+      while (st.hasMoreTokens())
+      {
+         String token = st.nextToken().trim();
+
+         if (token.startsWith("**"))
+            token = token.substring(2);
+         
+         if (token.endsWith("**"))
+            token = token.substring(0, token.indexOf("**"));
+         
+         result.add(token);
+      }
+
+      return result;
    }
 }

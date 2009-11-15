@@ -179,6 +179,13 @@ jboss-tattletale.properties
              </entry>
            </row>
            <row>
+             <entry>excludes</entry>
+             <entry>
+               <para>A comma separated list of directories or files that should be excluded from the scan. F.ex.</para>
+               <para><code>**/server/**,myjar.jar</code></para>
+             </entry>
+           </row>
+           <row>
              <entry>outputDir</entry>
              <entry>
                <para>The output directory where the report gets generated.</para>
@@ -206,11 +213,12 @@ jboss-tattletale.properties
      <para>Running JBoss Tattletale is very easy</para>
 
      <programlisting>
-java -Xmx512m -jar jboss-tattletale.jar &lt;sourcedir&gt; [&lt;outputdir&gt;]
+java -Xmx512m -jar jboss-tattletale.jar [-exclude=&lt;excludes&gt;] &lt;sourcedir&gt; [&lt;outputdir&gt;]
      </programlisting>
      
      <para>where the "sourcedir" is the directory that contains your Java archives and the optional "outputdir" parameter
-     is the directory where you would like your reports to be generated.</para>
+     is the directory where you would like your reports to be generated. The "-exclude" option let you 
+     exclude directories or file on the command line - see the configuration file for syntax.</para>
 
      <para>The main file will be generated under the output directory as index.html.</para>
 
