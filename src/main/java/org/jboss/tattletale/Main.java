@@ -51,6 +51,7 @@ import org.jboss.tattletale.reporting.SunJava5;
 import org.jboss.tattletale.reporting.SunJava6;
 import org.jboss.tattletale.reporting.TransitiveDependantsReport;
 import org.jboss.tattletale.reporting.TransitiveDependsOnReport;
+import org.jboss.tattletale.reporting.UnusedJarReport;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -425,6 +426,10 @@ public class Main
       Report blacklisted = new BlackListedReport(archives);
       blacklisted.generate(outputDir);
       generalReports.add(blacklisted);
+
+      Report unusedjar = new UnusedJarReport(archives);
+      unusedjar.generate(outputDir);
+      generalReports.add(unusedjar);
 
       Dump.generateIndex(dependenciesReports, generalReports, archiveReports, outputDir);
       Dump.generateCSS(outputDir);
