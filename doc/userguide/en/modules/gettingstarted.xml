@@ -175,6 +175,10 @@ jboss-tattletale.properties
                    <para><code>cdi10</code></para>
                    <para>The Contexts and Dependency Injection (CDI) 1.0 API.</para>
                  </listitem>
+                 <listitem>
+                   <para><code>spring25</code></para>
+                   <para>The Spring 2.5 API.</para>
+                 </listitem>
                </itemizedlist>
              </entry>
            </row>

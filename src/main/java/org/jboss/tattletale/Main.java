@@ -46,6 +46,7 @@ import org.jboss.tattletale.reporting.Report;
 import org.jboss.tattletale.reporting.SealedReport;
 import org.jboss.tattletale.reporting.Seam22;
 import org.jboss.tattletale.reporting.SignReport;
+import org.jboss.tattletale.reporting.Spring25;
 import org.jboss.tattletale.reporting.SunJava5;
 import org.jboss.tattletale.reporting.SunJava6;
 import org.jboss.tattletale.reporting.TransitiveDependantsReport;
@@ -276,6 +277,9 @@ public class Main
 
             if (profiles != null && (profiles.contains("cdi10") || profiles.contains("CDI 1.0")))
                known.add(new CDI10());
+
+            if (profiles != null && (profiles.contains("spring25") || profiles.contains("Spring 2.5")))
+               known.add(new Spring25());
 
             File f = new File(scanDir);
             if (f.isDirectory())
