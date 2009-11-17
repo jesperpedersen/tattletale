@@ -58,7 +58,10 @@ public abstract class Archive implements Serializable, Comparable
    /** Provides */
    private SortedMap<String, Long> provides;
 
-   /** Package dependencies */
+   /** Profiles */
+   private SortedSet<String> profiles;
+
+   /** Class dependencies */
    private SortedMap<String, SortedSet<String>> classDependencies;
 
    /** Package dependencies */
@@ -106,6 +109,7 @@ public abstract class Archive implements Serializable, Comparable
       this.sign = sign;
       this.requires = requires;
       this.provides = provides;
+      this.profiles = new TreeSet<String>();
       this.classDependencies = classDependencies;
       this.packageDependencies = packageDependencies;
       this.blacklistedDependencies = blacklistedDependencies;
@@ -236,6 +240,24 @@ public abstract class Archive implements Serializable, Comparable
    public SortedMap<String, Long> getProvides()
    {
       return provides;
+   }
+
+   /**
+    * Get the profiles
+    * @return The value
+    */
+   public SortedSet<String> getProfiles()
+   {
+      return profiles;
+   }
+
+   /**
+    * Add a profile
+    * @param profile The profile
+    */
+   public void addProfile(String profile)
+   {
+      profiles.add(profile);
    }
 
    /**
@@ -388,6 +410,10 @@ public abstract class Archive implements Serializable, Comparable
 
       sb = sb.append("provides=");
       sb = sb.append(provides);
+      sb = sb.append("\n");
+
+      sb = sb.append("profiles=");
+      sb = sb.append(profiles);
       sb = sb.append("\n");
 
       sb = sb.append("classdependencies=");

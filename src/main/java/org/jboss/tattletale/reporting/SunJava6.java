@@ -32,6 +32,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.SortedSet;
 import java.util.TreeSet;
+import java.util.zip.GZIPInputStream;
 
 import javassist.bytecode.ClassFile;
 
@@ -49,9 +50,10 @@ public class SunJava6 extends NestableArchive
       InputStream is = null;
       try
       {
-         is = Thread.currentThread().getContextClassLoader().getResourceAsStream("sunjdk6.clz");
+         is = SunJava6.class.getClassLoader().getResourceAsStream("sunjdk6.clz.gz");
 
-         InputStreamReader isr = new InputStreamReader(is);
+         GZIPInputStream gis = new GZIPInputStream(is); 
+         InputStreamReader isr = new InputStreamReader(gis);
          BufferedReader br = new BufferedReader(isr);
 
          String s = br.readLine();

@@ -24,7 +24,7 @@ package org.jboss.tattletale.reporting;
 import org.jboss.tattletale.core.Archive;
 import org.jboss.tattletale.reporting.classloader.ClassLoaderStructure;
 
-import java.util.Set;
+import java.util.List;
 import java.util.SortedSet;
 
 /**
@@ -34,7 +34,7 @@ import java.util.SortedSet;
 public abstract class CLSReport extends Report
 {
    /** Known archives */
-   private Set<Archive> known;
+   private List<Archive> known;
 
    /** the CLS */
    private ClassLoaderStructure cls = null;
@@ -72,7 +72,7 @@ public abstract class CLSReport extends Report
                     String name,
                     String directory,
                     String classloaderStructure,
-                    Set<Archive> known)
+                    List<Archive> known)
    {
       this(severity, archives, name, directory, classloaderStructure);
       setKnown(known);
@@ -95,22 +95,34 @@ public abstract class CLSReport extends Report
          Class c = Thread.currentThread().getContextClassLoader().loadClass(classloaderStructure);
          cls = (ClassLoaderStructure)c.newInstance();
       }
-      catch (Exception ntd)
+      catch (Exception e)
       {
-         // Ignore
+         try
+         {
+            Class c = CLSReport.class.getClassLoader().loadClass(classloaderStructure);
+            cls = (ClassLoaderStructure)c.newInstance();
+         }
+         catch (Exception ntd)
+         {
+            // Ignore
+         }
       }
    }
 
-   private void setKnown(Set<Archive> known)
+   /**
+    * Set the known archives
+    * @param known The list of known archives
+    */
+   private void setKnown(List<Archive> known)
    {
       this.known = known;
    }
 
    /**
-    * get the known archives
-    * @return a Set of the known Archives
+    * Get the known archives
+    * @return The list of known archives
     */
-   public Set<Archive> getKnown()
+   public List<Archive> getKnown()
    {
       return known;
    }

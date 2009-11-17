@@ -217,33 +217,6 @@ dot -Tpng myarchive.dot &gt; myarchive.png
         </table>
       </section>
 
-      <!-- Signing information report -->
-      <section id="sign">
-        <title>Signing information</title>
-
-        <para>The signing information report will display the signing status of your project.</para>
-
-        <table frame="all">
-          <title>Signing information report</title>
-          <tgroup cols="4" align="left" colsep="1" rowsep="1">
-            <colspec colname="c1"/>
-            <colspec colname="c2"/>
-            <thead>
-              <row>
-                <entry align="left">Archive</entry>
-                <entry align="left">Status</entry>
-              </row>
-            </thead>
-            <tbody>
-              <row>
-                <entry>The archive</entry>
-                <entry>The status if the archive is signed or unsigned</entry>
-              </row>
-            </tbody>
-          </tgroup>
-        </table>
-      </section>
-
       <!-- Sealed report -->
       <section id="sealed">
         <title>Sealed information</title>
@@ -252,9 +225,9 @@ dot -Tpng myarchive.dot &gt; myarchive.png
 
         <table frame="all">
           <title>Sealed information report</title>
-          <tgroup cols="4" align="left" colsep="1" rowsep="1">
+          <tgroup cols="2" align="left" colsep="1" rowsep="1">
             <colspec colname="c1"/>
-            <colspec colname="c2"/>
+            <colspec colname="c2" colwidth="4*"/>
             <thead>
               <row>
                 <entry align="left">Archive</entry>
@@ -265,6 +238,33 @@ dot -Tpng myarchive.dot &gt; myarchive.png
               <row>
                 <entry>The archive</entry>
                 <entry>The status if the archive is sealed or unsealed</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </table>
+      </section>
+
+      <!-- Signing information report -->
+      <section id="sign">
+        <title>Signing information</title>
+
+        <para>The signing information report will display the signing status of your project.</para>
+
+        <table frame="all">
+          <title>Signing information report</title>
+          <tgroup cols="2" align="left" colsep="1" rowsep="1">
+            <colspec colname="c1"/>
+            <colspec colname="c2" colwidth="4*"/>
+            <thead>
+              <row>
+                <entry align="left">Archive</entry>
+                <entry align="left">Status</entry>
+              </row>
+            </thead>
+            <tbody>
+              <row>
+                <entry>The archive</entry>
+                <entry>The status if the archive is signed or unsigned</entry>
               </row>
             </tbody>
           </tgroup>
@@ -401,6 +401,35 @@ dot -Tpng myarchive.dot &gt; myarchive.png
               <row>
                 <entry>The archive name</entry>
                 <entry>The list of locations where the archive is found</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </table>
+      </section>
+
+      <!-- Unused Jar report -->
+      <section id="unusedjar">
+        <title>Unused Jar</title>
+
+        <para>The Unused Jar report lists archives that isn't referenced from any other Jar archive in
+          the distribution. This doesn't mean however that the archive isn't used since it could be referenced
+          through Java Reflection or through metadata.</para>
+
+        <table frame="all">
+          <title>Unused Jar report</title>
+          <tgroup cols="2" align="left" colsep="1" rowsep="1">
+            <colspec colname="c1"/>
+            <colspec colname="c2" colwidth="4*"/>
+            <thead>
+              <row>
+                <entry align="left">Archive</entry>
+                <entry align="left">Used</entry>
+              </row>
+            </thead>
+            <tbody>
+              <row>
+                <entry>The archive</entry>
+                <entry>Status if the archive is used or not</entry>
               </row>
             </tbody>
           </tgroup>

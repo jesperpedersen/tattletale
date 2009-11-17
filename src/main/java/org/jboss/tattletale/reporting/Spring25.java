@@ -24,7 +24,6 @@ package org.jboss.tattletale.reporting;
 import org.jboss.tattletale.core.Archive;
 import org.jboss.tattletale.core.ArchiveTypes;
 import org.jboss.tattletale.core.Location;
-import org.jboss.tattletale.core.NestableArchive;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -37,10 +36,10 @@ import java.util.zip.GZIPInputStream;
 import javassist.bytecode.ClassFile;
 
 /**
- * Sun: Java 5
+ * Spring 2.5
  * @author Jesper Pedersen <jesper.pedersen@jboss.org>
  */
-public class SunJava5 extends NestableArchive
+public class Spring25 extends Archive
 {
    /** Class set */
    private static SortedSet<String> classSet = new TreeSet<String>();
@@ -50,7 +49,7 @@ public class SunJava5 extends NestableArchive
       InputStream is = null;
       try
       {
-         is = SunJava5.class.getClassLoader().getResourceAsStream("sunjdk5.clz.gz");
+         is = Spring25.class.getClassLoader().getResourceAsStream("spring25.clz.gz");
 
          GZIPInputStream gis = new GZIPInputStream(is); 
          InputStreamReader isr = new InputStreamReader(gis);
@@ -84,15 +83,12 @@ public class SunJava5 extends NestableArchive
    /**
     * Constructor
     */
-   public SunJava5()
+   public Spring25()
    {
-      super(ArchiveTypes.JAR, "Sun Java 5", ClassFile.JAVA_5, null, null, null, null, null, null, null, null);
+      super(ArchiveTypes.JAR, "Spring 2.5", ClassFile.JAVA_4, null, null, null, null, null, null, null, null);
 
-      Location l = new Location("rt.jar", "Sun JDK5");
+      Location l = new Location("spring.jar", "Spring 2.5");
       addLocation(l);
-
-      addSubArchive(new SunJava5JCE());
-      addSubArchive(new SunJava5JSSE());
    }
 
    /**
@@ -105,15 +101,6 @@ public class SunJava5 extends NestableArchive
    {
       if (classSet.contains(clz))
          return true;
-
-      if (getSubArchives() != null)
-      {
-         for (Archive a : getSubArchives())
-         {
-            if (a.doesProvide(clz))
-               return true;
-         }
-      }
       
       return false;
    }

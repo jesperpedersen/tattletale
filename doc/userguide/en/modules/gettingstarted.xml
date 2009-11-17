@@ -14,18 +14,45 @@
      <para>Once downloaded extract the files by executing:</para>
 
      <programlisting>
-unzip jboss-tattletale-1.0.0.GA.zip
+unzip jboss-tattletale-1.1.0.GA.zip
      </programlisting>
 
      <para>or</para>
 
      <programlisting>
-tar xzf jboss-tattletale-1.0.0.GA.tar.gz
+tar xzf jboss-tattletale-1.1.0.GA.tar.gz
      </programlisting>
 
      <para>depending on which archive type you downloaded.</para>
 
      <para>JBoss Tattletale is now located in a folder under the directory you extracted the files into.</para>
+     
+     <section id="maven">
+       <title>Maven</title>
+       
+       <para>The JBoss Tattletale project is published in the JBoss Maven2 repository:</para>
+       
+       <programlisting>
+repository.jboss.org
+       </programlisting>
+
+       <para>under the group id of: org.jboss.tattletale</para>
+       
+       <para>The artifacts for the project are</para>
+       
+       <itemizedlist spacing="compact">
+         <listitem>
+           tattletale: The core library
+         </listitem>
+       </itemizedlist>
+       
+       <para>Developer snapshots are published on the JBoss Snapshots Maven2 server:</para>
+
+       <programlisting>
+snapshots.jboss.org
+       </programlisting>
+
+     </section>
 
      <section id="sourcecode">
        <title>Source code</title>
@@ -45,7 +72,8 @@ svn co http://anonsvn.jboss.org/repos/tattletale/trunk/ tattletale-trunk
 svn co https://svn.jboss.org/repos/tattletale/trunk/ tattletale-trunk
        </programlisting>
 
-       <para>The project is compiled using Java Development Kit 1.5 or higher and Apache Ant 1.7 or higher. Using</para>
+       <para>The project is compiled using Java Development Kit 1.5 or higher, Apache Ant 1.7 or higher and
+          Apache Ivy 2.1 or higher. Using</para>
 
        <programlisting>
 ant &lt;target&gt;
@@ -92,7 +120,7 @@ jboss-tattletale.properties
        <title>JBoss Tattletale configuration</title>
        <tgroup cols="2" align="left" colsep="1" rowsep="1">
          <colspec colname="c1"/>
-         <colspec colname="c2" colwidth="4*"/>
+         <colspec colname="c2" colwidth="5*"/>
          <thead>
            <row>
              <entry align="left">Key</entry>
@@ -107,18 +135,58 @@ jboss-tattletale.properties
                  Can be one of the following:</para>
                <itemizedlist>
                  <listitem>
-                   <para>org.jboss.tattletale.reporting.classloader.NoopClassLoaderStructure</para>
+                   <para><code>org.jboss.tattletale.reporting.classloader.NoopClassLoaderStructure</code></para>
                    <para>A no-operation classloader structure implementation that doesn't scope any archives.</para>
                  </listitem>
                  <listitem>
-                   <para>org.jboss.tattletale.reporting.classloader.JBossAS4ClassLoaderStructure</para>
+                   <para><code>org.jboss.tattletale.reporting.classloader.JBossAS4ClassLoaderStructure</code></para>
                    <para>A classloader structure implementation that scopes based on JBoss Application Server 4.x directory structures.</para>
                  </listitem>
                  <listitem>
-                   <para>org.jboss.tattletale.reporting.classloader.JBossAS5ClassLoaderStructure</para>
+                   <para><code>org.jboss.tattletale.reporting.classloader.JBossAS5ClassLoaderStructure</code></para>
                    <para>A classloader structure implementation that scopes based on JBoss Application Server 5.x directory structures.</para>
                  </listitem>
                </itemizedlist>
+             </entry>
+           </row>
+           <row>
+             <entry>profiles</entry>
+             <entry>
+               <para>Specifies a comma separated list of profiles to resolve against. 
+                 The following profiles are supported:</para>
+               <itemizedlist>
+                 <listitem>
+                   <para><code>java5</code></para>
+                   <para>The Java 5 API.</para>
+                 </listitem>
+                 <listitem>
+                   <para><code>java6</code></para>
+                   <para>The Java 6 API.</para>
+                 </listitem>
+                 <listitem>
+                   <para><code>ee5</code></para>
+                   <para>The Java Enterprise Edition 5 API.</para>
+                 </listitem>
+                 <listitem>
+                   <para><code>seam22</code></para>
+                   <para>The JBoss Seam 2.2 API.</para>
+                 </listitem>
+                 <listitem>
+                   <para><code>cdi10</code></para>
+                   <para>The Contexts and Dependency Injection (CDI) 1.0 API.</para>
+                 </listitem>
+                 <listitem>
+                   <para><code>spring25</code></para>
+                   <para>The Spring 2.5 API.</para>
+                 </listitem>
+               </itemizedlist>
+             </entry>
+           </row>
+           <row>
+             <entry>excludes</entry>
+             <entry>
+               <para>A comma separated list of directories or files that should be excluded from the scan. F.ex.</para>
+               <para><code>**/server/**,myjar.jar</code></para>
              </entry>
            </row>
            <row>
@@ -130,7 +198,7 @@ jboss-tattletale.properties
            <row>
              <entry>blacklisted</entry>
              <entry>
-               <para>A comma separated list of black listed classes or packages. F.ex. com.mycompany.forinternaluseonly, com.partner.forinternaluseonly</para>
+               <para>A comma separated list of black listed classes or packages. F.ex. <code>com.mycompany.forinternaluseonly, com.partner.forinternaluseonly</code></para>
              </entry>
            </row>
          </tbody>
@@ -149,11 +217,12 @@ jboss-tattletale.properties
      <para>Running JBoss Tattletale is very easy</para>
 
      <programlisting>
-java -Xmx512m -jar jboss-tattletale.jar &lt;sourcedir&gt; [&lt;outputdir&gt;]
+java -Xmx512m -jar jboss-tattletale.jar [-exclude=&lt;excludes&gt;] &lt;sourcedir&gt; [&lt;outputdir&gt;]
      </programlisting>
      
      <para>where the "sourcedir" is the directory that contains your Java archives and the optional "outputdir" parameter
-     is the directory where you would like your reports to be generated.</para>
+     is the directory where you would like your reports to be generated. The "-exclude" option let you 
+     exclude directories or file on the command line - see the configuration file for syntax.</para>
 
      <para>The main file will be generated under the output directory as index.html.</para>
 
@@ -177,7 +246,17 @@ java -Xmx512m -jar jboss-tattletale.jar &lt;sourcedir&gt; [&lt;outputdir&gt;]
 xmlns:tattletale="antlib:org.jboss.tattletale.ant"
      </programlisting>
 
-     <para>That is it. See the Apache Ant documentation for additional instructions on installation.</para>
+     <para>That is it.</para>
+
+     <para>Alternative, you can do a <code>taskdef</code> for each task</para>
+
+     <programlisting>
+&lt;taskdef name="report"
+         classname="org.jboss.tattletale.ant.ReportTask"
+         classpathref="tattletale.lib.path.id"/&gt;
+     </programlisting>
+
+     <para>See the Apache Ant documentation for additional instructions on installation.</para>
 
      <section id="ant_report">
        <title>report</title>

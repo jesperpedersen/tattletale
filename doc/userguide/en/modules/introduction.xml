@@ -20,7 +20,7 @@
        <para>Find missing classes from the classpath</para>
      </listitem>
      <listitem>
-       <para>Spot if a class is located in multiple JAR files</para>
+       <para>Spot if a class/package is located in multiple JAR files</para>
      </listitem>
      <listitem>
        <para>Spot if the same JAR file is located in multiple locations</para>
@@ -36,6 +36,12 @@
      </listitem>
      <listitem>
        <para>Find JAR files without a version number</para>
+     </listitem>
+     <listitem>
+       <para>Find unused JAR files</para>
+     </listitem>
+     <listitem>
+       <para>Identify sealed and signed JAR archives</para>
      </listitem>
      <listitem>
        <para>Locate a class in a JAR file</para>

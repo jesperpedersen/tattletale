@@ -29,8 +29,8 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -50,11 +50,11 @@ public class GraphvizReport extends CLSReport
    /**
     * Constructor
     * @param archives The archives
-    * @param known The set of known archives
+    * @param known The list of known archives
     * @param classloaderStructure The classloader structure
     */
    public GraphvizReport(SortedSet<Archive> archives,
-                         Set<Archive> known,
+                         List<Archive> known,
                          String classloaderStructure)
    {
       super(ReportSeverity.INFO, archives, NAME, DIRECTORY, classloaderStructure, known);

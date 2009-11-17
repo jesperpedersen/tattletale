@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 
-<project name="jboss-tattletale" default="dist" basedir=".">
+<project name="jboss-tattletale" 
+         default="dist" 
+         basedir="."
+         xmlns:ivy="antlib:org.apache.ivy.ant">
+
     <property name="build.dir" value="${basedir}/build"/>
     <property name="lib.dir" value="${basedir}/lib"/>
     <property name="doc.dir" value="${basedir}/doc"/>
@@ -21,17 +25,30 @@
 
     <property name="jboss-tattletale.jar" value="jboss-tattletale.jar"/>
 
+    <!-- ================================= 
+         Repositories              
+         ================================= -->
+    <property name="central.repo" value="http://repo1.maven.org/maven2"/>
+    <property name="jboss.repo" value="http://repository.jboss.org/maven2"/>
+    <property name="snapshots.repo" value="http://snapshots.jboss.org/maven2"/>
+  
+    <!-- ================================= 
+         Versions              
+         ================================= -->
+    <property name="version.ant" value="1.6.5"/>
+    <property name="version.javassist" value="3.11.0.GA"/>
+    
     <!-- =================================================================== -->
     <!-- Define the class path                                               -->
     <!-- =================================================================== -->
     <path id="class.path">
-        <fileset dir="${lib.dir}">
+        <fileset dir="${lib.dir}/core">
             <include name="*.jar"/>
         </fileset>
     </path>
 
     <path id="test.class.path">
-        <fileset dir="${lib.dir}">
+        <fileset dir="${lib.dir}/test">
             <include name="*.jar"/>
         </fileset>
         <fileset dir="${dist.dir}">
@@ -41,7 +58,7 @@
 
     <path id="checkstyle.class.path">
         <fileset dir="${tools.dir}/checkstyle/lib"/>
-        <fileset dir="${lib.dir}">
+        <fileset dir="${lib.dir}/core">
             <include name="**/*.jar"/>
         </fileset>
         <fileset dir="${dist.dir}">
@@ -53,20 +70,28 @@
     <!-- Initialize                                                          -->
     <!-- =================================================================== -->
     <target name="init">
+       <ivy:settings file="${basedir}/ivy.settings.xml"/>
     </target>
 
+    <!-- ================================= 
+         Target: resolve              
+         ================================= -->
+    <target name="resolve" depends="init">
+       <ivy:retrieve pattern="${lib.dir}/[conf]/[artifact].[ext]" sync="true"/>
+    </target>
+  
     <!-- =================================================================== -->
     <!-- Prepares the directory structure                                    -->
     <!-- =================================================================== -->
     <target name="prepare" depends="init">
-        <mkdir dir="${build.dir}"/>
-        <mkdir dir="${dist.dir}"/>
+       <mkdir dir="${build.dir}"/>
+       <mkdir dir="${dist.dir}"/>
     </target>
 
     <!-- =================================================================== -->
     <!-- Jars                                                                -->
     <!-- =================================================================== -->
-    <target name="jars" depends="prepare">
+    <target name="jars" depends="prepare,resolve">
         <delete dir="${build.dir}"/>
         <mkdir dir="${build.dir}"/>
         <javac
@@ -86,6 +111,7 @@
             </fileset>
             <fileset dir="${etc.dir}">
                <include name="**/*.clz"/>
+               <include name="**/*.clz.gz"/>
             </fileset>
             <fileset dir="${etc.dir}">
                <include name="**/*.css"/>
@@ -99,7 +125,7 @@
         <jar destfile="${dist.dir}/${jboss-tattletale.jar}"
              basedir="${build.dir}"
              manifest="${etc.dir}/manifest.mf"
-             includes="org/jboss/tattletale/**,**/*.properties,**/*.clz,**/*.css"
+             includes="org/jboss/tattletale/**,**/*.properties,**/*.clz,**/*.clz.gz,**/*.css"
              excludes="**/*.java"/>
     </target>
 
@@ -129,7 +155,7 @@
     <!-- =================================================================== -->
     <target name="dist" depends="jars">
         <copy todir="${dist.dir}">
-            <fileset dir="${lib.dir}">
+            <fileset dir="${lib.dir}/core">
                <include name="**/*.jar"/>
                <exclude name="**/ant.jar"/>
             </fileset>
@@ -185,9 +211,6 @@
         <gzip zipfile="${name}-${major}.${minor}.${patch}.${type}.tar.gz" 
               src="${name}-${major}.${minor}.${patch}.${type}.tar"/>
 
-        <bzip2 zipfile="${name}-${major}.${minor}.${patch}.${type}.tar.bz2" 
-               src="${name}-${major}.${minor}.${patch}.${type}.tar"/>
-
         <delete file="${name}-${major}.${minor}.${patch}.${type}.tar"/>
     </target>
 
@@ -227,7 +250,13 @@
         <delete dir="${reports.dir}"/>
         <delete file="*.zip"/>
         <delete file="*.tar.gz"/>
-        <delete file="*.tar.bz2"/>
+    </target>
+
+    <!-- ================================= 
+         Target: clean-cache              
+         ================================= -->
+    <target name="clean-cache">
+       <ivy:cleancache />
     </target>
 
 </project>

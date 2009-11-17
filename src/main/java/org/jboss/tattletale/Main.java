@@ -27,6 +27,7 @@ import org.jboss.tattletale.core.Archive;
 import org.jboss.tattletale.core.ArchiveTypes;
 import org.jboss.tattletale.core.Location;
 import org.jboss.tattletale.reporting.BlackListedReport;
+import org.jboss.tattletale.reporting.CDI10;
 import org.jboss.tattletale.reporting.ClassLocationReport;
 import org.jboss.tattletale.reporting.DependantsReport;
 import org.jboss.tattletale.reporting.DependsOnReport;
@@ -35,6 +36,7 @@ import org.jboss.tattletale.reporting.EliminateJarsReport;
 import org.jboss.tattletale.reporting.GraphvizReport;
 import org.jboss.tattletale.reporting.InvalidVersionReport;
 import org.jboss.tattletale.reporting.JarReport;
+import org.jboss.tattletale.reporting.JavaEE5;
 import org.jboss.tattletale.reporting.MultipleJarsReport;
 import org.jboss.tattletale.reporting.MultipleLocationsReport;
 import org.jboss.tattletale.reporting.NoVersionReport;
@@ -42,16 +44,20 @@ import org.jboss.tattletale.reporting.OSGiReport;
 import org.jboss.tattletale.reporting.PackageMultipleJarsReport;
 import org.jboss.tattletale.reporting.Report;
 import org.jboss.tattletale.reporting.SealedReport;
+import org.jboss.tattletale.reporting.Seam22;
 import org.jboss.tattletale.reporting.SignReport;
+import org.jboss.tattletale.reporting.Spring25;
 import org.jboss.tattletale.reporting.SunJava5;
 import org.jboss.tattletale.reporting.SunJava6;
 import org.jboss.tattletale.reporting.TransitiveDependantsReport;
 import org.jboss.tattletale.reporting.TransitiveDependsOnReport;
+import org.jboss.tattletale.reporting.UnusedJarReport;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -77,7 +83,7 @@ public class Main
     */
    private static void usage() 
    {
-      System.out.println("Usage: Tattletale <scan-directory> [output-directory]");
+      System.out.println("Usage: Tattletale [-exclude=<excludes>] <scan-directory> [output-directory]");
    }
 
    /**
@@ -90,8 +96,19 @@ public class Main
       {
          try 
          {
-            String scanDir = args[0];
-            String outputDir = args.length > 1 ? args[1] : "."; 
+            int arg = 0;
+
+            Set<String> excludes = null;
+
+            if (args[arg].startsWith("-exclude="))
+            {
+               excludes = new HashSet<String>();
+               excludes.addAll(parseExcludes(args[arg].substring(args[arg].indexOf("=") + 1)));
+               arg++;
+            }
+
+            String scanDir = args[arg];
+            String outputDir = args.length > arg + 1 ? args[arg + 1] : "."; 
 
             Properties properties = new Properties();
             String propertiesFile = System.getProperty("jboss-tattletale.properties");
@@ -158,7 +175,7 @@ public class Main
                InputStream is = null;
                try 
                {
-                  ClassLoader cl = Thread.currentThread().getContextClassLoader();
+                  ClassLoader cl = Main.class.getClassLoader();
                   is = cl.getResourceAsStream("jboss-tattletale.properties");
                   properties.load(is);
                   loaded = true;
@@ -184,11 +201,24 @@ public class Main
             }
 
             String classloaderStructure = null;
+            Set<String> profiles = null;
             Set<String> blacklisted = null;
 
             if (loaded)
             {
                classloaderStructure = properties.getProperty("classloader");
+
+               if (properties.getProperty("profiles") != null)
+               {
+                  profiles = new HashSet<String>();
+
+                  StringTokenizer st = new StringTokenizer(properties.getProperty("profiles"), ",");
+                  while (st.hasMoreTokens())
+                  {
+                     String token = st.nextToken().trim();
+                     profiles.add(token);
+                  }
+               }
 
                if (properties.getProperty("blacklisted") != null)
                {
@@ -212,6 +242,14 @@ public class Main
                      blacklisted.add(token);
                   }
                }
+
+               if (properties.getProperty("excludes") != null)
+               {
+                  if (excludes == null)
+                     excludes = new HashSet<String>();
+
+                  excludes.addAll(parseExcludes(properties.getProperty("excludes")));
+               }
             }
 
             if (classloaderStructure == null || classloaderStructure.trim().equals(""))
@@ -223,14 +261,31 @@ public class Main
             SortedSet<Archive> archives = new TreeSet<Archive>();
             SortedMap<String, SortedSet<String>> gProvides = new TreeMap<String, SortedSet<String>>();
 
-            Set<Archive> known = new HashSet<Archive>();
-            known.add(new SunJava5());
-            known.add(new SunJava6());
+            List<Archive> known = new ArrayList<Archive>();
+
+            if (profiles == null || profiles.size() == 0 || 
+                profiles.contains("java5") || profiles.contains("Sun Java 5"))
+               known.add(new SunJava5());
+
+            if (profiles == null || profiles.contains("java6") || profiles.contains("Sun Java 6"))
+               known.add(new SunJava6());
+
+            if (profiles != null && (profiles.contains("ee5") || profiles.contains("Java Enterprise 5")))
+               known.add(new JavaEE5());
+
+            if (profiles != null && (profiles.contains("seam22") || profiles.contains("Seam 2.2")))
+               known.add(new Seam22());
+
+            if (profiles != null && (profiles.contains("cdi10") || profiles.contains("CDI 1.0")))
+               known.add(new CDI10());
+
+            if (profiles != null && (profiles.contains("spring25") || profiles.contains("Spring 2.5")))
+               known.add(new Spring25());
 
             File f = new File(scanDir);
             if (f.isDirectory())
             {
-               List<File> fileList = DirectoryScanner.scan(f);
+               List<File> fileList = DirectoryScanner.scan(f, excludes);
 
                for (File file : fileList)
                {
@@ -292,7 +347,7 @@ public class Main
                                     String classloaderStructure,
                                     SortedSet<Archive> archives, 
                                     SortedMap<String, SortedSet<String>> gProvides, 
-                                    Set<Archive> known) 
+                                    List<Archive> known)
    {   
       SortedSet<Report> dependenciesReports = new TreeSet<Report>();
       SortedSet<Report> generalReports = new TreeSet<Report>();
@@ -372,6 +427,10 @@ public class Main
       blacklisted.generate(outputDir);
       generalReports.add(blacklisted);
 
+      Report unusedjar = new UnusedJarReport(archives);
+      unusedjar.generate(outputDir);
+      generalReports.add(unusedjar);
+
       Dump.generateIndex(dependenciesReports, generalReports, archiveReports, outputDir);
       Dump.generateCSS(outputDir);
    }
@@ -403,5 +462,31 @@ public class Main
          outputDirFile.mkdirs();
       }
       return outputDir;
+   }
+
+   /**
+    * Parse excludes
+    * @param s The input string
+    * @return The set of excludes
+    */
+   private static Set<String> parseExcludes(String s)
+   {
+      Set<String> result = new HashSet<String>();
+
+      StringTokenizer st = new StringTokenizer(s, ",");
+      while (st.hasMoreTokens())
+      {
+         String token = st.nextToken().trim();
+
+         if (token.startsWith("**"))
+            token = token.substring(2);
+         
+         if (token.endsWith("**"))
+            token = token.substring(0, token.indexOf("**"));
+         
+         result.add(token);
+      }
+
+      return result;
    }
 }

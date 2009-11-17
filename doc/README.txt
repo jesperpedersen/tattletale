@@ -8,12 +8,14 @@ The tool will provide you with reports that can help you
 
 * Identify dependencies between JAR files
 * Find missing classes from the classpath
-* Spot if a class is located in multiple JAR files
+* Spot if a class/package is located in multiple JAR files
 * Spot if the same JAR file is located in multiple locations
 * With a list of what each JAR file requires and provides
 * Verify the SerialVersionUID of a class
 * Find similar JAR files that have different version numbers
 * Find JAR files without a version number
+* Find unused JAR files
+* Identify sealed / signed JAR archives
 * Locate a class in a JAR file
 * Get the OSGi status of your project
 
@@ -29,7 +31,7 @@ We hope that JBoss Tattletale will help you in your development tasks !
 
 Quick start:
 ------------
-java -Xmx512m -jar jboss-tattletale.jar <scan-directory> [output-directory]
+java -Xmx512m -jar jboss-tattletale.jar [-exclude=<excludes>] <scan-directory> [output-directory]
 
 Output: Analysis reports generate in current directory if no output-directory set.
 

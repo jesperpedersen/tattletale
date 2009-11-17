@@ -17,10 +17,14 @@
 
       <para>Jesper Pedersen acts as the lead for the JBoss Tattletale project. He can be reached at jesper (dot) pedersen (at) jboss (dot) org.</para>
 
-      <para>Jay Balunas is a core developer on the JBoss Tattletale project. He can be reached at jay (dot) balunas (at) jboss (dot) org.</para>
+   </section>
 
-      <para>James Cobb does all the graphics for the JBoss Tattletale project. He can be reached at jcobb (at) redhat (dot) com.</para>
+   <section id="thanksto">
+     <title>Thanks to</title>
+
+     <para>Jay Balunas, Torben Jaeger and James Cobb.</para>
 
    </section>
+
 
 </chapter>

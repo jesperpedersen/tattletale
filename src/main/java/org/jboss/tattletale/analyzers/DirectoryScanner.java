@@ -25,7 +25,9 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Directory scanner
@@ -41,9 +43,21 @@ public class DirectoryScanner
     */
    public static List<File> scan(File file)
    {
+      return scan(file, null);
+   }
+
+  
+   /**
+    * Scan a directory for JAR files
+    * @param file The root directory
+    * @param excludes The set of excludes
+    * @return The list of JAR files
+    */
+   public static List<File> scan(File file, Set<String> excludes)
+   {
       try
       {
-         return getFileListing(file);
+         return getFileListing(file, excludes);
       }
       catch (Exception e)
       {
@@ -59,15 +73,16 @@ public class DirectoryScanner
     * Files found; the List is sorted using File.compareTo().
     *
     * @param aStartingDir is a valid directory, which can be read.
+    * @param excludes The set of excludes
     */
-   private static List<File> getFileListing(File aStartingDir) throws Exception 
+   private static List<File> getFileListing(File aStartingDir, Set<String> excludes) throws Exception 
    {
-      List<File> result = getFileListingNoSort(aStartingDir);
+      List<File> result = getFileListingNoSort(aStartingDir, excludes);
       Collections.sort(result);
       return result;
    }
    
-   private static List<File> getFileListingNoSort(File aStartingDir) throws Exception 
+   private static List<File> getFileListingNoSort(File aStartingDir, Set<String> excludes) throws Exception 
    {
       List<File> result = new ArrayList<File>();
 
@@ -81,12 +96,29 @@ public class DirectoryScanner
          {
             if (file.getName().endsWith(".jar"))
             {
-               result.add(file);
+               boolean include = true;
+
+               if (excludes != null)
+               {
+                  Iterator<String> it = excludes.iterator();
+                  while (include && it.hasNext())
+                  {
+                     String exclude = it.next();
+
+                     if (file.getName().equals(exclude) || file.getAbsolutePath().indexOf(exclude) != -1)
+                     {
+                        include = false;
+                     }
+                  }
+               }
+
+               if (include)
+                  result.add(file);
             }
          }
          else if (file.isDirectory()) 
          {
-            List<File> deeperList = getFileListingNoSort(file);
+            List<File> deeperList = getFileListingNoSort(file, excludes);
             result.addAll(deeperList);
          }
       }

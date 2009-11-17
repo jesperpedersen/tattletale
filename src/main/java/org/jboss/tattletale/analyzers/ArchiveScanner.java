@@ -52,7 +52,6 @@ import javassist.ClassPool;
 import javassist.CtClass;
 import javassist.CtField;
 import javassist.NotFoundException;
-import javassist.bytecode.ClassFile;
 
 /**
  * Archive scanner
@@ -81,7 +80,7 @@ public class ArchiveScanner
     */
    public static Archive scan(File file, 
                               Map<String, SortedSet<String>> gProvides, 
-                              Set<Archive> known, 
+                              List<Archive> known, 
                               Set<String> blacklisted)
    {
       Archive archive = null;
@@ -96,6 +95,7 @@ public class ArchiveScanner
          Integer classVersion = null;
          SortedSet<String> requires = new TreeSet<String>();
          SortedMap<String, Long> provides = new TreeMap<String, Long>();
+         SortedSet<String> profiles = new TreeSet<String>();
          SortedMap<String, SortedSet<String>> classDependencies = new TreeMap<String, SortedSet<String>>();
          SortedMap<String, SortedSet<String>> packageDependencies = new TreeMap<String, SortedSet<String>>();
          SortedMap<String, SortedSet<String>> blacklistedDependencies = new TreeMap<String, SortedSet<String>>();
@@ -169,7 +169,10 @@ public class ArchiveScanner
                         {
                            Archive a = kit.next();
                            if (a.doesProvide(s))
+                           {
+                              profiles.add(a.getName());
                               include = false;
+                           }
                         }
                      }
 
@@ -268,6 +271,9 @@ public class ArchiveScanner
             }
          }
 
+         if (provides.size() == 0)
+            return null;
+
          String version = null;
          List<String> lManifest = null;
          Manifest manifest = jarFile.getManifest();
@@ -301,6 +307,14 @@ public class ArchiveScanner
 
          archive = new JarArchive(name, classVersion.intValue(), lManifest, lSign, requires, provides, 
                                   classDependencies, packageDependencies, blacklistedDependencies, location);
+
+         if (profiles.size() > 0)
+         {
+            for (String profile : profiles)
+            {
+               archive.addProfile(profile);
+            }
+         }
 
          Iterator<String> it = provides.keySet().iterator();
          while (it.hasNext())
