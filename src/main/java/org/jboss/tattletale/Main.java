@@ -175,7 +175,7 @@ public class Main
                InputStream is = null;
                try 
                {
-                  ClassLoader cl = Thread.currentThread().getContextClassLoader();
+                  ClassLoader cl = Main.class.getClassLoader();
                   is = cl.getResourceAsStream("jboss-tattletale.properties");
                   properties.load(is);
                   loaded = true;

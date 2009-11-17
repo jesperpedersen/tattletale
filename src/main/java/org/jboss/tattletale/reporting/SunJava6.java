@@ -50,7 +50,7 @@ public class SunJava6 extends NestableArchive
       InputStream is = null;
       try
       {
-         is = Thread.currentThread().getContextClassLoader().getResourceAsStream("sunjdk6.clz.gz");
+         is = SunJava6.class.getClassLoader().getResourceAsStream("sunjdk6.clz.gz");
 
          GZIPInputStream gis = new GZIPInputStream(is); 
          InputStreamReader isr = new InputStreamReader(gis);

@@ -49,7 +49,7 @@ public class SunJava6JCE extends Archive
       InputStream is = null;
       try
       {
-         is = Thread.currentThread().getContextClassLoader().getResourceAsStream("sunjdk6-jce.clz.gz");
+         is = SunJava6JCE.class.getClassLoader().getResourceAsStream("sunjdk6-jce.clz.gz");
 
          GZIPInputStream gis = new GZIPInputStream(is); 
          InputStreamReader isr = new InputStreamReader(gis);

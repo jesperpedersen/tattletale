@@ -49,7 +49,7 @@ public class JavaEE5 extends Archive
       InputStream is = null;
       try
       {
-         is = Thread.currentThread().getContextClassLoader().getResourceAsStream("ee5.clz.gz");
+         is = JavaEE5.class.getClassLoader().getResourceAsStream("ee5.clz.gz");
 
          GZIPInputStream gis = new GZIPInputStream(is); 
          InputStreamReader isr = new InputStreamReader(gis);

@@ -49,7 +49,7 @@ public class SunJava5JSSE extends Archive
       InputStream is = null;
       try
       {
-         is = Thread.currentThread().getContextClassLoader().getResourceAsStream("sunjdk5-jsse.clz.gz");
+         is = SunJava5JSSE.class.getClassLoader().getResourceAsStream("sunjdk5-jsse.clz.gz");
 
          GZIPInputStream gis = new GZIPInputStream(is); 
          InputStreamReader isr = new InputStreamReader(gis);

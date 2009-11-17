@@ -49,7 +49,7 @@ public class Seam22 extends Archive
       InputStream is = null;
       try
       {
-         is = Thread.currentThread().getContextClassLoader().getResourceAsStream("seam22.clz.gz");
+         is = Seam22.class.getClassLoader().getResourceAsStream("seam22.clz.gz");
 
          GZIPInputStream gis = new GZIPInputStream(is); 
          InputStreamReader isr = new InputStreamReader(gis);

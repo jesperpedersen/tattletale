@@ -49,7 +49,7 @@ public class CDI10 extends Archive
       InputStream is = null;
       try
       {
-         is = Thread.currentThread().getContextClassLoader().getResourceAsStream("cdi10.clz.gz");
+         is = CDI10.class.getClassLoader().getResourceAsStream("cdi10.clz.gz");
 
          GZIPInputStream gis = new GZIPInputStream(is); 
          InputStreamReader isr = new InputStreamReader(gis);
