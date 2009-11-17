@@ -246,7 +246,17 @@ java -Xmx512m -jar jboss-tattletale.jar [-exclude=&lt;excludes&gt;] &lt;sourcedi
 xmlns:tattletale="antlib:org.jboss.tattletale.ant"
      </programlisting>
 
-     <para>That is it. See the Apache Ant documentation for additional instructions on installation.</para>
+     <para>That is it.</para>
+
+     <para>Alternative, you can do a <code>taskdef</code> for each task</para>
+
+     <programlisting>
+&lt;taskdef name="report"
+         classname="org.jboss.tattletale.ant.ReportTask"
+         classpathref="tattletale.lib.path.id"/&gt;
+     </programlisting>
+
+     <para>See the Apache Ant documentation for additional instructions on installation.</para>
 
      <section id="ant_report">
        <title>report</title>
