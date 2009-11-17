@@ -211,9 +211,6 @@
         <gzip zipfile="${name}-${major}.${minor}.${patch}.${type}.tar.gz" 
               src="${name}-${major}.${minor}.${patch}.${type}.tar"/>
 
-        <bzip2 zipfile="${name}-${major}.${minor}.${patch}.${type}.tar.bz2" 
-               src="${name}-${major}.${minor}.${patch}.${type}.tar"/>
-
         <delete file="${name}-${major}.${minor}.${patch}.${type}.tar"/>
     </target>
 
@@ -253,7 +250,6 @@
         <delete dir="${reports.dir}"/>
         <delete file="*.zip"/>
         <delete file="*.tar.gz"/>
-        <delete file="*.tar.bz2"/>
     </target>
 
     <!-- ================================= 
