@@ -83,6 +83,9 @@ public class Main
    /** Destination */
    private String destination;
 
+   /** Profiles */
+   private String profiles;
+
    /** Excludes */
    private String excludes;
 
@@ -93,6 +96,7 @@ public class Main
    {
       this.source = ".";
       this.destination = ".";
+      this.profiles = null;
       this.excludes = null;
    }
 
@@ -115,6 +119,15 @@ public class Main
    }
 
    /**
+    * Set profiles
+    * @param profiles The value
+    */
+   public void setProfiles(String profiles)
+   {
+      this.profiles = profiles;
+   }
+
+   /**
     * Set excludes
     * @param excludes The value
     */
@@ -132,21 +145,54 @@ public class Main
       Properties properties = loadDefault();
 
       String classloaderStructure = null;
-      Set<String> profiles = null;
+
+      Set<String> profileSet = null;
+      boolean allProfiles = false;
+
       Set<String> blacklisted = null;
+
       Set<String> excludeSet = null;
+
 
       classloaderStructure = properties.getProperty("classloader");
          
-      if (properties.getProperty("profiles") != null)
+      if (profiles != null)
       {
-         profiles = new HashSet<String>();
+         profileSet = new HashSet<String>();
+
+         StringTokenizer st = new StringTokenizer(profiles, ",");
+         while (st.hasMoreTokens())
+         {
+            String token = st.nextToken().trim();
+            if ("*".equals(token))
+            {
+               allProfiles = true;
+            }
+            else
+            {
+               allProfiles = false;
+               profileSet.add(token);
+            }
+         }
+      }
+
+      if (profileSet == null && properties.getProperty("profiles") != null)
+      {
+         profileSet = new HashSet<String>();
          
          StringTokenizer st = new StringTokenizer(properties.getProperty("profiles"), ",");
          while (st.hasMoreTokens())
          {
             String token = st.nextToken().trim();
-            profiles.add(token);
+            if ("*".equals(token))
+            {
+               allProfiles = true;
+            }
+            else
+            {
+               allProfiles = false;
+               profileSet.add(token);
+            }
          }
       }
 
@@ -196,23 +242,23 @@ public class Main
       
       List<Archive> known = new ArrayList<Archive>();
 
-      if (profiles == null || profiles.size() == 0 || 
-          profiles.contains("java5") || profiles.contains("Sun Java 5"))
+      if (profileSet == null || allProfiles || profileSet.size() == 0 || 
+          profileSet.contains("java5") || profileSet.contains("Sun Java 5"))
          known.add(new SunJava5());
       
-      if (profiles == null || profiles.contains("java6") || profiles.contains("Sun Java 6"))
+      if (profileSet == null || allProfiles || profileSet.contains("java6") || profileSet.contains("Sun Java 6"))
          known.add(new SunJava6());
       
-      if (profiles != null && (profiles.contains("ee5") || profiles.contains("Java Enterprise 5")))
+      if (allProfiles || profileSet != null && (profileSet.contains("ee5") || profileSet.contains("Java Enterprise 5")))
          known.add(new JavaEE5());
       
-      if (profiles != null && (profiles.contains("seam22") || profiles.contains("Seam 2.2")))
+      if (allProfiles || profileSet != null && (profileSet.contains("seam22") || profileSet.contains("Seam 2.2")))
          known.add(new Seam22());
       
-      if (profiles != null && (profiles.contains("cdi10") || profiles.contains("CDI 1.0")))
+      if (allProfiles || profileSet != null && (profileSet.contains("cdi10") || profileSet.contains("CDI 1.0")))
          known.add(new CDI10());
       
-      if (profiles != null && (profiles.contains("spring25") || profiles.contains("Spring 2.5")))
+      if (allProfiles || profileSet != null && (profileSet.contains("spring25") || profileSet.contains("Spring 2.5")))
          known.add(new Spring25());
       
       File f = new File(source);

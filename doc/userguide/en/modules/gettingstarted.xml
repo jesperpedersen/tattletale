@@ -286,11 +286,45 @@ xmlns:tattletale="antlib:org.jboss.tattletale.ant"
                </entry>
              </row>
              <row>
+               <entry><code>profiles</code></entry>
+               <entry>
+                 Specifies a comma separated list of profiles to resolve against. All profiles can
+                 be selected by specifying "*". The following profiles are supported:
+                 <itemizedlist>
+                   <listitem>
+                     <para><code>java5</code></para>
+                     <para>The Java 5 API.</para>
+                   </listitem>
+                   <listitem>
+                     <para><code>java6</code></para>
+                     <para>The Java 6 API.</para>
+                   </listitem>
+                   <listitem>
+                     <para><code>ee5</code></para>
+                     <para>The Java Enterprise Edition 5 API.</para>
+                   </listitem>
+                   <listitem>
+                     <para><code>seam22</code></para>
+                     <para>The JBoss Seam 2.2 API.</para>
+                   </listitem>
+                   <listitem>
+                     <para><code>cdi10</code></para>
+                     <para>The Contexts and Dependency Injection (CDI) 1.0 API.</para>
+                   </listitem>
+                   <listitem>
+                     <para><code>spring25</code></para>
+                   <para>The Spring 2.5 API.</para>
+                   </listitem>
+                 </itemizedlist>
+                 <para>Default: <code>java5, java6</code></para>
+               </entry>
+             </row>
+             <row>
                <entry><code>excludes</code></entry>
                <entry>
                  A comma separated list of directories or files that should be excluded from the scan. F.ex.
                  <para><code>**/server/**,myjar.jar</code></para>
-                 <para>Default: No exludes</para>
+                 <para>Default: No excludes</para>
                </entry>
              </row>
            </tbody>

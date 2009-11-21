@@ -33,6 +33,9 @@ import org.apache.tools.ant.BuildException;
  */
 public class ReportTask extends AbstractReportTask
 {
+   /** Profiles */
+   private String profiles;
+
    /** Excludes */
    private String excludes;
 
@@ -41,7 +44,26 @@ public class ReportTask extends AbstractReportTask
     */
    public ReportTask()
    {
+      this.profiles = null;
       this.excludes = null;
+   }
+
+   /**
+    * Get the profiles
+    * @return The value
+    */
+   public String getProfiles() 
+   {
+      return profiles;
+   }
+
+   /**
+    * Set the profiles
+    * @param profiles The value
+    */
+   public void setProfiles(String profiles) 
+   {
+      this.profiles = profiles;
    }
 
    /**
@@ -75,6 +97,7 @@ public class ReportTask extends AbstractReportTask
 
          main.setSource(getSource());
          main.setDestination(getDestination());
+         main.setProfiles(getProfiles());
          main.setExcludes(getExcludes());
 
          main.execute();
