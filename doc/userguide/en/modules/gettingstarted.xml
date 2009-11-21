@@ -324,9 +324,17 @@ xmlns:tattletale="antlib:org.jboss.tattletale.ant"
                <entry>
                  A comma separated list of directories or files that should be excluded from the scan. F.ex.
                  <para><code>**/server/**,myjar.jar</code></para>
-                 <para>Default: No excludes</para>
+                 <para>Default: Empty list</para>
                </entry>
              </row>
+             <row>
+               <entry><code>blacklisted</code></entry>
+               <entry>
+                 A comma separated list of black listed classes or packages. F.ex. 
+                 <code>com.mycompany.forinternaluseonly, com.partner.forinternaluseonly</code>
+                 <para>Default: Empty list</para>
+               </entry>
+           </row>
            </tbody>
        </tgroup>
        </table>

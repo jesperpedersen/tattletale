@@ -89,6 +89,9 @@ public class Main
    /** Excludes */
    private String excludes;
 
+   /** Blacklisted */
+   private String blacklisted;
+
    /**
     * Constructor
     */
@@ -98,6 +101,7 @@ public class Main
       this.destination = ".";
       this.profiles = null;
       this.excludes = null;
+      this.blacklisted = null;
    }
 
    /**
@@ -137,6 +141,15 @@ public class Main
    }
 
    /**
+    * Set blacklisted
+    * @param blacklisted The value
+    */
+   public void setBlacklisted(String blacklisted)
+   {
+      this.blacklisted = blacklisted;
+   }
+
+   /**
     * Execute
     * @exception Exception Thrown if an error occurs
     */
@@ -149,7 +162,7 @@ public class Main
       Set<String> profileSet = null;
       boolean allProfiles = false;
 
-      Set<String> blacklisted = null;
+      Set<String> blacklistedSet = null;
 
       Set<String> excludeSet = null;
 
@@ -196,9 +209,32 @@ public class Main
          }
       }
 
-      if (properties.getProperty("blacklisted") != null)
+      if (blacklisted != null)
       {
-         blacklisted = new HashSet<String>();
+         blacklistedSet = new HashSet<String>();
+
+         StringTokenizer st = new StringTokenizer(blacklisted, ",");
+         while (st.hasMoreTokens())
+         {
+            String token = st.nextToken().trim();
+               
+            if (token.endsWith(".*"))
+            {
+               token.substring(0, token.indexOf(".*"));
+            }
+
+            if (token.endsWith(".class"))
+            {
+               token.substring(0, token.indexOf(".class"));
+            }
+            
+            blacklistedSet.add(token);
+         }
+      }
+
+      if (blacklistedSet == null && properties.getProperty("blacklisted") != null)
+      {
+         blacklistedSet = new HashSet<String>();
 
          StringTokenizer st = new StringTokenizer(properties.getProperty("blacklisted"), ",");
          while (st.hasMoreTokens())
@@ -215,7 +251,7 @@ public class Main
                token.substring(0, token.indexOf(".class"));
             }
             
-            blacklisted.add(token);
+            blacklistedSet.add(token);
          }
       }
 
@@ -268,8 +304,8 @@ public class Main
 
          for (File file : fileList)
          {
-            Archive archive = ArchiveScanner.scan(file, gProvides, known, blacklisted);
-                  
+            Archive archive = ArchiveScanner.scan(file, gProvides, known, blacklistedSet);
+
             if (archive != null)
             {
                SortedSet<Location> locations = locationsMap.get(archive.getName());

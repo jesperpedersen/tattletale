@@ -39,6 +39,9 @@ public class ReportTask extends AbstractReportTask
    /** Excludes */
    private String excludes;
 
+   /** Blacklisted */
+   private String blacklisted;
+
    /**
     * Constructor
     */
@@ -46,6 +49,7 @@ public class ReportTask extends AbstractReportTask
    {
       this.profiles = null;
       this.excludes = null;
+      this.blacklisted = null;
    }
 
    /**
@@ -85,6 +89,24 @@ public class ReportTask extends AbstractReportTask
    }
 
    /**
+    * Get the blacklisted
+    * @return The value
+    */
+   public String getBlacklisted() 
+   {
+      return blacklisted;
+   }
+
+   /**
+    * Set the blacklisted
+    * @param blacklisted The value
+    */
+   public void setBlacklisted(String blacklisted) 
+   {
+      this.blacklisted = blacklisted;
+   }
+
+   /**
     * Execute
     * @exception BuildException If the build fails
     */
@@ -99,6 +121,7 @@ public class ReportTask extends AbstractReportTask
          main.setDestination(getDestination());
          main.setProfiles(getProfiles());
          main.setExcludes(getExcludes());
+         main.setBlacklisted(getBlacklisted());
 
          main.execute();
       }
