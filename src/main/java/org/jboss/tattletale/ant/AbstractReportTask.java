@@ -26,21 +26,22 @@ import org.apache.tools.ant.Task;
 
 /**
  * Base abstract class for TattleTale Report Ant Tasks
+ *
+ * @author Jesper Pedersen <jesper.pedersen@jboss.org>
  * @author Jay Balunas jbalunas@jboss.org
  *
  */
 public abstract class AbstractReportTask extends Task
-{
+{   
+   /**
+    * Source directory
+    */
+   private String source;
    
    /**
-    * Directory to scan
+    * Destination directory
     */
-   private String scanDir;
-   
-   /**
-    * Directory to output reports
-    */
-   private String outputDir;
+   private String destination;
    
    
    /**
@@ -48,40 +49,80 @@ public abstract class AbstractReportTask extends Task
     */
    public AbstractReportTask()
    {
-      scanDir = ".";
-      outputDir = ".";
+      source = ".";
+      destination = ".";
    }
 
    /**
     * @return the scanDir
     */
+   @Deprecated
    public String getScanDir() 
    {
-      return scanDir;
+      return source;
    }
 
    /**
     * @param scanDir the scanDir to set
     */
+   @Deprecated
    public void setScanDir(String scanDir) 
    {
-      this.scanDir = scanDir;
+      this.source = scanDir;
    }
 
    /**
     * @return the outputDir
     */
+   @Deprecated
    public String getOutputDir() 
    {
-      return outputDir;
+      return destination;
    }
 
    /**
     * @param outputDir the outputDir to set
     */
+   @Deprecated
    public void setOutputDir(String outputDir) 
    {
-      this.outputDir = outputDir;
+      this.destination = outputDir;
+   }
+
+   /**
+    * Get the source
+    * @return The value
+    */
+   public String getSource() 
+   {
+      return source;
+   }
+
+   /**
+    * Set the source 
+    * @param source The value
+    */
+   public void setSource(String source) 
+   {
+      this.source = source;
+   }
+
+   /**
+    * Get the destination
+    * @return The value
+    */
+   public String getDestination() 
+   {
+      return destination;
+   }
+
+   /**
+    * Set the destination
+    * @param destination The value
+    */
+   public void setDestination(String destination) 
+   {
+      this.destination = destination;
    }
 
    /**

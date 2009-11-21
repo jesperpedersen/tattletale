@@ -27,11 +27,40 @@ import org.apache.tools.ant.BuildException;
 
 /**
  * Implementation class for TattleTale Report Ant Task
- * @author Jay Balunas jbalunas@jboss.org
  *
+ * @author Jesper Pedersen <jesper.pedersen@jboss.org>
+ * @author Jay Balunas jbalunas@jboss.org
  */
 public class ReportTask extends AbstractReportTask
 {
+   /** Excludes */
+   private String excludes;
+
+   /**
+    * Constructor
+    */
+   public ReportTask()
+   {
+      this.excludes = null;
+   }
+
+   /**
+    * Get the excludes
+    * @return The value
+    */
+   public String getExcludes() 
+   {
+      return excludes;
+   }
+
+   /**
+    * Set the excludes
+    * @param excludes The value
+    */
+   public void setExcludes(String excludes) 
+   {
+      this.excludes = excludes;
+   }
 
    /**
     * Execute
@@ -42,9 +71,14 @@ public class ReportTask extends AbstractReportTask
    {
       try 
       {
-         String[] args = {getScanDir(), getOutputDir()};
-         Main.main(args);
-      } 
+         Main main = new Main();
+
+         main.setSource(getSource());
+         main.setDestination(getDestination());
+         main.setExcludes(getExcludes());
+
+         main.execute();
+      }
       catch (Throwable t) 
       {
          throw new BuildException(t.getMessage(), t);

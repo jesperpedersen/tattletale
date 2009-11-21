@@ -77,262 +77,283 @@ import java.util.TreeSet;
  */
 public class Main
 {
+   /** Source */
+   private String source;
+
+   /** Destination */
+   private String destination;
+
+   /** Excludes */
+   private String excludes;
 
    /**
-    * The usage method
+    * Constructor
     */
-   private static void usage() 
+   public Main()
    {
-      System.out.println("Usage: Tattletale [-exclude=<excludes>] <scan-directory> [output-directory]");
+      this.source = ".";
+      this.destination = ".";
+      this.excludes = null;
    }
 
    /**
-    * The main method
-    * @param args The arguments
+    * Set source
+    * @param source The value
     */
-   public static void main(String[] args) 
+   public void setSource(String source)
    {
-      if (args.length > 0) 
+      this.source = source;
+   }
+
+   /**
+    * Set destination
+    * @param destination The value
+    */
+   public void setDestination(String destination)
+   {
+      this.destination = destination;
+   }
+
+   /**
+    * Set excludes
+    * @param excludes The value
+    */
+   public void setExcludes(String excludes)
+   {
+      this.excludes = excludes;
+   }
+
+   /**
+    * Execute
+    * @exception Exception Thrown if an error occurs
+    */
+   public void execute() throws Exception
+   {
+      Properties properties = loadDefault();
+
+      String classloaderStructure = null;
+      Set<String> profiles = null;
+      Set<String> blacklisted = null;
+      Set<String> excludeSet = null;
+
+      classloaderStructure = properties.getProperty("classloader");
+         
+      if (properties.getProperty("profiles") != null)
       {
+         profiles = new HashSet<String>();
+         
+         StringTokenizer st = new StringTokenizer(properties.getProperty("profiles"), ",");
+         while (st.hasMoreTokens())
+         {
+            String token = st.nextToken().trim();
+            profiles.add(token);
+         }
+      }
+
+      if (properties.getProperty("blacklisted") != null)
+      {
+         blacklisted = new HashSet<String>();
+
+         StringTokenizer st = new StringTokenizer(properties.getProperty("blacklisted"), ",");
+         while (st.hasMoreTokens())
+         {
+            String token = st.nextToken().trim();
+               
+            if (token.endsWith(".*"))
+            {
+               token.substring(0, token.indexOf(".*"));
+            }
+
+            if (token.endsWith(".class"))
+            {
+               token.substring(0, token.indexOf(".class"));
+            }
+            
+            blacklisted.add(token);
+         }
+      }
+
+      if (excludes != null)
+      {
+         excludeSet = new HashSet<String>();
+         excludeSet.addAll(parseExcludes(excludes));
+      }
+
+      if (excludeSet == null && properties.getProperty("excludes") != null)
+      {
+         excludeSet = new HashSet<String>();
+         excludeSet.addAll(parseExcludes(properties.getProperty("excludes")));
+      }
+
+      if (classloaderStructure == null || classloaderStructure.trim().equals(""))
+      {
+         classloaderStructure = "org.jboss.tattletale.reporting.classloader.NoopClassLoaderStructure";
+      }
+
+      Map<String, SortedSet<Location>> locationsMap = new HashMap<String, SortedSet<Location>>();
+      SortedSet<Archive> archives = new TreeSet<Archive>();
+      SortedMap<String, SortedSet<String>> gProvides = new TreeMap<String, SortedSet<String>>();
+      
+      List<Archive> known = new ArrayList<Archive>();
+
+      if (profiles == null || profiles.size() == 0 || 
+          profiles.contains("java5") || profiles.contains("Sun Java 5"))
+         known.add(new SunJava5());
+      
+      if (profiles == null || profiles.contains("java6") || profiles.contains("Sun Java 6"))
+         known.add(new SunJava6());
+      
+      if (profiles != null && (profiles.contains("ee5") || profiles.contains("Java Enterprise 5")))
+         known.add(new JavaEE5());
+      
+      if (profiles != null && (profiles.contains("seam22") || profiles.contains("Seam 2.2")))
+         known.add(new Seam22());
+      
+      if (profiles != null && (profiles.contains("cdi10") || profiles.contains("CDI 1.0")))
+         known.add(new CDI10());
+      
+      if (profiles != null && (profiles.contains("spring25") || profiles.contains("Spring 2.5")))
+         known.add(new Spring25());
+      
+      File f = new File(source);
+      if (f.isDirectory())
+      {
+         List<File> fileList = DirectoryScanner.scan(f, excludeSet);
+
+         for (File file : fileList)
+         {
+            Archive archive = ArchiveScanner.scan(file, gProvides, known, blacklisted);
+                  
+            if (archive != null)
+            {
+               SortedSet<Location> locations = locationsMap.get(archive.getName());
+               if (locations == null)
+               {
+                  locations = new TreeSet<Location>();
+               }
+               locations.addAll(archive.getLocations());
+               locationsMap.put(archive.getName(), locations);
+               
+               if (!archives.contains(archive))
+               {
+                  archives.add(archive);
+               }
+            }
+         }
+
+         for (Archive a : archives)
+         {
+            SortedSet<Location> locations = locationsMap.get(a.getName());
+
+            for (Location l : locations)
+            {
+               a.addLocation(l);
+            }
+         }
+               
+         //Write out report     
+         String outputDir = setupOutputDir(destination);
+         outputReport(outputDir, classloaderStructure, archives, gProvides, known);
+      }
+   }
+
+   /**
+    * Load default values
+    * @return The properties
+    */
+   private Properties loadDefault()
+   {
+      Properties properties = new Properties();
+      String propertiesFile = System.getProperty("jboss-tattletale.properties");
+      boolean loaded = false;
+            
+      if (propertiesFile != null) 
+      {
+         FileInputStream fis = null;
+         try
+         {
+            fis = new FileInputStream(propertiesFile);
+            properties.load(fis);
+            loaded = true;
+         } 
+         catch (IOException e) 
+         {
+            System.err.println("Unable to open " + propertiesFile);
+         } 
+         finally 
+         {
+            if (fis != null) 
+            {
+               try
+               {
+                  fis.close();
+               } 
+               catch (IOException ioe) 
+               {
+                  // Nothing to do
+               }
+            }
+         }
+      }
+      if (!loaded) 
+      {
+         FileInputStream fis = null;
+         try
+         {
+            fis = new FileInputStream("jboss-tattletale.properties");
+            properties.load(fis);
+            loaded = true;
+         } 
+         catch (IOException ignore) 
+         {
+            // Nothing to do
+         } 
+         finally 
+         {
+            if (fis != null) 
+            {
+               try
+               {
+                  fis.close();
+               } 
+               catch (IOException ioe) 
+               {
+                  // Nothing to do
+               }
+            }
+         }
+      }
+      if (!loaded) 
+      {
+         InputStream is = null;
          try 
          {
-            int arg = 0;
-
-            Set<String> excludes = null;
-
-            if (args[arg].startsWith("-exclude="))
-            {
-               excludes = new HashSet<String>();
-               excludes.addAll(parseExcludes(args[arg].substring(args[arg].indexOf("=") + 1)));
-               arg++;
-            }
-
-            String scanDir = args[arg];
-            String outputDir = args.length > arg + 1 ? args[arg + 1] : "."; 
-
-            Properties properties = new Properties();
-            String propertiesFile = System.getProperty("jboss-tattletale.properties");
-            boolean loaded = false;
-            
-            if (propertiesFile != null) 
-            {
-               FileInputStream fis = null;
-               try
-               {
-                  fis = new FileInputStream(propertiesFile);
-                  properties.load(fis);
-                  loaded = true;
-               } 
-               catch (IOException e) 
-               {
-                  System.err.println("Unable to open " + propertiesFile);
-               } 
-               finally 
-               {
-                  if (fis != null) 
-                  {
-                     try
-                     {
-                        fis.close();
-                     } 
-                     catch (IOException ioe) 
-                     {
-                        // Nothing to do
-                     }
-                  }
-               }
-            }
-            if (!loaded) 
-            {
-               FileInputStream fis = null;
-               try
-               {
-                  fis = new FileInputStream("jboss-tattletale.properties");
-                  properties.load(fis);
-                  loaded = true;
-               } 
-               catch (IOException ignore) 
-               {
-                  //
-               } 
-               finally 
-               {
-                  if (fis != null) 
-                  {
-                     try
-                     {
-                        fis.close();
-                     } 
-                     catch (IOException ioe) 
-                     {
-                        // Nothing to do
-                     }
-                  }
-               }
-            }
-            if (!loaded) 
-            {
-               InputStream is = null;
-               try 
-               {
-                  ClassLoader cl = Main.class.getClassLoader();
-                  is = cl.getResourceAsStream("jboss-tattletale.properties");
-                  properties.load(is);
-                  loaded = true;
-               } 
-               catch (Exception ie)
-               {
-                  // Properties file not found
-               } 
-               finally 
-               {
-                  if (is != null) 
-                  {
-                     try
-                     {
-                        is.close();
-                     } 
-                     catch (IOException ioe) 
-                     {
-                        // Nothing to do
-                     }
-                  }
-               }
-            }
-
-            String classloaderStructure = null;
-            Set<String> profiles = null;
-            Set<String> blacklisted = null;
-
-            if (loaded)
-            {
-               classloaderStructure = properties.getProperty("classloader");
-
-               if (properties.getProperty("profiles") != null)
-               {
-                  profiles = new HashSet<String>();
-
-                  StringTokenizer st = new StringTokenizer(properties.getProperty("profiles"), ",");
-                  while (st.hasMoreTokens())
-                  {
-                     String token = st.nextToken().trim();
-                     profiles.add(token);
-                  }
-               }
-
-               if (properties.getProperty("blacklisted") != null)
-               {
-                  blacklisted = new HashSet<String>();
-
-                  StringTokenizer st = new StringTokenizer(properties.getProperty("blacklisted"), ",");
-                  while (st.hasMoreTokens())
-                  {
-                     String token = st.nextToken().trim();
-
-                     if (token.endsWith(".*"))
-                     {
-                        token.substring(0, token.indexOf(".*"));
-                     }
-
-                     if (token.endsWith(".class"))
-                     {
-                        token.substring(0, token.indexOf(".class"));
-                     }
-                     
-                     blacklisted.add(token);
-                  }
-               }
-
-               if (properties.getProperty("excludes") != null)
-               {
-                  if (excludes == null)
-                     excludes = new HashSet<String>();
-
-                  excludes.addAll(parseExcludes(properties.getProperty("excludes")));
-               }
-            }
-
-            if (classloaderStructure == null || classloaderStructure.trim().equals(""))
-            {
-               classloaderStructure = "org.jboss.tattletale.reporting.classloader.NoopClassLoaderStructure";
-            }
-
-            Map<String, SortedSet<Location>> locationsMap = new HashMap<String, SortedSet<Location>>();
-            SortedSet<Archive> archives = new TreeSet<Archive>();
-            SortedMap<String, SortedSet<String>> gProvides = new TreeMap<String, SortedSet<String>>();
-
-            List<Archive> known = new ArrayList<Archive>();
-
-            if (profiles == null || profiles.size() == 0 || 
-                profiles.contains("java5") || profiles.contains("Sun Java 5"))
-               known.add(new SunJava5());
-
-            if (profiles == null || profiles.contains("java6") || profiles.contains("Sun Java 6"))
-               known.add(new SunJava6());
-
-            if (profiles != null && (profiles.contains("ee5") || profiles.contains("Java Enterprise 5")))
-               known.add(new JavaEE5());
-
-            if (profiles != null && (profiles.contains("seam22") || profiles.contains("Seam 2.2")))
-               known.add(new Seam22());
-
-            if (profiles != null && (profiles.contains("cdi10") || profiles.contains("CDI 1.0")))
-               known.add(new CDI10());
-
-            if (profiles != null && (profiles.contains("spring25") || profiles.contains("Spring 2.5")))
-               known.add(new Spring25());
-
-            File f = new File(scanDir);
-            if (f.isDirectory())
-            {
-               List<File> fileList = DirectoryScanner.scan(f, excludes);
-
-               for (File file : fileList)
-               {
-                  Archive archive = ArchiveScanner.scan(file, gProvides, known, blacklisted);
-                  
-                  if (archive != null)
-                  {
-                     SortedSet<Location> locations = locationsMap.get(archive.getName());
-                     if (locations == null)
-                     {
-                        locations = new TreeSet<Location>();
-                     }
-                     locations.addAll(archive.getLocations());
-                     locationsMap.put(archive.getName(), locations);
-
-                     if (!archives.contains(archive))
-                     {
-                        archives.add(archive);
-                     }
-                  }
-               }
-
-               for (Archive a : archives)
-               {
-                  SortedSet<Location> locations = locationsMap.get(a.getName());
-
-                  for (Location l : locations)
-                  {
-                     a.addLocation(l);
-                  }
-               }
-               
-               //Write out report     
-               outputDir = setupOutputDir(outputDir, properties, loaded);
-               outputReport(outputDir, classloaderStructure, archives, gProvides, known);
-            }
-
-         }
-         catch (Throwable t)
+            ClassLoader cl = Main.class.getClassLoader();
+            is = cl.getResourceAsStream("jboss-tattletale.properties");
+            properties.load(is);
+            loaded = true;
+         } 
+         catch (Exception ie)
          {
-            System.err.println(t.getMessage());
+            // Properties file not found
+         } 
+         finally 
+         {
+            if (is != null) 
+            {
+               try
+               {
+                  is.close();
+               } 
+               catch (IOException ioe) 
+               {
+                  // Nothing to do
+               }
+            }
          }
-      } 
-      else 
-      {
-         usage();
       }
+
+      return properties;
    }
 
    /**
@@ -343,12 +364,12 @@ public class Main
     * @param gProvides The global provides
     * @param known The known archives
     */
-   private static void outputReport(String outputDir, 
-                                    String classloaderStructure,
-                                    SortedSet<Archive> archives, 
-                                    SortedMap<String, SortedSet<String>> gProvides, 
-                                    List<Archive> known)
-   {   
+   private void outputReport(String outputDir, 
+                             String classloaderStructure,
+                             SortedSet<Archive> archives, 
+                             SortedMap<String, SortedSet<String>> gProvides, 
+                             List<Archive> known)
+   {
       SortedSet<Report> dependenciesReports = new TreeSet<Report>();
       SortedSet<Report> generalReports = new TreeSet<Report>();
       SortedSet<Report> archiveReports = new TreeSet<Report>();
@@ -438,29 +459,25 @@ public class Main
    /**
     * Validate and create the outputDir if needed.
     * @param outputDir Where reports go
-    * @param properties From the optional jboss-tattletale.properties file
-    * @param loaded Whether or not the properties file was loaded
     * @return The verified output path for the reports
+    * @exception IOException If the output directory cant be created
     */
-   private static String setupOutputDir(String outputDir,
-         Properties properties, boolean loaded) 
+   private String setupOutputDir(String outputDir) throws IOException
    {
-      //Set output directory from props if it is set
-      outputDir = loaded && properties.containsKey("output.dir") ?
-                  properties.getProperty("output.dir") : outputDir;
-                  
-      //verify ending slash
+      // Verify ending slash
       outputDir = !outputDir.substring(outputDir.length() - 1)
                   .equals(File.separator) ?
                    outputDir + File.separator : outputDir;
                    
-      //verify output directory exists & create if it does not
+      // Verify output directory exists & create if it does not
       File outputDirFile = new File(outputDir);
       
       if (!outputDirFile.exists())
       {
-         outputDirFile.mkdirs();
+         if (!outputDirFile.mkdirs())
+            throw new IOException("Cannot create directory: " + outputDir);
       }
+
       return outputDir;
    }
 
@@ -469,7 +486,7 @@ public class Main
     * @param s The input string
     * @return The set of excludes
     */
-   private static Set<String> parseExcludes(String s)
+   private Set<String> parseExcludes(String s)
    {
       Set<String> result = new HashSet<String>();
 
@@ -488,5 +505,49 @@ public class Main
       }
 
       return result;
+   }
+
+   /**
+    * The usage method
+    */
+   private static void usage() 
+   {
+      System.out.println("Usage: Tattletale [-exclude=<excludes>] <scan-directory> [output-directory]");
+   }
+
+   /**
+    * The main method
+    * @param args The arguments
+    */
+   public static void main(String[] args) 
+   {
+      if (args.length > 0) 
+      {
+         try
+         {
+            int arg = 0;
+            Main main = new Main();
+
+            if (args[arg].startsWith("-exclude="))
+            {
+               main.setExcludes(args[arg].substring(args[arg].indexOf("=") + 1));
+               arg++;
+            }
+
+            main.setSource(args[arg]);
+            main.setDestination(args.length > arg + 1 ? args[arg + 1] : ".");
+
+            main.execute();
+         }
+         catch (Exception e)
+         {
+            System.err.println("Exception: " + e.getMessage());
+            e.printStackTrace(System.err);
+         }
+      }
+      else 
+      {
+         usage();
+      }
    }
 }

@@ -190,12 +190,6 @@ jboss-tattletale.properties
              </entry>
            </row>
            <row>
-             <entry>outputDir</entry>
-             <entry>
-               <para>The output directory where the report gets generated.</para>
-             </entry>
-           </row>
-           <row>
              <entry>blacklisted</entry>
              <entry>
                <para>A comma separated list of black listed classes or packages. F.ex. <code>com.mycompany.forinternaluseonly, com.partner.forinternaluseonly</code></para>
@@ -261,12 +255,49 @@ xmlns:tattletale="antlib:org.jboss.tattletale.ant"
      <section id="ant_report">
        <title>report</title>
        <para>Usage:</para>
-     <programlisting>
-&lt;tattletale:report scanDir="" outputDir=""/&gt;
-     </programlisting>
+       <programlisting>
+&lt;tattletale:report source="${src.dir]" destination="${dest.dir}"/&gt;
+       </programlisting>
 
-     <para>where scanDir is the directory that contains the Java archives and outputDir is the directory
-       where the reports should be generated.</para>
+       <table frame="all">
+         <title>Apache Ant: report</title>
+         <tgroup cols="2" align="left" colsep="1" rowsep="1">
+           <colspec colname="c1"/>
+           <colspec colname="c2" colwidth="5*"/>
+           <thead>
+             <row>
+               <entry align="left">Key</entry>
+               <entry align="left">Value</entry>
+             </row>
+           </thead>
+           <tbody>
+             <row>
+               <entry><code>source</code></entry>
+               <entry>
+                 The directory that contains the Java archives
+                 <para>Default: Current directory</para>
+               </entry>
+             </row>
+             <row>
+               <entry><code>destination</code></entry>
+               <entry>
+                 The directory where the reports should be generated
+                 <para>Default: Current directory</para>
+               </entry>
+             </row>
+             <row>
+               <entry><code>excludes</code></entry>
+               <entry>
+                 A comma separated list of directories or files that should be excluded from the scan. F.ex.
+                 <para><code>**/server/**,myjar.jar</code></para>
+                 <para>Default: No exludes</para>
+               </entry>
+             </row>
+           </tbody>
+       </tgroup>
+       </table>
+
+       <para>Note that defining a property in the task overrides the setting in the configuration file.</para>
 
      </section>
 
