@@ -286,6 +286,28 @@ xmlns:tattletale="antlib:org.jboss.tattletale.ant"
                </entry>
              </row>
              <row>
+               <entry><code>classloader</code></entry>
+               <entry>
+                 Specifies which classloader structure that should be used when scanning the archives. 
+                   Can be one of the following:
+                 <itemizedlist>
+                   <listitem>
+                     <para><code>org.jboss.tattletale.reporting.classloader.NoopClassLoaderStructure</code></para>
+                     <para>A no-operation classloader structure implementation that doesn't scope any archives.</para>
+                   </listitem>
+                   <listitem>
+                     <para><code>org.jboss.tattletale.reporting.classloader.JBossAS4ClassLoaderStructure</code></para>
+                     <para>A classloader structure implementation that scopes based on JBoss Application Server 4.x directory structures.</para>
+                   </listitem>
+                   <listitem>
+                     <para><code>org.jboss.tattletale.reporting.classloader.JBossAS5ClassLoaderStructure</code></para>
+                     <para>A classloader structure implementation that scopes based on JBoss Application Server 5.x directory structures.</para>
+                   </listitem>
+                 </itemizedlist>
+                 <para>Default: <code>org.jboss.tattletale.reporting.classloader.NoopClassLoaderStructure</code></para>
+               </entry>
+             </row>
+             <row>
                <entry><code>profiles</code></entry>
                <entry>
                  Specifies a comma separated list of profiles to resolve against. All profiles can

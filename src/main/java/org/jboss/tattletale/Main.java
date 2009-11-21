@@ -83,6 +83,9 @@ public class Main
    /** Destination */
    private String destination;
 
+   /** Class loader structure */
+   private String classloaderStructure;
+
    /** Profiles */
    private String profiles;
 
@@ -99,6 +102,7 @@ public class Main
    {
       this.source = ".";
       this.destination = ".";
+      this.classloaderStructure = null;
       this.profiles = null;
       this.excludes = null;
       this.blacklisted = null;
@@ -120,6 +124,15 @@ public class Main
    public void setDestination(String destination)
    {
       this.destination = destination;
+   }
+
+   /**
+    * Set class loader structure
+    * @param cls The value
+    */
+   public void setClassLoaderStructure(String cls)
+   {
+      this.classloaderStructure = cls;
    }
 
    /**
@@ -157,8 +170,6 @@ public class Main
    {
       Properties properties = loadDefault();
 
-      String classloaderStructure = null;
-
       Set<String> profileSet = null;
       boolean allProfiles = false;
 
@@ -166,8 +177,8 @@ public class Main
 
       Set<String> excludeSet = null;
 
-
-      classloaderStructure = properties.getProperty("classloader");
+      if (classloaderStructure == null)
+         classloaderStructure = properties.getProperty("classloader");
          
       if (profiles != null)
       {

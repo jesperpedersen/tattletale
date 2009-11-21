@@ -33,6 +33,9 @@ import org.apache.tools.ant.BuildException;
  */
 public class ReportTask extends AbstractReportTask
 {
+   /** Class loader structure  */
+   private String classloaderStructure;
+
    /** Profiles */
    private String profiles;
 
@@ -47,9 +50,28 @@ public class ReportTask extends AbstractReportTask
     */
    public ReportTask()
    {
+      this.classloaderStructure = null;
       this.profiles = null;
       this.excludes = null;
       this.blacklisted = null;
+   }
+
+   /**
+    * Get the class loader structure
+    * @return The value
+    */
+   public String getClassloader() 
+   {
+      return classloaderStructure;
+   }
+
+   /**
+    * Set the class loader structure
+    * @param cls The value
+    */
+   public void setClassloader(String cls) 
+   {
+      this.classloaderStructure = cls;
    }
 
    /**
@@ -119,6 +141,7 @@ public class ReportTask extends AbstractReportTask
 
          main.setSource(getSource());
          main.setDestination(getDestination());
+         main.setClassLoaderStructure(getClassloader());
          main.setProfiles(getProfiles());
          main.setExcludes(getExcludes());
          main.setBlacklisted(getBlacklisted());
