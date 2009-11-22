@@ -48,7 +48,7 @@ public class JarReport extends ArchiveReport
     */
    public JarReport(Archive archive)
    {
-      super(ReportSeverity.INFO, archive);
+      super(DIRECTORY, ReportSeverity.INFO, archive);
 
       StringBuffer sb = new StringBuffer(archive.getName());
       setFilename(sb.append(".html").toString());

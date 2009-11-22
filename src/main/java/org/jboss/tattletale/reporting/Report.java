@@ -37,6 +37,9 @@ import java.util.SortedSet;
  */
 public abstract class Report implements Comparable
 {
+   /** Report id */
+   private String id;
+
    /** The severity */
    protected int severity;
 
@@ -60,12 +63,15 @@ public abstract class Report implements Comparable
 
    /**
     * Constructor
+    * @param id The report id
     * @param severity The severity
     * @param archives The archives
     */
-   public Report(int severity,
+   public Report(String id, 
+                 int severity,
                  SortedSet<Archive> archives)
    {
+      this.id = id;
       this.severity = severity;
       this.archives = archives;
       this.status = ReportStatus.GREEN;
@@ -73,17 +79,19 @@ public abstract class Report implements Comparable
 
    /**
     * Constructor
+    * @param id The report id
     * @param severity The severity
     * @param archives The archives
     * @param name The name of the report
     * @param directory The name of the output directory
     */
-   public Report(int severity,
+   public Report(String id,
+                 int severity,
                  SortedSet<Archive> archives,
                  String name,
                  String directory)
    {
-      this(severity, archives);
+      this(id, severity, archives);
       this.name = name;
       this.directory = directory;
    }
@@ -94,7 +102,7 @@ public abstract class Report implements Comparable
     */
    public String getId()
    {
-      return directory;
+      return id;
    }
 
    /**

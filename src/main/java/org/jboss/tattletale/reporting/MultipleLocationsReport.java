@@ -49,7 +49,7 @@ public class MultipleLocationsReport extends Report
     */
    public MultipleLocationsReport(SortedSet<Archive> archives)
    {
-      super(ReportSeverity.WARNING, archives, NAME, DIRECTORY);
+      super(DIRECTORY, ReportSeverity.WARNING, archives, NAME, DIRECTORY);
    }
 
    /**

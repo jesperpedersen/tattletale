@@ -34,12 +34,13 @@ public abstract class ArchiveReport extends Report
    
    /**
     * Constructor
+    * @param id The report id
     * @param severity The severity
     * @param archive The archive
     */
-   public ArchiveReport(int severity, Archive archive)
+   public ArchiveReport(String id, int severity, Archive archive)
    {
-      super(severity, null);
+      super(id, severity, null);
       this.archive = archive;
    }
 

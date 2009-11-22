@@ -54,6 +54,9 @@ public class ReportTask extends AbstractReportTask
    /** Fail on error */
    private boolean failOnError;
 
+   /** Reports */
+   private String reports;
+
    /**
     * Constructor
     */
@@ -66,6 +69,7 @@ public class ReportTask extends AbstractReportTask
       this.failOnInfo = false;
       this.failOnWarn = false;
       this.failOnError = false;
+      this.reports = null;
    }
 
    /**
@@ -195,6 +199,24 @@ public class ReportTask extends AbstractReportTask
    }
 
    /**
+    * Get the reports
+    * @return The value
+    */
+   public String getReports() 
+   {
+      return reports;
+   }
+
+   /**
+    * Set the reports
+    * @param reports The value
+    */
+   public void setReports(String reports) 
+   {
+      this.reports = reports;
+   }
+
+   /**
     * Execute
     * @exception BuildException If the build fails
     */
@@ -214,6 +236,7 @@ public class ReportTask extends AbstractReportTask
          main.setFailOnInfo(getFailOnInfo());
          main.setFailOnWarn(getFailOnWarn());
          main.setFailOnError(getFailOnError());
+         main.setReports(getReports());
 
          System.out.println("Scanning: " + getSource());
 

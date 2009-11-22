@@ -49,7 +49,7 @@ public class EliminateJarsReport extends Report
     */
    public EliminateJarsReport(SortedSet<Archive> archives)
    {
-      super(ReportSeverity.WARNING, archives, NAME, DIRECTORY);
+      super(DIRECTORY, ReportSeverity.WARNING, archives, NAME, DIRECTORY);
    }
 
    /**

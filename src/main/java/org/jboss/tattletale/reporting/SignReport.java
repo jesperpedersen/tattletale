@@ -46,7 +46,7 @@ public class SignReport extends Report
     */
    public SignReport(SortedSet<Archive> archives)
    {
-      super(ReportSeverity.INFO, archives, NAME, DIRECTORY);
+      super(DIRECTORY, ReportSeverity.INFO, archives, NAME, DIRECTORY);
    }
 
    /**

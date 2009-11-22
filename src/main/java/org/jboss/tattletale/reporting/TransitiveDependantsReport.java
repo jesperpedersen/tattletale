@@ -55,7 +55,7 @@ public class TransitiveDependantsReport extends CLSReport
    public TransitiveDependantsReport(SortedSet<Archive> archives,
                                      String classloaderStructure)
    {
-      super(ReportSeverity.INFO, archives, NAME, DIRECTORY, classloaderStructure);
+      super(DIRECTORY, ReportSeverity.INFO, archives, NAME, DIRECTORY, classloaderStructure);
    }
 
    /**

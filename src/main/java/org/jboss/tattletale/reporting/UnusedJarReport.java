@@ -46,7 +46,7 @@ public class UnusedJarReport extends Report
     */
    public UnusedJarReport(SortedSet<Archive> archives)
    {
-      super(ReportSeverity.WARNING, archives, NAME, DIRECTORY);
+      super(DIRECTORY, ReportSeverity.WARNING, archives, NAME, DIRECTORY);
    }
 
    /**

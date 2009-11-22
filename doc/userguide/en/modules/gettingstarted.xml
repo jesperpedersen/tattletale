@@ -129,10 +129,92 @@ jboss-tattletale.properties
          </thead>
          <tbody>
            <row>
-             <entry>classloader</entry>
+             <entry><code>reports</code></entry>
              <entry>
-               <para>Specifies which classloader structure that should be used when scanning the archives. 
-                 Can be one of the following:</para>
+               A comma separated list of which reports that should be generated.
+               The following reports are supported:
+               <itemizedlist>
+                 <listitem>
+                   <para><code>dependants</code></para>
+                   <para>The "Dependants" report.</para>
+                 </listitem>
+                 <listitem>
+                   <para><code>dependson</code></para>
+                   <para>The "DependsOn" report.</para>
+                 </listitem>
+                 <listitem>
+                   <para><code>graphviz</code></para>
+                   <para>The "Graphical dependencies" report.</para>
+                 </listitem>
+                 <listitem>
+                   <para><code>transitivedependants</code></para>
+                   <para>The "Transitive Dependants" report.</para>
+                 </listitem>
+                 <listitem>
+                   <para><code>transitivedependson</code></para>
+                   <para>The "Transitive DependsOn" report.</para>
+                 </listitem>
+                 <listitem>
+                   <para><code>classlocation</code></para>
+                   <para>The "Class Location" report.</para>
+                 </listitem>
+                 <listitem>
+                   <para><code>osgi</code></para>
+                   <para>The "OSGi" report.</para>
+                 </listitem>
+                 <listitem>
+                   <para><code>sealed</code></para>
+                   <para>The "Sealed Information" report.</para>
+                 </listitem>
+                 <listitem>
+                   <para><code>sign</code></para>
+                   <para>The "Signing Information" report.</para>
+                 </listitem>
+                 <listitem>
+                   <para><code>eliminatejars</code></para>
+                   <para>The "Eliminate Jar files with different versions" report.</para>
+                 </listitem>
+                 <listitem>
+                   <para><code>invalidversion</code></para>
+                   <para>The "Invalid version" report.</para>
+                 </listitem>
+                 <listitem>
+                   <para><code>multiplejars</code></para>
+                   <para>The "Multiple Jar files" report.</para>
+                 </listitem>
+                 <listitem>
+                   <para><code>multiplejarspackage</code></para>
+                   <para>The "Multiple Jar files (Package)" report.</para>
+                 </listitem>
+                 <listitem>
+                   <para><code>multiplelocations</code></para>
+                   <para>The "Multiple Locations" report.</para>
+                 </listitem>
+                 <listitem>
+                   <para><code>unusedjar</code></para>
+                   <para>The "Unused Jar" report.</para>
+                 </listitem>
+                 <listitem>
+                   <para><code>blacklisted</code></para>
+                   <para>The "Black listed" report.</para>
+                 </listitem>
+                 <listitem>
+                   <para><code>noversion</code></para>
+                   <para>The "No version" report.</para>
+                 </listitem>
+                 <listitem>
+                   <para><code>jar</code></para>
+                   <para>The "Jar archive" report.</para>
+                 </listitem>
+               </itemizedlist>
+               <para>Default: All reports (<code>reports=*</code>)</para>
+             </entry>
+           </row>
+           <row>
+             <entry><code>classloader</code></entry>
+             <entry>
+               Specifies which classloader structure that should be used when scanning the archives. 
+               Can be one of the following:
                <itemizedlist>
                  <listitem>
                    <para><code>org.jboss.tattletale.reporting.classloader.NoopClassLoaderStructure</code></para>
@@ -150,10 +232,10 @@ jboss-tattletale.properties
              </entry>
            </row>
            <row>
-             <entry>profiles</entry>
+             <entry><code>profiles</code></entry>
              <entry>
-               <para>Specifies a comma separated list of profiles to resolve against. 
-                 The following profiles are supported:</para>
+               Specifies a comma separated list of profiles to resolve against. 
+               The following profiles are supported:
                <itemizedlist>
                  <listitem>
                    <para><code>java5</code></para>
@@ -183,16 +265,17 @@ jboss-tattletale.properties
              </entry>
            </row>
            <row>
-             <entry>excludes</entry>
+             <entry><code>excludes</code></entry>
              <entry>
-               <para>A comma separated list of directories or files that should be excluded from the scan. F.ex.</para>
+               A comma separated list of directories or files that should be excluded from the scan. F.ex.
                <para><code>**/server/**,myjar.jar</code></para>
              </entry>
            </row>
            <row>
-             <entry>blacklisted</entry>
+             <entry><code>blacklisted</code></entry>
              <entry>
-               <para>A comma separated list of black listed classes or packages. F.ex. <code>com.mycompany.forinternaluseonly, com.partner.forinternaluseonly</code></para>
+               A comma separated list of black listed classes or packages. F.ex. 
+               <para><code>com.mycompany.forinternaluseonly, com.partner.forinternaluseonly</code></para>
              </entry>
            </row>
          </tbody>
@@ -283,6 +366,88 @@ xmlns:tattletale="antlib:org.jboss.tattletale.ant"
                <entry>
                  The directory where the reports should be generated
                  <para>Default: Current directory</para>
+               </entry>
+             </row>
+             <row>
+               <entry><code>reports</code></entry>
+               <entry>
+                 A comma separated list of which reports that should be generated.
+                 The following reports are supported:
+                 <itemizedlist>
+                   <listitem>
+                     <para><code>dependants</code></para>
+                     <para>The "Dependants" report.</para>
+                   </listitem>
+                   <listitem>
+                     <para><code>dependson</code></para>
+                     <para>The "DependsOn" report.</para>
+                   </listitem>
+                   <listitem>
+                     <para><code>graphviz</code></para>
+                     <para>The "Graphical dependencies" report.</para>
+                   </listitem>
+                   <listitem>
+                     <para><code>transitivedependants</code></para>
+                     <para>The "Transitive Dependants" report.</para>
+                   </listitem>
+                   <listitem>
+                     <para><code>transitivedependson</code></para>
+                     <para>The "Transitive DependsOn" report.</para>
+                   </listitem>
+                   <listitem>
+                     <para><code>classlocation</code></para>
+                     <para>The "Class Location" report.</para>
+                   </listitem>
+                   <listitem>
+                     <para><code>osgi</code></para>
+                     <para>The "OSGi" report.</para>
+                   </listitem>
+                   <listitem>
+                     <para><code>sealed</code></para>
+                     <para>The "Sealed Information" report.</para>
+                   </listitem>
+                   <listitem>
+                     <para><code>sign</code></para>
+                     <para>The "Signing Information" report.</para>
+                   </listitem>
+                   <listitem>
+                     <para><code>eliminatejars</code></para>
+                     <para>The "Eliminate Jar files with different versions" report.</para>
+                   </listitem>
+                   <listitem>
+                     <para><code>invalidversion</code></para>
+                     <para>The "Invalid version" report.</para>
+                   </listitem>
+                   <listitem>
+                     <para><code>multiplejars</code></para>
+                     <para>The "Multiple Jar files" report.</para>
+                   </listitem>
+                   <listitem>
+                     <para><code>multiplejarspackage</code></para>
+                     <para>The "Multiple Jar files (Package)" report.</para>
+                   </listitem>
+                   <listitem>
+                     <para><code>multiplelocations</code></para>
+                     <para>The "Multiple Locations" report.</para>
+                   </listitem>
+                   <listitem>
+                     <para><code>unusedjar</code></para>
+                     <para>The "Unused Jar" report.</para>
+                   </listitem>
+                   <listitem>
+                     <para><code>blacklisted</code></para>
+                     <para>The "Black listed" report.</para>
+                   </listitem>
+                   <listitem>
+                     <para><code>noversion</code></para>
+                     <para>The "No version" report.</para>
+                   </listitem>
+                   <listitem>
+                     <para><code>jar</code></para>
+                     <para>The "Jar archive" report.</para>
+                   </listitem>
+                 </itemizedlist>
+                 <para>Default: All reports (<code>reports=*</code>)</para>
                </entry>
              </row>
              <row>

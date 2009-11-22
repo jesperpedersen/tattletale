@@ -54,7 +54,7 @@ public class ClassLocationReport extends Report
    public ClassLocationReport(SortedSet<Archive> archives,
                               SortedMap<String, SortedSet<String>> gProvides)
    {
-      super(ReportSeverity.INFO, archives, NAME, DIRECTORY);
+      super(DIRECTORY, ReportSeverity.INFO, archives, NAME, DIRECTORY);
       this.gProvides = gProvides;
    }
 

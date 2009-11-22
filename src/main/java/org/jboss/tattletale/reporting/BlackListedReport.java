@@ -48,7 +48,7 @@ public class BlackListedReport extends Report
     */
    public BlackListedReport(SortedSet<Archive> archives)
    {
-      super(ReportSeverity.ERROR, archives, NAME, DIRECTORY);
+      super(DIRECTORY, ReportSeverity.ERROR, archives, NAME, DIRECTORY);
    }
 
    /**

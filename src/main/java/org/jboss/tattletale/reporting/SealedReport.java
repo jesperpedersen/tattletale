@@ -46,7 +46,7 @@ public class SealedReport extends Report
     */
    public SealedReport(SortedSet<Archive> archives)
    {
-      super(ReportSeverity.INFO, archives, NAME, DIRECTORY);
+      super(DIRECTORY, ReportSeverity.INFO, archives, NAME, DIRECTORY);
    }
 
    /**

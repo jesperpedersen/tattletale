@@ -57,7 +57,7 @@ public class TransitiveDependsOnReport extends CLSReport
                                     List<Archive> known,
                                     String classloaderStructure)
    {
-      super(ReportSeverity.INFO, archives, NAME, DIRECTORY, classloaderStructure, known);
+      super(DIRECTORY, ReportSeverity.INFO, archives, NAME, DIRECTORY, classloaderStructure, known);
    }
 
    /**

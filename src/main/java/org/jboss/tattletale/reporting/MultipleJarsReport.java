@@ -54,7 +54,7 @@ public class MultipleJarsReport extends Report
    public MultipleJarsReport(SortedSet<Archive> archives,
                              SortedMap<String, SortedSet<String>> gProvides)
    {
-      super(ReportSeverity.WARNING, archives, NAME, DIRECTORY);
+      super(DIRECTORY, ReportSeverity.WARNING, archives, NAME, DIRECTORY);
       this.gProvides = gProvides;
    }
 

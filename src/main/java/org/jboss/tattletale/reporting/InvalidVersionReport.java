@@ -49,7 +49,7 @@ public class InvalidVersionReport extends Report
     */
    public InvalidVersionReport(SortedSet<Archive> archives)
    {
-      super(ReportSeverity.WARNING, archives, NAME, DIRECTORY);
+      super(DIRECTORY, ReportSeverity.WARNING, archives, NAME, DIRECTORY);
    }
 
    /**

@@ -58,7 +58,7 @@ public class OSGiReport extends Report
    public OSGiReport(SortedSet<Archive> archives,
                      List<Archive> known)
    {
-      super(ReportSeverity.INFO, archives, NAME, DIRECTORY);
+      super(DIRECTORY, ReportSeverity.INFO, archives, NAME, DIRECTORY);
    }
 
    /**

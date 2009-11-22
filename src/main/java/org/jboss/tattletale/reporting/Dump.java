@@ -123,11 +123,11 @@ public class Dump
 
          bw.write("<h1>" + Version.FULL_VERSION + "</h1>" + NEW_LINE);
          
-         bw.write("<h2>Dependencies</h2>" + NEW_LINE);
-         bw.write("<ul>" + NEW_LINE);
-
-         if (dependenciesReports != null)
+         if (dependenciesReports != null && dependenciesReports.size() > 0)
          {
+            bw.write("<h2>Dependencies</h2>" + NEW_LINE);
+            bw.write("<ul>" + NEW_LINE);
+
             for (Report r : dependenciesReports)
             {
                bw.write("<li>");
@@ -164,15 +164,15 @@ public class Dump
                bw.write("</span>");
                bw.write(")</li>" + NEW_LINE);
             }
+
+            bw.write("</ul>" + NEW_LINE);
          }
 
-         bw.write("</ul>" + NEW_LINE);
-
-         bw.write("<h2>Reports</h2>" + NEW_LINE);
-         bw.write("<ul>" + NEW_LINE);
-
-         if (generalReports != null)
+         if (generalReports != null && generalReports.size() > 0)
          {
+            bw.write("<h2>Reports</h2>" + NEW_LINE);
+            bw.write("<ul>" + NEW_LINE);
+
             for (Report r : generalReports)
             {
                bw.write("<li>");
@@ -209,15 +209,15 @@ public class Dump
                bw.write("</span>");
                bw.write(")</li>" + NEW_LINE);
             }
+
+            bw.write("</ul>" + NEW_LINE);
          }
 
-         bw.write("</ul>" + NEW_LINE);
-
-         bw.write("<h2>Archives</h2>" + NEW_LINE);
-         bw.write("<ul>" + NEW_LINE);
-
-         if (archiveReports != null)
+         if (archiveReports != null && archiveReports.size() > 0)
          {
+            bw.write("<h2>Archives</h2>" + NEW_LINE);
+            bw.write("<ul>" + NEW_LINE);
+
             for (Report r : archiveReports)
             {
                bw.write("<li>");
@@ -254,9 +254,9 @@ public class Dump
                bw.write("</span>");
                bw.write(")</li>" + NEW_LINE);
             }
+            
+            bw.write("</ul>" + NEW_LINE);
          }
-
-         bw.write("</ul>" + NEW_LINE);
 
          bw.write(NEW_LINE);
          bw.write("<p>" + NEW_LINE);

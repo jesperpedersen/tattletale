@@ -106,6 +106,9 @@ public class Main
    /** Fail on error */
    private boolean failOnError;
 
+   /** Reports */
+   private String reports;
+
    /**
     * Constructor
     */
@@ -120,6 +123,7 @@ public class Main
       this.failOnInfo = false;
       this.failOnWarn = false;
       this.failOnError = false;
+      this.reports = null;
    }
 
    /**
@@ -204,6 +208,15 @@ public class Main
    }
 
    /**
+    * Set the reports
+    * @param reports The value
+    */
+   public void setReports(String reports) 
+   {
+      this.reports = reports;
+   }
+
+   /**
     * Execute
     * @exception Exception Thrown if an error occurs
     */
@@ -217,6 +230,9 @@ public class Main
       Set<String> blacklistedSet = null;
 
       Set<String> excludeSet = null;
+
+      boolean allReports = false;
+      Set<String> reportSet = null;
 
       if (classloaderStructure == null)
          classloaderStructure = properties.getProperty("classloader");
@@ -319,6 +335,34 @@ public class Main
          excludeSet.addAll(parseExcludes(properties.getProperty("excludes")));
       }
 
+      if (reports == null || reports.trim().equals("*") ||
+          (properties.getProperty("reports") != null && properties.getProperty("reports").equals("*")))
+      {
+         allReports = true;
+      }
+
+      if (!allReports && reports != null)
+      {
+         reportSet = new HashSet<String>();
+
+         StringTokenizer st = new StringTokenizer(reports, ",");
+         while (st.hasMoreTokens())
+         {
+            String token = st.nextToken().trim();
+            reportSet.add(token);
+         }
+      }
+
+      if (!allReports && reportSet == null && properties.getProperty("reports") != null)
+      {
+         StringTokenizer st = new StringTokenizer(properties.getProperty("reports"), ",");
+         while (st.hasMoreTokens())
+         {
+            String token = st.nextToken().trim();
+            reportSet.add(token);
+         }
+      }
+
       if (classloaderStructure == null || classloaderStructure.trim().equals(""))
       {
          classloaderStructure = "org.jboss.tattletale.reporting.classloader.NoopClassLoaderStructure";
@@ -387,7 +431,7 @@ public class Main
                
          //Write out report     
          String outputDir = setupOutputDir(destination);
-         outputReport(outputDir, classloaderStructure, archives, gProvides, known);
+         outputReport(outputDir, allReports, reportSet, classloaderStructure, archives, gProvides, known);
       }
    }
 
@@ -493,6 +537,8 @@ public class Main
    /**
     * Generate the basic reports to the output directory
     * @param outputDir Where the reports go
+    * @param allReport Should all reports be generated ?
+    * @param reportSet The set of reports that should be generated
     * @param classloaderStructure The class loader structure
     * @param archives The archives
     * @param gProvides The global provides
@@ -500,6 +546,8 @@ public class Main
     * @exception Exception In case of fail on settings
     */
    private void outputReport(String outputDir, 
+                             boolean allReports,
+                             Set<String> reportSet,
                              String classloaderStructure,
                              SortedSet<Archive> archives, 
                              SortedMap<String, SortedSet<String>> gProvides, 
@@ -510,82 +558,136 @@ public class Main
       SortedSet<Report> archiveReports = new TreeSet<Report>();
 
       Report dependsOn = new DependsOnReport(archives, known, classloaderStructure);
-      dependsOn.generate(outputDir);
-      dependenciesReports.add(dependsOn);
+      if (allReports || reportSet.contains(dependsOn.getId()))
+      {
+         dependsOn.generate(outputDir);
+         dependenciesReports.add(dependsOn);
+      }
 
       Report dependants = new DependantsReport(archives, classloaderStructure);
-      dependants.generate(outputDir);
-      dependenciesReports.add(dependants);
+      if (allReports || reportSet.contains(dependants.getId()))
+      {
+         dependants.generate(outputDir);
+         dependenciesReports.add(dependants);
+      }
 
       Report transitiveDependsOn = new TransitiveDependsOnReport(archives, known, classloaderStructure);
-      transitiveDependsOn.generate(outputDir);
-      dependenciesReports.add(transitiveDependsOn);
+      if (allReports || reportSet.contains(transitiveDependsOn.getId()))
+      {
+         transitiveDependsOn.generate(outputDir);
+         dependenciesReports.add(transitiveDependsOn);
+      }
 
       Report transitiveDependants = new TransitiveDependantsReport(archives, classloaderStructure);
-      transitiveDependants.generate(outputDir);
-      dependenciesReports.add(transitiveDependants);
+      if (allReports || reportSet.contains(transitiveDependants.getId()))
+      {
+         transitiveDependants.generate(outputDir);
+         dependenciesReports.add(transitiveDependants);
+      }
 
       Report graphviz = new GraphvizReport(archives, known, classloaderStructure);
-      graphviz.generate(outputDir);
-      dependenciesReports.add(graphviz);
+      if (allReports || reportSet.contains(graphviz.getId()))
+      {
+         graphviz.generate(outputDir);
+         dependenciesReports.add(graphviz);
+      }
 
       for (Archive a : archives)
       {
          if (a.getType() == ArchiveTypes.JAR)
          {
             Report jar = new JarReport(a);
-            jar.generate(outputDir);
-            archiveReports.add(jar);
+            if (allReports || reportSet.contains(jar.getId()))
+            {
+               jar.generate(outputDir);
+               archiveReports.add(jar);
+            }
          }
       }
 
       Report multipleJars = new MultipleJarsReport(archives, gProvides);
-      multipleJars.generate(outputDir);
-      generalReports.add(multipleJars);
+      if (allReports || reportSet.contains(multipleJars.getId()))
+      {
+         multipleJars.generate(outputDir);
+         generalReports.add(multipleJars);
+      }
 
       Report multipleLocations = new MultipleLocationsReport(archives);
-      multipleLocations.generate(outputDir);
-      generalReports.add(multipleLocations);
+      if (allReports || reportSet.contains(multipleLocations.getId()))
+      {
+         multipleLocations.generate(outputDir);
+         generalReports.add(multipleLocations);
+      }
 
       Report packageMultipleJars = new PackageMultipleJarsReport(archives, gProvides);
-      packageMultipleJars.generate(outputDir);
-      generalReports.add(packageMultipleJars);
+      if (allReports || reportSet.contains(packageMultipleJars.getId()))
+      {
+         packageMultipleJars.generate(outputDir);
+         generalReports.add(packageMultipleJars);
+      }
 
       Report eliminateJars = new EliminateJarsReport(archives);
-      eliminateJars.generate(outputDir);
-      generalReports.add(eliminateJars);
+      if (allReports || reportSet.contains(eliminateJars.getId()))
+      {
+         eliminateJars.generate(outputDir);
+         generalReports.add(eliminateJars);
+      }
 
       Report noVersion = new NoVersionReport(archives);
-      noVersion.generate(outputDir);
-      generalReports.add(noVersion);
+      if (allReports || reportSet.contains(noVersion.getId()))
+      {
+         noVersion.generate(outputDir);
+         generalReports.add(noVersion);
+      }
 
       Report classLocation = new ClassLocationReport(archives, gProvides);
-      classLocation.generate(outputDir);
-      generalReports.add(classLocation);
+      if (allReports || reportSet.contains(classLocation.getId()))
+      {
+         classLocation.generate(outputDir);
+         generalReports.add(classLocation);
+      }
 
       Report osgi = new OSGiReport(archives, known);
-      osgi.generate(outputDir);
-      generalReports.add(osgi);
+      if (allReports || reportSet.contains(osgi.getId()))
+      {
+         osgi.generate(outputDir);
+         generalReports.add(osgi);
+      }
 
       Report sign = new SignReport(archives);
-      sign.generate(outputDir);
-      generalReports.add(sign);
+      if (allReports || reportSet.contains(sign.getId()))
+      {
+         sign.generate(outputDir);
+         generalReports.add(sign);
+      }
 
       Report sealed = new SealedReport(archives);
-      sealed.generate(outputDir);
-      generalReports.add(sealed);
+      if (allReports || reportSet.contains(sealed.getId()))
+      {
+         sealed.generate(outputDir);
+         generalReports.add(sealed);
+      }
 
       Report invalidversion = new InvalidVersionReport(archives);
-      invalidversion.generate(outputDir);
-      generalReports.add(invalidversion);
+      if (allReports || reportSet.contains(invalidversion.getId()))
+      {
+         invalidversion.generate(outputDir);
+         generalReports.add(invalidversion);
+      }
 
       Report blacklisted = new BlackListedReport(archives);
-      blacklisted.generate(outputDir);
-      generalReports.add(blacklisted);
+      if (allReports || reportSet.contains(blacklisted.getId()))
+      {
+         blacklisted.generate(outputDir);
+         generalReports.add(blacklisted);
+      }
 
       Report unusedjar = new UnusedJarReport(archives);
-      unusedjar.generate(outputDir);
-      generalReports.add(unusedjar);
+      if (allReports || reportSet.contains(unusedjar.getId()))
+      {
+         unusedjar.generate(outputDir);
+         generalReports.add(unusedjar);
+      }
 
       Dump.generateIndex(dependenciesReports, generalReports, archiveReports, outputDir);
       Dump.generateCSS(outputDir);

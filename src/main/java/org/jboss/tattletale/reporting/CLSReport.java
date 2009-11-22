@@ -41,25 +41,28 @@ public abstract class CLSReport extends Report
 
    /**
     * Constructor
+    * @param id The report id
     * @param severity The severity
     * @param archives The archives
     * @param name The name of the report
     * @param directory The name of the output directory
     * @param classloaderStructure The ClassloaderStructure
     */
-   public CLSReport(int severity,
+   public CLSReport(String id,
+                    int severity,
                     SortedSet<Archive> archives,
                     String name,
                     String directory,
                     String classloaderStructure
    )
    {
-      super(severity, archives, name, directory);
+      super(id, severity, archives, name, directory);
       setCLS(classloaderStructure);
    }
 
    /**
     * Constructor
+    * @param id The report id
     * @param severity The severity
     * @param archives The archives
     * @param name The name of the report
@@ -67,14 +70,15 @@ public abstract class CLSReport extends Report
     * @param classloaderStructure The ClassloaderStructure
     * @param known The known archives
     */
-   public CLSReport(int severity,
+   public CLSReport(String id,
+                    int severity,
                     SortedSet<Archive> archives,
                     String name,
                     String directory,
                     String classloaderStructure,
                     List<Archive> known)
    {
-      this(severity, archives, name, directory, classloaderStructure);
+      this(id, severity, archives, name, directory, classloaderStructure);
       setKnown(known);
    }
 
