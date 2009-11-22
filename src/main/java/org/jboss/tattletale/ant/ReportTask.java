@@ -45,6 +45,15 @@ public class ReportTask extends AbstractReportTask
    /** Blacklisted */
    private String blacklisted;
 
+   /** Fail on info */
+   private boolean failOnInfo;
+
+   /** Fail on warning */
+   private boolean failOnWarn;
+
+   /** Fail on error */
+   private boolean failOnError;
+
    /**
     * Constructor
     */
@@ -54,6 +63,9 @@ public class ReportTask extends AbstractReportTask
       this.profiles = null;
       this.excludes = null;
       this.blacklisted = null;
+      this.failOnInfo = false;
+      this.failOnWarn = false;
+      this.failOnError = false;
    }
 
    /**
@@ -129,6 +141,60 @@ public class ReportTask extends AbstractReportTask
    }
 
    /**
+    * Get fail on info
+    * @return The value
+    */
+   public boolean getFailOnInfo()
+   {
+      return failOnInfo;
+   }
+
+   /**
+    * Set fail on info
+    * @param b The value
+    */
+   public void setFailOnInfo(boolean b)
+   {
+      this.failOnInfo = b;
+   }
+
+   /**
+    * Get fail on warn
+    * @return The value
+    */
+   public boolean getFailOnWarn()
+   {
+      return failOnWarn;
+   }
+
+   /**
+    * Set fail on warn
+    * @param b The value
+    */
+   public void setFailOnWarn(boolean b)
+   {
+      this.failOnWarn = b;
+   }
+
+   /**
+    * Get fail on error
+    * @return The value
+    */
+   public boolean getFailOnError()
+   {
+      return failOnError;
+   }
+
+   /**
+    * Set fail on error
+    * @param b The value
+    */
+   public void setFailOnError(boolean b)
+   {
+      this.failOnError = b;
+   }
+
+   /**
     * Execute
     * @exception BuildException If the build fails
     */
@@ -145,6 +211,11 @@ public class ReportTask extends AbstractReportTask
          main.setProfiles(getProfiles());
          main.setExcludes(getExcludes());
          main.setBlacklisted(getBlacklisted());
+         main.setFailOnInfo(getFailOnInfo());
+         main.setFailOnWarn(getFailOnWarn());
+         main.setFailOnError(getFailOnError());
+
+         System.out.println("Scanning: " + getSource());
 
          main.execute();
       }

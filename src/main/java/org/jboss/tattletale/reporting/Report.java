@@ -89,6 +89,15 @@ public abstract class Report implements Comparable
    }
 
    /**
+    * Get the report id
+    * @return The value
+    */
+   public String getId()
+   {
+      return directory;
+   }
+
+   /**
     * Get the severity
     * @return The value
     */

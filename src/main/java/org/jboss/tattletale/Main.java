@@ -43,6 +43,8 @@ import org.jboss.tattletale.reporting.NoVersionReport;
 import org.jboss.tattletale.reporting.OSGiReport;
 import org.jboss.tattletale.reporting.PackageMultipleJarsReport;
 import org.jboss.tattletale.reporting.Report;
+import org.jboss.tattletale.reporting.ReportSeverity;
+import org.jboss.tattletale.reporting.ReportStatus;
 import org.jboss.tattletale.reporting.SealedReport;
 import org.jboss.tattletale.reporting.Seam22;
 import org.jboss.tattletale.reporting.SignReport;
@@ -95,6 +97,15 @@ public class Main
    /** Blacklisted */
    private String blacklisted;
 
+   /** Fail on info */
+   private boolean failOnInfo;
+
+   /** Fail on warning */
+   private boolean failOnWarn;
+
+   /** Fail on error */
+   private boolean failOnError;
+
    /**
     * Constructor
     */
@@ -106,6 +117,9 @@ public class Main
       this.profiles = null;
       this.excludes = null;
       this.blacklisted = null;
+      this.failOnInfo = false;
+      this.failOnWarn = false;
+      this.failOnError = false;
    }
 
    /**
@@ -160,6 +174,33 @@ public class Main
    public void setBlacklisted(String blacklisted)
    {
       this.blacklisted = blacklisted;
+   }
+
+   /**
+    * Set fail on info
+    * @param b The value
+    */
+   public void setFailOnInfo(boolean b)
+   {
+      this.failOnInfo = b;
+   }
+
+   /**
+    * Set fail on warn
+    * @param b The value
+    */
+   public void setFailOnWarn(boolean b)
+   {
+      this.failOnWarn = b;
+   }
+
+   /**
+    * Set fail on error
+    * @param b The value
+    */
+   public void setFailOnError(boolean b)
+   {
+      this.failOnError = b;
    }
 
    /**
@@ -456,12 +497,13 @@ public class Main
     * @param archives The archives
     * @param gProvides The global provides
     * @param known The known archives
+    * @exception Exception In case of fail on settings
     */
    private void outputReport(String outputDir, 
                              String classloaderStructure,
                              SortedSet<Archive> archives, 
                              SortedMap<String, SortedSet<String>> gProvides, 
-                             List<Archive> known)
+                             List<Archive> known) throws Exception
    {
       SortedSet<Report> dependenciesReports = new TreeSet<Report>();
       SortedSet<Report> generalReports = new TreeSet<Report>();
@@ -547,6 +589,218 @@ public class Main
 
       Dump.generateIndex(dependenciesReports, generalReports, archiveReports, outputDir);
       Dump.generateCSS(outputDir);
+
+      if (failOnInfo || failOnWarn || failOnError)
+      {
+         boolean foundError = false;
+
+         boolean first = true;
+         StringBuilder sb = new StringBuilder();
+
+         for (Report report : dependenciesReports)
+         {
+            if (ReportStatus.YELLOW == report.getStatus() || ReportStatus.RED == report.getStatus())
+            {
+               if (ReportSeverity.INFO == report.getSeverity() && failOnInfo)
+               {
+                  if (!first)
+                     sb = sb.append(System.getProperty("line.separator"));
+
+                  sb = sb.append(report.getId());
+                  sb = sb.append("=");
+                  
+                  if (ReportStatus.YELLOW == report.getStatus())
+                  {
+                     sb = sb.append("YELLOW");
+                  }
+                  else if (ReportStatus.RED == report.getStatus())
+                  {
+                     sb = sb.append("RED");
+                  }
+
+                  foundError = true;
+                  first = false;
+               }
+               else if (ReportSeverity.WARNING == report.getSeverity() && failOnWarn)
+               {
+                  if (!first)
+                     sb = sb.append(System.getProperty("line.separator"));
+
+                  sb = sb.append(report.getId());
+                  sb = sb.append("=");
+                  
+                  if (ReportStatus.YELLOW == report.getStatus())
+                  {
+                     sb = sb.append("YELLOW");
+                  }
+                  else if (ReportStatus.RED == report.getStatus())
+                  {
+                     sb = sb.append("RED");
+                  }
+
+                  foundError = true;
+                  first = false;
+               }
+               else if (ReportSeverity.ERROR == report.getSeverity() && failOnError)
+               {
+                  if (!first)
+                     sb = sb.append(System.getProperty("line.separator"));
+
+                  sb = sb.append(report.getId());
+                  sb = sb.append("=");
+                  
+                  if (ReportStatus.YELLOW == report.getStatus())
+                  {
+                     sb = sb.append("YELLOW");
+                  }
+                  else if (ReportStatus.RED == report.getStatus())
+                  {
+                     sb = sb.append("RED");
+                  }
+
+                  foundError = true;
+                  first = false;
+               }
+            }
+         }
+
+         for (Report report : generalReports)
+         {
+            if (ReportStatus.YELLOW == report.getStatus() || ReportStatus.RED == report.getStatus())
+            {
+               if (ReportSeverity.INFO == report.getSeverity() && failOnInfo)
+               {
+                  if (!first)
+                     sb = sb.append(System.getProperty("line.separator"));
+
+                  sb = sb.append(report.getId());
+                  sb = sb.append("=");
+                  
+                  if (ReportStatus.YELLOW == report.getStatus())
+                  {
+                     sb = sb.append("YELLOW");
+                  }
+                  else if (ReportStatus.RED == report.getStatus())
+                  {
+                     sb = sb.append("RED");
+                  }
+
+                  foundError = true;
+                  first = false;
+               }
+               else if (ReportSeverity.WARNING == report.getSeverity() && failOnWarn)
+               {
+                  if (!first)
+                     sb = sb.append(System.getProperty("line.separator"));
+
+                  sb = sb.append(report.getId());
+                  sb = sb.append("=");
+                  
+                  if (ReportStatus.YELLOW == report.getStatus())
+                  {
+                     sb = sb.append("YELLOW");
+                  }
+                  else if (ReportStatus.RED == report.getStatus())
+                  {
+                     sb = sb.append("RED");
+                  }
+
+                  foundError = true;
+                  first = false;
+               }
+               else if (ReportSeverity.ERROR == report.getSeverity() && failOnError)
+               {
+                  if (!first)
+                     sb = sb.append(System.getProperty("line.separator"));
+
+                  sb = sb.append(report.getId());
+                  sb = sb.append("=");
+                  
+                  if (ReportStatus.YELLOW == report.getStatus())
+                  {
+                     sb = sb.append("YELLOW");
+                  }
+                  else if (ReportStatus.RED == report.getStatus())
+                  {
+                     sb = sb.append("RED");
+                  }
+
+                  foundError = true;
+                  first = false;
+               }
+            }
+         }
+
+         for (Report report : archiveReports)
+         {
+            if (ReportStatus.YELLOW == report.getStatus() || ReportStatus.RED == report.getStatus())
+            {
+               if (ReportSeverity.INFO == report.getSeverity() && failOnInfo)
+               {
+                  if (!first)
+                     sb = sb.append(System.getProperty("line.separator"));
+
+                  sb = sb.append(report.getId());
+                  sb = sb.append("=");
+                  
+                  if (ReportStatus.YELLOW == report.getStatus())
+                  {
+                     sb = sb.append("YELLOW");
+                  }
+                  else if (ReportStatus.RED == report.getStatus())
+                  {
+                     sb = sb.append("RED");
+                  }
+
+                  foundError = true;
+                  first = false;
+               }
+               else if (ReportSeverity.WARNING == report.getSeverity() && failOnWarn)
+               {
+                  if (!first)
+                     sb = sb.append(System.getProperty("line.separator"));
+
+                  sb = sb.append(report.getId());
+                  sb = sb.append("=");
+                  
+                  if (ReportStatus.YELLOW == report.getStatus())
+                  {
+                     sb = sb.append("YELLOW");
+                  }
+                  else if (ReportStatus.RED == report.getStatus())
+                  {
+                     sb = sb.append("RED");
+                  }
+
+                  foundError = true;
+                  first = false;
+               }
+               else if (ReportSeverity.ERROR == report.getSeverity() && failOnError)
+               {
+                  if (!first)
+                     sb = sb.append(System.getProperty("line.separator"));
+
+                  sb = sb.append(report.getId());
+                  sb = sb.append("=");
+                  
+                  if (ReportStatus.YELLOW == report.getStatus())
+                  {
+                     sb = sb.append("YELLOW");
+                  }
+                  else if (ReportStatus.RED == report.getStatus())
+                  {
+                     sb = sb.append("RED");
+                  }
+
+                  foundError = true;
+                  first = false;
+               }
+            }
+         }
+
+         if (foundError)
+            throw new Exception(sb.toString());
+      }
    }
 
    /**
@@ -629,6 +883,9 @@ public class Main
 
             main.setSource(args[arg]);
             main.setDestination(args.length > arg + 1 ? args[arg + 1] : ".");
+            main.setFailOnInfo(false);
+            main.setFailOnWarn(false);
+            main.setFailOnError(false);
 
             main.execute();
          }

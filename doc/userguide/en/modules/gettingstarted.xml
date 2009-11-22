@@ -356,7 +356,28 @@ xmlns:tattletale="antlib:org.jboss.tattletale.ant"
                  <code>com.mycompany.forinternaluseonly, com.partner.forinternaluseonly</code>
                  <para>Default: Empty list</para>
                </entry>
-           </row>
+             </row>
+             <row>
+               <entry><code>failOnInfo</code></entry>
+               <entry>
+                 Fail the build if a failed INFO report is found
+                 <para>Default: <code>false</code></para>
+               </entry>
+             </row>
+             <row>
+               <entry><code>failOnWarn</code></entry>
+               <entry>
+                 Fail the build if a failed WARN report is found
+                 <para>Default: <code>false</code></para>
+               </entry>
+             </row>
+             <row>
+               <entry><code>failOnError</code></entry>
+               <entry>
+                 Fail the build if a failed ERROR report is found
+                 <para>Default: <code>false</code></para>
+               </entry>
+             </row>
            </tbody>
        </tgroup>
        </table>
