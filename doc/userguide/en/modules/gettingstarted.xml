@@ -369,6 +369,13 @@ xmlns:tattletale="antlib:org.jboss.tattletale.ant"
                </entry>
              </row>
              <row>
+               <entry><code>configuration</code></entry>
+               <entry>
+                 Path to the configuration file
+                 <para>Default: No value</para>
+               </entry>
+             </row>
+             <row>
                <entry><code>reports</code></entry>
                <entry>
                  A comma separated list of which reports that should be generated.

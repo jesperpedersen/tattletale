@@ -85,6 +85,9 @@ public class Main
    /** Destination */
    private String destination;
 
+   /** Configuration */
+   private String configuration;
+
    /** Class loader structure */
    private String classloaderStructure;
 
@@ -116,6 +119,7 @@ public class Main
    {
       this.source = ".";
       this.destination = ".";
+      this.configuration = null;
       this.classloaderStructure = null;
       this.profiles = null;
       this.excludes = null;
@@ -123,7 +127,7 @@ public class Main
       this.failOnInfo = false;
       this.failOnWarn = false;
       this.failOnError = false;
-      this.reports = null;
+      this.reports = "*";
    }
 
    /**
@@ -142,6 +146,15 @@ public class Main
    public void setDestination(String destination)
    {
       this.destination = destination;
+   }
+
+   /**
+    * Set configuration
+    * @param configuration The value
+    */
+   public void setConfiguration(String configuration)
+   {
+      this.configuration = configuration;
    }
 
    /**
@@ -222,7 +235,15 @@ public class Main
     */
    public void execute() throws Exception
    {
-      Properties properties = loadDefault();
+      Properties properties = null;
+      if (configuration != null)
+      {
+         properties = loadConfiguration();
+      }
+      else
+      {
+         properties = loadDefault();
+      }
 
       Set<String> profileSet = null;
       boolean allProfiles = false;
@@ -335,7 +356,7 @@ public class Main
          excludeSet.addAll(parseExcludes(properties.getProperty("excludes")));
       }
 
-      if (reports == null || reports.trim().equals("*") ||
+      if ((reports != null && reports.trim().equals("*")) ||
           (properties.getProperty("reports") != null && properties.getProperty("reports").equals("*")))
       {
          allReports = true;
@@ -355,6 +376,8 @@ public class Main
 
       if (!allReports && reportSet == null && properties.getProperty("reports") != null)
       {
+         reportSet = new HashSet<String>();
+
          StringTokenizer st = new StringTokenizer(properties.getProperty("reports"), ",");
          while (st.hasMoreTokens())
          {
@@ -362,6 +385,9 @@ public class Main
             reportSet.add(token);
          }
       }
+
+      if (!allReports && reportSet == null)
+         allReports = true;
 
       if (classloaderStructure == null || classloaderStructure.trim().equals(""))
       {
@@ -433,6 +459,42 @@ public class Main
          String outputDir = setupOutputDir(destination);
          outputReport(outputDir, allReports, reportSet, classloaderStructure, archives, gProvides, known);
       }
+   }
+
+   /**
+    * Load cpnfiguration
+    * @return The properties
+    */
+   private Properties loadConfiguration()
+   {
+      Properties properties = new Properties();
+
+      FileInputStream fis = null;
+      try
+      {
+         fis = new FileInputStream(configuration);
+         properties.load(fis);
+      } 
+      catch (IOException e) 
+      {
+         System.err.println("Unable to open " + configuration);
+      } 
+      finally 
+      {
+         if (fis != null) 
+         {
+            try
+            {
+               fis.close();
+            } 
+            catch (IOException ioe) 
+            {
+               // Nothing to do
+            }
+         }
+      }
+
+      return properties;
    }
 
    /**

@@ -43,7 +43,11 @@ public abstract class AbstractReportTask extends Task
     */
    private String destination;
    
-   
+   /**
+    * Configuration
+    */
+   private String configuration;
+      
    /**
     * Constructor
     */
@@ -51,6 +55,7 @@ public abstract class AbstractReportTask extends Task
    {
       source = ".";
       destination = ".";
+      configuration = null;
    }
 
    /**
@@ -123,6 +128,24 @@ public abstract class AbstractReportTask extends Task
    public void setDestination(String destination) 
    {
       this.destination = destination;
+   }
+
+   /**
+    * Get the configuration
+    * @return The value
+    */
+   public String getConfiguration() 
+   {
+      return configuration;
+   }
+
+   /**
+    * Set the configuration
+    * @param configuration The value
+    */
+   public void setConfiguration(String configuration) 
+   {
+      this.configuration = configuration;
    }
 
    /**
