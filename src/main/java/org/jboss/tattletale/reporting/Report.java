@@ -58,6 +58,9 @@ public abstract class Report implements Comparable
    /** output directory */
    private File outputDir;
 
+   /** Filter */
+   private String filter;
+
    /** output filename */
    private static final String INDEX_HTML = "index.html";
 
@@ -75,6 +78,7 @@ public abstract class Report implements Comparable
       this.severity = severity;
       this.archives = archives;
       this.status = ReportStatus.GREEN;
+      this.filter = null;
    }
 
    /**
@@ -139,6 +143,24 @@ public abstract class Report implements Comparable
    public String getName()
    {
       return name;
+   }
+
+   /**
+    * Get the filter for the report
+    * @return The filter
+    */
+   public String getFilter()
+   {
+      return filter;
+   }
+
+   /**
+    * Set the filter for the report
+    * @param filter The value
+    */
+   public void setFilter(String filter)
+   {
+      this.filter = filter;
    }
 
    /**

@@ -248,8 +248,8 @@
         <delete dir="${dist.dir}"/>
         <delete dir="${doc.api.dir}"/>
         <delete dir="${reports.dir}"/>
-        <delete file="*.zip"/>
-        <delete file="*.tar.gz"/>
+        <delete file="${name}-${major}.${minor}.${patch}.${type}.zip"/>
+        <delete file="${name}-${major}.${minor}.${patch}.${type}.tar.gz"/>
     </target>
 
     <!-- ================================= 

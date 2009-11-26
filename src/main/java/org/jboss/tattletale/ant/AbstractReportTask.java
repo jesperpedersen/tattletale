@@ -49,6 +49,11 @@ public abstract class AbstractReportTask extends Task
    private String configuration;
       
    /**
+    * Filter
+    */
+   private String filter;
+      
+   /**
     * Constructor
     */
    public AbstractReportTask()
@@ -56,6 +61,7 @@ public abstract class AbstractReportTask extends Task
       source = ".";
       destination = ".";
       configuration = null;
+      filter = null;
    }
 
    /**
@@ -146,6 +152,24 @@ public abstract class AbstractReportTask extends Task
    public void setConfiguration(String configuration) 
    {
       this.configuration = configuration;
+   }
+
+   /**
+    * Get the filter
+    * @return The value
+    */
+   public String getFilter() 
+   {
+      return filter;
+   }
+
+   /**
+    * Set the filter
+    * @param filter The value
+    */
+   public void setFilter(String filter) 
+   {
+      this.filter = filter;
    }
 
    /**

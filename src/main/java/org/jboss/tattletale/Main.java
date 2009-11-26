@@ -88,6 +88,9 @@ public class Main
    /** Configuration */
    private String configuration;
 
+   /** Filter */
+   private String filter;
+
    /** Class loader structure */
    private String classloaderStructure;
 
@@ -120,6 +123,7 @@ public class Main
       this.source = ".";
       this.destination = ".";
       this.configuration = null;
+      this.filter = null;
       this.classloaderStructure = null;
       this.profiles = null;
       this.excludes = null;
@@ -155,6 +159,15 @@ public class Main
    public void setConfiguration(String configuration)
    {
       this.configuration = configuration;
+   }
+
+   /**
+    * Set filter
+    * @param filter The value
+    */
+   public void setFilter(String filter)
+   {
+      this.filter = filter;
    }
 
    /**
@@ -235,14 +248,25 @@ public class Main
     */
    public void execute() throws Exception
    {
-      Properties properties = null;
+      Properties config = null;
+      Properties filters = null;
+
       if (configuration != null)
       {
-         properties = loadConfiguration();
+         config = loadConfiguration();
       }
       else
       {
-         properties = loadDefault();
+         config = loadDefaultConfiguration();
+      }
+
+      if (filter != null)
+      {
+         filters = loadFilters();
+      }
+      else
+      {
+         filters = loadDefaultFilters();
       }
 
       Set<String> profileSet = null;
@@ -256,7 +280,7 @@ public class Main
       Set<String> reportSet = null;
 
       if (classloaderStructure == null)
-         classloaderStructure = properties.getProperty("classloader");
+         classloaderStructure = config.getProperty("classloader");
          
       if (profiles != null)
       {
@@ -278,11 +302,11 @@ public class Main
          }
       }
 
-      if (profileSet == null && properties.getProperty("profiles") != null)
+      if (profileSet == null && config.getProperty("profiles") != null)
       {
          profileSet = new HashSet<String>();
          
-         StringTokenizer st = new StringTokenizer(properties.getProperty("profiles"), ",");
+         StringTokenizer st = new StringTokenizer(config.getProperty("profiles"), ",");
          while (st.hasMoreTokens())
          {
             String token = st.nextToken().trim();
@@ -321,11 +345,11 @@ public class Main
          }
       }
 
-      if (blacklistedSet == null && properties.getProperty("blacklisted") != null)
+      if (blacklistedSet == null && config.getProperty("blacklisted") != null)
       {
          blacklistedSet = new HashSet<String>();
 
-         StringTokenizer st = new StringTokenizer(properties.getProperty("blacklisted"), ",");
+         StringTokenizer st = new StringTokenizer(config.getProperty("blacklisted"), ",");
          while (st.hasMoreTokens())
          {
             String token = st.nextToken().trim();
@@ -350,14 +374,14 @@ public class Main
          excludeSet.addAll(parseExcludes(excludes));
       }
 
-      if (excludeSet == null && properties.getProperty("excludes") != null)
+      if (excludeSet == null && config.getProperty("excludes") != null)
       {
          excludeSet = new HashSet<String>();
-         excludeSet.addAll(parseExcludes(properties.getProperty("excludes")));
+         excludeSet.addAll(parseExcludes(config.getProperty("excludes")));
       }
 
       if ((reports != null && reports.trim().equals("*")) ||
-          (properties.getProperty("reports") != null && properties.getProperty("reports").equals("*")))
+          (config.getProperty("reports") != null && config.getProperty("reports").equals("*")))
       {
          allReports = true;
       }
@@ -374,11 +398,11 @@ public class Main
          }
       }
 
-      if (!allReports && reportSet == null && properties.getProperty("reports") != null)
+      if (!allReports && reportSet == null && config.getProperty("reports") != null)
       {
          reportSet = new HashSet<String>();
 
-         StringTokenizer st = new StringTokenizer(properties.getProperty("reports"), ",");
+         StringTokenizer st = new StringTokenizer(config.getProperty("reports"), ",");
          while (st.hasMoreTokens())
          {
             String token = st.nextToken().trim();
@@ -457,7 +481,7 @@ public class Main
                
          //Write out report     
          String outputDir = setupOutputDir(destination);
-         outputReport(outputDir, allReports, reportSet, classloaderStructure, archives, gProvides, known);
+         outputReport(outputDir, allReports, reportSet, classloaderStructure, filters, archives, gProvides, known);
       }
    }
 
@@ -498,10 +522,10 @@ public class Main
    }
 
    /**
-    * Load default values
+    * Load default configuration values
     * @return The properties
     */
-   private Properties loadDefault()
+   private Properties loadDefaultConfiguration()
    {
       Properties properties = new Properties();
       String propertiesFile = System.getProperty("jboss-tattletale.properties");
@@ -597,11 +621,118 @@ public class Main
    }
 
    /**
+    * Load filters
+    * @return The filters
+    */
+   private Properties loadFilters()
+   {
+      Properties properties = new Properties();
+
+      FileInputStream fis = null;
+      try
+      {
+         fis = new FileInputStream(filter);
+         properties.load(fis);
+      } 
+      catch (IOException e) 
+      {
+         System.err.println("Unable to open " + filter);
+      } 
+      finally 
+      {
+         if (fis != null) 
+         {
+            try
+            {
+               fis.close();
+            } 
+            catch (IOException ioe) 
+            {
+               // Nothing to do
+            }
+         }
+      }
+
+      return properties;
+   }
+
+   /**
+    * Load default filter values
+    * @return The properties
+    */
+   private Properties loadDefaultFilters()
+   {
+      Properties properties = new Properties();
+      String propertiesFile = System.getProperty("jboss-tattletale-filter.properties");
+      boolean loaded = false;
+            
+      if (propertiesFile != null) 
+      {
+         FileInputStream fis = null;
+         try
+         {
+            fis = new FileInputStream(propertiesFile);
+            properties.load(fis);
+            loaded = true;
+         } 
+         catch (IOException e) 
+         {
+            System.err.println("Unable to open " + propertiesFile);
+         } 
+         finally 
+         {
+            if (fis != null) 
+            {
+               try
+               {
+                  fis.close();
+               } 
+               catch (IOException ioe) 
+               {
+                  // Nothing to do
+               }
+            }
+         }
+      }
+      if (!loaded) 
+      {
+         FileInputStream fis = null;
+         try
+         {
+            fis = new FileInputStream("jboss-tattletale-filter.properties");
+            properties.load(fis);
+            loaded = true;
+         } 
+         catch (IOException ignore) 
+         {
+            // Nothing to do
+         } 
+         finally 
+         {
+            if (fis != null) 
+            {
+               try
+               {
+                  fis.close();
+               } 
+               catch (IOException ioe) 
+               {
+                  // Nothing to do
+               }
+            }
+         }
+      }
+
+      return properties;
+   }
+
+   /**
     * Generate the basic reports to the output directory
     * @param outputDir Where the reports go
     * @param allReport Should all reports be generated ?
     * @param reportSet The set of reports that should be generated
     * @param classloaderStructure The class loader structure
+    * @param filters The filters
     * @param archives The archives
     * @param gProvides The global provides
     * @param known The known archives
@@ -611,6 +742,7 @@ public class Main
                              boolean allReports,
                              Set<String> reportSet,
                              String classloaderStructure,
+                             Properties filters,
                              SortedSet<Archive> archives, 
                              SortedMap<String, SortedSet<String>> gProvides, 
                              List<Archive> known) throws Exception
@@ -622,6 +754,9 @@ public class Main
       Report dependsOn = new DependsOnReport(archives, known, classloaderStructure);
       if (allReports || reportSet.contains(dependsOn.getId()))
       {
+         if (filters != null && filters.getProperty(dependsOn.getId()) != null)
+            dependsOn.setFilter(filters.getProperty(dependsOn.getId()));
+
          dependsOn.generate(outputDir);
          dependenciesReports.add(dependsOn);
       }
@@ -629,6 +764,9 @@ public class Main
       Report dependants = new DependantsReport(archives, classloaderStructure);
       if (allReports || reportSet.contains(dependants.getId()))
       {
+         if (filters != null && filters.getProperty(dependants.getId()) != null)
+            dependants.setFilter(filters.getProperty(dependants.getId()));
+
          dependants.generate(outputDir);
          dependenciesReports.add(dependants);
       }
@@ -636,6 +774,9 @@ public class Main
       Report transitiveDependsOn = new TransitiveDependsOnReport(archives, known, classloaderStructure);
       if (allReports || reportSet.contains(transitiveDependsOn.getId()))
       {
+         if (filters != null && filters.getProperty(transitiveDependsOn.getId()) != null)
+            transitiveDependsOn.setFilter(filters.getProperty(transitiveDependsOn.getId()));
+
          transitiveDependsOn.generate(outputDir);
          dependenciesReports.add(transitiveDependsOn);
       }
@@ -643,6 +784,9 @@ public class Main
       Report transitiveDependants = new TransitiveDependantsReport(archives, classloaderStructure);
       if (allReports || reportSet.contains(transitiveDependants.getId()))
       {
+         if (filters != null && filters.getProperty(transitiveDependants.getId()) != null)
+            transitiveDependants.setFilter(filters.getProperty(transitiveDependants.getId()));
+
          transitiveDependants.generate(outputDir);
          dependenciesReports.add(transitiveDependants);
       }
@@ -650,6 +794,9 @@ public class Main
       Report graphviz = new GraphvizReport(archives, known, classloaderStructure);
       if (allReports || reportSet.contains(graphviz.getId()))
       {
+         if (filters != null && filters.getProperty(graphviz.getId()) != null)
+            graphviz.setFilter(filters.getProperty(graphviz.getId()));
+
          graphviz.generate(outputDir);
          dependenciesReports.add(graphviz);
       }
@@ -661,6 +808,9 @@ public class Main
             Report jar = new JarReport(a);
             if (allReports || reportSet.contains(jar.getId()))
             {
+               if (filters != null && filters.getProperty(jar.getId()) != null)
+                  jar.setFilter(filters.getProperty(jar.getId()));
+
                jar.generate(outputDir);
                archiveReports.add(jar);
             }
@@ -670,6 +820,9 @@ public class Main
       Report multipleJars = new MultipleJarsReport(archives, gProvides);
       if (allReports || reportSet.contains(multipleJars.getId()))
       {
+         if (filters != null && filters.getProperty(multipleJars.getId()) != null)
+            multipleJars.setFilter(filters.getProperty(multipleJars.getId()));
+
          multipleJars.generate(outputDir);
          generalReports.add(multipleJars);
       }
@@ -677,6 +830,9 @@ public class Main
       Report multipleLocations = new MultipleLocationsReport(archives);
       if (allReports || reportSet.contains(multipleLocations.getId()))
       {
+         if (filters != null && filters.getProperty(multipleLocations.getId()) != null)
+            multipleLocations.setFilter(filters.getProperty(multipleLocations.getId()));
+
          multipleLocations.generate(outputDir);
          generalReports.add(multipleLocations);
       }
@@ -684,6 +840,9 @@ public class Main
       Report packageMultipleJars = new PackageMultipleJarsReport(archives, gProvides);
       if (allReports || reportSet.contains(packageMultipleJars.getId()))
       {
+         if (filters != null && filters.getProperty(packageMultipleJars.getId()) != null)
+            packageMultipleJars.setFilter(filters.getProperty(packageMultipleJars.getId()));
+
          packageMultipleJars.generate(outputDir);
          generalReports.add(packageMultipleJars);
       }
@@ -691,6 +850,9 @@ public class Main
       Report eliminateJars = new EliminateJarsReport(archives);
       if (allReports || reportSet.contains(eliminateJars.getId()))
       {
+         if (filters != null && filters.getProperty(eliminateJars.getId()) != null)
+            eliminateJars.setFilter(filters.getProperty(eliminateJars.getId()));
+
          eliminateJars.generate(outputDir);
          generalReports.add(eliminateJars);
       }
@@ -698,6 +860,9 @@ public class Main
       Report noVersion = new NoVersionReport(archives);
       if (allReports || reportSet.contains(noVersion.getId()))
       {
+         if (filters != null && filters.getProperty(noVersion.getId()) != null)
+            noVersion.setFilter(filters.getProperty(noVersion.getId()));
+
          noVersion.generate(outputDir);
          generalReports.add(noVersion);
       }
@@ -705,6 +870,9 @@ public class Main
       Report classLocation = new ClassLocationReport(archives, gProvides);
       if (allReports || reportSet.contains(classLocation.getId()))
       {
+         if (filters != null && filters.getProperty(classLocation.getId()) != null)
+            classLocation.setFilter(filters.getProperty(classLocation.getId()));
+
          classLocation.generate(outputDir);
          generalReports.add(classLocation);
       }
@@ -712,6 +880,9 @@ public class Main
       Report osgi = new OSGiReport(archives, known);
       if (allReports || reportSet.contains(osgi.getId()))
       {
+         if (filters != null && filters.getProperty(osgi.getId()) != null)
+            osgi.setFilter(filters.getProperty(osgi.getId()));
+
          osgi.generate(outputDir);
          generalReports.add(osgi);
       }
@@ -719,6 +890,9 @@ public class Main
       Report sign = new SignReport(archives);
       if (allReports || reportSet.contains(sign.getId()))
       {
+         if (filters != null && filters.getProperty(sign.getId()) != null)
+            sign.setFilter(filters.getProperty(sign.getId()));
+
          sign.generate(outputDir);
          generalReports.add(sign);
       }
@@ -726,6 +900,9 @@ public class Main
       Report sealed = new SealedReport(archives);
       if (allReports || reportSet.contains(sealed.getId()))
       {
+         if (filters != null && filters.getProperty(sealed.getId()) != null)
+            sealed.setFilter(filters.getProperty(sealed.getId()));
+
          sealed.generate(outputDir);
          generalReports.add(sealed);
       }
@@ -733,6 +910,9 @@ public class Main
       Report invalidversion = new InvalidVersionReport(archives);
       if (allReports || reportSet.contains(invalidversion.getId()))
       {
+         if (filters != null && filters.getProperty(invalidversion.getId()) != null)
+            invalidversion.setFilter(filters.getProperty(invalidversion.getId()));
+
          invalidversion.generate(outputDir);
          generalReports.add(invalidversion);
       }
@@ -740,6 +920,9 @@ public class Main
       Report blacklisted = new BlackListedReport(archives);
       if (allReports || reportSet.contains(blacklisted.getId()))
       {
+         if (filters != null && filters.getProperty(blacklisted.getId()) != null)
+            blacklisted.setFilter(filters.getProperty(blacklisted.getId()));
+
          blacklisted.generate(outputDir);
          generalReports.add(blacklisted);
       }
@@ -747,6 +930,9 @@ public class Main
       Report unusedjar = new UnusedJarReport(archives);
       if (allReports || reportSet.contains(unusedjar.getId()))
       {
+         if (filters != null && filters.getProperty(unusedjar.getId()) != null)
+            unusedjar.setFilter(filters.getProperty(unusedjar.getId()));
+
          unusedjar.generate(outputDir);
          generalReports.add(unusedjar);
       }

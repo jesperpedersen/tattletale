@@ -282,10 +282,86 @@ jboss-tattletale.properties
        </tgroup>
      </table>
 
-    <para>NOTE: The classloader structure feature is currently based on directory structures and may therefore fail to
-      identify archives that should be included in the reports. If you want to be sure that all
-      archives are included use the NoopClassLoaderStructure plugin.</para>
+     <para>The load order for the configuration file is
 
+       <orderedlist spacing="compact">
+         <listitem>
+           <code>configuration</code> parameter in the Apache Ant task
+         </listitem>
+         <listitem>
+           <code>-Djboss-tattletale.properties</code> system property
+         </listitem>
+         <listitem>
+           <code>jboss-tattletale.properties</code> file in current directory
+         </listitem>
+         <listitem>
+           <code>jboss-tattletale.properties</code> file in class loader
+         </listitem>
+       </orderedlist>
+
+     </para>
+
+     <para>NOTE: The classloader structure feature is currently based on directory structures and may therefore fail to
+       identify archives that should be included in the reports. If you want to be sure that all
+       archives are included use the NoopClassLoaderStructure plugin.</para>
+
+     <section id="filtering">
+       <title>Filtering</title>
+
+       <para>JBoss Tattletale supports filtering of the warnings and errors that the reports generates.</para>
+
+       <para>This functionality allows the user to filter out any warnings or errors that should be ignored
+         and thereby allow the application to successful terminate.</para>
+
+       <para>The format of the filter properties file is</para>
+
+       <table frame="all">
+         <title>JBoss Tattletale filter</title>
+         <tgroup cols="2" align="left" colsep="1" rowsep="1">
+           <colspec colname="c1"/>
+           <colspec colname="c2" colwidth="5*"/>
+           <thead>
+             <row>
+               <entry align="left">Key</entry>
+             <entry align="left">Value</entry>
+           </row>
+           </thead>
+           <tbody>
+             <row>
+               <entry><code>report id</code></entry>
+               <entry>The filter
+               </entry>
+             </row>
+           </tbody>
+         </tgroup>
+       </table>
+
+       <para>An example:</para>
+
+       <programlisting>
+myreport=myfilter
+       </programlisting>
+
+       <para>The load order for the filter file is
+         
+         <orderedlist spacing="compact">
+           <listitem>
+             <code>filter</code> parameter in the Apache Ant task
+           </listitem>
+           <listitem>
+             <code>-Djboss-tattletale-filter.properties</code> system property
+           </listitem>
+           <listitem>
+             <code>jboss-tattletale-filter.properties</code> file in current directory
+           </listitem>
+         </orderedlist>
+         
+       </para>
+
+       <para>See the individual reports for filtering support.</para>
+
+     </section>
+     
    </section>
 
    <section id="running">
@@ -372,6 +448,13 @@ xmlns:tattletale="antlib:org.jboss.tattletale.ant"
                <entry><code>configuration</code></entry>
                <entry>
                  Path to the configuration file
+                 <para>Default: No value</para>
+               </entry>
+             </row>
+             <row>
+               <entry><code>filter</code></entry>
+               <entry>
+                 Path to the filter file
                  <para>Default: No value</para>
                </entry>
              </row>

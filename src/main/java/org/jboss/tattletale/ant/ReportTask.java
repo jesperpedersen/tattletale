@@ -230,6 +230,7 @@ public class ReportTask extends AbstractReportTask
          main.setSource(getSource());
          main.setDestination(getDestination());
          main.setConfiguration(getConfiguration());
+         main.setFilter(getFilter());
          main.setClassLoaderStructure(getClassloader());
          main.setProfiles(getProfiles());
          main.setExcludes(getExcludes());
