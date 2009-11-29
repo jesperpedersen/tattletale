@@ -1,7 +1,5 @@
 Manifest-Version: 1.0
-Main-Class: org.jboss.tattletale.Main
-Class-Path: jboss-tattletale.jar javassist.jar
-Implementation-Title: JBoss Tattletale
+Implementation-Title: JBoss Tattletale Apache Ant
 Implementation-Vendor: Red Hat Middleware LLC
 Implementation-Vendor-Id: org.jboss
 Implementation-Version: 1.1

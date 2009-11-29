@@ -370,7 +370,7 @@ myreport=myfilter
      <para>Running JBoss Tattletale is very easy</para>
 
      <programlisting>
-java -Xmx512m -jar jboss-tattletale.jar [-exclude=&lt;excludes&gt;] &lt;sourcedir&gt; [&lt;outputdir&gt;]
+java -Xmx512m -jar tattletale.jar [-exclude=&lt;excludes&gt;] &lt;sourcedir&gt; [&lt;outputdir&gt;]
      </programlisting>
      
      <para>where the "sourcedir" is the directory that contains your Java archives and the optional "outputdir" parameter
@@ -391,7 +391,7 @@ java -Xmx512m -jar jboss-tattletale.jar [-exclude=&lt;excludes&gt;] &lt;sourcedi
      <para>JBoss Tattletale integrates with Apache Ant such that you can generate the reports directly from 
        your build environment.</para>
 
-     <para>First, you need to add jboss-tattletale.jar and javassist.jar to the Apache Ant classpath.</para>
+     <para>First, you need to add tattletale.jar, tattletale-ant.jar and javassist.jar to the Apache Ant classpath.</para>
 
      <para>Second, you need to add the following to your project definition tag:</para>
 

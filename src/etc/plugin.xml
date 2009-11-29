@@ -1,0 +1,61 @@
+<plugin>
+  <description></description>
+  <groupId>org.jboss.tattletale</groupId>
+  <artifactId>tattletale-maven</artifactId>
+  <version>1.0.0-SNAPSHOT</version>
+  <goalPrefix>tattletale</goalPrefix>
+  <isolatedRealm>false</isolatedRealm>
+  <inheritedByDefault>true</inheritedByDefault>
+  <mojos>
+    <mojo>
+      <goal>report</goal>
+      <description>Execututes Tattletale.</description>
+      <requiresDirectInvocation>false</requiresDirectInvocation>
+      <requiresProject>true</requiresProject>
+      <requiresReports>false</requiresReports>
+      <aggregator>false</aggregator>
+      <requiresOnline>false</requiresOnline>
+      <inheritedByDefault>true</inheritedByDefault>
+      <phase>package</phase>
+      <implementation>org.jboss.tattletale.maven.ReportMojo</implementation>
+      <language>java</language>
+      <instantiationStrategy>per-lookup</instantiationStrategy>
+      <executionStrategy>once-per-session</executionStrategy>
+      <parameters>
+        <parameter>
+          <name>source</name>
+          <type>java.io.File</type>
+          <required>true</required>
+          <editable>true</editable>
+          <description>The source directory.</description>
+        </parameter>
+        <parameter>
+          <name>destination</name>
+          <type>java.io.File</type>
+          <required>true</required>
+          <editable>true</editable>
+          <description>The destination directory for the reports.</description>
+        </parameter>
+      </parameters>
+      <configuration>
+        <!--
+        <buildDirectory implementation="java.io.File">
+          ${project.build.directory}</buildDirectory>
+        <baseDirectory implementation="java.io.File">
+          ${basedir}</baseDirectory>-->
+      </configuration>
+      <requirements>
+        <!-- <requirement>
+          <role>org.codehaus.plexus.archiver.Archiver</role>
+          <role-hint>zip</role-hint>
+          <field-name>zipArchiver</field-name>
+        </requirement> -->
+      </requirements>
+    </mojo>
+  </mojos>
+  <dependencies>
+    <groupId>org.jboss.tattletale</groupId>
+    <artifactId>tattletale</artifactId>
+    <version>1.1.0-SNAPSHOT</version>
+  </dependencies>
+</plugin>
