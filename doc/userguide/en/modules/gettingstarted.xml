@@ -44,6 +44,12 @@ repository.jboss.org
          <listitem>
            tattletale: The core library
          </listitem>
+         <listitem>
+           tattletale-ant: The Apache Ant tasks
+         </listitem>
+         <listitem>
+           tattletale-maven: The Apache Maven plugin
+         </listitem>
        </itemizedlist>
        
        <para>Developer snapshots are published on the JBoss Snapshots Maven2 server:</para>
