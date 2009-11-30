@@ -36,21 +36,77 @@
           <editable>true</editable>
           <description>The destination directory for the reports.</description>
         </parameter>
+        <parameter>
+          <name>configuration</name>
+          <type>java.io.File</type>
+          <required>false</required>
+          <editable>true</editable>
+          <description>The configuration of Tattletale.</description>
+        </parameter>
+        <parameter>
+          <name>filter</name>
+          <type>java.io.File</type>
+          <required>false</required>
+          <editable>true</editable>
+          <description>The filter for Tattletale.</description>
+        </parameter>
+        <parameter>
+          <name>classloader</name>
+          <type>java.lang.String</type>
+          <required>false</required>
+          <editable>true</editable>
+          <description>The class loader structure.</description>
+        </parameter>
+        <parameter>
+          <name>reports</name>
+          <type>java.lang.String</type>
+          <required>false</required>
+          <editable>true</editable>
+          <description>The list of reports to generate.</description>
+        </parameter>
+        <parameter>
+          <name>profiles</name>
+          <type>java.lang.String</type>
+          <required>false</required>
+          <editable>true</editable>
+          <description>The list of profiles to use.</description>
+        </parameter>
+        <parameter>
+          <name>excludes</name>
+          <type>java.lang.String</type>
+          <required>false</required>
+          <editable>true</editable>
+          <description>The list of excludes to use.</description>
+        </parameter>
+        <parameter>
+          <name>blacklisted</name>
+          <type>java.lang.String</type>
+          <required>false</required>
+          <editable>true</editable>
+          <description>The list of black listed APIs.</description>
+        </parameter>
+        <parameter>
+          <name>failOnInfo</name>
+          <type>boolean</type>
+          <required>false</required>
+          <editable>true</editable>
+          <description>Should a failed INFO report throw error.</description>
+        </parameter>
+        <parameter>
+          <name>failOnWarn</name>
+          <type>boolean</type>
+          <required>false</required>
+          <editable>true</editable>
+          <description>Should a failed WARN report throw error.</description>
+        </parameter>
+        <parameter>
+          <name>failOnError</name>
+          <type>boolean</type>
+          <required>false</required>
+          <editable>true</editable>
+          <description>Should a failed ERROR report throw error.</description>
+        </parameter>
       </parameters>
-      <configuration>
-        <!--
-        <buildDirectory implementation="java.io.File">
-          ${project.build.directory}</buildDirectory>
-        <baseDirectory implementation="java.io.File">
-          ${basedir}</baseDirectory>-->
-      </configuration>
-      <requirements>
-        <!-- <requirement>
-          <role>org.codehaus.plexus.archiver.Archiver</role>
-          <role-hint>zip</role-hint>
-          <field-name>zipArchiver</field-name>
-        </requirement> -->
-      </requirements>
     </mojo>
   </mojos>
   <dependencies>

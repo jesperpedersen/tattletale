@@ -228,10 +228,15 @@ public class ReportMojo extends TattletaleMojo
       {
          Main main = new Main();
 
-         main.setSource(getSource());
-         main.setDestination(getDestination());
-         main.setConfiguration(getConfiguration());
-         main.setFilter(getFilter());
+         main.setSource(getSource().getAbsolutePath());
+         main.setDestination(getDestination().getAbsolutePath());
+
+         if (getConfiguration() != null)
+            main.setConfiguration(getConfiguration().getAbsolutePath());
+
+         if (getFilter() != null)
+            main.setFilter(getFilter().getAbsolutePath());
+
          main.setClassLoaderStructure(getClassloader());
          main.setProfiles(getProfiles());
          main.setExcludes(getExcludes());
@@ -241,7 +246,7 @@ public class ReportMojo extends TattletaleMojo
          main.setFailOnError(getFailOnError());
          main.setReports(getReports());
 
-         System.out.println("Scanning: " + getSource());
+         getLog().info("Scanning: " + getSource().getAbsolutePath());
 
          main.execute();
       }

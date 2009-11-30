@@ -21,6 +21,8 @@
  */
 package org.jboss.tattletale.maven;
 
+import java.io.File;
+
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
@@ -35,30 +37,30 @@ public abstract class TattletaleMojo extends AbstractMojo
    /**
     * Source directory
     */
-   private String source;
+   private File source;
    
    /**
     * Destination directory
     */
-   private String destination;
+   private File destination;
    
    /**
     * Configuration
     */
-   private String configuration;
+   private File configuration;
       
    /**
     * Filter
     */
-   private String filter;
+   private File filter;
       
    /**
     * Constructor
     */
    public TattletaleMojo()
    {
-      source = ".";
-      destination = ".";
+      source = new File(".");
+      destination = new File(".");
       configuration = null;
       filter = null;
    }
@@ -67,7 +69,7 @@ public abstract class TattletaleMojo extends AbstractMojo
     * Get the source
     * @return The value
     */
-   public String getSource() 
+   public File getSource() 
    {
       return source;
    }
@@ -76,7 +78,7 @@ public abstract class TattletaleMojo extends AbstractMojo
     * Set the source 
     * @param source The value
     */
-   public void setSource(String source) 
+   public void setSource(File source) 
    {
       this.source = source;
    }
@@ -85,7 +87,7 @@ public abstract class TattletaleMojo extends AbstractMojo
     * Get the destination
     * @return The value
     */
-   public String getDestination() 
+   public File getDestination() 
    {
       return destination;
    }
@@ -94,7 +96,7 @@ public abstract class TattletaleMojo extends AbstractMojo
     * Set the destination
     * @param destination The value
     */
-   public void setDestination(String destination) 
+   public void setDestination(File destination) 
    {
       this.destination = destination;
    }
@@ -103,7 +105,7 @@ public abstract class TattletaleMojo extends AbstractMojo
     * Get the configuration
     * @return The value
     */
-   public String getConfiguration() 
+   public File getConfiguration() 
    {
       return configuration;
    }
@@ -112,7 +114,7 @@ public abstract class TattletaleMojo extends AbstractMojo
     * Set the configuration
     * @param configuration The value
     */
-   public void setConfiguration(String configuration) 
+   public void setConfiguration(File configuration) 
    {
       this.configuration = configuration;
    }
@@ -121,7 +123,7 @@ public abstract class TattletaleMojo extends AbstractMojo
     * Get the filter
     * @return The value
     */
-   public String getFilter() 
+   public File getFilter() 
    {
       return filter;
    }
@@ -130,7 +132,7 @@ public abstract class TattletaleMojo extends AbstractMojo
     * Set the filter
     * @param filter The value
     */
-   public void setFilter(String filter) 
+   public void setFilter(File filter) 
    {
       this.filter = filter;
    }
