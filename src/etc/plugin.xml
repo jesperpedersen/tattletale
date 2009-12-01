@@ -59,28 +59,28 @@
         </parameter>
         <parameter>
           <name>reports</name>
-          <type>java.lang.String</type>
+          <type>java.lang.String[]</type>
           <required>false</required>
           <editable>true</editable>
           <description>The list of reports to generate.</description>
         </parameter>
         <parameter>
           <name>profiles</name>
-          <type>java.lang.String</type>
+          <type>java.lang.String[]</type>
           <required>false</required>
           <editable>true</editable>
           <description>The list of profiles to use.</description>
         </parameter>
         <parameter>
           <name>excludes</name>
-          <type>java.lang.String</type>
+          <type>java.lang.String[]</type>
           <required>false</required>
           <editable>true</editable>
           <description>The list of excludes to use.</description>
         </parameter>
         <parameter>
           <name>blacklisted</name>
-          <type>java.lang.String</type>
+          <type>java.lang.String[]</type>
           <required>false</required>
           <editable>true</editable>
           <description>The list of black listed APIs.</description>

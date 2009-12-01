@@ -36,14 +36,17 @@ public class ReportMojo extends TattletaleMojo
    /** Class loader structure  */
    private String classloaderStructure;
 
+   /** Reports */
+   private String[] reports;
+
    /** Profiles */
-   private String profiles;
+   private String[] profiles;
 
    /** Excludes */
-   private String excludes;
+   private String[] excludes;
 
    /** Blacklisted */
-   private String blacklisted;
+   private String[] blacklisted;
 
    /** Fail on info */
    private boolean failOnInfo;
@@ -53,9 +56,6 @@ public class ReportMojo extends TattletaleMojo
 
    /** Fail on error */
    private boolean failOnError;
-
-   /** Reports */
-   private String reports;
 
    /**
     * Constructor
@@ -91,10 +91,28 @@ public class ReportMojo extends TattletaleMojo
    }
 
    /**
+    * Get the reports
+    * @return The value
+    */
+   public String[] getReports() 
+   {
+      return reports;
+   }
+
+   /**
+    * Set the reports
+    * @param reports The value
+    */
+   public void setReports(String[] reports) 
+   {
+      this.reports = reports;
+   }
+
+   /**
     * Get the profiles
     * @return The value
     */
-   public String getProfiles() 
+   public String[] getProfiles() 
    {
       return profiles;
    }
@@ -103,7 +121,7 @@ public class ReportMojo extends TattletaleMojo
     * Set the profiles
     * @param profiles The value
     */
-   public void setProfiles(String profiles) 
+   public void setProfiles(String[] profiles) 
    {
       this.profiles = profiles;
    }
@@ -112,7 +130,7 @@ public class ReportMojo extends TattletaleMojo
     * Get the excludes
     * @return The value
     */
-   public String getExcludes() 
+   public String[] getExcludes() 
    {
       return excludes;
    }
@@ -121,7 +139,7 @@ public class ReportMojo extends TattletaleMojo
     * Set the excludes
     * @param excludes The value
     */
-   public void setExcludes(String excludes) 
+   public void setExcludes(String[] excludes) 
    {
       this.excludes = excludes;
    }
@@ -130,7 +148,7 @@ public class ReportMojo extends TattletaleMojo
     * Get the blacklisted
     * @return The value
     */
-   public String getBlacklisted() 
+   public String[] getBlacklisted() 
    {
       return blacklisted;
    }
@@ -139,7 +157,7 @@ public class ReportMojo extends TattletaleMojo
     * Set the blacklisted
     * @param blacklisted The value
     */
-   public void setBlacklisted(String blacklisted) 
+   public void setBlacklisted(String[] blacklisted) 
    {
       this.blacklisted = blacklisted;
    }
@@ -199,24 +217,6 @@ public class ReportMojo extends TattletaleMojo
    }
 
    /**
-    * Get the reports
-    * @return The value
-    */
-   public String getReports() 
-   {
-      return reports;
-   }
-
-   /**
-    * Set the reports
-    * @param reports The value
-    */
-   public void setReports(String reports) 
-   {
-      this.reports = reports;
-   }
-
-   /**
     * Execute
     * @exception MojoExecutionException Thrown if the plugin cant be executed
     * @exception MojoFailureException Thrown if there is an error
@@ -238,13 +238,58 @@ public class ReportMojo extends TattletaleMojo
             main.setFilter(getFilter().getAbsolutePath());
 
          main.setClassLoaderStructure(getClassloader());
-         main.setProfiles(getProfiles());
-         main.setExcludes(getExcludes());
-         main.setBlacklisted(getBlacklisted());
+
+         if (getReports() != null)
+         {
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < getReports().length; i++)
+            {
+               sb = sb.append(getReports()[i]);
+               if (i < getReports().length - 1)
+                  sb = sb.append(",");
+            }
+            main.setReports(sb.toString());
+         }
+
+         if (getProfiles() != null)
+         {
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < getProfiles().length; i++)
+            {
+               sb = sb.append(getProfiles()[i]);
+               if (i < getProfiles().length - 1)
+                  sb = sb.append(",");
+            }
+            main.setProfiles(sb.toString());
+         }
+
+         if (getExcludes() != null)
+         {
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < getExcludes().length; i++)
+            {
+               sb = sb.append(getExcludes()[i]);
+               if (i < getExcludes().length - 1)
+                  sb = sb.append(",");
+            }
+            main.setExcludes(sb.toString());
+         }
+
+         if (getBlacklisted() != null)
+         {
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < getBlacklisted().length; i++)
+            {
+               sb = sb.append(getBlacklisted()[i]);
+               if (i < getBlacklisted().length - 1)
+                  sb = sb.append(",");
+            }
+            main.setBlacklisted(sb.toString());
+         }
+
          main.setFailOnInfo(getFailOnInfo());
          main.setFailOnWarn(getFailOnWarn());
          main.setFailOnError(getFailOnError());
-         main.setReports(getReports());
 
          getLog().info("Scanning: " + getSource().getAbsolutePath());
 

@@ -97,6 +97,8 @@
     <target name="jars" depends="prepare,resolve">
         <delete dir="${build.dir}"/>
         <mkdir dir="${build.dir}"/>
+        <mkdir dir="${build.dir}/META-INF"/>
+        <mkdir dir="${build.dir}/META-INF/maven"/>
         <javac
             destdir="${build.dir}"
             classpathref="class.path"
@@ -125,6 +127,11 @@
                <include name="antlib.xml"/>
             </fileset>
         </copy>
+        <copy todir="${build.dir}/META-INF/maven">
+            <fileset dir="${etc.dir}">
+               <include name="plugin.xml"/>
+            </fileset>
+        </copy>
         <jar destfile="${dist.dir}/${tattletale.jar}"
              basedir="${build.dir}"
              manifest="${etc.dir}/core-manifest.mf"
@@ -140,11 +147,8 @@
         <jar destfile="${dist.dir}/${tattletale-maven.jar}"
              basedir="${build.dir}"
              manifest="${etc.dir}/maven-manifest.mf"
-             includes="org/jboss/tattletale/maven/**"
+             includes="org/jboss/tattletale/maven/**,META-INF/**"
              excludes="**/*.java">
-          <metainf dir="${etc.dir}">
-            <include name="plugin.xml"/>
-          </metainf>
         </jar>
     </target>
 
