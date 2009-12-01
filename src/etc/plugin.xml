@@ -11,7 +11,7 @@
       <goal>report</goal>
       <description>Execututes Tattletale.</description>
       <requiresDirectInvocation>false</requiresDirectInvocation>
-      <requiresProject>true</requiresProject>
+      <requiresProject>false</requiresProject>
       <requiresReports>false</requiresReports>
       <aggregator>false</aggregator>
       <requiresOnline>false</requiresOnline>
