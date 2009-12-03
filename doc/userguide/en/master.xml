@@ -4,6 +4,8 @@
         <!ENTITY about SYSTEM "modules/about.xml">
         <!ENTITY introduction SYSTEM "modules/introduction.xml">
         <!ENTITY gettingstarted SYSTEM "modules/gettingstarted.xml">
+        <!ENTITY ant SYSTEM "modules/ant.xml">
+        <!ENTITY maven SYSTEM "modules/maven.xml">
         <!ENTITY reports SYSTEM "modules/reports.xml">
         <!ENTITY troubleshooting SYSTEM "modules/troubleshooting.xml">
         ]>
@@ -36,6 +38,10 @@
    &introduction;
 
    &gettingstarted;
+
+   &ant;
+
+   &maven;
 
    &reports;
 
