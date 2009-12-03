@@ -1168,14 +1168,44 @@ public class Main
                    
       // Verify output directory exists & create if it does not
       File outputDirFile = new File(outputDir);
+
+      if (outputDirFile.exists())
+         recursiveDelete(outputDirFile);
       
-      if (!outputDirFile.exists())
-      {
-         if (!outputDirFile.mkdirs())
-            throw new IOException("Cannot create directory: " + outputDir);
-      }
+      if (!outputDirFile.mkdirs())
+         throw new IOException("Cannot create directory: " + outputDir);
 
       return outputDir;
+   }
+
+   /**
+    * Recursive delete
+    * @param f The file handler
+    * @exception IOException Thrown if a file could not be deleted
+    */
+   private void recursiveDelete(File f) throws IOException
+   {
+      if (f != null && f.exists())
+      {
+         File[] files = f.listFiles();
+         if (files != null)
+         {
+            for (int i = 0; i < files.length; i++)
+            {
+               if (files[i].isDirectory())
+               {
+                  recursiveDelete(files[i]);
+               }
+               else
+               {
+                  if (!files[i].delete())
+                     throw new IOException("Could not delete " + files[i]);
+               }
+            }
+         }
+         if (!f.delete())
+            throw new IOException("Could not delete " + f);
+      }
    }
 
    /**
