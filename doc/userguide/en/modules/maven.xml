@@ -4,13 +4,48 @@
 
    <para>JBoss Tattletale integrates with Apache Maven such that you can generate the reports directly from 
      your build environment.</para>
+     
+   <para>To be able to use the Tattletale Maven plugin in your Maven project, you will have to add the following plugin declaration
+     in the pom.xml of your project:
+     <programlisting>
+       <![CDATA[
+<build>
+  <plugins>
+    <plugin>
+      <groupId>org.jboss.tattletale</groupId>
+      <artifactId>tattletale-maven</artifactId>
+      <!-- The version of the plugin you want to use -->
+      <version>1.0.0</version>
+      <executions>
+ 	<execution>
+ 	  <goals>
+ 	    <goal>report</goal>
+ 	  </goals>
+ 	</execution>
+      </executions>
+      <configuration>
+ 	<!-- This is the location which will be scanned for generating tattletale reports
+ 	  --> 
+ 	<source>/absolutepath/to/source/dir</source>
+ 	<!-- This is where the reports will be generated -->
+ 	<destination>/absolute/path/to/reports/dir</destination>
+      </configuration>
+    </plugin>
+  </plugins>
+</build>     	
+        ]]>
+     </programlisting>
+     <note>By default, the tattletale-maven plugin is attached to the "package" phase of Maven.</note>
+   </para>
    
 
    <section id="maven_report">
      <title>report</title>
      <para>Usage:</para>
+     Once you have configured your project's pom.xml to include the tattletale-maven plugin, as explained earlier, you
+     can generate the report by running the package goal on your project
      <programlisting>
-
+mvn clean package
      </programlisting>
 
      <table frame="all">
