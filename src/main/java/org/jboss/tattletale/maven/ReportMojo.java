@@ -19,31 +19,34 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.tattletale.ant;
+package org.jboss.tattletale.maven;
 
 import org.jboss.tattletale.Main;
 
-import org.apache.tools.ant.BuildException;
+import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.plugin.MojoFailureException;
 
 /**
- * Implementation class for TattleTale Report Ant Task
+ * Implementation class for TattleTale Report Maven Mojo
  *
  * @author Jesper Pedersen <jesper.pedersen@jboss.org>
- * @author Jay Balunas jbalunas@jboss.org
  */
-public class ReportTask extends AbstractReportTask
+public class ReportMojo extends TattletaleMojo
 {
    /** Class loader structure  */
    private String classloaderStructure;
 
+   /** Reports */
+   private String[] reports;
+
    /** Profiles */
-   private String profiles;
+   private String[] profiles;
 
    /** Excludes */
-   private String excludes;
+   private String[] excludes;
 
    /** Blacklisted */
-   private String blacklisted;
+   private String[] blacklisted;
 
    /** Fail on info */
    private boolean failOnInfo;
@@ -54,13 +57,10 @@ public class ReportTask extends AbstractReportTask
    /** Fail on error */
    private boolean failOnError;
 
-   /** Reports */
-   private String reports;
-
    /**
     * Constructor
     */
-   public ReportTask()
+   public ReportMojo()
    {
       this.classloaderStructure = null;
       this.profiles = null;
@@ -91,10 +91,28 @@ public class ReportTask extends AbstractReportTask
    }
 
    /**
+    * Get the reports
+    * @return The value
+    */
+   public String[] getReports() 
+   {
+      return reports;
+   }
+
+   /**
+    * Set the reports
+    * @param reports The value
+    */
+   public void setReports(String[] reports) 
+   {
+      this.reports = reports;
+   }
+
+   /**
     * Get the profiles
     * @return The value
     */
-   public String getProfiles() 
+   public String[] getProfiles() 
    {
       return profiles;
    }
@@ -103,7 +121,7 @@ public class ReportTask extends AbstractReportTask
     * Set the profiles
     * @param profiles The value
     */
-   public void setProfiles(String profiles) 
+   public void setProfiles(String[] profiles) 
    {
       this.profiles = profiles;
    }
@@ -112,7 +130,7 @@ public class ReportTask extends AbstractReportTask
     * Get the excludes
     * @return The value
     */
-   public String getExcludes() 
+   public String[] getExcludes() 
    {
       return excludes;
    }
@@ -121,7 +139,7 @@ public class ReportTask extends AbstractReportTask
     * Set the excludes
     * @param excludes The value
     */
-   public void setExcludes(String excludes) 
+   public void setExcludes(String[] excludes) 
    {
       this.excludes = excludes;
    }
@@ -130,7 +148,7 @@ public class ReportTask extends AbstractReportTask
     * Get the blacklisted
     * @return The value
     */
-   public String getBlacklisted() 
+   public String[] getBlacklisted() 
    {
       return blacklisted;
    }
@@ -139,7 +157,7 @@ public class ReportTask extends AbstractReportTask
     * Set the blacklisted
     * @param blacklisted The value
     */
-   public void setBlacklisted(String blacklisted) 
+   public void setBlacklisted(String[] blacklisted) 
    {
       this.blacklisted = blacklisted;
    }
@@ -199,54 +217,87 @@ public class ReportTask extends AbstractReportTask
    }
 
    /**
-    * Get the reports
-    * @return The value
-    */
-   public String getReports() 
-   {
-      return reports;
-   }
-
-   /**
-    * Set the reports
-    * @param reports The value
-    */
-   public void setReports(String reports) 
-   {
-      this.reports = reports;
-   }
-
-   /**
     * Execute
-    * @exception BuildException If the build fails
+    * @exception MojoExecutionException Thrown if the plugin cant be executed
+    * @exception MojoFailureException Thrown if there is an error
     */
    @Override
-   public void execute() throws BuildException 
+   public void execute() throws MojoExecutionException, MojoFailureException
    {
       try 
       {
          Main main = new Main();
 
-         main.setSource(getSource());
-         main.setDestination(getDestination());
-         main.setConfiguration(getConfiguration());
-         main.setFilter(getFilter());
+         main.setSource(getSource().getAbsolutePath());
+         main.setDestination(getDestination().getAbsolutePath());
+
+         if (getConfiguration() != null)
+            main.setConfiguration(getConfiguration().getAbsolutePath());
+
+         if (getFilter() != null)
+            main.setFilter(getFilter().getAbsolutePath());
+
          main.setClassLoaderStructure(getClassloader());
-         main.setProfiles(getProfiles());
-         main.setExcludes(getExcludes());
-         main.setBlacklisted(getBlacklisted());
+
+         if (getReports() != null)
+         {
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < getReports().length; i++)
+            {
+               sb = sb.append(getReports()[i]);
+               if (i < getReports().length - 1)
+                  sb = sb.append(",");
+            }
+            main.setReports(sb.toString());
+         }
+
+         if (getProfiles() != null)
+         {
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < getProfiles().length; i++)
+            {
+               sb = sb.append(getProfiles()[i]);
+               if (i < getProfiles().length - 1)
+                  sb = sb.append(",");
+            }
+            main.setProfiles(sb.toString());
+         }
+
+         if (getExcludes() != null)
+         {
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < getExcludes().length; i++)
+            {
+               sb = sb.append(getExcludes()[i]);
+               if (i < getExcludes().length - 1)
+                  sb = sb.append(",");
+            }
+            main.setExcludes(sb.toString());
+         }
+
+         if (getBlacklisted() != null)
+         {
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < getBlacklisted().length; i++)
+            {
+               sb = sb.append(getBlacklisted()[i]);
+               if (i < getBlacklisted().length - 1)
+                  sb = sb.append(",");
+            }
+            main.setBlacklisted(sb.toString());
+         }
+
          main.setFailOnInfo(getFailOnInfo());
          main.setFailOnWarn(getFailOnWarn());
          main.setFailOnError(getFailOnError());
-         main.setReports(getReports());
 
-         System.out.println("Scanning: " + getSource());
+         getLog().info("Scanning: " + getSource().getAbsolutePath());
 
          main.execute();
       }
       catch (Throwable t) 
       {
-         throw new BuildException(t.getMessage(), t);
+         throw new MojoFailureException(t.getMessage());
       }
    }
 }

@@ -19,92 +19,57 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.tattletale.ant;
+package org.jboss.tattletale.maven;
 
-import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.Task;
+import java.io.File;
+
+import org.apache.maven.plugin.AbstractMojo;
+import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.plugin.MojoFailureException;
 
 /**
- * Base abstract class for TattleTale Report Ant Tasks
+ * Base abstract class for TattleTale Maven Mojo
  *
  * @author Jesper Pedersen <jesper.pedersen@jboss.org>
- * @author Jay Balunas jbalunas@jboss.org
- *
  */
-public abstract class AbstractReportTask extends Task
+public abstract class TattletaleMojo extends AbstractMojo
 {   
    /**
     * Source directory
     */
-   private String source;
+   private File source;
    
    /**
     * Destination directory
     */
-   private String destination;
+   private File destination;
    
    /**
     * Configuration
     */
-   private String configuration;
+   private File configuration;
       
    /**
     * Filter
     */
-   private String filter;
+   private File filter;
       
    /**
     * Constructor
     */
-   public AbstractReportTask()
+   public TattletaleMojo()
    {
-      source = ".";
-      destination = ".";
+      source = new File(".");
+      destination = new File(".");
       configuration = null;
       filter = null;
-   }
-
-   /**
-    * @return the scanDir
-    */
-   @Deprecated
-   public String getScanDir() 
-   {
-      return source;
-   }
-
-   /**
-    * @param scanDir the scanDir to set
-    */
-   @Deprecated
-   public void setScanDir(String scanDir) 
-   {
-      this.source = scanDir;
-   }
-
-   /**
-    * @return the outputDir
-    */
-   @Deprecated
-   public String getOutputDir() 
-   {
-      return destination;
-   }
-
-   /**
-    * @param outputDir the outputDir to set
-    */
-   @Deprecated
-   public void setOutputDir(String outputDir) 
-   {
-      this.destination = outputDir;
    }
 
    /**
     * Get the source
     * @return The value
     */
-   public String getSource() 
+   public File getSource() 
    {
       return source;
    }
@@ -113,7 +78,7 @@ public abstract class AbstractReportTask extends Task
     * Set the source 
     * @param source The value
     */
-   public void setSource(String source) 
+   public void setSource(File source) 
    {
       this.source = source;
    }
@@ -122,7 +87,7 @@ public abstract class AbstractReportTask extends Task
     * Get the destination
     * @return The value
     */
-   public String getDestination() 
+   public File getDestination() 
    {
       return destination;
    }
@@ -131,7 +96,7 @@ public abstract class AbstractReportTask extends Task
     * Set the destination
     * @param destination The value
     */
-   public void setDestination(String destination) 
+   public void setDestination(File destination) 
    {
       this.destination = destination;
    }
@@ -140,7 +105,7 @@ public abstract class AbstractReportTask extends Task
     * Get the configuration
     * @return The value
     */
-   public String getConfiguration() 
+   public File getConfiguration() 
    {
       return configuration;
    }
@@ -149,7 +114,7 @@ public abstract class AbstractReportTask extends Task
     * Set the configuration
     * @param configuration The value
     */
-   public void setConfiguration(String configuration) 
+   public void setConfiguration(File configuration) 
    {
       this.configuration = configuration;
    }
@@ -158,7 +123,7 @@ public abstract class AbstractReportTask extends Task
     * Get the filter
     * @return The value
     */
-   public String getFilter() 
+   public File getFilter() 
    {
       return filter;
    }
@@ -167,15 +132,15 @@ public abstract class AbstractReportTask extends Task
     * Set the filter
     * @param filter The value
     */
-   public void setFilter(String filter) 
+   public void setFilter(File filter) 
    {
       this.filter = filter;
    }
 
    /**
-    * Execute Ant task
-    * @exception BuildException If an error occurs
+    * Execute
+    * @exception MojoExecutionException Thrown if the plugin cant be executed
+    * @exception MojoFailureException Thrown if there is an error
     */
-   public abstract void execute() throws BuildException;
-
+   public abstract void execute() throws MojoExecutionException, MojoFailureException;
 }

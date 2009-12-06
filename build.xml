@@ -23,7 +23,9 @@
     <property name="patch" value="0"/>
     <property name="type" value="Beta2"/>
 
-    <property name="jboss-tattletale.jar" value="jboss-tattletale.jar"/>
+    <property name="tattletale.jar" value="tattletale.jar"/>
+    <property name="tattletale-ant.jar" value="tattletale-ant.jar"/>
+    <property name="tattletale-maven.jar" value="tattletale-maven.jar"/>
 
     <!-- ================================= 
          Repositories              
@@ -37,6 +39,7 @@
          ================================= -->
     <property name="version.ant" value="1.6.5"/>
     <property name="version.javassist" value="3.11.0.GA"/>
+    <property name="version.maven" value="2.0"/>
     
     <!-- =================================================================== -->
     <!-- Define the class path                                               -->
@@ -94,6 +97,8 @@
     <target name="jars" depends="prepare,resolve">
         <delete dir="${build.dir}"/>
         <mkdir dir="${build.dir}"/>
+        <mkdir dir="${build.dir}/META-INF"/>
+        <mkdir dir="${build.dir}/META-INF/maven"/>
         <javac
             destdir="${build.dir}"
             classpathref="class.path"
@@ -122,11 +127,29 @@
                <include name="antlib.xml"/>
             </fileset>
         </copy>
-        <jar destfile="${dist.dir}/${jboss-tattletale.jar}"
+        <copy todir="${build.dir}/META-INF/maven">
+            <fileset dir="${etc.dir}">
+               <include name="plugin.xml"/>
+            </fileset>
+        </copy>
+        <jar destfile="${dist.dir}/${tattletale.jar}"
              basedir="${build.dir}"
-             manifest="${etc.dir}/manifest.mf"
+             manifest="${etc.dir}/core-manifest.mf"
              includes="org/jboss/tattletale/**,**/*.properties,**/*.clz,**/*.clz.gz,**/*.css"
+             excludes="**/ant/**,**/maven/**,**/*.java"/>
+
+        <jar destfile="${dist.dir}/${tattletale-ant.jar}"
+             basedir="${build.dir}"
+             manifest="${etc.dir}/ant-manifest.mf"
+             includes="org/jboss/tattletale/ant/**"
              excludes="**/*.java"/>
+
+        <jar destfile="${dist.dir}/${tattletale-maven.jar}"
+             basedir="${build.dir}"
+             manifest="${etc.dir}/maven-manifest.mf"
+             includes="org/jboss/tattletale/maven/**,META-INF/**"
+             excludes="**/*.java">
+        </jar>
     </target>
 
     <!-- =================================================================== -->
@@ -158,6 +181,7 @@
             <fileset dir="${lib.dir}/core">
                <include name="**/*.jar"/>
                <exclude name="**/ant.jar"/>
+               <exclude name="**/maven-plugin-api.jar"/>
             </fileset>
         </copy>
         <copy todir="${dist.dir}">
@@ -248,8 +272,8 @@
         <delete dir="${dist.dir}"/>
         <delete dir="${doc.api.dir}"/>
         <delete dir="${reports.dir}"/>
-        <delete file="*.zip"/>
-        <delete file="*.tar.gz"/>
+        <delete file="${name}-${major}.${minor}.${patch}.${type}.zip"/>
+        <delete file="${name}-${major}.${minor}.${patch}.${type}.tar.gz"/>
     </target>
 
     <!-- ================================= 

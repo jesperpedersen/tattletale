@@ -1,0 +1,117 @@
+<plugin>
+  <description></description>
+  <groupId>org.jboss.tattletale</groupId>
+  <artifactId>tattletale-maven</artifactId>
+  <version>1.0.0-SNAPSHOT</version>
+  <goalPrefix>tattletale</goalPrefix>
+  <isolatedRealm>false</isolatedRealm>
+  <inheritedByDefault>true</inheritedByDefault>
+  <mojos>
+    <mojo>
+      <goal>report</goal>
+      <description>Execututes Tattletale.</description>
+      <requiresDirectInvocation>false</requiresDirectInvocation>
+      <requiresProject>false</requiresProject>
+      <requiresReports>false</requiresReports>
+      <aggregator>false</aggregator>
+      <requiresOnline>false</requiresOnline>
+      <inheritedByDefault>true</inheritedByDefault>
+      <phase>package</phase>
+      <implementation>org.jboss.tattletale.maven.ReportMojo</implementation>
+      <language>java</language>
+      <instantiationStrategy>per-lookup</instantiationStrategy>
+      <executionStrategy>once-per-session</executionStrategy>
+      <parameters>
+        <parameter>
+          <name>source</name>
+          <type>java.io.File</type>
+          <required>true</required>
+          <editable>true</editable>
+          <description>The source directory.</description>
+        </parameter>
+        <parameter>
+          <name>destination</name>
+          <type>java.io.File</type>
+          <required>true</required>
+          <editable>true</editable>
+          <description>The destination directory for the reports.</description>
+        </parameter>
+        <parameter>
+          <name>configuration</name>
+          <type>java.io.File</type>
+          <required>false</required>
+          <editable>true</editable>
+          <description>The configuration of Tattletale.</description>
+        </parameter>
+        <parameter>
+          <name>filter</name>
+          <type>java.io.File</type>
+          <required>false</required>
+          <editable>true</editable>
+          <description>The filter for Tattletale.</description>
+        </parameter>
+        <parameter>
+          <name>classloader</name>
+          <type>java.lang.String</type>
+          <required>false</required>
+          <editable>true</editable>
+          <description>The class loader structure.</description>
+        </parameter>
+        <parameter>
+          <name>reports</name>
+          <type>java.lang.String[]</type>
+          <required>false</required>
+          <editable>true</editable>
+          <description>The list of reports to generate.</description>
+        </parameter>
+        <parameter>
+          <name>profiles</name>
+          <type>java.lang.String[]</type>
+          <required>false</required>
+          <editable>true</editable>
+          <description>The list of profiles to use.</description>
+        </parameter>
+        <parameter>
+          <name>excludes</name>
+          <type>java.lang.String[]</type>
+          <required>false</required>
+          <editable>true</editable>
+          <description>The list of excludes to use.</description>
+        </parameter>
+        <parameter>
+          <name>blacklisted</name>
+          <type>java.lang.String[]</type>
+          <required>false</required>
+          <editable>true</editable>
+          <description>The list of black listed APIs.</description>
+        </parameter>
+        <parameter>
+          <name>failOnInfo</name>
+          <type>boolean</type>
+          <required>false</required>
+          <editable>true</editable>
+          <description>Should a failed INFO report throw error.</description>
+        </parameter>
+        <parameter>
+          <name>failOnWarn</name>
+          <type>boolean</type>
+          <required>false</required>
+          <editable>true</editable>
+          <description>Should a failed WARN report throw error.</description>
+        </parameter>
+        <parameter>
+          <name>failOnError</name>
+          <type>boolean</type>
+          <required>false</required>
+          <editable>true</editable>
+          <description>Should a failed ERROR report throw error.</description>
+        </parameter>
+      </parameters>
+    </mojo>
+  </mojos>
+  <dependencies>
+    <groupId>org.jboss.tattletale</groupId>
+    <artifactId>tattletale</artifactId>
+    <version>1.1.0-SNAPSHOT</version>
+  </dependencies>
+</plugin>
