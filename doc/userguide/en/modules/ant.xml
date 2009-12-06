@@ -99,6 +99,10 @@ xmlns:tattletale="antlib:org.jboss.tattletale.ant"
                    <para>The "Transitive DependsOn" report.</para>
                  </listitem>
                  <listitem>
+                   <para><code>circulardependency</code></para>
+                   <para>The "Circular Dependency" report.</para>
+                 </listitem>
+                 <listitem>
                    <para><code>classlocation</code></para>
                    <para>The "Class Location" report.</para>
                  </listitem>

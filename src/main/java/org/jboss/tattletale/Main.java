@@ -28,6 +28,7 @@ import org.jboss.tattletale.core.ArchiveTypes;
 import org.jboss.tattletale.core.Location;
 import org.jboss.tattletale.reporting.BlackListedReport;
 import org.jboss.tattletale.reporting.CDI10;
+import org.jboss.tattletale.reporting.CircularDependencyReport;
 import org.jboss.tattletale.reporting.ClassLocationReport;
 import org.jboss.tattletale.reporting.DependantsReport;
 import org.jboss.tattletale.reporting.DependsOnReport;
@@ -789,6 +790,16 @@ public class Main
 
          transitiveDependants.generate(outputDir);
          dependenciesReports.add(transitiveDependants);
+      }
+
+      Report circularDependency = new CircularDependencyReport(archives, classloaderStructure);
+      if (allReports || reportSet.contains(circularDependency.getId()))
+      {
+         if (filters != null && filters.getProperty(circularDependency.getId()) != null)
+            circularDependency.setFilter(filters.getProperty(circularDependency.getId()));
+
+         circularDependency.generate(outputDir);
+         dependenciesReports.add(circularDependency);
       }
 
       Report graphviz = new GraphvizReport(archives, known, classloaderStructure);

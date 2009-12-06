@@ -74,7 +74,7 @@ dot -Tpng myarchive.dot &gt; myarchive.png
         <para>See the GraphViz documentation for a full description on how to generate these images.</para>
 
         <table frame="all">
-          <title>Depends On report</title>
+          <title>Graphical dependencies report</title>
           <tgroup cols="3" align="left" colsep="1" rowsep="1">
             <colspec colname="c1"/>
             <colspec colname="c2"/>
@@ -131,7 +131,7 @@ dot -Tpng myarchive.dot &gt; myarchive.png
         <para>The transitive depends on report will lists all archives that an archive depends on.</para>
 
         <table frame="all">
-          <title>Depends On report</title>
+          <title>Transitive Depends On report</title>
           <tgroup cols="2" align="left" colsep="1" rowsep="1">
             <colspec colname="c1"/>
             <colspec colname="c2" colwidth="4*"/>
@@ -146,6 +146,37 @@ dot -Tpng myarchive.dot &gt; myarchive.png
                 <entry>The archive</entry>
                 <entry>A list of all archives which the archive depends on. Classes which can't be found are listed
                   in italic</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </table>
+      </section>
+
+      <!-- Circular Depdency report -->
+      <section id="circulardependency">
+        <title>Circular Dependency report</title>
+
+        <para>The circular dependency report will lists all archives that has a circular dependency
+          with another archive.</para>
+
+        <para>Archives that are marked with "(*)" has the circular dependency. Note, that the circular
+          dependency can be through a transitive dependency and not a direct dependency.</para>
+
+        <table frame="all">
+          <title>Circular Dependency report</title>
+          <tgroup cols="2" align="left" colsep="1" rowsep="1">
+            <colspec colname="c1"/>
+            <colspec colname="c2" colwidth="4*"/>
+            <thead>
+              <row>
+                <entry align="left">Archive</entry>
+                <entry align="left">Circular Dependencies</entry>
+              </row>
+            </thead>
+            <tbody>
+              <row>
+                <entry>The archive</entry>
+                <entry>A list of all archives which the archive has a circular dependency on.</entry>
               </row>
             </tbody>
           </tgroup>
