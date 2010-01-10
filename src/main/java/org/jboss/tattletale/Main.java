@@ -38,6 +38,7 @@ import org.jboss.tattletale.reporting.GraphvizReport;
 import org.jboss.tattletale.reporting.InvalidVersionReport;
 import org.jboss.tattletale.reporting.JarReport;
 import org.jboss.tattletale.reporting.JavaEE5;
+import org.jboss.tattletale.reporting.JavaEE6;
 import org.jboss.tattletale.reporting.MultipleJarsReport;
 import org.jboss.tattletale.reporting.MultipleLocationsReport;
 import org.jboss.tattletale.reporting.NoVersionReport;
@@ -434,6 +435,9 @@ public class Main
       
       if (allProfiles || profileSet != null && (profileSet.contains("ee5") || profileSet.contains("Java Enterprise 5")))
          known.add(new JavaEE5());
+      
+      if (allProfiles || profileSet != null && (profileSet.contains("ee6") || profileSet.contains("Java Enterprise 6")))
+         known.add(new JavaEE6());
       
       if (allProfiles || profileSet != null && (profileSet.contains("seam22") || profileSet.contains("Seam 2.2")))
          known.add(new Seam22());

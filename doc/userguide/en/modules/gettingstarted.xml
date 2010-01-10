@@ -260,6 +260,10 @@ jboss-tattletale.properties
                    <para>The Java Enterprise Edition 5 API.</para>
                  </listitem>
                  <listitem>
+                   <para><code>ee6</code></para>
+                   <para>The Java Enterprise Edition 6 API.</para>
+                 </listitem>
+                 <listitem>
                    <para><code>seam22</code></para>
                    <para>The JBoss Seam 2.2 API.</para>
                  </listitem>
