@@ -230,6 +230,10 @@ mvn clean package
                    <para><code>spring25</code></para>
                    <para>The Spring 2.5 API.</para>
                  </listitem>
+                 <listitem>
+                   <para><code>spring30</code></para>
+                   <para>The Spring 3.0 API.</para>
+                 </listitem>
                </itemizedlist>
                <para>Default: <code>&lt;report&gt;java5&lt;/report&gt;&lt;report&gt;java6&lt;/report&gt;</code></para>
              </entry>

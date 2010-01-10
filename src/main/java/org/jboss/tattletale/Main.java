@@ -51,6 +51,7 @@ import org.jboss.tattletale.reporting.SealedReport;
 import org.jboss.tattletale.reporting.Seam22;
 import org.jboss.tattletale.reporting.SignReport;
 import org.jboss.tattletale.reporting.Spring25;
+import org.jboss.tattletale.reporting.Spring30;
 import org.jboss.tattletale.reporting.SunJava5;
 import org.jboss.tattletale.reporting.SunJava6;
 import org.jboss.tattletale.reporting.TransitiveDependantsReport;
@@ -447,6 +448,9 @@ public class Main
       
       if (allProfiles || profileSet != null && (profileSet.contains("spring25") || profileSet.contains("Spring 2.5")))
          known.add(new Spring25());
+      
+      if (allProfiles || profileSet != null && (profileSet.contains("spring30") || profileSet.contains("Spring 3.0")))
+         known.add(new Spring30());
       
       File f = new File(source);
       if (f.isDirectory())

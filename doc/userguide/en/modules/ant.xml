@@ -214,6 +214,10 @@ xmlns:tattletale="antlib:org.jboss.tattletale.ant"
                    <para><code>spring25</code></para>
                    <para>The Spring 2.5 API.</para>
                  </listitem>
+                 <listitem>
+                   <para><code>spring30</code></para>
+                   <para>The Spring 3.0 API.</para>
+                 </listitem>
                </itemizedlist>
                <para>Default: <code>java5, java6</code></para>
              </entry>
