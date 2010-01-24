@@ -81,7 +81,8 @@ public class InvalidVersionReport extends Report
 
             if (version != null && !version.matches("\\d+(\\.\\d+(\\.\\d+(\\.[0-9a-zA-Z\\_\\-]+)?)?)?"))
             {
-               status = ReportStatus.RED;
+               if (!isFiltered(archive.getName()))
+                  status = ReportStatus.RED;
 
                if (odd)
                {
@@ -147,5 +148,15 @@ public class InvalidVersionReport extends Report
 
       bw.write("<a href=\"../index.html\">Main</a>" + Dump.NEW_LINE);
       bw.write("<p>" + Dump.NEW_LINE);
+   }
+
+   /**
+    * Create filter
+    * @return The filter
+    */
+   @Override
+   protected Filter createFilter()
+   {
+      return new KeyFilter();
    }
 }
