@@ -59,7 +59,33 @@ public class KeyFilter implements Filter
     */
    public boolean isFiltered(String archive)
    {
-      return isFiltered(archive, null);
+      if (archive.endsWith(".class"))
+      {
+         archive = archive.substring(0, archive.indexOf(".class"));
+      }
+
+      if (archive.endsWith(".jar"))
+      {
+         archive = archive.substring(0, archive.indexOf(".jar"));
+      }
+
+      if (archive.endsWith(".*"))
+      {
+         archive = archive.substring(0, archive.indexOf(".*"));
+      }
+            
+      archive = archive.replace('.', '/');
+
+      Iterator<String> it = keyFilters.iterator();
+      while (it.hasNext())
+      {
+         String v = it.next();
+
+         if (archive.startsWith(v))
+            return true;
+      }
+
+      return false;
    }
 
    /**
@@ -70,36 +96,7 @@ public class KeyFilter implements Filter
     */
    public boolean isFiltered(String archive, String query)
    {
-      if (query == null)
-         query = archive;
-
-      if (query.endsWith(".class"))
-      {
-         query = query.substring(0, query.indexOf(".class"));
-      }
-
-      if (query.endsWith(".jar"))
-      {
-         query = query.substring(0, query.indexOf(".jar"));
-      }
-
-      if (query.endsWith(".*"))
-      {
-         query = query.substring(0, query.indexOf(".*"));
-      }
-            
-      query = query.replace('.', '/');
-
-      Iterator<String> it = keyFilters.iterator();
-      while (it.hasNext())
-      {
-         String v = it.next();
-
-         if (query.startsWith(v))
-            return true;
-      }
-
-      return false;
+      throw new UnsupportedOperationException("isFiltered(String, String) not supported");
    }
 
    /**

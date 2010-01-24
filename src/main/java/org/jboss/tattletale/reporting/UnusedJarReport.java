@@ -112,7 +112,9 @@ public class UnusedJarReport extends Report
          {
             bw.write("     <td style=\"color: red;\">No</td>" + Dump.NEW_LINE);
             unused++;
-            status = ReportStatus.YELLOW;
+
+            if (!isFiltered(archive.getName()))
+               status = ReportStatus.YELLOW;
          }
 
          bw.write("  </tr>" + Dump.NEW_LINE);
@@ -159,5 +161,15 @@ public class UnusedJarReport extends Report
 
       bw.write("<a href=\"../index.html\">Main</a>" + Dump.NEW_LINE);
       bw.write("<p>" + Dump.NEW_LINE);
+   }
+
+   /**
+    * Create filter
+    * @return The filter
+    */
+   @Override
+   protected Filter createFilter()
+   {
+      return new KeyFilter();
    }
 }
