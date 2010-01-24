@@ -352,6 +352,19 @@ sealed=off
             </tbody>
           </tgroup>
         </table>
+
+        <para>Filter key is: <code>sign</code></para>
+
+        <para>Filter definition is:</para>
+        <programlisting>
+[yes|on|true|no|off|false]
+        </programlisting>
+
+        <para>An example:</para>
+        <programlisting>
+sign=off
+        </programlisting>
+
       </section>
 
       <!-- Eliminate Jar report -->

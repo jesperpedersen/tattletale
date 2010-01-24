@@ -98,7 +98,7 @@ public class SignReport extends Report
 
       bw.write("</table>" + Dump.NEW_LINE);
 
-      if (signed > 0 && unsigned > 0)
+      if (signed > 0 && unsigned > 0 && !isFiltered())
          status = ReportStatus.YELLOW;
 
       bw.write(Dump.NEW_LINE);
@@ -138,5 +138,15 @@ public class SignReport extends Report
 
       bw.write("<a href=\"../index.html\">Main</a>" + Dump.NEW_LINE);
       bw.write("<p>" + Dump.NEW_LINE);
+   }
+
+   /**
+    * Create filter
+    * @return The filter
+    */
+   @Override
+   protected Filter createFilter()
+   {
+      return new BooleanFilter();
    }
 }
