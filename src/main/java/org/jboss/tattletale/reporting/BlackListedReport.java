@@ -77,7 +77,9 @@ public class BlackListedReport extends Report
             if (archive.getBlackListedDependencies() != null && archive.getBlackListedDependencies().size() > 0)
             {
                include = true;
-               status = ReportStatus.RED;
+
+               if (!isFiltered(archive.getName()))
+                  status = ReportStatus.RED;
             }
 
             if (include)

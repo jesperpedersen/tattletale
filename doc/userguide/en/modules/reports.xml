@@ -596,6 +596,19 @@ unusedjar=myjar1.jar,myjar2.jar
             </tbody>
           </tgroup>
         </table>
+
+        <para>Filter key is: <code>blacklisted</code></para>
+
+        <para>Filter definition is:</para>
+        <programlisting>
+[archive](,[archive])*;
+        </programlisting>
+
+        <para>An example:</para>
+        <programlisting>
+blacklisted=myjar1.jar,myjar2.jar
+        </programlisting>
+
       </section>
 
       <!-- No version report -->
