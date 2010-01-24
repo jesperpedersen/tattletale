@@ -58,6 +58,19 @@
             </tbody>
           </tgroup>
         </table>
+
+        <para>Filter key is: <code>dependson</code></para>
+
+        <para>Filter definition is:</para>
+        <programlisting>
+archive=[class|package](,[class|package])*;
+        </programlisting>
+
+        <para>An example:</para>
+        <programlisting>
+dependson=myjar1.jar=org.eclipse.*;myjar2.jar=com.mycompany.MyClass,com.mycompany.OtherClass
+        </programlisting>
+
       </section>
 
       <!-- Graphical dependencies report -->
