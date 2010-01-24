@@ -486,6 +486,19 @@ invalidversion=myjar1.jar,myjar2.jar
             </tbody>
           </tgroup>
         </table>
+
+        <para>Filter key is: <code>multiplejars</code></para>
+
+        <para>Filter definition is:</para>
+        <programlisting>
+[package](,[package])*;
+        </programlisting>
+
+        <para>An example:</para>
+        <programlisting>
+multiplejars=com.mycompany.mypackage1,com.mycompany.mypackage2
+        </programlisting>
+
       </section>
 
       <!-- Package Multiple Jar files report -->
