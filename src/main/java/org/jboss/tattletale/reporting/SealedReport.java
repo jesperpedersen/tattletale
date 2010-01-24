@@ -99,7 +99,7 @@ public class SealedReport extends Report
 
       bw.write("</table>" + Dump.NEW_LINE);
 
-      if (sealed > 0 && unsealed > 0)
+      if (sealed > 0 && unsealed > 0 && !isFiltered())
          status = ReportStatus.YELLOW;
 
       bw.write(Dump.NEW_LINE);
@@ -139,5 +139,15 @@ public class SealedReport extends Report
 
       bw.write("<a href=\"../index.html\">Main</a>" + Dump.NEW_LINE);
       bw.write("<p>" + Dump.NEW_LINE);
+   }
+
+   /**
+    * Create filter
+    * @return The filter
+    */
+   @Override
+   protected Filter createFilter()
+   {
+      return new BooleanFilter();
    }
 }

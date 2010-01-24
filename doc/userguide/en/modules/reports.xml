@@ -312,6 +312,19 @@ classlocation=org.eclipse.*,com.mycompany.MyClass
             </tbody>
           </tgroup>
         </table>
+
+        <para>Filter key is: <code>sealed</code></para>
+
+        <para>Filter definition is:</para>
+        <programlisting>
+[yes|on|true|no|off|false]
+        </programlisting>
+
+        <para>An example:</para>
+        <programlisting>
+sealed=off
+        </programlisting>
+
       </section>
 
       <!-- Signing information report -->

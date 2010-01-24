@@ -133,12 +133,12 @@ public class ClassLocationReport extends Report
    }
 
    /**
-    * Is key/value filters
-    * @return True if key/value; false if key
+    * Create filter
+    * @return The filter
     */
    @Override
-   protected boolean isKeyValueFilter()
+   protected Filter createFilter()
    {
-      return false;
+      return new KeyFilter();
    }
 }
