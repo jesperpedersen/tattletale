@@ -448,6 +448,19 @@ classlocation=org.eclipse.*,com.mycompany.MyClass
             </tbody>
           </tgroup>
         </table>
+
+        <para>Filter key is: <code>multiplejarspackage</code></para>
+
+        <para>Filter definition is:</para>
+        <programlisting>
+[package](,[package])*;
+        </programlisting>
+
+        <para>An example:</para>
+        <programlisting>
+multiplejarspackage=com.mycompany.mypackage1,com.mycompany.mypackage2
+        </programlisting>
+
       </section>
 
       <!-- Multiple Locations report -->

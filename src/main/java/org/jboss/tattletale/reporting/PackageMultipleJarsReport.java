@@ -113,7 +113,10 @@ public class PackageMultipleJarsReport extends Report
 
          if (archives.size() > 1)
          {
-            status = ReportStatus.YELLOW;
+            if (!isFiltered(pkg))
+            {
+               status = ReportStatus.YELLOW;
+            }
 
             if (odd)
             {
@@ -158,5 +161,15 @@ public class PackageMultipleJarsReport extends Report
 
       bw.write("<a href=\"../index.html\">Main</a>" + Dump.NEW_LINE);
       bw.write("<p>" + Dump.NEW_LINE);
+   }
+
+   /**
+    * Is key/value filters
+    * @return True if key/value; false if key
+    */
+   @Override
+   protected boolean isKeyValueFilter()
+   {
+      return false;
    }
 }
