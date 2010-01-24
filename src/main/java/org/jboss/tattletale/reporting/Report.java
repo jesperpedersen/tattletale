@@ -66,8 +66,14 @@ public abstract class Report implements Comparable
    /** Filter */
    private String filter;
 
-   /** Filters */
-   private Map<String, SortedSet<String>> filters;
+   /** Filter initialized */
+   private boolean filterInitialized;
+
+   /** KeyValue Filters */
+   private Map<String, SortedSet<String>> keyValueFilters;
+
+   /** Key Filters */
+   private SortedSet<String> keyFilters;
 
    /** output filename */
    private static final String INDEX_HTML = "index.html";
@@ -87,6 +93,7 @@ public abstract class Report implements Comparable
       this.archives = archives;
       this.status = ReportStatus.GREEN;
       this.filter = null;
+      this.filterInitialized = false;
    }
 
    /**
@@ -170,7 +177,16 @@ public abstract class Report implements Comparable
    {
       this.filter = filter;
 
-      initFilters();
+      if (isKeyValueFilter())
+      {
+         initKeyValueFilters();
+      }
+      else
+      {
+         initKeyFilters();
+      }
+
+      this.filterInitialized = true;
    }
 
    /**
@@ -352,38 +368,64 @@ public abstract class Report implements Comparable
    /**
     * Is filtered
     * @param archive The archive
+    * @return True if filtered; otherwise false
+    */
+   protected boolean isFiltered(String archive)
+   {
+      return isFiltered(archive, null);
+   }
+
+   /**
+    * Is filtered
+    * @param archive The archive
     * @param query The query
     * @return True if filtered; otherwise false
     */
    protected boolean isFiltered(String archive, String query)
    {
-      SortedSet<String> ss = filters.get(archive);
-      if (ss != null)
+      if (filterInitialized)
       {
-         if (query.endsWith(".class"))
+         SortedSet<String> ss = null;
+
+         if (isKeyValueFilter())
          {
-            query = query.substring(0, query.indexOf(".class"));
+            ss = keyValueFilters.get(archive);
+         }
+         else
+         {
+            ss = keyFilters;
+
+            if (query == null)
+               query = archive;
          }
 
-         if (query.endsWith(".jar"))
+         if (ss != null)
          {
-            query = query.substring(0, query.indexOf(".jar"));
-         }
+            if (query.endsWith(".class"))
+            {
+               query = query.substring(0, query.indexOf(".class"));
+            }
 
-         if (query.endsWith(".*"))
-         {
-            query = query.substring(0, query.indexOf(".*"));
-         }
-         
-         query = query.replace('.', '/');
+            if (query.endsWith(".jar"))
+            {
+               query = query.substring(0, query.indexOf(".jar"));
+            }
 
-         Iterator<String> it = ss.iterator();
-         while (it.hasNext())
-         {
-            String v = it.next();
+            if (query.endsWith(".*"))
+            {
+               query = query.substring(0, query.indexOf(".*"));
+            }
+            
+            query = query.replace('.', '/');
 
-            if (query.startsWith(v))
-               return true;
+            Iterator<String> it = ss.iterator();
+            while (it.hasNext())
+            {
+               String v = it.next();
+
+               if (query.startsWith(v))
+                  return true;
+            }
          }
       }
 
@@ -391,11 +433,20 @@ public abstract class Report implements Comparable
    }
 
    /**
+    * Is key/value filters
+    * @return True if key/value; false if key
+    */
+   protected boolean isKeyValueFilter()
+   {
+      return true;
+   }
+
+   /**
     * Init the filters
     */
-   private void initFilters()
+   private void initKeyValueFilters()
    {
-      filters = new HashMap<String, SortedSet<String>>();
+      keyValueFilters = new HashMap<String, SortedSet<String>>();
 
       if (filter != null)
       {
@@ -442,7 +493,49 @@ public abstract class Report implements Comparable
                v.add(value);
             }
 
-            filters.put(key, v);
+            keyValueFilters.put(key, v);
+         }
+      }
+   }
+
+   /**
+    * Init the key filters
+    */
+   private void initKeyFilters()
+   {
+      keyFilters = new TreeSet<String>(new SizeComparator());
+
+      if (filter != null)
+      {
+         StringTokenizer vt = new StringTokenizer(filter, ",");
+         while (vt.hasMoreTokens())
+         {
+            String value = vt.nextToken();
+
+            boolean includeAll = false;
+
+            if (value.endsWith(".class"))
+            {
+               value = value.substring(0, value.indexOf(".class"));
+            }
+
+            if (value.endsWith(".jar"))
+            {
+               value = value.substring(0, value.indexOf(".jar"));
+            }
+
+            if (value.endsWith(".*"))
+            {
+               value = value.substring(0, value.indexOf(".*"));
+               includeAll = true;
+            }
+
+            value = value.replace('.', '/');
+
+            if (includeAll)
+               value = value + '/';
+
+            keyFilters.add(value);
          }
       }
    }

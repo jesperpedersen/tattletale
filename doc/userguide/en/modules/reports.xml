@@ -239,6 +239,19 @@ transitivedependson=myjar.jar=com.mycompany.MyClass,com.mycompany.OtherClass
             </tbody>
           </tgroup>
         </table>
+
+        <para>Filter key is: <code>classlocation</code></para>
+
+        <para>Filter definition is:</para>
+        <programlisting>
+[class|package](,[class|package])*;
+        </programlisting>
+
+        <para>An example:</para>
+        <programlisting>
+classlocation=org.eclipse.*,com.mycompany.MyClass
+        </programlisting>
+
       </section>
 
       <!-- OSGi report -->
