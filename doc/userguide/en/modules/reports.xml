@@ -163,6 +163,19 @@ dot -Tpng myarchive.dot &gt; myarchive.png
             </tbody>
           </tgroup>
         </table>
+
+        <para>Filter key is: <code>transitivedependson</code></para>
+
+        <para>Filter definition is:</para>
+        <programlisting>
+archive=[class|package](,[class|package])*;
+        </programlisting>
+
+        <para>An example:</para>
+        <programlisting>
+transitivedependson=myjar.jar=com.mycompany.MyClass,com.mycompany.OtherClass
+        </programlisting>
+
       </section>
 
       <!-- Circular Depdency report -->

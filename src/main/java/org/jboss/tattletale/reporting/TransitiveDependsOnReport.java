@@ -184,6 +184,8 @@ public class TransitiveDependsOnReport extends CLSReport
             Iterator<String> valueIt = value.iterator();
             while (valueIt.hasNext())
             {
+               boolean filtered = false;
+
                String r = valueIt.next();
                if (r.endsWith(".jar"))
                {
@@ -191,13 +193,20 @@ public class TransitiveDependsOnReport extends CLSReport
                }
                else
                {
-                  bw.write("<i>" + r + "</i>");
-                  status = ReportStatus.YELLOW;
+                  filtered = isFiltered(archive, r);
+                  if (!filtered)
+                  {
+                     bw.write("<i>" + r + "</i>");
+                     status = ReportStatus.YELLOW;
+                  }
                }
 
-               if (valueIt.hasNext())
+               if (!filtered)
                {
-                  bw.write(", ");
+                  if (valueIt.hasNext())
+                  {
+                     bw.write(", ");
+                  }
                }
             }
          }
