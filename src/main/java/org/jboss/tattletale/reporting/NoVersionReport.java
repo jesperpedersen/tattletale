@@ -87,7 +87,9 @@ public class NoVersionReport extends Report
                if (location.getVersion() == null)
                {
                   include = true;
-                  status = ReportStatus.RED;
+
+                  if (!isFiltered(archive.getName()))
+                     status = ReportStatus.RED;
                }
             }
 
@@ -157,5 +159,15 @@ public class NoVersionReport extends Report
 
       bw.write("<a href=\"../index.html\">Main</a>" + Dump.NEW_LINE);
       bw.write("<p>" + Dump.NEW_LINE);
+   }
+
+   /**
+    * Create filter
+    * @return The filter
+    */
+   @Override
+   protected Filter createFilter()
+   {
+      return new KeyFilter();
    }
 }
