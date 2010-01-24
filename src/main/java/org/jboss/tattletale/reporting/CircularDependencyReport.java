@@ -154,7 +154,8 @@ public class CircularDependencyReport extends CLSReport
 
             if (circular.size() > 0)
             {
-               status = ReportStatus.RED;
+               if (!isFiltered(archive))
+                  status = ReportStatus.RED;
 
                if (odd)
                {
@@ -239,5 +240,15 @@ public class CircularDependencyReport extends CLSReport
             }
          }
       }
+   }
+
+   /**
+    * Create filter
+    * @return The filter
+    */
+   @Override
+   protected Filter createFilter()
+   {
+      return new KeyFilter();
    }
 }

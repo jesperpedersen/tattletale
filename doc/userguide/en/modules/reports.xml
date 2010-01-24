@@ -207,6 +207,19 @@ transitivedependson=myjar.jar=com.mycompany.MyClass,com.mycompany.OtherClass
             </tbody>
           </tgroup>
         </table>
+
+        <para>Filter key is: <code>circulardependency</code></para>
+
+        <para>Filter definition is:</para>
+        <programlisting>
+[archive](,[archive])*;
+        </programlisting>
+
+        <para>An example:</para>
+        <programlisting>
+circulardependency=myjar1.jar,myjar2.jar
+        </programlisting>
+
       </section>
 
    </section>
