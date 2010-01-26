@@ -113,7 +113,8 @@ public class PackageMultipleJarsReport extends Report
 
          if (archives.size() > 1)
          {
-            if (!isFiltered(pkg))
+            boolean filtered = isFiltered(pkg);
+            if (!filtered)
             {
                status = ReportStatus.YELLOW;
             }
@@ -127,7 +128,14 @@ public class PackageMultipleJarsReport extends Report
                bw.write("  <tr class=\"roweven\">" + Dump.NEW_LINE);
             }
             bw.write("     <td>" + pkg + "</td>" + Dump.NEW_LINE);
-            bw.write("     <td>");
+            if (!filtered)
+            {
+               bw.write("        <td>");
+            }
+            else
+            {
+               bw.write("        <td style=\"text-decoration: line-through;\">");
+            }
 
             Iterator sit = archives.iterator();
             while (sit.hasNext())

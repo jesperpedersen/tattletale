@@ -81,7 +81,9 @@ public class InvalidVersionReport extends Report
 
             if (version != null && !version.matches("\\d+(\\.\\d+(\\.\\d+(\\.[0-9a-zA-Z\\_\\-]+)?)?)?"))
             {
-               if (!isFiltered(archive.getName()))
+               boolean filtered = isFiltered(archive.getName());
+
+               if (!filtered)
                   status = ReportStatus.RED;
 
                if (odd)
@@ -107,7 +109,14 @@ public class InvalidVersionReport extends Report
                   bw.write("      <tr>" + Dump.NEW_LINE);
 
                   bw.write("        <td>" + location.getFilename() + "</td>" + Dump.NEW_LINE);
-                  bw.write("        <td>");
+                  if (!filtered)
+                  {
+                     bw.write("        <td>");
+                  }
+                  else
+                  {
+                     bw.write("        <td style=\"text-decoration: line-through;\">");
+                  }
                   if (location.getVersion() != null)
                   {
                      bw.write(location.getVersion());

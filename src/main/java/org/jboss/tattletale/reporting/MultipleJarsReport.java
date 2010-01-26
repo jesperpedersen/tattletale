@@ -82,7 +82,8 @@ public class MultipleJarsReport extends Report
 
          if (archives.size() > 1)
          {
-            if (!isFiltered(clz))
+            boolean filtered = isFiltered(clz);
+            if (!filtered)
                status = ReportStatus.RED;
 
             if (odd)
@@ -94,7 +95,14 @@ public class MultipleJarsReport extends Report
                bw.write("  <tr class=\"roweven\">" + Dump.NEW_LINE);
             }
             bw.write("     <td>" + clz + "</td>" + Dump.NEW_LINE);
-            bw.write("     <td>");
+            if (!filtered)
+            {
+               bw.write("     <td>");
+            }
+            else
+            {
+               bw.write("     <td style=\"text-decoration: line-through;\">");
+            }
 
             Iterator sit = archives.iterator();
             while (sit.hasNext())

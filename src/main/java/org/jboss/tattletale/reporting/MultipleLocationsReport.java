@@ -72,7 +72,9 @@ public class MultipleLocationsReport extends Report
       {
          if (a.getType() == ArchiveTypes.JAR && a.getLocations().size() > 1)
          {
-            if (!isFiltered(a.getName()))
+            boolean filtered = isFiltered(a.getName());
+
+            if (!filtered)
             {
                status = ReportStatus.YELLOW;
             }
@@ -87,7 +89,14 @@ public class MultipleLocationsReport extends Report
             }
             bw.write("     <td><a href=\"../jar/" + a.getName() + ".html\">" + a.getName() + "</a></td>" +
                      Dump.NEW_LINE);
-            bw.write("     <td>");
+            if (!filtered)
+            {
+               bw.write("     <td>");
+            }
+            else
+            {
+               bw.write("     <td style=\"text-decoration: line-through;\">");
+            }
 
             Iterator<Location> lit = a.getLocations().iterator();
             while (lit.hasNext())

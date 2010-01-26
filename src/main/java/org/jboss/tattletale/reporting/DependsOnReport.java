@@ -140,8 +140,6 @@ public class DependsOnReport extends CLSReport
                Iterator<String> resultIt = result.iterator();
                while (resultIt.hasNext())
                {
-                  boolean filtered = false;
-
                   String r = resultIt.next();
                   if (r.endsWith(".jar"))
                   {
@@ -149,20 +147,20 @@ public class DependsOnReport extends CLSReport
                   }
                   else
                   {
-                     filtered = isFiltered(archive.getName(), r);
-                     if (!filtered)
+                     if (!isFiltered(archive.getName(), r))
                      {
                         bw.write("<i>" + r + "</i>");
                         status = ReportStatus.YELLOW;
                      }
+                     else
+                     {
+                        bw.write("<i style=\"text-decoration: line-through;\">" + r + "</i>");
+                     }
                   }
 
-                  if (!filtered)
+                  if (resultIt.hasNext())
                   {
-                     if (resultIt.hasNext())
-                     {
-                        bw.write(", ");
-                     }
+                     bw.write(", ");
                   }
                }
             }

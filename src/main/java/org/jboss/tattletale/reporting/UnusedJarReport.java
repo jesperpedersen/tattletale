@@ -110,11 +110,17 @@ public class UnusedJarReport extends Report
          }
          else
          {
-            bw.write("     <td style=\"color: red;\">No</td>" + Dump.NEW_LINE);
             unused++;
 
             if (!isFiltered(archive.getName()))
+            {
                status = ReportStatus.YELLOW;
+               bw.write("     <td style=\"color: red;\">No</td>" + Dump.NEW_LINE);
+            }
+            else
+            {
+               bw.write("     <td style=\"color: red; text-decoration: line-through;\">No</td>" + Dump.NEW_LINE);
+            }
          }
 
          bw.write("  </tr>" + Dump.NEW_LINE);

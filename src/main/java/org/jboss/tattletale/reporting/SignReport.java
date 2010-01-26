@@ -98,7 +98,8 @@ public class SignReport extends Report
 
       bw.write("</table>" + Dump.NEW_LINE);
 
-      if (signed > 0 && unsigned > 0 && !isFiltered())
+      boolean filtered = isFiltered();
+      if (signed > 0 && unsigned > 0 && !filtered)
          status = ReportStatus.YELLOW;
 
       bw.write(Dump.NEW_LINE);
@@ -113,12 +114,28 @@ public class SignReport extends Report
 
       bw.write("  <tr class=\"rowodd\">" + Dump.NEW_LINE);
       bw.write("     <td>Signed</td>" + Dump.NEW_LINE);
-      bw.write("     <td style=\"color: red;\">" + signed + "</td>" + Dump.NEW_LINE);
+      if (!filtered)
+      {
+         bw.write("     <td style=\"color: red;\">" + signed + "</td>" + Dump.NEW_LINE);
+      }
+      else
+      {
+         bw.write("     <td style=\"color: red; text-decoration: line-through;\">" + signed + "</td>" + 
+                  Dump.NEW_LINE);
+      }
       bw.write("  </tr>" + Dump.NEW_LINE);
 
       bw.write("  <tr class=\"roweven\">" + Dump.NEW_LINE);
       bw.write("     <td>Unsigned</td>" + Dump.NEW_LINE);
-      bw.write("     <td style=\"color: green;\">" + unsigned + "</td>" + Dump.NEW_LINE);
+      if (!filtered)
+      {
+         bw.write("     <td style=\"color: green;\">" + unsigned + "</td>" + Dump.NEW_LINE);
+      }
+      else
+      {
+         bw.write("     <td style=\"color: green; text-decoration: line-through;\">" + unsigned + "</td>" +
+                  Dump.NEW_LINE);
+      }
       bw.write("  </tr>" + Dump.NEW_LINE);
 
       bw.write("</table>" + Dump.NEW_LINE);
