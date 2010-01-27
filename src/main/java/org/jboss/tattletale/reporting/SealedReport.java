@@ -99,7 +99,8 @@ public class SealedReport extends Report
 
       bw.write("</table>" + Dump.NEW_LINE);
 
-      if (sealed > 0 && unsealed > 0)
+      boolean filtered = isFiltered();
+      if (sealed > 0 && unsealed > 0 && !filtered)
          status = ReportStatus.YELLOW;
 
       bw.write(Dump.NEW_LINE);
@@ -114,12 +115,28 @@ public class SealedReport extends Report
 
       bw.write("  <tr class=\"rowodd\">" + Dump.NEW_LINE);
       bw.write("     <td>Sealed</td>" + Dump.NEW_LINE);
-      bw.write("     <td style=\"color: red;\">" + sealed + "</td>" + Dump.NEW_LINE);
+      if (!filtered)
+      {
+         bw.write("     <td style=\"color: red;\">" + sealed + "</td>" + Dump.NEW_LINE);
+      }
+      else
+      {
+         bw.write("     <td style=\"color: red; text-decoration: line-through;\">" + sealed + "</td>" + 
+                  Dump.NEW_LINE);
+      }
       bw.write("  </tr>" + Dump.NEW_LINE);
 
       bw.write("  <tr class=\"roweven\">" + Dump.NEW_LINE);
       bw.write("     <td>Unsealed</td>" + Dump.NEW_LINE);
-      bw.write("     <td style=\"color: green;\">" + unsealed + "</td>" + Dump.NEW_LINE);
+      if (!filtered)
+      {
+         bw.write("     <td style=\"color: green;\">" + unsealed + "</td>" + Dump.NEW_LINE);
+      }
+      else
+      {
+         bw.write("     <td style=\"color: green; text-decoration: line-through;\">" + unsealed + "</td>" +
+                  Dump.NEW_LINE);
+      }
       bw.write("  </tr>" + Dump.NEW_LINE);
 
       bw.write("</table>" + Dump.NEW_LINE);
@@ -139,5 +156,15 @@ public class SealedReport extends Report
 
       bw.write("<a href=\"../index.html\">Main</a>" + Dump.NEW_LINE);
       bw.write("<p>" + Dump.NEW_LINE);
+   }
+
+   /**
+    * Create filter
+    * @return The filter
+    */
+   @Override
+   protected Filter createFilter()
+   {
+      return new BooleanFilter();
    }
 }

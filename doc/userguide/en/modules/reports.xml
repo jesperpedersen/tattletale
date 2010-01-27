@@ -58,6 +58,19 @@
             </tbody>
           </tgroup>
         </table>
+
+        <para>Filter key is: <code>dependson</code></para>
+
+        <para>Filter definition is:</para>
+        <programlisting>
+archive=[class|package](,[class|package])*;
+        </programlisting>
+
+        <para>An example:</para>
+        <programlisting>
+dependson=myjar1.jar=org.eclipse.*;myjar2.jar=com.mycompany.MyClass,com.mycompany.OtherClass
+        </programlisting>
+
       </section>
 
       <!-- Graphical dependencies report -->
@@ -150,6 +163,19 @@ dot -Tpng myarchive.dot &gt; myarchive.png
             </tbody>
           </tgroup>
         </table>
+
+        <para>Filter key is: <code>transitivedependson</code></para>
+
+        <para>Filter definition is:</para>
+        <programlisting>
+archive=[class|package](,[class|package])*;
+        </programlisting>
+
+        <para>An example:</para>
+        <programlisting>
+transitivedependson=myjar.jar=com.mycompany.MyClass,com.mycompany.OtherClass
+        </programlisting>
+
       </section>
 
       <!-- Circular Depdency report -->
@@ -181,6 +207,19 @@ dot -Tpng myarchive.dot &gt; myarchive.png
             </tbody>
           </tgroup>
         </table>
+
+        <para>Filter key is: <code>circulardependency</code></para>
+
+        <para>Filter definition is:</para>
+        <programlisting>
+[archive](,[archive])*;
+        </programlisting>
+
+        <para>An example:</para>
+        <programlisting>
+circulardependency=myjar1.jar,myjar2.jar
+        </programlisting>
+
       </section>
 
    </section>
@@ -213,6 +252,19 @@ dot -Tpng myarchive.dot &gt; myarchive.png
             </tbody>
           </tgroup>
         </table>
+
+        <para>Filter key is: <code>classlocation</code></para>
+
+        <para>Filter definition is:</para>
+        <programlisting>
+[class|package](,[class|package])*;
+        </programlisting>
+
+        <para>An example:</para>
+        <programlisting>
+classlocation=org.eclipse.*,com.mycompany.MyClass
+        </programlisting>
+
       </section>
 
       <!-- OSGi report -->
@@ -246,6 +298,19 @@ dot -Tpng myarchive.dot &gt; myarchive.png
             </tbody>
           </tgroup>
         </table>
+
+        <para>Filter key is: <code>osgi</code></para>
+
+        <para>Filter definition is:</para>
+        <programlisting>
+[archive](,[archive])*;
+        </programlisting>
+
+        <para>An example:</para>
+        <programlisting>
+osgi=myjar1.jar,myjar2.jar
+        </programlisting>
+
       </section>
 
       <!-- Sealed report -->
@@ -273,6 +338,19 @@ dot -Tpng myarchive.dot &gt; myarchive.png
             </tbody>
           </tgroup>
         </table>
+
+        <para>Filter key is: <code>sealed</code></para>
+
+        <para>Filter definition is:</para>
+        <programlisting>
+[yes|on|true|no|off|false]
+        </programlisting>
+
+        <para>An example:</para>
+        <programlisting>
+sealed=off
+        </programlisting>
+
       </section>
 
       <!-- Signing information report -->
@@ -300,6 +378,19 @@ dot -Tpng myarchive.dot &gt; myarchive.png
             </tbody>
           </tgroup>
         </table>
+
+        <para>Filter key is: <code>sign</code></para>
+
+        <para>Filter definition is:</para>
+        <programlisting>
+[yes|on|true|no|off|false]
+        </programlisting>
+
+        <para>An example:</para>
+        <programlisting>
+sign=off
+        </programlisting>
+
       </section>
 
       <!-- Eliminate Jar report -->
@@ -328,6 +419,19 @@ dot -Tpng myarchive.dot &gt; myarchive.png
             </tbody>
           </tgroup>
         </table>
+
+        <para>Filter key is: <code>eliminatejars</code></para>
+
+        <para>Filter definition is:</para>
+        <programlisting>
+[archive](,[archive])*;
+        </programlisting>
+
+        <para>An example:</para>
+        <programlisting>
+eliminatejars=myjar1.jar,myjar2.jar
+        </programlisting>
+
       </section>
 
       <!-- Invalid version report -->
@@ -355,6 +459,19 @@ dot -Tpng myarchive.dot &gt; myarchive.png
             </tbody>
           </tgroup>
         </table>
+
+        <para>Filter key is: <code>invalidversion</code></para>
+
+        <para>Filter definition is:</para>
+        <programlisting>
+[archive](,[archive])*;
+        </programlisting>
+
+        <para>An example:</para>
+        <programlisting>
+invalidversion=myjar1.jar,myjar2.jar
+        </programlisting>
+
       </section>
 
       <!-- Multiple Jar files report -->
@@ -382,6 +499,19 @@ dot -Tpng myarchive.dot &gt; myarchive.png
             </tbody>
           </tgroup>
         </table>
+
+        <para>Filter key is: <code>multiplejars</code></para>
+
+        <para>Filter definition is:</para>
+        <programlisting>
+[package](,[package])*;
+        </programlisting>
+
+        <para>An example:</para>
+        <programlisting>
+multiplejars=com.mycompany.mypackage1,com.mycompany.mypackage2
+        </programlisting>
+
       </section>
 
       <!-- Package Multiple Jar files report -->
@@ -409,6 +539,19 @@ dot -Tpng myarchive.dot &gt; myarchive.png
             </tbody>
           </tgroup>
         </table>
+
+        <para>Filter key is: <code>multiplejarspackage</code></para>
+
+        <para>Filter definition is:</para>
+        <programlisting>
+[package](,[package])*;
+        </programlisting>
+
+        <para>An example:</para>
+        <programlisting>
+multiplejarspackage=com.mycompany.mypackage1,com.mycompany.mypackage2
+        </programlisting>
+
       </section>
 
       <!-- Multiple Locations report -->
@@ -436,6 +579,19 @@ dot -Tpng myarchive.dot &gt; myarchive.png
             </tbody>
           </tgroup>
         </table>
+
+        <para>Filter key is: <code>multiplelocations</code></para>
+
+        <para>Filter definition is:</para>
+        <programlisting>
+[archive](,[archive])*;
+        </programlisting>
+
+        <para>An example:</para>
+        <programlisting>
+multiplelocations=myjar1.jar,myjar2.jar
+        </programlisting>
+
       </section>
 
       <!-- Unused Jar report -->
@@ -465,6 +621,19 @@ dot -Tpng myarchive.dot &gt; myarchive.png
             </tbody>
           </tgroup>
         </table>
+
+        <para>Filter key is: <code>unusedjar</code></para>
+
+        <para>Filter definition is:</para>
+        <programlisting>
+[archive](,[archive])*;
+        </programlisting>
+
+        <para>An example:</para>
+        <programlisting>
+unusedjar=myjar1.jar,myjar2.jar
+        </programlisting>
+
       </section>
 
       <!-- Black listed report -->
@@ -492,6 +661,19 @@ dot -Tpng myarchive.dot &gt; myarchive.png
             </tbody>
           </tgroup>
         </table>
+
+        <para>Filter key is: <code>blacklisted</code></para>
+
+        <para>Filter definition is:</para>
+        <programlisting>
+[archive](,[archive])*;
+        </programlisting>
+
+        <para>An example:</para>
+        <programlisting>
+blacklisted=myjar1.jar,myjar2.jar
+        </programlisting>
+
       </section>
 
       <!-- No version report -->
@@ -519,6 +701,19 @@ dot -Tpng myarchive.dot &gt; myarchive.png
             </tbody>
           </tgroup>
         </table>
+
+        <para>Filter key is: <code>noversion</code></para>
+
+        <para>Filter definition is:</para>
+        <programlisting>
+[archive](,[archive])*;
+        </programlisting>
+
+        <para>An example:</para>
+        <programlisting>
+noversion=myjar1.jar,myjar2.jar
+        </programlisting>
+
       </section>
 
    </section>

@@ -1,6 +1,6 @@
 /*
  * JBoss, Home of Professional Open Source.
- * Copyright 2009, Red Hat Middleware LLC, and individual contributors
+ * Copyright 2010, Red Hat Middleware LLC, and individual contributors
  * as indicated by the @author tags. See the copyright.txt file in the
  * distribution for a full listing of individual contributors.
  *
@@ -19,31 +19,38 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.tattletale;
+package org.jboss.tattletale.reporting;
 
 /**
- * The version class
+ * Represents a filter
  * @author Jesper Pedersen <jesper.pedersen@jboss.org>
  */
-public class Version
+public interface Filter
 {
-
-   /** The vendor */
-   public static final String VENDOR = "JBoss"; 
-   
-   /** The product */
-   public static final String PRODUCT = "Tattletale"; 
-   
-   /** The version */
-   public static final String VERSION = "1.1.0.Beta3";
-   
-   /** Full version */
-   public static final String FULL_VERSION = VENDOR + " " + PRODUCT + " " + VERSION;
-   
    /**
-    * Constructor
+    * Is filtered
+    * @return True if filtered; otherwise false
     */
-   private Version()
-   {
-   }
+   public boolean isFiltered();
+
+   /**
+    * Is filtered
+    * @param archive The archive
+    * @return True if filtered; otherwise false
+    */
+   public boolean isFiltered(String archive);
+
+   /**
+    * Is filtered
+    * @param archive The archive
+    * @param query The query
+    * @return True if filtered; otherwise false
+    */
+   public boolean isFiltered(String archive, String query);
+
+   /**
+    * Init the filter
+    * @param value The filter value
+    */
+   public void init(String value);
 }

@@ -147,8 +147,15 @@ public class DependsOnReport extends CLSReport
                   }
                   else
                   {
-                     bw.write("<i>" + r + "</i>");
-                     status = ReportStatus.YELLOW;
+                     if (!isFiltered(archive.getName(), r))
+                     {
+                        bw.write("<i>" + r + "</i>");
+                        status = ReportStatus.YELLOW;
+                     }
+                     else
+                     {
+                        bw.write("<i style=\"text-decoration: line-through;\">" + r + "</i>");
+                     }
                   }
 
                   if (resultIt.hasNext())

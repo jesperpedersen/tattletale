@@ -27,7 +27,6 @@ import org.jboss.tattletale.core.ArchiveTypes;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import java.util.SortedMap;
 import java.util.SortedSet;
@@ -154,7 +153,9 @@ public class CircularDependencyReport extends CLSReport
 
             if (circular.size() > 0)
             {
-               status = ReportStatus.RED;
+               boolean filtered = isFiltered(archive);
+               if (!filtered)
+                  status = ReportStatus.RED;
 
                if (odd)
                {
@@ -165,7 +166,14 @@ public class CircularDependencyReport extends CLSReport
                   bw.write("  <tr class=\"roweven\">" + Dump.NEW_LINE);
                }
                bw.write("     <td><a href=\"../jar/" + archive + ".html\">" + archive + "</a></td>" + Dump.NEW_LINE);
-               bw.write("     <td>");
+               if (!filtered)
+               {
+                  bw.write("     <td>");
+               }
+               else
+               {
+                  bw.write("     <td style=\"text-decoration: line-through;\">");
+               }
 
                valueIt = value.iterator();
                while (valueIt.hasNext())
@@ -239,5 +247,15 @@ public class CircularDependencyReport extends CLSReport
             }
          }
       }
+   }
+
+   /**
+    * Create filter
+    * @return The filter
+    */
+   @Override
+   protected Filter createFilter()
+   {
+      return new KeyFilter();
    }
 }

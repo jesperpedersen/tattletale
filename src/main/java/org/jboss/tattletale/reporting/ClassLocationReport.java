@@ -79,10 +79,14 @@ public class ClassLocationReport extends Report
       {
          String clz = (String)((Map.Entry)entry).getKey();
          SortedSet archives = (SortedSet)((Map.Entry)entry).getValue();
+         boolean filtered = isFiltered(clz);
 
-         if (archives.size() > 1)
+         if (!filtered)
          {
-            status = ReportStatus.YELLOW;
+            if (archives.size() > 1)
+            {
+               status = ReportStatus.YELLOW;
+            }
          }
 
          if (odd)
@@ -94,7 +98,14 @@ public class ClassLocationReport extends Report
             bw.write("  <tr class=\"roweven\">" + Dump.NEW_LINE);
          }
          bw.write("     <td>" + clz + "</td>" + Dump.NEW_LINE);
-         bw.write("     <td>");
+         if (!filtered)
+         {
+            bw.write("        <td>");
+         }
+         else
+         {
+            bw.write("        <td style=\"text-decoration: line-through;\">");
+         }
 
          Iterator sit = archives.iterator();
          while (sit.hasNext())
@@ -127,5 +138,15 @@ public class ClassLocationReport extends Report
 
       bw.write("<a href=\"../index.html\">Main</a>" + Dump.NEW_LINE);
       bw.write("<p>" + Dump.NEW_LINE);
+   }
+
+   /**
+    * Create filter
+    * @return The filter
+    */
+   @Override
+   protected Filter createFilter()
+   {
+      return new KeyFilter();
    }
 }

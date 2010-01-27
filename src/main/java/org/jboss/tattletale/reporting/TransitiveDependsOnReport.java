@@ -191,8 +191,15 @@ public class TransitiveDependsOnReport extends CLSReport
                }
                else
                {
-                  bw.write("<i>" + r + "</i>");
-                  status = ReportStatus.YELLOW;
+                  if (!isFiltered(archive, r))
+                  {
+                     bw.write("<i>" + r + "</i>");
+                     status = ReportStatus.YELLOW;
+                  }
+                  else
+                  {
+                     bw.write("<i style=\"text-decoration: line-through;\">" + r + "</i>");
+                  }
                }
 
                if (valueIt.hasNext())

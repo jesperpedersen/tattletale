@@ -73,11 +73,14 @@ public class BlackListedReport extends Report
          if (archive.getType() == ArchiveTypes.JAR)
          {
             boolean include = false;
+            boolean filtered = isFiltered(archive.getName());
 
             if (archive.getBlackListedDependencies() != null && archive.getBlackListedDependencies().size() > 0)
             {
                include = true;
-               status = ReportStatus.RED;
+
+               if (!filtered)
+                  status = ReportStatus.RED;
             }
 
             if (include)
@@ -108,7 +111,14 @@ public class BlackListedReport extends Report
 
                   bw.write("        <td>" + pkg + "</td>" + Dump.NEW_LINE);
 
-                  bw.write("        <td>");
+                  if (!filtered)
+                  {
+                     bw.write("       <td>");
+                  }
+                  else
+                  {
+                     bw.write("       <td style=\"text-decoration: line-through;\">");
+                  }
 
                   for (String blp : blpkgs)
                   {
@@ -147,5 +157,15 @@ public class BlackListedReport extends Report
 
       bw.write("<a href=\"../index.html\">Main</a>" + Dump.NEW_LINE);
       bw.write("<p>" + Dump.NEW_LINE);
+   }
+
+   /**
+    * Create filter
+    * @return The filter
+    */
+   @Override
+   protected Filter createFilter()
+   {
+      return new KeyFilter();
    }
 }

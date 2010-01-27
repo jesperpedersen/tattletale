@@ -432,7 +432,6 @@ public class OSGiReport extends Report
 
       for (Archive archive : archives)
       {
-
          if (odd)
          {
             bw.write("  <tr class=\"rowodd\">" + Dump.NEW_LINE);
@@ -450,9 +449,17 @@ public class OSGiReport extends Report
          }
          else
          {
-            bw.write("     <td style=\"color: red;\">No</td>" + Dump.NEW_LINE);
             osgiNotReady++;
-            status = ReportStatus.RED;
+
+            if (!isFiltered(archive.getName()))
+            {
+               status = ReportStatus.RED;
+               bw.write("     <td style=\"color: red;\">No</td>" + Dump.NEW_LINE);
+            }
+            else
+            {
+               bw.write("     <td style=\"color: red; text-decoration: line-through;\">No</td>" + Dump.NEW_LINE);
+            }
          }
          bw.write("     <td><a href=\"" + archive.getName() + "/index.html\">Report</a></td>" + Dump.NEW_LINE);
          bw.write("     <td><a href=\"" + archive.getName() + "/MANIFEST.MF\">Manifest</a></td>" + Dump.NEW_LINE);
@@ -518,5 +525,15 @@ public class OSGiReport extends Report
       }
 
       return version;
+   }
+
+   /**
+    * Create filter
+    * @return The filter
+    */
+   @Override
+   protected Filter createFilter()
+   {
+      return new KeyFilter();
    }
 }

@@ -79,7 +79,8 @@ public class NoVersionReport extends Report
             Location location = lit.next();
 
             boolean include = false;
-
+            boolean filtered = isFiltered(archive.getName());
+            
             while (!include && lit.hasNext())
             {
                location = lit.next();
@@ -87,7 +88,9 @@ public class NoVersionReport extends Report
                if (location.getVersion() == null)
                {
                   include = true;
-                  status = ReportStatus.RED;
+
+                  if (!filtered)
+                     status = ReportStatus.RED;
                }
             }
 
@@ -116,7 +119,14 @@ public class NoVersionReport extends Report
                   bw.write("      <tr>" + Dump.NEW_LINE);
 
                   bw.write("        <td>" + location.getFilename() + "</td>" + Dump.NEW_LINE);
-                  bw.write("        <td>");
+                  if (!filtered)
+                  {
+                     bw.write("        <td>");
+                  }
+                  else
+                  {
+                     bw.write("        <td style=\"text-decoration: line-through;\">");
+                  }
                   if (location.getVersion() != null)
                   {
                      bw.write(location.getVersion());
@@ -157,5 +167,15 @@ public class NoVersionReport extends Report
 
       bw.write("<a href=\"../index.html\">Main</a>" + Dump.NEW_LINE);
       bw.write("<p>" + Dump.NEW_LINE);
+   }
+
+   /**
+    * Create filter
+    * @return The filter
+    */
+   @Override
+   protected Filter createFilter()
+   {
+      return new KeyFilter();
    }
 }

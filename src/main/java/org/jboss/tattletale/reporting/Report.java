@@ -61,6 +61,9 @@ public abstract class Report implements Comparable
    /** Filter */
    private String filter;
 
+   /** Filter implementation */
+   private Filter filterImpl;
+
    /** output filename */
    private static final String INDEX_HTML = "index.html";
 
@@ -79,6 +82,7 @@ public abstract class Report implements Comparable
       this.archives = archives;
       this.status = ReportStatus.GREEN;
       this.filter = null;
+      this.filterImpl = null;
    }
 
    /**
@@ -161,6 +165,8 @@ public abstract class Report implements Comparable
    public void setFilter(String filter)
    {
       this.filter = filter;
+      this.filterImpl = createFilter();
+      this.filterImpl.init(filter);
    }
 
    /**
@@ -337,5 +343,59 @@ public abstract class Report implements Comparable
    public int hashCode()
    {
       return 7 + 31 * getName().hashCode();
+   }
+
+   /**
+    * Create filter
+    * @return The filter
+    */
+   protected Filter createFilter()
+   {
+      return new KeyValueFilter();
+   }
+
+   /**
+    * Is filtered
+    * @return True if filtered; otherwise false
+    */
+   protected boolean isFiltered()
+   {
+      if (filterImpl != null)
+      {
+         return filterImpl.isFiltered();
+      }
+
+      return false;
+   }
+
+   /**
+    * Is filtered
+    * @param archive The archive
+    * @return True if filtered; otherwise false
+    */
+   protected boolean isFiltered(String archive)
+   {
+      if (filterImpl != null)
+      {
+         return filterImpl.isFiltered(archive);
+      }
+
+      return false;
+   }
+
+   /**
+    * Is filtered
+    * @param archive The archive
+    * @param query The query
+    * @return True if filtered; otherwise false
+    */
+   protected boolean isFiltered(String archive, String query)
+   {
+      if (filterImpl != null)
+      {
+         return filterImpl.isFiltered(archive, query);
+      }
+
+      return false;
    }
 }

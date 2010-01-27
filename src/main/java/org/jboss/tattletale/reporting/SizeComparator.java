@@ -1,6 +1,6 @@
 /*
  * JBoss, Home of Professional Open Source.
- * Copyright 2009, Red Hat Middleware LLC, and individual contributors
+ * Copyright 2010, Red Hat Middleware LLC, and individual contributors
  * as indicated by the @author tags. See the copyright.txt file in the
  * distribution for a full listing of individual contributors.
  *
@@ -19,31 +19,45 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.tattletale;
+package org.jboss.tattletale.reporting;
+
+import java.io.Serializable;
+import java.util.Comparator;
 
 /**
- * The version class
+ * Size comparator
  * @author Jesper Pedersen <jesper.pedersen@jboss.org>
  */
-public class Version
+public class SizeComparator implements Comparator<String>, Serializable
 {
 
-   /** The vendor */
-   public static final String VENDOR = "JBoss"; 
-   
-   /** The product */
-   public static final String PRODUCT = "Tattletale"; 
-   
-   /** The version */
-   public static final String VERSION = "1.1.0.Beta3";
-   
-   /** Full version */
-   public static final String FULL_VERSION = VENDOR + " " + PRODUCT + " " + VERSION;
-   
    /**
     * Constructor
     */
-   private Version()
+   public SizeComparator()
    {
+
+   }
+
+   /**
+    * Compare two objects
+    * @param sa String
+    * @param sb String
+    * @return Positive if sb greater than sa; zero if equal; otherwise negative
+    */
+   public int compare(String sa, String sb)
+   {
+      if (sa.length() < sb.length())
+      {
+         return 1;
+      }
+      else if (sa.length() == sb.length())
+      {
+         return sa.compareTo(sb);
+      }
+      else
+      {
+         return -1;
+      }
    }
 }
