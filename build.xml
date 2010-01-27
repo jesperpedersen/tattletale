@@ -21,7 +21,7 @@
     <property name="major" value="1"/>
     <property name="minor" value="1"/>
     <property name="patch" value="0"/>
-    <property name="type" value="Beta3"/>
+    <property name="type" value="CR1"/>
 
     <property name="tattletale.jar" value="tattletale.jar"/>
     <property name="tattletale-ant.jar" value="tattletale-ant.jar"/>
