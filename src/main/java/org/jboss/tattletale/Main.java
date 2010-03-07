@@ -118,6 +118,9 @@ public class Main
    /** Reports */
    private String reports;
 
+   /** Scan */
+   private String scan;
+
    /**
     * Constructor
     */
@@ -135,6 +138,7 @@ public class Main
       this.failOnWarn = false;
       this.failOnError = false;
       this.reports = "*";
+      this.scan = ".jar";
    }
 
    /**
@@ -243,6 +247,15 @@ public class Main
    public void setReports(String reports) 
    {
       this.reports = reports;
+   }
+
+   /**
+    * Set the scan
+    * @param scan The value
+    */
+   public void setScan(String scan) 
+   {
+      this.scan = scan;
    }
 
    /**
@@ -419,6 +432,15 @@ public class Main
       if (classloaderStructure == null || classloaderStructure.trim().equals(""))
       {
          classloaderStructure = "org.jboss.tattletale.reporting.classloader.NoopClassLoaderStructure";
+      }
+
+      if (scan != null)
+      {
+         DirectoryScanner.setArchives(scan);
+      }
+      else
+      {
+         DirectoryScanner.setArchives(".jar");
       }
 
       Map<String, SortedSet<Location>> locationsMap = new HashMap<String, SortedSet<Location>>();

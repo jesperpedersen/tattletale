@@ -57,6 +57,9 @@ public class ReportMojo extends TattletaleMojo
    /** Fail on error */
    private boolean failOnError;
 
+   /** Scan */
+   private String scan;
+
    /**
     * Constructor
     */
@@ -70,6 +73,7 @@ public class ReportMojo extends TattletaleMojo
       this.failOnWarn = false;
       this.failOnError = false;
       this.reports = null;
+      this.scan = null;
    }
 
    /**
@@ -217,6 +221,24 @@ public class ReportMojo extends TattletaleMojo
    }
 
    /**
+    * Get the scan
+    * @return The value
+    */
+   public String getScan() 
+   {
+      return scan;
+   }
+
+   /**
+    * Set the scan
+    * @param scan The value
+    */
+   public void setScan(String scan) 
+   {
+      this.scan = scan;
+   }
+
+   /**
     * Execute
     * @exception MojoExecutionException Thrown if the plugin cant be executed
     * @exception MojoFailureException Thrown if there is an error
@@ -290,6 +312,8 @@ public class ReportMojo extends TattletaleMojo
          main.setFailOnInfo(getFailOnInfo());
          main.setFailOnWarn(getFailOnWarn());
          main.setFailOnError(getFailOnError());
+
+         main.setScan(getScan());
 
          getLog().info("Scanning: " + getSource().getAbsolutePath());
 

@@ -25,9 +25,12 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
+import java.util.StringTokenizer;
 
 /**
  * Directory scanner
@@ -35,6 +38,48 @@ import java.util.Set;
  */
 public class DirectoryScanner
 {
+   /** Archives types that should be scanned */
+   private static Set<String> archives = new HashSet<String>();
+
+   static
+   {
+      archives.add(".jar");
+   }
+
+   /**
+    * Constructor
+    */
+   private DirectoryScanner()
+   {
+   }
+
+   /**
+    * Set archives
+    * @param scan The archives
+    */
+   public static void setArchives(String scan)
+   {
+      archives.clear();
+
+      if (scan != null)
+      {
+         StringTokenizer st = new StringTokenizer(scan, ",");
+         while (st.hasMoreTokens())
+         {
+            String token = st.nextToken();
+
+            if (token.startsWith("*"))
+            {
+               token = token.substring(1);
+            }
+
+            archives.add(token.toLowerCase(Locale.US));
+         }
+      }
+
+      if (archives.isEmpty())
+         archives.add(".jar");
+   }
 
    /**
     * Scan a directory for JAR files
@@ -94,7 +139,9 @@ public class DirectoryScanner
       {
          if (file.isFile())
          {
-            if (file.getName().endsWith(".jar"))
+            String extension = file.getName().substring(file.getName().lastIndexOf("."));
+
+            if (archives.contains(extension))
             {
                boolean include = true;
 

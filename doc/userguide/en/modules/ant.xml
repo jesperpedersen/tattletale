@@ -259,6 +259,13 @@ xmlns:tattletale="antlib:org.jboss.tattletale.ant"
                <para>Default: <code>false</code></para>
              </entry>
            </row>
+           <row>
+             <entry><code>scan</code></entry>
+             <entry>
+               A comma separated list of file extensions that should be scanned
+               <para>Default: <code>.jar</code></para>
+             </entry>
+           </row>
          </tbody>
        </tgroup>
      </table>
