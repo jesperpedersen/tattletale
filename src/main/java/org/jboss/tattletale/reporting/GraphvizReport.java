@@ -24,10 +24,12 @@ package org.jboss.tattletale.reporting;
 import org.jboss.tattletale.core.Archive;
 import org.jboss.tattletale.core.ArchiveTypes;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -74,6 +76,8 @@ public class GraphvizReport extends CLSReport
       bw.write("     <th>Archives</th>" + Dump.NEW_LINE);
       bw.write("     <th>Packages</th>" + Dump.NEW_LINE);
       bw.write("  </tr>" + Dump.NEW_LINE);
+
+      boolean hasDot = testDot();
 
       boolean odd = true;
 
@@ -128,12 +132,19 @@ public class GraphvizReport extends CLSReport
             else
             {
                bw.write("<a href=\"" + archive.getName() + "/" + archive.getName() + ".dot\">.dot</a>");
+               if (hasDot)
+               {
+                  bw.write("&nbsp;");
+                  bw.write("<a href=\"" + archive.getName() + "/" + archive.getName() + ".png\">.png</a>");
+               }
 
                File doutput = new File(getOutputDir(), archive.getName());
                doutput.mkdirs();
 
-               FileWriter dotfw = new FileWriter(
-                     doutput.getAbsolutePath() + File.separator + archive.getName() + ".dot");
+               String dotName = doutput.getAbsolutePath() + File.separator + archive.getName() + ".dot";
+               String pngName = doutput.getAbsolutePath() + File.separator + archive.getName() + ".png";
+
+               FileWriter dotfw = new FileWriter(dotName);
                BufferedWriter dotw = new BufferedWriter(dotfw, 8192);
 
                dotw.write("digraph " + dotName(archive.getName()) + "_dependencies {" + Dump.NEW_LINE);
@@ -150,6 +161,9 @@ public class GraphvizReport extends CLSReport
 
                dotw.flush();
                dotw.close();
+
+               if (hasDot)
+                  generatePicture(dotName, pngName, doutput);
             }
 
             bw.write("</td>" + Dump.NEW_LINE);
@@ -164,12 +178,19 @@ public class GraphvizReport extends CLSReport
             else
             {
                bw.write("<a href=\"" + archive.getName() + "/" + archive.getName() + "-package.dot\">.dot</a>");
+               if (hasDot)
+               {
+                  bw.write("&nbsp;");
+                  bw.write("<a href=\"" + archive.getName() + "/" + archive.getName() + "-package.png\">.png</a>");
+               }
 
                File doutput = new File(getOutputDir(), archive.getName());
                doutput.mkdirs();
 
-               FileWriter dotfw = new FileWriter(
-                     doutput.getAbsolutePath() + File.separator + archive.getName() + "-package.dot");
+               String dotName = doutput.getAbsolutePath() + File.separator + archive.getName() + "-package.dot";
+               String pngName = doutput.getAbsolutePath() + File.separator + archive.getName() + "-package.png";
+
+               FileWriter dotfw = new FileWriter(dotName);
                BufferedWriter dotw = new BufferedWriter(dotfw, 8192);
 
                dotw.write("digraph " + dotName(archive.getName()) + "_package_dependencies {" + Dump.NEW_LINE);
@@ -192,6 +213,9 @@ public class GraphvizReport extends CLSReport
 
                dotw.flush();
                dotw.close();
+
+               if (hasDot)
+                  generatePicture(dotName, pngName, doutput);
             }
 
             bw.write("</td>" + Dump.NEW_LINE);
@@ -240,5 +264,91 @@ public class GraphvizReport extends CLSReport
       if (idx != -1) name = name.substring(0, idx);
 
       return name.replace('-', '_').replace('.', '_');
+   }
+
+   /**
+    * Test for the dot application
+    */
+   private boolean testDot()
+   {
+      try
+      {
+         ProcessBuilder pb = new ProcessBuilder();
+         pb = pb.command("dot", "-V");
+      
+         Process proc = pb.redirectErrorStream(true).start();
+
+         proc.waitFor();
+
+         if (proc.exitValue() != 0)
+         {
+            return false;
+         }
+
+         return true;
+      }
+      catch (InterruptedException ie)
+      {
+         Thread.interrupted();
+      }
+      catch (IOException ioe)
+      {
+         // Ignore
+      }
+
+      return false;
+   }
+
+   /**
+    * Generate picture
+    * @param dotName The .dot file name
+    * @param pngName The .png file name
+    * @param directory The directory
+    */
+   private boolean generatePicture(String dotName, String pngName, File directory)
+   {
+      try
+      {
+         ProcessBuilder pb = new ProcessBuilder();
+         pb = pb.command("dot", "-Tpng", dotName, "-o", pngName);
+         pb = pb.directory(directory);
+      
+         Process proc = pb.redirectErrorStream(true).start();
+
+         BufferedReader out = new BufferedReader(new InputStreamReader(proc.getInputStream()));
+         BufferedReader err = new BufferedReader(new InputStreamReader(proc.getErrorStream()));
+         String l;
+
+         /*
+         while ((l = out.readLine()) != null)
+         {
+            System.err.println(l);
+         }
+
+         while ((l = err.readLine()) != null)
+         {
+            System.err.println(l);
+         }
+         */
+
+         proc.waitFor();
+
+         if (proc.exitValue() != 0)
+         {
+            return false;
+         }
+
+         return true;
+      }
+      catch (InterruptedException ie)
+      {
+         Thread.interrupted();
+      }
+      catch (IOException ioe)
+      {
+         System.err.println(ioe.getMessage());
+      }
+
+      return false;
    }
 }
