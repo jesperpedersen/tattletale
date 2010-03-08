@@ -4,7 +4,7 @@
   <artifactId>tattletale</artifactId>
   <packaging>jar</packaging>
   <name>Tattletale</name>
-  <version>1.1.0.CR1</version>
+  <version>1.2.0.Beta1</version>
   <description>A dependency analyzer</description>
   <licenses>
     <license>
