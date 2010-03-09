@@ -296,6 +296,13 @@ jboss-tattletale.properties
                <para><code>com.mycompany.forinternaluseonly, com.partner.forinternaluseonly</code></para>
              </entry>
            </row>
+           <row>
+             <entry><code>scan</code></entry>
+             <entry>
+               A comma separated list of file extensions that should be scanned
+               <para>Default: <code>.jar</code></para>
+             </entry>
+           </row>
          </tbody>
        </tgroup>
      </table>

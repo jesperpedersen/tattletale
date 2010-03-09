@@ -139,9 +139,12 @@ public class DirectoryScanner
       {
          if (file.isFile())
          {
-            String extension = file.getName().substring(file.getName().lastIndexOf("."));
+            String extension = null;
 
-            if (archives.contains(extension))
+            if (file.getName().lastIndexOf(".") != -1)
+               extension = file.getName().substring(file.getName().lastIndexOf("."));
+
+            if (extension != null && archives.contains(extension))
             {
                boolean include = true;
 

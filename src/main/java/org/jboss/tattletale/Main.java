@@ -1210,10 +1210,10 @@ public class Main
       // Verify output directory exists & create if it does not
       File outputDirFile = new File(outputDir);
 
-      if (outputDirFile.exists())
+      if (outputDirFile.exists() && !outputDirFile.equals(new File(".")))
          recursiveDelete(outputDirFile);
       
-      if (!outputDirFile.mkdirs())
+      if (!outputDirFile.equals(new File(".")) && !outputDirFile.mkdirs())
          throw new IOException("Cannot create directory: " + outputDir);
 
       return outputDir;

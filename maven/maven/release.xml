@@ -4,7 +4,7 @@
   <artifactId>tattletale-maven</artifactId>
   <packaging>jar</packaging>
   <name>Tattletale Apache Maven</name>
-  <version>1.1.0.CR1</version>
+  <version>1.1.0.CR2</version>
   <description>A dependency analyzer</description>
   <licenses>
     <license>
@@ -18,8 +18,8 @@
     <dependency>
       <groupId>org.jboss.tattletale</groupId>
       <artifactId>tattletale</artifactId>
-      <version>1.1.0.CR1</version>
-    </dependency>     
+      <version>1.1.0.CR2</version>
+    </dependency>
   </dependencies>
   
 </project>
