@@ -31,7 +31,7 @@ We hope that JBoss Tattletale will help you in your development tasks !
 
 Quick start:
 ------------
-java -Xmx512m -jar jboss-tattletale.jar [-exclude=<excludes>] <scan-directory> [output-directory]
+java -Xmx512m -jar tattletale.jar [-exclude=<excludes>] <scan-directory> [output-directory]
 
 Output: Analysis reports generate in current directory if no output-directory set.
 
