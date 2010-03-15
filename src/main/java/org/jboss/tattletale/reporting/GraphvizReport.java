@@ -33,6 +33,7 @@ import java.io.InputStreamReader;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -49,17 +50,29 @@ public class GraphvizReport extends CLSReport
    /** DIRECTORY */
    private static final String DIRECTORY = "graphviz";
 
+   /** Path to the dot application */
+   private String graphvizDot;
+
    /**
     * Constructor
     * @param archives The archives
     * @param known The list of known archives
     * @param classloaderStructure The classloader structure
+    * @param config Tattletale runtime properties.
     */
    public GraphvizReport(SortedSet<Archive> archives,
                          List<Archive> known,
-                         String classloaderStructure)
+                         String classloaderStructure,
+                         Properties config)
    {
       super(DIRECTORY, ReportSeverity.INFO, archives, NAME, DIRECTORY, classloaderStructure, known);
+
+      this.graphvizDot = "dot"; 
+
+      if (config != null)
+      {
+         graphvizDot = config.getProperty("graphvizDot", "dot");
+      }
    }
 
    /**
@@ -274,7 +287,7 @@ public class GraphvizReport extends CLSReport
       try
       {
          ProcessBuilder pb = new ProcessBuilder();
-         pb = pb.command("dot", "-V");
+         pb = pb.command(graphvizDot, "-V");
       
          Process proc = pb.redirectErrorStream(true).start();
 
@@ -310,7 +323,7 @@ public class GraphvizReport extends CLSReport
       try
       {
          ProcessBuilder pb = new ProcessBuilder();
-         pb = pb.command("dot", "-Tpng", dotName, "-o", pngName);
+         pb = pb.command(graphvizDot, "-Tpng", dotName, "-o", pngName);
          pb = pb.directory(directory);
       
          Process proc = pb.redirectErrorStream(true).start();
