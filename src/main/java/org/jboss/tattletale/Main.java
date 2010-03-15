@@ -509,10 +509,11 @@ public class Main
                a.addLocation(l);
             }
          }
-               
-         //Write out report     
+
+         //Write out report
          String outputDir = setupOutputDir(destination);
-         outputReport(outputDir, allReports, reportSet, classloaderStructure, filters, archives, gProvides, known);
+         outputReport(outputDir, config, allReports, reportSet, classloaderStructure, 
+                      filters, archives, gProvides, known);
       }
    }
 
@@ -760,6 +761,7 @@ public class Main
    /**
     * Generate the basic reports to the output directory
     * @param outputDir Where the reports go
+    * @param config Tattletale runtime properties.
     * @param allReport Should all reports be generated ?
     * @param reportSet The set of reports that should be generated
     * @param classloaderStructure The class loader structure
@@ -769,7 +771,8 @@ public class Main
     * @param known The known archives
     * @exception Exception In case of fail on settings
     */
-   private void outputReport(String outputDir, 
+   private void outputReport(String outputDir,
+                             Properties config,
                              boolean allReports,
                              Set<String> reportSet,
                              String classloaderStructure,
@@ -832,7 +835,7 @@ public class Main
          dependenciesReports.add(circularDependency);
       }
 
-      Report graphviz = new GraphvizReport(archives, known, classloaderStructure);
+      Report graphviz = new GraphvizReport(archives, known, classloaderStructure, config);
       if (allReports || reportSet.contains(graphviz.getId()))
       {
          if (filters != null && filters.getProperty(graphviz.getId()) != null)
@@ -1210,10 +1213,10 @@ public class Main
       // Verify output directory exists & create if it does not
       File outputDirFile = new File(outputDir);
 
-      if (outputDirFile.exists())
+      if (outputDirFile.exists() && !outputDirFile.equals(new File(".")))
          recursiveDelete(outputDirFile);
       
-      if (!outputDirFile.mkdirs())
+      if (!outputDirFile.equals(new File(".")) && !outputDirFile.mkdirs())
          throw new IOException("Cannot create directory: " + outputDir);
 
       return outputDir;
