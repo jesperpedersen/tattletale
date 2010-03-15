@@ -303,6 +303,16 @@ jboss-tattletale.properties
                <para>Default: <code>.jar</code></para>
              </entry>
            </row>
+           <row>
+             <entry><code>graphvizDot</code></entry>
+             <entry>
+               The full path to the Graphviz DOT executable.  This property is required if you want to generate
+               PNG files and the Graphviz bin directory is not on your path.  F.ex.
+               <para><code>graphvizDot=C:\\Graphviz2.26.3\\bin\\dot.exe</code></para>
+               or
+               <para><code>graphvizDot=/opt/graphiz/bin/dot</code></para>
+             </entry>
+           </row>
          </tbody>
        </tgroup>
      </table>
