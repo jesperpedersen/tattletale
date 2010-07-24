@@ -32,7 +32,7 @@ export PATH
 
     <section id="ant">
       <title>Apache Ant</title>
-      <para>You must have Apache Ant 1.7.1+ installed on your system.</para>
+      <para>You must have Apache Ant 1.8.1+ installed on your system.</para>
       <para>Remember to ensure that "ant" are in your path (or symlinked).</para>
 
       <programlisting>
@@ -47,11 +47,9 @@ export PATH
 
     <section id="ivy">
       <title>Apache Ivy</title>
-      <para>You must have Apache Ivy 2.1+ installed in your Apache Ant installation.</para>
 
-      <programlisting>
-cp ivy.jar $ANT_HOME/lib
-      </programlisting>
+      <para>JBoss Tattletale uses Apache Ivy for dependency management. The build environment automatically
+        bootstrap the installation of Apache Ivy.</para>
 
     </section>
 
