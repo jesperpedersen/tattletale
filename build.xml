@@ -31,9 +31,16 @@
          Repositories              
          ================================= -->
     <property name="central.repo" value="http://repo1.maven.org/maven2"/>
-    <property name="jboss.repo" value="http://repository.jboss.org/maven2"/>
+    <property name="jboss.repo" value="http://repository.jboss.org/nexus/content/groups/public/"/>
     <property name="snapshots.repo" value="http://snapshots.jboss.org/maven2"/>
   
+    <!-- ================================= 
+         Ivy              
+         ================================= -->
+    <property name="ivy.version" value="2.2.0-rc1"/>
+    <property name="ivy.dir" value="${user.home}/.ivy2/cache/org.apache.ivy/jars"/>
+    <property name="ivy.jar.name" value="ivy-${ivy.version}.jar"/>
+    
     <!-- ================================= 
          Versions              
          ================================= -->
@@ -69,6 +76,15 @@
         </fileset>
     </path>
 
+    <!-- ================================= 
+         Bootstrap Ivy
+         ================================= -->
+    <mkdir dir="${ivy.dir}"/>
+    <get usetimestamp="true" src="https://repository.apache.org/content/repositories/releases/org/apache/ivy/ivy/${ivy.version}/${ivy.jar.name}" 
+         skipexisting="true"
+         dest="${ivy.dir}/${ivy.jar.name}"/>
+    <taskdef resource="org/apache/ivy/ant/antlib.xml" uri="antlib:org.apache.ivy.ant" classpath="${ivy.dir}/${ivy.jar.name}"/>
+    
     <!-- =================================================================== -->
     <!-- Initialize                                                          -->
     <!-- =================================================================== -->
