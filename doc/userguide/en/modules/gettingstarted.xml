@@ -238,6 +238,10 @@ jboss-tattletale.properties
                    <para><code>org.jboss.tattletale.reporting.classloader.JBossAS5ClassLoaderStructure</code></para>
                    <para>A classloader structure implementation that scopes based on JBoss Application Server 5.x directory structures.</para>
                  </listitem>
+                 <listitem>
+                   <para><code>org.jboss.tattletale.reporting.classloader.JBossAS6ClassLoaderStructure</code></para>
+                   <para>A classloader structure implementation that scopes based on JBoss Application Server 6.x directory structures.</para>
+                 </listitem>
                </itemizedlist>
              </entry>
            </row>
