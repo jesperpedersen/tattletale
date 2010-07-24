@@ -137,7 +137,7 @@ public class Main
       this.failOnInfo = false;
       this.failOnWarn = false;
       this.failOnError = false;
-      this.reports = "*";
+      this.reports = null;
       this.scan = ".jar";
    }
 
@@ -396,8 +396,10 @@ public class Main
          excludeSet.addAll(parseExcludes(config.getProperty("excludes")));
       }
 
-      if ((reports != null && reports.trim().equals("*")) ||
-          (config.getProperty("reports") != null && config.getProperty("reports").equals("*")))
+      if (reports == null)
+         reports = config.getProperty("reports");
+
+      if (reports == null || (reports != null && reports.trim().equals("*")))
       {
          allReports = true;
       }
