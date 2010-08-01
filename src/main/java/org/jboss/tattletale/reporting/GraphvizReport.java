@@ -50,6 +50,9 @@ public class GraphvizReport extends CLSReport
    /** DIRECTORY */
    private static final String DIRECTORY = "graphviz";
 
+   /** Enable dot */
+   private boolean enableDot;
+
    /** Path to the dot application */
    private String graphvizDot;
 
@@ -67,10 +70,12 @@ public class GraphvizReport extends CLSReport
    {
       super(DIRECTORY, ReportSeverity.INFO, archives, NAME, DIRECTORY, classloaderStructure, known);
 
+      this.enableDot = true;
       this.graphvizDot = "dot"; 
 
       if (config != null)
       {
+         enableDot = Boolean.valueOf(config.getProperty("enableDot", "true"));
          graphvizDot = config.getProperty("graphvizDot", "dot");
       }
    }
@@ -175,7 +180,7 @@ public class GraphvizReport extends CLSReport
                dotw.flush();
                dotw.close();
 
-               if (hasDot)
+               if (enableDot && hasDot)
                   generatePicture(dotName, pngName, doutput);
             }
 
@@ -227,7 +232,7 @@ public class GraphvizReport extends CLSReport
                dotw.flush();
                dotw.close();
 
-               if (hasDot)
+               if (enableDot && hasDot)
                   generatePicture(dotName, pngName, doutput);
             }
 
