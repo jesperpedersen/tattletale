@@ -308,6 +308,13 @@ jboss-tattletale.properties
              </entry>
            </row>
            <row>
+             <entry><code>enableDot</code></entry>
+             <entry>
+               Should images be generated if the Graphviz DOT application is found
+               <para>Default: <code>true</code></para>
+             </entry>
+           </row>
+           <row>
              <entry><code>graphvizDot</code></entry>
              <entry>
                The full path to the Graphviz DOT executable.  This property is required if you want to generate
@@ -325,7 +332,7 @@ jboss-tattletale.properties
 
        <orderedlist spacing="compact">
          <listitem>
-           <code>configuration</code> parameter in the Apache Ant task
+           <code>configuration</code> parameter in the Apache Ant / Maven task
          </listitem>
          <listitem>
            <code>-Djboss-tattletale.properties</code> system property
@@ -385,7 +392,7 @@ myreport=myfilter
          
          <orderedlist spacing="compact">
            <listitem>
-             <code>filter</code> parameter in the Apache Ant task
+             <code>filter</code> parameter in the Apache Ant / Maven task
            </listitem>
            <listitem>
              <code>-Djboss-tattletale-filter.properties</code> system property
