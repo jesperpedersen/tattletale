@@ -63,7 +63,9 @@ mvn clean package
            <row>
              <entry><code>source</code></entry>
              <entry>
-               The directory that contains the Java archives
+               The directory that contains the Java archives. Multiple directories can be
+               scanned by separating each with the <code>File.pathSeparator</code> character - f.ex.
+               <code>dir1:dir2</code> on Un*x.
                <para>Default: Current directory</para>
              </entry>
            </row>
