@@ -476,43 +476,52 @@ public class Main
       if (allProfiles || profileSet != null && (profileSet.contains("spring30") || profileSet.contains("Spring 3.0")))
          known.add(new Spring30());
       
-      File f = new File(source);
-      if (f.isDirectory())
+      StringTokenizer st = new StringTokenizer(source, File.pathSeparator);
+      
+      while (st.hasMoreTokens())
       {
-         List<File> fileList = DirectoryScanner.scan(f, excludeSet);
+         File f = new File(st.nextToken());
 
-         for (File file : fileList)
+         if (f.isDirectory())
          {
-            Archive archive = ArchiveScanner.scan(file, gProvides, known, blacklistedSet);
+            List<File> fileList = DirectoryScanner.scan(f, excludeSet);
 
-            if (archive != null)
+            for (File file : fileList)
             {
-               SortedSet<Location> locations = locationsMap.get(archive.getName());
-               if (locations == null)
+               Archive archive = ArchiveScanner.scan(file, gProvides, known, blacklistedSet);
+
+               if (archive != null)
                {
-                  locations = new TreeSet<Location>();
-               }
-               locations.addAll(archive.getLocations());
-               locationsMap.put(archive.getName(), locations);
+                  SortedSet<Location> locations = locationsMap.get(archive.getName());
+                  if (locations == null)
+                  {
+                     locations = new TreeSet<Location>();
+                  }
+                  locations.addAll(archive.getLocations());
+                  locationsMap.put(archive.getName(), locations);
                
-               if (!archives.contains(archive))
+                  if (!archives.contains(archive))
+                  {
+                     archives.add(archive);
+                  }
+               }
+            }
+
+            for (Archive a : archives)
+            {
+               SortedSet<Location> locations = locationsMap.get(a.getName());
+
+               for (Location l : locations)
                {
-                  archives.add(archive);
+                  a.addLocation(l);
                }
             }
          }
+      }
 
-         for (Archive a : archives)
-         {
-            SortedSet<Location> locations = locationsMap.get(a.getName());
-
-            for (Location l : locations)
-            {
-               a.addLocation(l);
-            }
-         }
-
-         //Write out report
+      //Write out report
+      if (archives != null && archives.size() > 0)
+      {
          String outputDir = setupOutputDir(destination);
          outputReport(outputDir, config, allReports, reportSet, classloaderStructure, 
                       filters, archives, gProvides, known);
