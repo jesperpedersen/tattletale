@@ -97,6 +97,14 @@ mvn clean package
                All reports can be selected by specifying "*". The following reports are supported:
                <itemizedlist>
                  <listitem>
+                   <para><code>classdependants</code></para>
+                   <para>The "Class Dependants" report.</para>
+                 </listitem>
+                 <listitem>
+                   <para><code>classdependson</code></para>
+                   <para>The "Class DependsOn" report.</para>
+                 </listitem>
+                 <listitem>
                    <para><code>dependants</code></para>
                    <para>The "Dependants" report.</para>
                  </listitem>
