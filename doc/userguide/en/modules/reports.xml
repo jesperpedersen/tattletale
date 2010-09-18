@@ -5,6 +5,60 @@
    <section id="dependency">
       <title>Dependency reports</title>
 
+      <!-- Class Dependants report -->
+      <section id="classdependants">
+        <title>Class Dependants</title>
+
+        <para>The class dependants report will lists which classes depends on a specific class.</para>
+
+        <table frame="all">
+          <title>Class Dependants report</title>
+          <tgroup cols="2" align="left" colsep="1" rowsep="1">
+            <colspec colname="c1"/>
+            <colspec colname="c2" colwidth="4*"/>
+            <thead>
+              <row>
+                <entry align="left">Class</entry>
+                <entry align="left">Dependants</entry>
+              </row>
+            </thead>
+            <tbody>
+              <row>
+                <entry>The class</entry>
+                <entry>A list of classes that depends on this class</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </table>
+      </section>
+
+      <!-- Class Depends On report -->
+      <section id="classdependson">
+        <title>Class Depends On report</title>
+
+        <para>The class depends on report will lists which classes that a class depends on.</para>
+
+        <table frame="all">
+          <title>Class Depends On report</title>
+          <tgroup cols="2" align="left" colsep="1" rowsep="1">
+            <colspec colname="c1"/>
+            <colspec colname="c2" colwidth="4*"/>
+            <thead>
+              <row>
+                <entry align="left">Class</entry>
+                <entry align="left">Depends On</entry>
+              </row>
+            </thead>
+            <tbody>
+              <row>
+                <entry>The class</entry>
+                <entry>A list of classes which the class depends on</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </table>
+      </section>
+
       <!-- Dependants report -->
       <section id="dependants">
         <title>Dependants</title>

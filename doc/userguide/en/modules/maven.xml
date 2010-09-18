@@ -15,7 +15,7 @@
       <groupId>org.jboss.tattletale</groupId>
       <artifactId>tattletale-maven</artifactId>
       <!-- The version of the plugin you want to use -->
-      <version>1.2.0.Beta1</version>
+      <version>1.1.0.Final</version>
       <executions>
  	<execution>
  	  <goals>
@@ -96,6 +96,14 @@ mvn clean package
                Contains nested <code>report</code> elements of which reports that should be generated.
                All reports can be selected by specifying "*". The following reports are supported:
                <itemizedlist>
+                 <listitem>
+                   <para><code>classdependants</code></para>
+                   <para>The "Class Dependants" report.</para>
+                 </listitem>
+                 <listitem>
+                   <para><code>classdependson</code></para>
+                   <para>The "Class DependsOn" report.</para>
+                 </listitem>
                  <listitem>
                    <para><code>dependants</code></para>
                    <para>The "Dependants" report.</para>

@@ -141,6 +141,14 @@ jboss-tattletale.properties
                The following reports are supported:
                <itemizedlist>
                  <listitem>
+                   <para><code>classdependants</code></para>
+                   <para>The "Class Dependants" report.</para>
+                 </listitem>
+                 <listitem>
+                   <para><code>classdependson</code></para>
+                   <para>The "ClassDependsOn" report.</para>
+                 </listitem>
+                 <listitem>
                    <para><code>dependants</code></para>
                    <para>The "Dependants" report.</para>
                  </listitem>
