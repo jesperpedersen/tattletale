@@ -29,6 +29,8 @@ import org.jboss.tattletale.core.Location;
 import org.jboss.tattletale.reporting.BlackListedReport;
 import org.jboss.tattletale.reporting.CDI10;
 import org.jboss.tattletale.reporting.CircularDependencyReport;
+import org.jboss.tattletale.reporting.ClassDependantsReport;
+import org.jboss.tattletale.reporting.ClassDependsOnReport;
 import org.jboss.tattletale.reporting.ClassLocationReport;
 import org.jboss.tattletale.reporting.DependantsReport;
 import org.jboss.tattletale.reporting.DependsOnReport;
@@ -795,6 +797,26 @@ public class Main
       SortedSet<Report> dependenciesReports = new TreeSet<Report>();
       SortedSet<Report> generalReports = new TreeSet<Report>();
       SortedSet<Report> archiveReports = new TreeSet<Report>();
+
+      Report classDependsOn = new ClassDependsOnReport(archives, known, classloaderStructure);
+      if (allReports || reportSet.contains(classDependsOn.getId()))
+      {
+         if (filters != null && filters.getProperty(classDependsOn.getId()) != null)
+            classDependsOn.setFilter(filters.getProperty(classDependsOn.getId()));
+
+         classDependsOn.generate(outputDir);
+         dependenciesReports.add(classDependsOn);
+      }
+
+      Report classDependants = new ClassDependantsReport(archives, known, classloaderStructure);
+      if (allReports || reportSet.contains(classDependants.getId()))
+      {
+         if (filters != null && filters.getProperty(classDependants.getId()) != null)
+            classDependants.setFilter(filters.getProperty(classDependants.getId()));
+
+         classDependants.generate(outputDir);
+         dependenciesReports.add(classDependants);
+      }
 
       Report dependsOn = new DependsOnReport(archives, known, classloaderStructure);
       if (allReports || reportSet.contains(dependsOn.getId()))
