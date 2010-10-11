@@ -45,7 +45,7 @@
          Versions              
          ================================= -->
     <property name="version.ant" value="1.6.5"/>
-    <property name="version.javassist" value="3.11.0.GA"/>
+    <property name="version.javassist" value="3.14.0-GA"/>
     <property name="version.maven" value="2.0"/>
     
     <!-- =================================================================== -->

@@ -35,8 +35,8 @@
 
   <dependencies>
     <dependency org="ant" name="ant" rev="${version.ant}" conf="core->default"/>
-    <dependency org="javassist" name="javassist" rev="${version.javassist}" conf="core->default"/>
     <dependency org="org.apache.maven" name="maven-plugin-api" rev="${version.maven}" conf="core->default"/>
+    <dependency org="org.javassist" name="javassist" rev="${version.javassist}" conf="core->default"/>
   </dependencies>
 
 </ivy-module>
