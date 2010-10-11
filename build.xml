@@ -20,7 +20,7 @@
     <property name="name" value="jboss-tattletale"/>
     <property name="major" value="1"/>
     <property name="minor" value="1"/>
-    <property name="patch" value="0"/>
+    <property name="patch" value="1"/>
     <property name="type" value="Final"/>
 
     <property name="tattletale.jar" value="tattletale.jar"/>
@@ -45,7 +45,7 @@
          Versions              
          ================================= -->
     <property name="version.ant" value="1.6.5"/>
-    <property name="version.javassist" value="3.11.0.GA"/>
+    <property name="version.javassist" value="3.14.0-GA"/>
     <property name="version.maven" value="2.0"/>
     
     <!-- =================================================================== -->
