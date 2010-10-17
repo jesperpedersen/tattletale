@@ -27,7 +27,6 @@ import org.jboss.tattletale.core.Archive;
 import org.jboss.tattletale.core.ArchiveTypes;
 import org.jboss.tattletale.core.Location;
 import org.jboss.tattletale.reporting.BlackListedReport;
-import org.jboss.tattletale.reporting.CDI10;
 import org.jboss.tattletale.reporting.CircularDependencyReport;
 import org.jboss.tattletale.reporting.ClassDependantsReport;
 import org.jboss.tattletale.reporting.ClassDependsOnReport;
@@ -39,8 +38,6 @@ import org.jboss.tattletale.reporting.EliminateJarsReport;
 import org.jboss.tattletale.reporting.GraphvizReport;
 import org.jboss.tattletale.reporting.InvalidVersionReport;
 import org.jboss.tattletale.reporting.JarReport;
-import org.jboss.tattletale.reporting.JavaEE5;
-import org.jboss.tattletale.reporting.JavaEE6;
 import org.jboss.tattletale.reporting.MultipleJarsReport;
 import org.jboss.tattletale.reporting.MultipleLocationsReport;
 import org.jboss.tattletale.reporting.NoVersionReport;
@@ -50,15 +47,19 @@ import org.jboss.tattletale.reporting.Report;
 import org.jboss.tattletale.reporting.ReportSeverity;
 import org.jboss.tattletale.reporting.ReportStatus;
 import org.jboss.tattletale.reporting.SealedReport;
-import org.jboss.tattletale.reporting.Seam22;
 import org.jboss.tattletale.reporting.SignReport;
-import org.jboss.tattletale.reporting.Spring25;
-import org.jboss.tattletale.reporting.Spring30;
-import org.jboss.tattletale.reporting.SunJava5;
-import org.jboss.tattletale.reporting.SunJava6;
 import org.jboss.tattletale.reporting.TransitiveDependantsReport;
 import org.jboss.tattletale.reporting.TransitiveDependsOnReport;
 import org.jboss.tattletale.reporting.UnusedJarReport;
+import org.jboss.tattletale.reporting.profiles.CDI10;
+import org.jboss.tattletale.reporting.profiles.CommonProfile;
+import org.jboss.tattletale.reporting.profiles.JavaEE5;
+import org.jboss.tattletale.reporting.profiles.JavaEE6;
+import org.jboss.tattletale.reporting.profiles.Seam22;
+import org.jboss.tattletale.reporting.profiles.Spring25;
+import org.jboss.tattletale.reporting.profiles.Spring30;
+import org.jboss.tattletale.reporting.profiles.SunJava5;
+import org.jboss.tattletale.reporting.profiles.SunJava6;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -79,6 +80,7 @@ import java.util.TreeSet;
 
 /**
  * Main
+ * 
  * @author Jesper Pedersen <jesper.pedersen@jboss.org>
  * @author Jay Balunas <jbalunas@jboss.org>
  */
@@ -145,7 +147,9 @@ public class Main
 
    /**
     * Set source
-    * @param source The value
+    * 
+    * @param source
+    *           The value
     */
    public void setSource(String source)
    {
@@ -154,7 +158,9 @@ public class Main
 
    /**
     * Set destination
-    * @param destination The value
+    * 
+    * @param destination
+    *           The value
     */
    public void setDestination(String destination)
    {
@@ -163,7 +169,9 @@ public class Main
 
    /**
     * Set configuration
-    * @param configuration The value
+    * 
+    * @param configuration
+    *           The value
     */
    public void setConfiguration(String configuration)
    {
@@ -172,7 +180,9 @@ public class Main
 
    /**
     * Set filter
-    * @param filter The value
+    * 
+    * @param filter
+    *           The value
     */
    public void setFilter(String filter)
    {
@@ -181,7 +191,9 @@ public class Main
 
    /**
     * Set class loader structure
-    * @param cls The value
+    * 
+    * @param cls
+    *           The value
     */
    public void setClassLoaderStructure(String cls)
    {
@@ -190,7 +202,9 @@ public class Main
 
    /**
     * Set profiles
-    * @param profiles The value
+    * 
+    * @param profiles
+    *           The value
     */
    public void setProfiles(String profiles)
    {
@@ -199,7 +213,9 @@ public class Main
 
    /**
     * Set excludes
-    * @param excludes The value
+    * 
+    * @param excludes
+    *           The value
     */
    public void setExcludes(String excludes)
    {
@@ -208,7 +224,9 @@ public class Main
 
    /**
     * Set blacklisted
-    * @param blacklisted The value
+    * 
+    * @param blacklisted
+    *           The value
     */
    public void setBlacklisted(String blacklisted)
    {
@@ -217,7 +235,9 @@ public class Main
 
    /**
     * Set fail on info
-    * @param b The value
+    * 
+    * @param b
+    *           The value
     */
    public void setFailOnInfo(boolean b)
    {
@@ -226,7 +246,9 @@ public class Main
 
    /**
     * Set fail on warn
-    * @param b The value
+    * 
+    * @param b
+    *           The value
     */
    public void setFailOnWarn(boolean b)
    {
@@ -235,7 +257,9 @@ public class Main
 
    /**
     * Set fail on error
-    * @param b The value
+    * 
+    * @param b
+    *           The value
     */
    public void setFailOnError(boolean b)
    {
@@ -244,25 +268,31 @@ public class Main
 
    /**
     * Set the reports
-    * @param reports The value
+    * 
+    * @param reports
+    *           The value
     */
-   public void setReports(String reports) 
+   public void setReports(String reports)
    {
       this.reports = reports;
    }
 
    /**
     * Set the scan
-    * @param scan The value
+    * 
+    * @param scan
+    *           The value
     */
-   public void setScan(String scan) 
+   public void setScan(String scan)
    {
       this.scan = scan;
    }
 
    /**
     * Execute
-    * @exception Exception Thrown if an error occurs
+    * 
+    * @exception Exception
+    *               Thrown if an error occurs
     */
    public void execute() throws Exception
    {
@@ -299,7 +329,7 @@ public class Main
 
       if (classloaderStructure == null)
          classloaderStructure = config.getProperty("classloader");
-         
+
       if (profiles != null)
       {
          profileSet = new HashSet<String>();
@@ -323,8 +353,9 @@ public class Main
       if (profileSet == null && config.getProperty("profiles") != null)
       {
          profileSet = new HashSet<String>();
-         
-         StringTokenizer st = new StringTokenizer(config.getProperty("profiles"), ",");
+
+         StringTokenizer st = new StringTokenizer(config
+            .getProperty("profiles"), ",");
          while (st.hasMoreTokens())
          {
             String token = st.nextToken().trim();
@@ -348,7 +379,7 @@ public class Main
          while (st.hasMoreTokens())
          {
             String token = st.nextToken().trim();
-               
+
             if (token.endsWith(".*"))
             {
                token.substring(0, token.indexOf(".*"));
@@ -358,7 +389,7 @@ public class Main
             {
                token.substring(0, token.indexOf(".class"));
             }
-            
+
             blacklistedSet.add(token);
          }
       }
@@ -367,11 +398,12 @@ public class Main
       {
          blacklistedSet = new HashSet<String>();
 
-         StringTokenizer st = new StringTokenizer(config.getProperty("blacklisted"), ",");
+         StringTokenizer st = new StringTokenizer(config
+            .getProperty("blacklisted"), ",");
          while (st.hasMoreTokens())
          {
             String token = st.nextToken().trim();
-               
+
             if (token.endsWith(".*"))
             {
                token.substring(0, token.indexOf(".*"));
@@ -381,7 +413,7 @@ public class Main
             {
                token.substring(0, token.indexOf(".class"));
             }
-            
+
             blacklistedSet.add(token);
          }
       }
@@ -418,11 +450,13 @@ public class Main
          }
       }
 
-      if (!allReports && reportSet == null && config.getProperty("reports") != null)
+      if (!allReports && reportSet == null
+         && config.getProperty("reports") != null)
       {
          reportSet = new HashSet<String>();
 
-         StringTokenizer st = new StringTokenizer(config.getProperty("reports"), ",");
+         StringTokenizer st = new StringTokenizer(
+            config.getProperty("reports"), ",");
          while (st.hasMoreTokens())
          {
             String token = st.nextToken().trim();
@@ -433,7 +467,8 @@ public class Main
       if (!allReports && reportSet == null)
          allReports = true;
 
-      if (classloaderStructure == null || classloaderStructure.trim().equals(""))
+      if (classloaderStructure == null
+         || classloaderStructure.trim().equals(""))
       {
          classloaderStructure = "org.jboss.tattletale.reporting.classloader.NoopClassLoaderStructure";
       }
@@ -450,36 +485,20 @@ public class Main
       Map<String, SortedSet<Location>> locationsMap = new HashMap<String, SortedSet<Location>>();
       SortedSet<Archive> archives = new TreeSet<Archive>();
       SortedMap<String, SortedSet<String>> gProvides = new TreeMap<String, SortedSet<String>>();
-      
+
+      // Load up selected profiles
       List<Archive> known = new ArrayList<Archive>();
 
-      if (profileSet == null || allProfiles || profileSet.size() == 0 || 
-          profileSet.contains("java5") || profileSet.contains("Sun Java 5"))
-         known.add(new SunJava5());
-      
-      if (profileSet == null || allProfiles || profileSet.contains("java6") || profileSet.contains("Sun Java 6"))
-         known.add(new SunJava6());
-      
-      if (allProfiles || profileSet != null && (profileSet.contains("ee5") || profileSet.contains("Java Enterprise 5")))
-         known.add(new JavaEE5());
-      
-      if (allProfiles || profileSet != null && (profileSet.contains("ee6") || profileSet.contains("Java Enterprise 6")))
-         known.add(new JavaEE6());
-      
-      if (allProfiles || profileSet != null && (profileSet.contains("seam22") || profileSet.contains("Seam 2.2")))
-         known.add(new Seam22());
-      
-      if (allProfiles || profileSet != null && (profileSet.contains("cdi10") || profileSet.contains("CDI 1.0")))
-         known.add(new CDI10());
-      
-      if (allProfiles || profileSet != null && (profileSet.contains("spring25") || profileSet.contains("Spring 2.5")))
-         known.add(new Spring25());
-      
-      if (allProfiles || profileSet != null && (profileSet.contains("spring30") || profileSet.contains("Spring 3.0")))
-         known.add(new Spring30());
-      
+      CommonProfile[] profiles = new CommonProfile[] {new SunJava5(),
+         new SunJava6(), new JavaEE5(), new JavaEE6(), new CDI10(),
+         new Seam22(), new Spring25(), new Spring30() };
+
+      for (CommonProfile p : profiles)
+         if (p.included(allProfiles, profileSet))
+            known.add(p);
+
       StringTokenizer st = new StringTokenizer(source, File.pathSeparator);
-      
+
       while (st.hasMoreTokens())
       {
          File f = new File(st.nextToken());
@@ -490,18 +509,20 @@ public class Main
 
             for (File file : fileList)
             {
-               Archive archive = ArchiveScanner.scan(file, gProvides, known, blacklistedSet);
+               Archive archive = ArchiveScanner.scan(file, gProvides, known,
+                  blacklistedSet);
 
                if (archive != null)
                {
-                  SortedSet<Location> locations = locationsMap.get(archive.getName());
+                  SortedSet<Location> locations = locationsMap.get(archive
+                     .getName());
                   if (locations == null)
                   {
                      locations = new TreeSet<Location>();
                   }
                   locations.addAll(archive.getLocations());
                   locationsMap.put(archive.getName(), locations);
-               
+
                   if (!archives.contains(archive))
                   {
                      archives.add(archive);
@@ -521,17 +542,18 @@ public class Main
          }
       }
 
-      //Write out report
+      // Write out report
       if (archives != null && archives.size() > 0)
       {
          String outputDir = setupOutputDir(destination);
-         outputReport(outputDir, config, allReports, reportSet, classloaderStructure, 
-                      filters, archives, gProvides, known);
+         outputReport(outputDir, config, allReports, reportSet,
+            classloaderStructure, filters, archives, gProvides, known);
       }
    }
 
    /**
     * Load cpnfiguration
+    * 
     * @return The properties
     */
    private Properties loadConfiguration()
@@ -543,20 +565,20 @@ public class Main
       {
          fis = new FileInputStream(configuration);
          properties.load(fis);
-      } 
-      catch (IOException e) 
+      }
+      catch (IOException e)
       {
          System.err.println("Unable to open " + configuration);
-      } 
-      finally 
+      }
+      finally
       {
-         if (fis != null) 
+         if (fis != null)
          {
             try
             {
                fis.close();
-            } 
-            catch (IOException ioe) 
+            }
+            catch (IOException ioe)
             {
                // Nothing to do
             }
@@ -568,6 +590,7 @@ public class Main
 
    /**
     * Load default configuration values
+    * 
     * @return The properties
     */
    private Properties loadDefaultConfiguration()
@@ -575,8 +598,8 @@ public class Main
       Properties properties = new Properties();
       String propertiesFile = System.getProperty("jboss-tattletale.properties");
       boolean loaded = false;
-            
-      if (propertiesFile != null) 
+
+      if (propertiesFile != null)
       {
          FileInputStream fis = null;
          try
@@ -584,27 +607,27 @@ public class Main
             fis = new FileInputStream(propertiesFile);
             properties.load(fis);
             loaded = true;
-         } 
-         catch (IOException e) 
+         }
+         catch (IOException e)
          {
             System.err.println("Unable to open " + propertiesFile);
-         } 
-         finally 
+         }
+         finally
          {
-            if (fis != null) 
+            if (fis != null)
             {
                try
                {
                   fis.close();
-               } 
-               catch (IOException ioe) 
+               }
+               catch (IOException ioe)
                {
                   // Nothing to do
                }
             }
          }
       }
-      if (!loaded) 
+      if (!loaded)
       {
          FileInputStream fis = null;
          try
@@ -612,49 +635,49 @@ public class Main
             fis = new FileInputStream("jboss-tattletale.properties");
             properties.load(fis);
             loaded = true;
-         } 
-         catch (IOException ignore) 
+         }
+         catch (IOException ignore)
          {
             // Nothing to do
-         } 
-         finally 
+         }
+         finally
          {
-            if (fis != null) 
+            if (fis != null)
             {
                try
                {
                   fis.close();
-               } 
-               catch (IOException ioe) 
+               }
+               catch (IOException ioe)
                {
                   // Nothing to do
                }
             }
          }
       }
-      if (!loaded) 
+      if (!loaded)
       {
          InputStream is = null;
-         try 
+         try
          {
             ClassLoader cl = Main.class.getClassLoader();
             is = cl.getResourceAsStream("jboss-tattletale.properties");
             properties.load(is);
             loaded = true;
-         } 
+         }
          catch (Exception ie)
          {
             // Properties file not found
-         } 
-         finally 
+         }
+         finally
          {
-            if (is != null) 
+            if (is != null)
             {
                try
                {
                   is.close();
-               } 
-               catch (IOException ioe) 
+               }
+               catch (IOException ioe)
                {
                   // Nothing to do
                }
@@ -667,6 +690,7 @@ public class Main
 
    /**
     * Load filters
+    * 
     * @return The filters
     */
    private Properties loadFilters()
@@ -678,20 +702,20 @@ public class Main
       {
          fis = new FileInputStream(filter);
          properties.load(fis);
-      } 
-      catch (IOException e) 
+      }
+      catch (IOException e)
       {
          System.err.println("Unable to open " + filter);
-      } 
-      finally 
+      }
+      finally
       {
-         if (fis != null) 
+         if (fis != null)
          {
             try
             {
                fis.close();
-            } 
-            catch (IOException ioe) 
+            }
+            catch (IOException ioe)
             {
                // Nothing to do
             }
@@ -703,15 +727,17 @@ public class Main
 
    /**
     * Load default filter values
+    * 
     * @return The properties
     */
    private Properties loadDefaultFilters()
    {
       Properties properties = new Properties();
-      String propertiesFile = System.getProperty("jboss-tattletale-filter.properties");
+      String propertiesFile = System
+         .getProperty("jboss-tattletale-filter.properties");
       boolean loaded = false;
-            
-      if (propertiesFile != null) 
+
+      if (propertiesFile != null)
       {
          FileInputStream fis = null;
          try
@@ -719,27 +745,27 @@ public class Main
             fis = new FileInputStream(propertiesFile);
             properties.load(fis);
             loaded = true;
-         } 
-         catch (IOException e) 
+         }
+         catch (IOException e)
          {
             System.err.println("Unable to open " + propertiesFile);
-         } 
-         finally 
+         }
+         finally
          {
-            if (fis != null) 
+            if (fis != null)
             {
                try
                {
                   fis.close();
-               } 
-               catch (IOException ioe) 
+               }
+               catch (IOException ioe)
                {
                   // Nothing to do
                }
             }
          }
       }
-      if (!loaded) 
+      if (!loaded)
       {
          FileInputStream fis = null;
          try
@@ -747,20 +773,20 @@ public class Main
             fis = new FileInputStream("jboss-tattletale-filter.properties");
             properties.load(fis);
             loaded = true;
-         } 
-         catch (IOException ignore) 
+         }
+         catch (IOException ignore)
          {
             // Nothing to do
-         } 
-         finally 
+         }
+         finally
          {
-            if (fis != null) 
+            if (fis != null)
             {
                try
                {
                   fis.close();
-               } 
-               catch (IOException ioe) 
+               }
+               catch (IOException ioe)
                {
                   // Nothing to do
                }
@@ -773,52 +799,66 @@ public class Main
 
    /**
     * Generate the basic reports to the output directory
-    * @param outputDir Where the reports go
-    * @param config Tattletale runtime properties.
-    * @param allReport Should all reports be generated ?
-    * @param reportSet The set of reports that should be generated
-    * @param classloaderStructure The class loader structure
-    * @param filters The filters
-    * @param archives The archives
-    * @param gProvides The global provides
-    * @param known The known archives
-    * @exception Exception In case of fail on settings
+    * 
+    * @param outputDir
+    *           Where the reports go
+    * @param config
+    *           Tattletale runtime properties.
+    * @param allReport
+    *           Should all reports be generated ?
+    * @param reportSet
+    *           The set of reports that should be generated
+    * @param classloaderStructure
+    *           The class loader structure
+    * @param filters
+    *           The filters
+    * @param archives
+    *           The archives
+    * @param gProvides
+    *           The global provides
+    * @param known
+    *           The known archives
+    * @exception Exception
+    *               In case of fail on settings
     */
-   private void outputReport(String outputDir,
-                             Properties config,
-                             boolean allReports,
-                             Set<String> reportSet,
-                             String classloaderStructure,
-                             Properties filters,
-                             SortedSet<Archive> archives, 
-                             SortedMap<String, SortedSet<String>> gProvides, 
-                             List<Archive> known) throws Exception
+   private void outputReport(String outputDir, Properties config,
+      boolean allReports, Set<String> reportSet, String classloaderStructure,
+      Properties filters, SortedSet<Archive> archives,
+      SortedMap<String, SortedSet<String>> gProvides, List<Archive> known)
+      throws Exception
    {
       SortedSet<Report> dependenciesReports = new TreeSet<Report>();
       SortedSet<Report> generalReports = new TreeSet<Report>();
       SortedSet<Report> archiveReports = new TreeSet<Report>();
 
-      Report classDependsOn = new ClassDependsOnReport(archives, known, classloaderStructure);
+      Report classDependsOn = new ClassDependsOnReport(archives, known,
+         classloaderStructure);
       if (allReports || reportSet.contains(classDependsOn.getId()))
       {
-         if (filters != null && filters.getProperty(classDependsOn.getId()) != null)
-            classDependsOn.setFilter(filters.getProperty(classDependsOn.getId()));
+         if (filters != null
+            && filters.getProperty(classDependsOn.getId()) != null)
+            classDependsOn.setFilter(filters
+               .getProperty(classDependsOn.getId()));
 
          classDependsOn.generate(outputDir);
          dependenciesReports.add(classDependsOn);
       }
 
-      Report classDependants = new ClassDependantsReport(archives, known, classloaderStructure);
+      Report classDependants = new ClassDependantsReport(archives, known,
+         classloaderStructure);
       if (allReports || reportSet.contains(classDependants.getId()))
       {
-         if (filters != null && filters.getProperty(classDependants.getId()) != null)
-            classDependants.setFilter(filters.getProperty(classDependants.getId()));
+         if (filters != null
+            && filters.getProperty(classDependants.getId()) != null)
+            classDependants.setFilter(filters.getProperty(classDependants
+               .getId()));
 
          classDependants.generate(outputDir);
          dependenciesReports.add(classDependants);
       }
 
-      Report dependsOn = new DependsOnReport(archives, known, classloaderStructure);
+      Report dependsOn = new DependsOnReport(archives, known,
+         classloaderStructure);
       if (allReports || reportSet.contains(dependsOn.getId()))
       {
          if (filters != null && filters.getProperty(dependsOn.getId()) != null)
@@ -838,37 +878,47 @@ public class Main
          dependenciesReports.add(dependants);
       }
 
-      Report transitiveDependsOn = new TransitiveDependsOnReport(archives, known, classloaderStructure);
+      Report transitiveDependsOn = new TransitiveDependsOnReport(archives,
+         known, classloaderStructure);
       if (allReports || reportSet.contains(transitiveDependsOn.getId()))
       {
-         if (filters != null && filters.getProperty(transitiveDependsOn.getId()) != null)
-            transitiveDependsOn.setFilter(filters.getProperty(transitiveDependsOn.getId()));
+         if (filters != null
+            && filters.getProperty(transitiveDependsOn.getId()) != null)
+            transitiveDependsOn.setFilter(filters
+               .getProperty(transitiveDependsOn.getId()));
 
          transitiveDependsOn.generate(outputDir);
          dependenciesReports.add(transitiveDependsOn);
       }
 
-      Report transitiveDependants = new TransitiveDependantsReport(archives, classloaderStructure);
+      Report transitiveDependants = new TransitiveDependantsReport(archives,
+         classloaderStructure);
       if (allReports || reportSet.contains(transitiveDependants.getId()))
       {
-         if (filters != null && filters.getProperty(transitiveDependants.getId()) != null)
-            transitiveDependants.setFilter(filters.getProperty(transitiveDependants.getId()));
+         if (filters != null
+            && filters.getProperty(transitiveDependants.getId()) != null)
+            transitiveDependants.setFilter(filters
+               .getProperty(transitiveDependants.getId()));
 
          transitiveDependants.generate(outputDir);
          dependenciesReports.add(transitiveDependants);
       }
 
-      Report circularDependency = new CircularDependencyReport(archives, classloaderStructure);
+      Report circularDependency = new CircularDependencyReport(archives,
+         classloaderStructure);
       if (allReports || reportSet.contains(circularDependency.getId()))
       {
-         if (filters != null && filters.getProperty(circularDependency.getId()) != null)
-            circularDependency.setFilter(filters.getProperty(circularDependency.getId()));
+         if (filters != null
+            && filters.getProperty(circularDependency.getId()) != null)
+            circularDependency.setFilter(filters.getProperty(circularDependency
+               .getId()));
 
          circularDependency.generate(outputDir);
          dependenciesReports.add(circularDependency);
       }
 
-      Report graphviz = new GraphvizReport(archives, known, classloaderStructure, config);
+      Report graphviz = new GraphvizReport(archives, known,
+         classloaderStructure, config);
       if (allReports || reportSet.contains(graphviz.getId()))
       {
          if (filters != null && filters.getProperty(graphviz.getId()) != null)
@@ -897,7 +947,8 @@ public class Main
       Report multipleJars = new MultipleJarsReport(archives, gProvides);
       if (allReports || reportSet.contains(multipleJars.getId()))
       {
-         if (filters != null && filters.getProperty(multipleJars.getId()) != null)
+         if (filters != null
+            && filters.getProperty(multipleJars.getId()) != null)
             multipleJars.setFilter(filters.getProperty(multipleJars.getId()));
 
          multipleJars.generate(outputDir);
@@ -907,18 +958,23 @@ public class Main
       Report multipleLocations = new MultipleLocationsReport(archives);
       if (allReports || reportSet.contains(multipleLocations.getId()))
       {
-         if (filters != null && filters.getProperty(multipleLocations.getId()) != null)
-            multipleLocations.setFilter(filters.getProperty(multipleLocations.getId()));
+         if (filters != null
+            && filters.getProperty(multipleLocations.getId()) != null)
+            multipleLocations.setFilter(filters.getProperty(multipleLocations
+               .getId()));
 
          multipleLocations.generate(outputDir);
          generalReports.add(multipleLocations);
       }
 
-      Report packageMultipleJars = new PackageMultipleJarsReport(archives, gProvides);
+      Report packageMultipleJars = new PackageMultipleJarsReport(archives,
+         gProvides);
       if (allReports || reportSet.contains(packageMultipleJars.getId()))
       {
-         if (filters != null && filters.getProperty(packageMultipleJars.getId()) != null)
-            packageMultipleJars.setFilter(filters.getProperty(packageMultipleJars.getId()));
+         if (filters != null
+            && filters.getProperty(packageMultipleJars.getId()) != null)
+            packageMultipleJars.setFilter(filters
+               .getProperty(packageMultipleJars.getId()));
 
          packageMultipleJars.generate(outputDir);
          generalReports.add(packageMultipleJars);
@@ -927,7 +983,8 @@ public class Main
       Report eliminateJars = new EliminateJarsReport(archives);
       if (allReports || reportSet.contains(eliminateJars.getId()))
       {
-         if (filters != null && filters.getProperty(eliminateJars.getId()) != null)
+         if (filters != null
+            && filters.getProperty(eliminateJars.getId()) != null)
             eliminateJars.setFilter(filters.getProperty(eliminateJars.getId()));
 
          eliminateJars.generate(outputDir);
@@ -947,7 +1004,8 @@ public class Main
       Report classLocation = new ClassLocationReport(archives, gProvides);
       if (allReports || reportSet.contains(classLocation.getId()))
       {
-         if (filters != null && filters.getProperty(classLocation.getId()) != null)
+         if (filters != null
+            && filters.getProperty(classLocation.getId()) != null)
             classLocation.setFilter(filters.getProperty(classLocation.getId()));
 
          classLocation.generate(outputDir);
@@ -987,8 +1045,10 @@ public class Main
       Report invalidversion = new InvalidVersionReport(archives);
       if (allReports || reportSet.contains(invalidversion.getId()))
       {
-         if (filters != null && filters.getProperty(invalidversion.getId()) != null)
-            invalidversion.setFilter(filters.getProperty(invalidversion.getId()));
+         if (filters != null
+            && filters.getProperty(invalidversion.getId()) != null)
+            invalidversion.setFilter(filters
+               .getProperty(invalidversion.getId()));
 
          invalidversion.generate(outputDir);
          generalReports.add(invalidversion);
@@ -997,7 +1057,8 @@ public class Main
       Report blacklisted = new BlackListedReport(archives);
       if (allReports || reportSet.contains(blacklisted.getId()))
       {
-         if (filters != null && filters.getProperty(blacklisted.getId()) != null)
+         if (filters != null
+            && filters.getProperty(blacklisted.getId()) != null)
             blacklisted.setFilter(filters.getProperty(blacklisted.getId()));
 
          blacklisted.generate(outputDir);
@@ -1014,7 +1075,8 @@ public class Main
          generalReports.add(unusedjar);
       }
 
-      Dump.generateIndex(dependenciesReports, generalReports, archiveReports, outputDir);
+      Dump.generateIndex(dependenciesReports, generalReports, archiveReports,
+         outputDir);
       Dump.generateCSS(outputDir);
 
       if (failOnInfo || failOnWarn || failOnError)
@@ -1026,7 +1088,8 @@ public class Main
 
          for (Report report : dependenciesReports)
          {
-            if (ReportStatus.YELLOW == report.getStatus() || ReportStatus.RED == report.getStatus())
+            if (ReportStatus.YELLOW == report.getStatus()
+               || ReportStatus.RED == report.getStatus())
             {
                if (ReportSeverity.INFO == report.getSeverity() && failOnInfo)
                {
@@ -1035,7 +1098,7 @@ public class Main
 
                   sb = sb.append(report.getId());
                   sb = sb.append("=");
-                  
+
                   if (ReportStatus.YELLOW == report.getStatus())
                   {
                      sb = sb.append("YELLOW");
@@ -1048,14 +1111,15 @@ public class Main
                   foundError = true;
                   first = false;
                }
-               else if (ReportSeverity.WARNING == report.getSeverity() && failOnWarn)
+               else if (ReportSeverity.WARNING == report.getSeverity()
+                  && failOnWarn)
                {
                   if (!first)
                      sb = sb.append(System.getProperty("line.separator"));
 
                   sb = sb.append(report.getId());
                   sb = sb.append("=");
-                  
+
                   if (ReportStatus.YELLOW == report.getStatus())
                   {
                      sb = sb.append("YELLOW");
@@ -1068,14 +1132,15 @@ public class Main
                   foundError = true;
                   first = false;
                }
-               else if (ReportSeverity.ERROR == report.getSeverity() && failOnError)
+               else if (ReportSeverity.ERROR == report.getSeverity()
+                  && failOnError)
                {
                   if (!first)
                      sb = sb.append(System.getProperty("line.separator"));
 
                   sb = sb.append(report.getId());
                   sb = sb.append("=");
-                  
+
                   if (ReportStatus.YELLOW == report.getStatus())
                   {
                      sb = sb.append("YELLOW");
@@ -1093,7 +1158,8 @@ public class Main
 
          for (Report report : generalReports)
          {
-            if (ReportStatus.YELLOW == report.getStatus() || ReportStatus.RED == report.getStatus())
+            if (ReportStatus.YELLOW == report.getStatus()
+               || ReportStatus.RED == report.getStatus())
             {
                if (ReportSeverity.INFO == report.getSeverity() && failOnInfo)
                {
@@ -1102,7 +1168,7 @@ public class Main
 
                   sb = sb.append(report.getId());
                   sb = sb.append("=");
-                  
+
                   if (ReportStatus.YELLOW == report.getStatus())
                   {
                      sb = sb.append("YELLOW");
@@ -1115,14 +1181,15 @@ public class Main
                   foundError = true;
                   first = false;
                }
-               else if (ReportSeverity.WARNING == report.getSeverity() && failOnWarn)
+               else if (ReportSeverity.WARNING == report.getSeverity()
+                  && failOnWarn)
                {
                   if (!first)
                      sb = sb.append(System.getProperty("line.separator"));
 
                   sb = sb.append(report.getId());
                   sb = sb.append("=");
-                  
+
                   if (ReportStatus.YELLOW == report.getStatus())
                   {
                      sb = sb.append("YELLOW");
@@ -1135,14 +1202,15 @@ public class Main
                   foundError = true;
                   first = false;
                }
-               else if (ReportSeverity.ERROR == report.getSeverity() && failOnError)
+               else if (ReportSeverity.ERROR == report.getSeverity()
+                  && failOnError)
                {
                   if (!first)
                      sb = sb.append(System.getProperty("line.separator"));
 
                   sb = sb.append(report.getId());
                   sb = sb.append("=");
-                  
+
                   if (ReportStatus.YELLOW == report.getStatus())
                   {
                      sb = sb.append("YELLOW");
@@ -1160,7 +1228,8 @@ public class Main
 
          for (Report report : archiveReports)
          {
-            if (ReportStatus.YELLOW == report.getStatus() || ReportStatus.RED == report.getStatus())
+            if (ReportStatus.YELLOW == report.getStatus()
+               || ReportStatus.RED == report.getStatus())
             {
                if (ReportSeverity.INFO == report.getSeverity() && failOnInfo)
                {
@@ -1169,7 +1238,7 @@ public class Main
 
                   sb = sb.append(report.getId());
                   sb = sb.append("=");
-                  
+
                   if (ReportStatus.YELLOW == report.getStatus())
                   {
                      sb = sb.append("YELLOW");
@@ -1182,14 +1251,15 @@ public class Main
                   foundError = true;
                   first = false;
                }
-               else if (ReportSeverity.WARNING == report.getSeverity() && failOnWarn)
+               else if (ReportSeverity.WARNING == report.getSeverity()
+                  && failOnWarn)
                {
                   if (!first)
                      sb = sb.append(System.getProperty("line.separator"));
 
                   sb = sb.append(report.getId());
                   sb = sb.append("=");
-                  
+
                   if (ReportStatus.YELLOW == report.getStatus())
                   {
                      sb = sb.append("YELLOW");
@@ -1202,14 +1272,15 @@ public class Main
                   foundError = true;
                   first = false;
                }
-               else if (ReportSeverity.ERROR == report.getSeverity() && failOnError)
+               else if (ReportSeverity.ERROR == report.getSeverity()
+                  && failOnError)
                {
                   if (!first)
                      sb = sb.append(System.getProperty("line.separator"));
 
                   sb = sb.append(report.getId());
                   sb = sb.append("=");
-                  
+
                   if (ReportStatus.YELLOW == report.getStatus())
                   {
                      sb = sb.append("YELLOW");
@@ -1232,23 +1303,25 @@ public class Main
 
    /**
     * Validate and create the outputDir if needed.
-    * @param outputDir Where reports go
+    * 
+    * @param outputDir
+    *           Where reports go
     * @return The verified output path for the reports
-    * @exception IOException If the output directory cant be created
+    * @exception IOException
+    *               If the output directory cant be created
     */
    private String setupOutputDir(String outputDir) throws IOException
    {
       // Verify ending slash
-      outputDir = !outputDir.substring(outputDir.length() - 1)
-                  .equals(File.separator) ?
-                   outputDir + File.separator : outputDir;
-                   
+      outputDir = !outputDir.substring(outputDir.length() - 1).equals(
+         File.separator) ? outputDir + File.separator : outputDir;
+
       // Verify output directory exists & create if it does not
       File outputDirFile = new File(outputDir);
 
       if (outputDirFile.exists() && !outputDirFile.equals(new File(".")))
          recursiveDelete(outputDirFile);
-      
+
       if (!outputDirFile.equals(new File(".")) && !outputDirFile.mkdirs())
          throw new IOException("Cannot create directory: " + outputDir);
 
@@ -1257,8 +1330,11 @@ public class Main
 
    /**
     * Recursive delete
-    * @param f The file handler
-    * @exception IOException Thrown if a file could not be deleted
+    * 
+    * @param f
+    *           The file handler
+    * @exception IOException
+    *               Thrown if a file could not be deleted
     */
    private void recursiveDelete(File f) throws IOException
    {
@@ -1287,7 +1363,9 @@ public class Main
 
    /**
     * Parse excludes
-    * @param s The input string
+    * 
+    * @param s
+    *           The input string
     * @return The set of excludes
     */
    private Set<String> parseExcludes(String s)
@@ -1301,10 +1379,10 @@ public class Main
 
          if (token.startsWith("**"))
             token = token.substring(2);
-         
+
          if (token.endsWith("**"))
             token = token.substring(0, token.indexOf("**"));
-         
+
          result.add(token);
       }
 
@@ -1314,18 +1392,21 @@ public class Main
    /**
     * The usage method
     */
-   private static void usage() 
+   private static void usage()
    {
-      System.out.println("Usage: Tattletale [-exclude=<excludes>] <scan-directory> [output-directory]");
+      System.out
+         .println("Usage: Tattletale [-exclude=<excludes>] <scan-directory> [output-directory]");
    }
 
    /**
     * The main method
-    * @param args The arguments
+    * 
+    * @param args
+    *           The arguments
     */
-   public static void main(String[] args) 
+   public static void main(String[] args)
    {
-      if (args.length > 0) 
+      if (args.length > 0)
       {
          try
          {
@@ -1334,7 +1415,8 @@ public class Main
 
             if (args[arg].startsWith("-exclude="))
             {
-               main.setExcludes(args[arg].substring(args[arg].indexOf("=") + 1));
+               main
+                  .setExcludes(args[arg].substring(args[arg].indexOf("=") + 1));
                arg++;
             }
 
@@ -1352,7 +1434,7 @@ public class Main
             e.printStackTrace(System.err);
          }
       }
-      else 
+      else
       {
          usage();
       }
