@@ -1,0 +1,39 @@
+${ivy.pom.license}
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.jboss.tattletale</groupId>
+  <artifactId>${ivy.pom.artifactId}</artifactId>
+  <packaging>${ivy.pom.packaging}</packaging>
+  <version>${ivy.pom.version}</version>
+  <name>Tattletale</name>
+  <url>http://www.jboss.org/tattletale</url>
+  <description>
+    Tattletale - a software quality tool
+  </description>
+  <licenses>
+    <license>
+      <name>lgpl</name>
+      <url>http://repository.jboss.org/licenses/lgpl.txt</url>
+    </license>
+  </licenses>
+  <organization>
+    <name>JBoss, by Red Hat</name>
+    <url>http://www.jboss.org</url>
+  </organization>
+  <scm>
+    <url>http://fisheye.jboss.org/browse/Tattletale</url>
+    <connection>http://anonsvn.jboss.org/repos/tattletale/trunk</connection>
+    <developerConnection>https://svn.jboss.org/repos/tattletale/trunk</developerConnection>
+  </scm>
+  <developers>
+    <developer>
+      <id>jesper.pedersen</id>
+      <name>Jesper Pedersen</name>
+      <organization>JBoss, by Red Hat</organization>
+    </developer>
+  </developers>
+  <dependencies>
+  </dependencies>
+</project>

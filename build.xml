@@ -17,11 +17,16 @@
     <property name="reports.dir" value="${basedir}/reports"/>
     <property name="tools.dir" value="${basedir}/tools"/>
 
-    <property name="name" value="jboss-tattletale"/>
+    <property name="name" value="tattletale"/>
     <property name="major" value="1"/>
     <property name="minor" value="2"/>
     <property name="patch" value="0"/>
     <property name="type" value="Beta1"/>
+
+    <condition property="version" value="${major}.${minor}.${patch}-SNAPSHOT">
+      <isset property="snapshot"/>
+    </condition>
+    <property name="version" value="${major}.${minor}.${patch}.${type}"/>
 
     <property name="tattletale.jar" value="tattletale.jar"/>
     <property name="tattletale-ant.jar" value="tattletale-ant.jar"/>
@@ -37,7 +42,7 @@
     <!-- ================================= 
          Ivy              
          ================================= -->
-    <property name="ivy.version" value="2.2.0-rc1"/>
+    <property name="ivy.version" value="2.2.0"/>
     <property name="ivy.dir" value="${user.home}/.ivy2/cache/org.apache.ivy/jars"/>
     <property name="ivy.jar.name" value="ivy-${ivy.version}.jar"/>
     
@@ -96,7 +101,9 @@
          Target: resolve              
          ================================= -->
     <target name="resolve" depends="init">
-       <ivy:retrieve pattern="${lib.dir}/[conf]/[artifact].[ext]" sync="true"/>
+       <ivy:retrieve pattern="${lib.dir}/[conf]/[artifact].[ext]" 
+                     conf="core"
+                     sync="true"/>
     </target>
   
     <!-- =================================================================== -->
@@ -298,5 +305,102 @@
     <target name="clean-cache">
        <ivy:cleancache />
     </target>
+
+  <!-- ================================= 
+       Target: nexus
+       ================================= -->
+  <macrodef name="deploy-file">
+    <attribute name="file"/>
+    <attribute name="artifact"/>
+    <attribute name="extension"/>
+    <sequential>
+      <concat destfile="${dist.dir}/@{file}" append="true" force="true" eol="unix">
+mvn deploy:deploy-file -Dfile=$PWD/@{artifact}.@{extension} -DpomFile=@{artifact}.xml $REPOSITORY
+</concat>
+    </sequential>
+  </macrodef>
+
+  <macrodef name="snapshot-deploy-file">
+    <attribute name="file"/>
+    <attribute name="artifact"/>
+    <attribute name="extension"/>
+    <sequential>
+      <concat destfile="${dist.dir}/@{file}" append="true" force="true" eol="unix">
+mvn deploy:deploy-file -Dfile=$PWD/@{artifact}.@{extension} -DpomFile=@{artifact}.xml -DuniqueVersion=false $REPOSITORY
+</concat>
+    </sequential>
+  </macrodef>
+
+  <target name="nexus" depends="clean,jars">
+    <ivy:retrieve pattern="${lib.dir}/[conf]/[artifact].[ext]" 
+                  conf="${name},${name}-ant,${name}-maven"
+                  sync="true"/>
+
+    <delete file="${dist.dir}/release.sh"/>
+    <delete file="${dist.dir}/snapshot.sh"/>
+
+    <concat destfile="${dist.dir}/release.sh" append="true" force="true" eol="unix">#!/bin/sh
+PWD=`pwd`
+VERSION=${major}.${minor}.${patch}.${type}
+REPOSITORY='-Durl=https://repository.jboss.org/nexus/service/local/staging/deploy/maven2/ -DrepositoryId=jboss-releases'
+</concat>
+
+    <concat destfile="${dist.dir}/snapshot.sh" append="true" force="true" eol="unix">#!/bin/sh
+PWD=`pwd`
+VERSION=${major}.${minor}.${patch}-SNAPSHOT
+REPOSITORY='-Durl=https://repository.jboss.org/nexus/content/repositories/snapshots/ -DrepositoryId=jboss-snapshots'
+</concat>
+
+    <!-- tattletale -->
+    <delete file="${dist.dir}/${name}.xml"/>
+    <ivy:makepom artifactName="${name}" 
+                 conf="${name}"
+                 ivyfile="${basedir}/ivy.xml" 
+                 pomfile="${dist.dir}/${name}.xml"
+                 headerFile="${basedir}/maven/HEADER"
+                 templatefile="${basedir}/maven/pom.template"
+                 printIvyInfo="false">
+      <mapping conf="${name}" scope="runtime"/>
+    </ivy:makepom>
+
+    <deploy-file file="release.sh" artifact="${name}" extension="jar"/>
+    <snapshot-deploy-file file="snapshot.sh" artifact="${name}" extension="jar"/>
+
+    <!-- tattletale-ant -->
+    <delete file="${dist.dir}/${name}-ant.xml"/>
+    <ivy:makepom artifactName="${name}-ant" 
+                 conf="${name}-ant"
+                 ivyfile="${basedir}/ivy.xml" 
+                 pomfile="${dist.dir}/${name}-ant.xml"
+                 headerFile="${basedir}/maven/HEADER"
+                 templatefile="${basedir}/maven/pom.template"
+                 printIvyInfo="false">
+      <mapping conf="${name}-ant" scope="runtime"/>
+      <dependency artifact="${name}" scope="runtime"/>
+    </ivy:makepom>
+
+    <deploy-file file="release.sh" artifact="${name}-ant" extension="jar"/>
+    <snapshot-deploy-file file="snapshot.sh" artifact="${name}-ant" extension="jar"/>
+
+    <!-- tattletale-maven -->
+    <delete file="${dist.dir}/${name}-maven.xml"/>
+    <ivy:makepom artifactName="${name}-maven" 
+                 conf="${name}-maven"
+                 ivyfile="${basedir}/ivy.xml" 
+                 pomfile="${dist.dir}/${name}-maven.xml"
+                 headerFile="${basedir}/maven/HEADER"
+                 templatefile="${basedir}/maven/pom.template"
+                 printIvyInfo="false">
+      <mapping conf="${name}-maven" scope="runtime"/>
+      <dependency artifact="${name}" scope="runtime"/>
+    </ivy:makepom>
+
+    <deploy-file file="release.sh" artifact="${name}-maven" extension="jar"/>
+    <snapshot-deploy-file file="snapshot.sh" artifact="${name}-maven" extension="jar"/>
+
+    <chmod file="${dist.dir}/release.sh" perm="755"/>
+    <chmod file="${dist.dir}/snapshot.sh" perm="755"/>
+
+  </target>
 
 </project>

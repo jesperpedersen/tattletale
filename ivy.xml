@@ -23,20 +23,34 @@
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xsi:noNamespaceSchemaLocation="http://ant.apache.org/ivy/schemas/ivy.xsd">
 
-  <info organisation="org.jboss" 
-        module="jboss-tattletale">
+  <info organisation="org.jboss.tattletale" 
+        module="tattletale"
+        revision="${version}">
     <license name="lgpl" url="http://repository.jboss.org/licenses/lgpl.txt"/>
     <repository name="jboss" url="http://repository.jboss.org"/>
+    <description homepage="http://www.jboss.org/tattletale">
+      Tattletale - a software quality tool
+    </description>
   </info>
 
-  <configurations>
+  <configurations defaultconfmapping="core->default;tattletale->default;tattletale-ant->default;tattletale-maven->default">
     <conf name="core" transitive="false"/>
+
+    <conf name="tattletale" transitive="false"/>
+    <conf name="tattletale-ant" transitive="false"/>
+    <conf name="tattletale-maven" transitive="false"/>
   </configurations>
 
+  <publications>
+    <artifact name="tattletale" type="jar"/>
+    <artifact name="tattletale-ant" type="jar"/>
+    <artifact name="tattletale-maven" type="jar"/>
+  </publications>
+
   <dependencies>
-    <dependency org="ant" name="ant" rev="${version.ant}" conf="core->default"/>
-    <dependency org="org.apache.maven" name="maven-plugin-api" rev="${version.maven}" conf="core->default"/>
-    <dependency org="org.javassist" name="javassist" rev="${version.javassist}" conf="core->default"/>
+    <dependency org="ant" name="ant" rev="${version.ant}" conf="core,tattletale-ant"/>
+    <dependency org="org.apache.maven" name="maven-plugin-api" rev="${version.maven}" conf="core,tattletale-maven"/>
+    <dependency org="org.javassist" name="javassist" rev="${version.javassist}" conf="core,tattletale"/>
   </dependencies>
 
 </ivy-module>
