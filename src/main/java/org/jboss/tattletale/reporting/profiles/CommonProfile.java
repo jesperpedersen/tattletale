@@ -19,10 +19,8 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.tattletale.reporting;
+package org.jboss.tattletale.reporting.profiles;
 
-import org.jboss.tattletale.core.Archive;
-import org.jboss.tattletale.core.ArchiveTypes;
 import org.jboss.tattletale.core.Location;
 import org.jboss.tattletale.core.NestableArchive;
 
@@ -30,29 +28,61 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.zip.GZIPInputStream;
 
-import javassist.bytecode.ClassFile;
-
 /**
- * Sun: Java 5
- * @author Jesper Pedersen <jesper.pedersen@jboss.org>
+ * Base profile class.
+ * 
+ * @author Michele
+ * 
  */
-public class SunJava5 extends NestableArchive
+public abstract class CommonProfile extends NestableArchive
 {
-   /** Class set */
-   private static SortedSet<String> classSet = new TreeSet<String>();
 
-   static
+   /**
+    * Constructor
+    * 
+    * @param classSet
+    *           The .gz file with the classes
+    * @param type
+    *           Archive type
+    * @param name
+    *           Profile name
+    * @param version
+    *           Profile's class version
+    * @param location
+    *           Profile's location
+    */
+   public CommonProfile(String classSet, int type, String name, int version,
+         String location)
+   {
+      super(type, name, version, null, null, null, null, null, null, null, null);
+      loadClassList(classSet);
+      addLocation(new Location(location, name));
+   }
+
+   /**
+    * Content of the class set file
+    */
+   protected SortedSet<String> classSet = new TreeSet<String>();
+
+   /**
+    * Loads this profile's classlist from the resources.
+    * 
+    * @param resourceFile
+    *           File name
+    */
+   protected void loadClassList(String resourceFile)
    {
       InputStream is = null;
       try
       {
-         is = SunJava5.class.getClassLoader().getResourceAsStream("sunjdk5.clz.gz");
+         is = CDI10.class.getClassLoader().getResourceAsStream(resourceFile);
 
-         GZIPInputStream gis = new GZIPInputStream(is); 
+         GZIPInputStream gis = new GZIPInputStream(is);
          InputStreamReader isr = new InputStreamReader(gis);
          BufferedReader br = new BufferedReader(isr);
 
@@ -82,22 +112,40 @@ public class SunJava5 extends NestableArchive
    }
 
    /**
-    * Constructor
+    * Returns true if this profile is selected by the supplied configuration
+    * information.
+    * 
+    * @param allProfiles
+    *           All-Profiles flag
+    * @param profileSet
+    *           Selected profiles as specified in the configuration
+    * @return True if the Profile is to be included
     */
-   public SunJava5()
+   public boolean included(boolean allProfiles, Set<String> profileSet)
    {
-      super(ArchiveTypes.JAR, "Sun Java 5", ClassFile.JAVA_5, null, null, null, null, null, null, null, null);
-
-      Location l = new Location("rt.jar", "Sun JDK5");
-      addLocation(l);
-
-      addSubArchive(new SunJava5JCE());
-      addSubArchive(new SunJava5JSSE());
+      return allProfiles
+            || profileSet != null
+            && (profileSet.contains(getProfileCode()) || profileSet
+                  .contains(getProfileName()));
    }
 
    /**
+    * 
+    * @return The code name of the profile
+    */
+   public abstract String getProfileCode();
+
+   /**
+    * 
+    * @return The long name of the profile
+    */
+   protected abstract String getProfileName();
+
+   /**
     * Does the archives provide this class
-    * @param clz The class name
+    * 
+    * @param clz
+    *           The class name
     * @return True if the class is provided; otherwise false
     */
    @Override
@@ -106,15 +154,6 @@ public class SunJava5 extends NestableArchive
       if (classSet.contains(clz))
          return true;
 
-      if (getSubArchives() != null)
-      {
-         for (Archive a : getSubArchives())
-         {
-            if (a.doesProvide(clz))
-               return true;
-         }
-      }
-      
       return false;
    }
 }
