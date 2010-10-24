@@ -14,13 +14,13 @@
      <para>Once downloaded extract the files by executing:</para>
 
      <programlisting>
-unzip jboss-tattletale-1.1.0.GA.zip
+unzip jboss-tattletale-1.1.1.GA.zip
      </programlisting>
 
      <para>or</para>
 
      <programlisting>
-tar xzf jboss-tattletale-1.1.0.GA.tar.gz
+tar xzf jboss-tattletale-1.1.1.GA.tar.gz
      </programlisting>
 
      <para>depending on which archive type you downloaded.</para>
