@@ -2,7 +2,7 @@
   <description></description>
   <groupId>org.jboss.tattletale</groupId>
   <artifactId>tattletale-maven</artifactId>
-  <version>1.1.0.Final</version>
+  <version>@VERSION.TATTLETALE@</version>
   <goalPrefix>tattletale</goalPrefix>
   <isolatedRealm>false</isolatedRealm>
   <inheritedByDefault>true</inheritedByDefault>
@@ -112,6 +112,6 @@
   <dependencies>
     <groupId>org.jboss.tattletale</groupId>
     <artifactId>tattletale</artifactId>
-    <version>1.1.0.Final</version>
+    <version>@VERSION.TATTLETALE@</version>
   </dependencies>
 </plugin>
