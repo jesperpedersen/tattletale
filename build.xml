@@ -20,7 +20,7 @@
     <property name="name" value="tattletale"/>
     <property name="major" value="1"/>
     <property name="minor" value="1"/>
-    <property name="patch" value="1"/>
+    <property name="patch" value="2"/>
     <property name="type" value="Final"/>
 
     <condition property="version" value="${major}.${minor}.${patch}-SNAPSHOT">
@@ -154,6 +154,9 @@
             <fileset dir="${etc.dir}">
                <include name="plugin.xml"/>
             </fileset>
+            <filterset>
+              <filter token="VERSION.TATTLETALE" value="${version}"/>
+            </filterset>
         </copy>
         <jar destfile="${dist.dir}/${tattletale.jar}"
              basedir="${build.dir}"
