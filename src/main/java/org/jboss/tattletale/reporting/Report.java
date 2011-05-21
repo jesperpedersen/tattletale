@@ -179,6 +179,16 @@ public abstract class Report implements Comparable
    }
 
    /**
+    * Return size of index.html file
+    * @return size of index.html file in KB
+    */
+   String getIndexHtmlSize()
+   {
+      File indexFile = new File(getOutputDir().getAbsolutePath() + File.separator + INDEX_HTML);
+      return ((indexFile.length() / 1024) + 1) + " KB";
+   }
+
+   /**
     * Generate the report(s)
     * @param outputDirectory The top-level output directory
     */

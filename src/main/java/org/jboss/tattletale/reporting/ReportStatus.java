@@ -43,4 +43,27 @@ public class ReportStatus
    private ReportStatus()
    {
    }
+
+   /**
+    * Returns status display color
+    * @param status status constant value
+    * @return status display color
+    */
+   public static String getStatusColor(int status)
+   {
+      String output = "-";
+      if (status == ReportStatus.GREEN)
+      {
+         output = "green";
+      }
+      else if (status == ReportStatus.YELLOW)
+      {
+         output = "orange";
+      }
+      else if (status == ReportStatus.RED)
+      {
+         output = "red";
+      }
+      return output;
+   }
 }

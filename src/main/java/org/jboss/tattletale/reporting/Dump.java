@@ -123,140 +123,9 @@ public class Dump
 
          bw.write("<h1>" + Version.FULL_VERSION + "</h1>" + NEW_LINE);
          
-         if (dependenciesReports != null && dependenciesReports.size() > 0)
-         {
-            bw.write("<h2>Dependencies</h2>" + NEW_LINE);
-            bw.write("<ul>" + NEW_LINE);
-
-            for (Report r : dependenciesReports)
-            {
-               bw.write("<li>");
-               bw.write("<a href=\"" + r.getDirectory() + "/index.html\">" + r.getName() + "</a> (");
-
-               bw.write("<span");
-               if (r.getStatus() == ReportStatus.GREEN)
-               {
-                  bw.write(" style=\"color: green;\"");
-               }
-               else if (r.getStatus() == ReportStatus.YELLOW)
-               {
-                  bw.write(" style=\"color: yellow;\"");
-               }
-               else if (r.getStatus() == ReportStatus.RED)
-               {
-                  bw.write(" style=\"color: red;\"");
-               }
-               bw.write(">");
-
-               if (r.getSeverity() == ReportSeverity.INFO)
-               {
-                  bw.write("INFO");
-               }
-               else if (r.getSeverity() == ReportSeverity.WARNING)
-               {
-                  bw.write("WARNING");
-               }
-               else if (r.getSeverity() == ReportSeverity.ERROR)
-               {
-                  bw.write("ERROR");
-               }
-
-               bw.write("</span>");
-               bw.write(")</li>" + NEW_LINE);
-            }
-
-            bw.write("</ul>" + NEW_LINE);
-         }
-
-         if (generalReports != null && generalReports.size() > 0)
-         {
-            bw.write("<h2>Reports</h2>" + NEW_LINE);
-            bw.write("<ul>" + NEW_LINE);
-
-            for (Report r : generalReports)
-            {
-               bw.write("<li>");
-               bw.write("<a href=\"" + r.getDirectory() + "/index.html\">" + r.getName() + "</a> (");
-
-               bw.write("<span");
-               if (r.getStatus() == ReportStatus.GREEN)
-               {
-                  bw.write(" style=\"color: green;\"");
-               }
-               else if (r.getStatus() == ReportStatus.YELLOW)
-               {
-                  bw.write(" style=\"color: yellow;\"");
-               }
-               else if (r.getStatus() == ReportStatus.RED)
-               {
-                  bw.write(" style=\"color: red;\"");
-               }
-               bw.write(">");
-
-               if (r.getSeverity() == ReportSeverity.INFO)
-               {
-                  bw.write("INFO");
-               }
-               else if (r.getSeverity() == ReportSeverity.WARNING)
-               {
-                  bw.write("WARNING");
-               }
-               else if (r.getSeverity() == ReportSeverity.ERROR)
-               {
-                  bw.write("ERROR");
-               }
-
-               bw.write("</span>");
-               bw.write(")</li>" + NEW_LINE);
-            }
-
-            bw.write("</ul>" + NEW_LINE);
-         }
-
-         if (archiveReports != null && archiveReports.size() > 0)
-         {
-            bw.write("<h2>Archives</h2>" + NEW_LINE);
-            bw.write("<ul>" + NEW_LINE);
-
-            for (Report r : archiveReports)
-            {
-               bw.write("<li>");
-               bw.write("<a href=\"" + r.getDirectory() + "/" + r.getName() + ".html\">" + r.getName() + "</a> (");
-
-               bw.write("<span");
-               if (r.getStatus() == ReportStatus.GREEN)
-               {
-                  bw.write(" style=\"color: green;\"");
-               }
-               else if (r.getStatus() == ReportStatus.YELLOW)
-               {
-                  bw.write(" style=\"color: yellow;\"");
-               }
-               else if (r.getStatus() == ReportStatus.RED)
-               {
-                  bw.write(" style=\"color: red;\"");
-               }
-               bw.write(">");
-
-               if (r.getSeverity() == ReportSeverity.INFO)
-               {
-                  bw.write("INFO");
-               }
-               else if (r.getSeverity() == ReportSeverity.WARNING)
-               {
-                  bw.write("WARNING");
-               }
-               else if (r.getSeverity() == ReportSeverity.ERROR)
-               {
-                  bw.write("ERROR");
-               }
-
-               bw.write("</span>");
-               bw.write(")</li>" + NEW_LINE);
-            }
-            
-            bw.write("</ul>" + NEW_LINE);
-         }
+         generateReportItems(bw, dependenciesReports, "Dependencies");
+         generateReportItems(bw, generalReports, "Reports");
+         generateReportItems(bw, archiveReports, "Archives");
 
          bw.write(NEW_LINE);
          bw.write("<p>" + NEW_LINE);
@@ -276,4 +145,30 @@ public class Dump
          e.printStackTrace(System.err);
       }
    }
+
+   private static void generateReportItems(BufferedWriter bw, 
+           SortedSet<Report> reports, String heading) throws IOException
+   {
+      if (reports != null && reports.size() > 0)
+      {
+         bw.write("<h2>" + heading + "</h2>" + NEW_LINE);
+         bw.write("<ul>" + NEW_LINE);
+
+         for (Report r : reports)
+         {
+            bw.write("<li>");
+            bw.write("<a href=\"" + r.getDirectory() + "/index.html\">" + r.getName() + "</a> (");
+            bw.write("<span");
+            bw.write(" style=\"color: " + ReportStatus.getStatusColor(r.getStatus()) + ";\"");
+            bw.write(">");
+
+            bw.write(ReportSeverity.getSeverityString(r.getSeverity()));
+            bw.write("</span>");
+            bw.write(") (" + r.getIndexHtmlSize() + ")</li>" + NEW_LINE);
+         }
+
+         bw.write("</ul>" + NEW_LINE);
+      }
+   }
+
 }

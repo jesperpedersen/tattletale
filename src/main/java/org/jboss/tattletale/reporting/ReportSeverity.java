@@ -43,4 +43,27 @@ public class ReportSeverity
    private ReportSeverity()
    {
    }
+   
+   /**
+    * Returns severity string
+    * @param severity constant value
+    * @return severity string
+    */
+   public static String getSeverityString(int severity)
+   {
+      String output = "-";
+      if (severity == ReportSeverity.INFO)
+      {
+         output = "INFO";
+      }
+      else if (severity == ReportSeverity.WARNING)
+      {
+         output = "WARNING";
+      }
+      else if (severity == ReportSeverity.ERROR)
+      {
+         output = "ERROR";
+      }
+      return output;
+   }
 }
