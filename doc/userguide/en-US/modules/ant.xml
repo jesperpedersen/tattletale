@@ -1,0 +1,291 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter id="ant">
+   <title>Apache Ant</title>
+
+   <para>JBoss Tattletale integrates with Apache Ant such that you can generate the reports directly from 
+     your build environment.</para>
+   
+   <para>First, you need to add tattletale.jar, tattletale-ant.jar and javassist.jar to the Apache Ant classpath.</para>
+
+   <para>Second, you need to add the following to your project definition tag:</para>
+
+   <programlisting>
+xmlns:tattletale="antlib:org.jboss.tattletale.ant"
+   </programlisting>
+
+   <para>That is it.</para>
+
+   <para>Alternative, you can do a <code>taskdef</code> for each task</para>
+
+   <programlisting>
+&lt;taskdef name="report"
+         classname="org.jboss.tattletale.ant.ReportTask"
+         classpathref="tattletale.lib.path.id"/&gt;
+   </programlisting>
+
+   <para>See the Apache Ant documentation for additional instructions on installation.</para>
+
+   <section id="ant_report">
+     <title>report</title>
+     <para>Usage:</para>
+     <programlisting>
+&lt;tattletale:report source="${src.dir]" destination="${dest.dir}"/&gt;
+     </programlisting>
+
+     <table frame="all">
+       <title>Apache Ant: report</title>
+       <tgroup cols="2" align="left" colsep="1" rowsep="1">
+         <colspec colname="c1"/>
+         <colspec colname="c2" colwidth="5*"/>
+         <thead>
+           <row>
+             <entry align="left">Key</entry>
+             <entry align="left">Value</entry>
+           </row>
+         </thead>
+         <tbody>
+           <row>
+             <entry><code>source</code></entry>
+             <entry>
+               The directory that contains the Java archives. Multiple directories can be
+               scanned by separating each with the <code>File.pathSeparator</code> character - f.ex.
+               <code>dir1:dir2</code> on Un*x.
+               <para>Default: Current directory</para>
+             </entry>
+           </row>
+           <row>
+             <entry><code>destination</code></entry>
+             <entry>
+               The directory where the reports should be generated
+               <para>Default: Current directory</para>
+             </entry>
+           </row>
+           <row>
+             <entry><code>configuration</code></entry>
+             <entry>
+               Path to the configuration file
+               <para>Default: No value</para>
+             </entry>
+           </row>
+           <row>
+             <entry><code>filter</code></entry>
+             <entry>
+               Path to the filter file
+               <para>Default: No value</para>
+             </entry>
+           </row>
+           <row>
+             <entry><code>reports</code></entry>
+             <entry>
+               A comma separated list of which reports that should be generated.
+               All reports can be selected by specifying "*". The following reports are supported:
+               <itemizedlist>
+                 <listitem>
+                   <para><code>classdependants</code></para>
+                   <para>The "Class Dependants" report.</para>
+                 </listitem>
+                 <listitem>
+                   <para><code>classdependson</code></para>
+                   <para>The "Class DependsOn" report.</para>
+                 </listitem>
+                 <listitem>
+                   <para><code>dependants</code></para>
+                   <para>The "Dependants" report.</para>
+                 </listitem>
+                 <listitem>
+                   <para><code>dependson</code></para>
+                   <para>The "DependsOn" report.</para>
+                 </listitem>
+                 <listitem>
+                   <para><code>graphviz</code></para>
+                   <para>The "Graphical dependencies" report.</para>
+                 </listitem>
+                 <listitem>
+                   <para><code>transitivedependants</code></para>
+                   <para>The "Transitive Dependants" report.</para>
+                 </listitem>
+                 <listitem>
+                   <para><code>transitivedependson</code></para>
+                   <para>The "Transitive DependsOn" report.</para>
+                 </listitem>
+                 <listitem>
+                   <para><code>circulardependency</code></para>
+                   <para>The "Circular Dependency" report.</para>
+                 </listitem>
+                 <listitem>
+                   <para><code>classlocation</code></para>
+                   <para>The "Class Location" report.</para>
+                 </listitem>
+                 <listitem>
+                   <para><code>osgi</code></para>
+                   <para>The "OSGi" report.</para>
+                 </listitem>
+                 <listitem>
+                   <para><code>sealed</code></para>
+                   <para>The "Sealed Information" report.</para>
+                 </listitem>
+                 <listitem>
+                   <para><code>sign</code></para>
+                   <para>The "Signing Information" report.</para>
+                 </listitem>
+                 <listitem>
+                   <para><code>eliminatejars</code></para>
+                   <para>The "Eliminate Jar files with different versions" report.</para>
+                 </listitem>
+                 <listitem>
+                   <para><code>invalidversion</code></para>
+                   <para>The "Invalid version" report.</para>
+                 </listitem>
+                 <listitem>
+                   <para><code>multiplejars</code></para>
+                   <para>The "Multiple Jar files" report.</para>
+                 </listitem>
+                 <listitem>
+                   <para><code>multiplejarspackage</code></para>
+                   <para>The "Multiple Jar files (Package)" report.</para>
+                 </listitem>
+                 <listitem>
+                   <para><code>multiplelocations</code></para>
+                   <para>The "Multiple Locations" report.</para>
+                 </listitem>
+                 <listitem>
+                   <para><code>unusedjar</code></para>
+                   <para>The "Unused Jar" report.</para>
+                 </listitem>
+                 <listitem>
+                   <para><code>blacklisted</code></para>
+                   <para>The "Black listed" report.</para>
+                 </listitem>
+                 <listitem>
+                   <para><code>noversion</code></para>
+                   <para>The "No version" report.</para>
+                 </listitem>
+                 <listitem>
+                   <para><code>jar</code></para>
+                   <para>The "Jar archive" report.</para>
+                 </listitem>
+               </itemizedlist>
+               <para>Default: All reports</para>
+             </entry>
+           </row>
+           <row>
+             <entry><code>classloader</code></entry>
+             <entry>
+               Specifies which classloader structure that should be used when scanning the archives. 
+               Can be one of the following:
+               <itemizedlist>
+                 <listitem>
+                   <para><code>org.jboss.tattletale.reporting.classloader.NoopClassLoaderStructure</code></para>
+                   <para>A no-operation classloader structure implementation that doesn't scope any archives.</para>
+                 </listitem>
+                 <listitem>
+                   <para><code>org.jboss.tattletale.reporting.classloader.JBossAS4ClassLoaderStructure</code></para>
+                   <para>A classloader structure implementation that scopes based on JBoss Application Server 4.x directory structures.</para>
+                 </listitem>
+                 <listitem>
+                   <para><code>org.jboss.tattletale.reporting.classloader.JBossAS5ClassLoaderStructure</code></para>
+                   <para>A classloader structure implementation that scopes based on JBoss Application Server 5.x directory structures.</para>
+                 </listitem>
+                 <listitem>
+                   <para><code>org.jboss.tattletale.reporting.classloader.JBossAS6ClassLoaderStructure</code></para>
+                   <para>A classloader structure implementation that scopes based on JBoss Application Server 6.x directory structures.</para>
+                 </listitem>
+               </itemizedlist>
+               <para>Default: <code>org.jboss.tattletale.reporting.classloader.NoopClassLoaderStructure</code></para>
+             </entry>
+           </row>
+           <row>
+             <entry><code>profiles</code></entry>
+             <entry>
+               Specifies a comma separated list of profiles to resolve against. All profiles can
+               be selected by specifying "*". The following profiles are supported:
+               <itemizedlist>
+                 <listitem>
+                   <para><code>java5</code></para>
+                   <para>The Java 5 API.</para>
+                 </listitem>
+                 <listitem>
+                   <para><code>java6</code></para>
+                   <para>The Java 6 API.</para>
+                 </listitem>
+                 <listitem>
+                   <para><code>ee5</code></para>
+                   <para>The Java Enterprise Edition 5 API.</para>
+                 </listitem>
+                 <listitem>
+                   <para><code>ee6</code></para>
+                   <para>The Java Enterprise Edition 6 API.</para>
+                 </listitem>
+                 <listitem>
+                   <para><code>seam22</code></para>
+                   <para>The JBoss Seam 2.2 API.</para>
+                 </listitem>
+                 <listitem>
+                   <para><code>cdi10</code></para>
+                   <para>The Contexts and Dependency Injection (CDI) 1.0 API.</para>
+                 </listitem>
+                 <listitem>
+                   <para><code>spring25</code></para>
+                   <para>The Spring 2.5 API.</para>
+                 </listitem>
+                 <listitem>
+                   <para><code>spring30</code></para>
+                   <para>The Spring 3.0 API.</para>
+                 </listitem>
+               </itemizedlist>
+               <para>Default: <code>java5, java6</code></para>
+             </entry>
+           </row>
+           <row>
+             <entry><code>excludes</code></entry>
+             <entry>
+               A comma separated list of directories or files that should be excluded from the scan. F.ex.
+               <para><code>**/server/**,myjar.jar</code></para>
+               <para>Default: Empty list</para>
+             </entry>
+           </row>
+           <row>
+             <entry><code>blacklisted</code></entry>
+             <entry>
+               A comma separated list of black listed classes or packages. F.ex. 
+               <code>com.mycompany.forinternaluseonly, com.partner.forinternaluseonly</code>
+               <para>Default: Empty list</para>
+             </entry>
+           </row>
+           <row>
+             <entry><code>failOnInfo</code></entry>
+             <entry>
+               Fail the build if a failed INFO report is found
+               <para>Default: <code>false</code></para>
+             </entry>
+           </row>
+           <row>
+             <entry><code>failOnWarn</code></entry>
+             <entry>
+               Fail the build if a failed WARN report is found
+               <para>Default: <code>false</code></para>
+             </entry>
+           </row>
+           <row>
+             <entry><code>failOnError</code></entry>
+             <entry>
+               Fail the build if a failed ERROR report is found
+               <para>Default: <code>false</code></para>
+             </entry>
+           </row>
+           <row>
+             <entry><code>scan</code></entry>
+             <entry>
+               A comma separated list of file extensions that should be scanned
+               <para>Default: <code>.jar</code></para>
+             </entry>
+           </row>
+         </tbody>
+       </tgroup>
+     </table>
+
+     <note>Note that defining a property in the task overrides the setting in the configuration file.</note>
+     
+   </section>
+   
+</chapter>

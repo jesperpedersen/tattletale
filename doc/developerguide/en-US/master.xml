@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN"
+              "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd" [
+        <!ENTITY about SYSTEM "../../userguide/en-US/modules/about.xml">
+        <!ENTITY introduction SYSTEM "../../userguide/en-US/modules/introduction.xml">
+        <!ENTITY building SYSTEM "modules/building.xml">
+        <!ENTITY coding SYSTEM "modules/coding.xml">
+        ]>
+<book lang="en">
+   <bookinfo>
+      <authorgroup>
+        <author><firstname>Jesper</firstname><surname>Pedersen</surname></author>
+      </authorgroup>
+
+      <copyright>
+        <year>2011</year>
+        <holder>Red Hat Middleware</holder>
+      </copyright>
+
+      <subtitle>Betraying all your project's naughty little secrets</subtitle>
+      <title>JBoss Tattletale 1.2 Developer's Guide</title>
+
+      <mediaobject>
+        <imageobject>
+          <imagedata fileref="images/tattletale_mark_200px.png" align="center" valign="middle"/>
+        </imageobject>
+      </mediaobject>
+
+   </bookinfo>
+
+   <toc></toc>
+
+   &about;
+
+   &introduction;
+
+   &building;
+
+   &coding;
+
+</book>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter id="about">
+   <title>About JBoss Tattletale</title>
+
+   <para>JBoss Tattletale is a tool that can help development teams getting an overview of the project
+     they are working on or a product they depend on.</para>
+
+   <para>The tool generates reports that will show dependencies and general information that can help
+     identify areas that needs attention such as minimizing the number of dependencies or eliminate duplicated
+     class files from the class path.</para>
+
+   <para>JBoss Tattletale will help to improve the quality of your software project.</para>
+
+
+   <section id="team">
+      <title>The team</title>
+
+      <para>Jesper Pedersen acts as the lead for the JBoss Tattletale project. He can be reached at jesper (dot) pedersen (at) jboss (dot) org.</para>
+
+   </section>
+
+   <section id="thanksto">
+     <title>Thanks to</title>
+
+     <para>Jay Balunas, James Cobb, Torben Jaeger, Rostislav Svoboda and Steve Taranto.</para>
+
+   </section>
+
+
+</chapter>

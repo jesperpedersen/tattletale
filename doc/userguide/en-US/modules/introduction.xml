@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter id="introduction">
+   <title>Introduction</title>
+
+   <para>Have you ever found yourself frustrated with a ClassNotFoundException? 
+     Would you like to know what libraries are in your project and what they depend on? 
+     Would you like to get a full report on this stuff every time you run your ant build? 
+     If so you need to use the JBoss Tattletale project!</para>
+
+   <para>JBoss Tattletale is a tool that can help you get an overview of the project you are 
+     working on or a product that you depend on.</para>
+
+   <para>The tool will provide you with reports that can help you</para>
+   <itemizedlist spacing="compact">
+     <listitem>
+       <para>Identify dependencies between JAR files</para>
+     </listitem>
+     <listitem>
+       <para>Find missing classes from the classpath</para>
+     </listitem>
+     <listitem>
+       <para>Spot if a class/package is located in multiple JAR files</para>
+     </listitem>
+     <listitem>
+       <para>Spot if the same JAR file is located in multiple locations</para>
+     </listitem>
+     <listitem>
+       <para>With a list of what each JAR file requires and provides</para>
+     </listitem>
+     <listitem>
+       <para>Verify the SerialVersionUID of a class</para>
+     </listitem>
+     <listitem>
+       <para>Find similar JAR files that have different version numbers</para>
+     </listitem>
+     <listitem>
+       <para>Find JAR files without a version number</para>
+     </listitem>
+     <listitem>
+       <para>Find unused JAR files</para>
+     </listitem>
+     <listitem>
+       <para>Identify sealed and signed JAR archives</para>
+     </listitem>
+     <listitem>
+       <para>Locate a class in a JAR file</para>
+     </listitem>
+     <listitem>
+       <para>Get the OSGi status of your project</para>
+     </listitem>
+   </itemizedlist>
+
+   <para>JBoss Tattletale will recursive scan the directory pass as the argument for JAR files and then
+     build the reports as HTML files.</para>
+
+   <para>JBoss Tattletale is licensed under GNU Lesser General Public License (LGPL) version 2.1 or later.</para>
+
+   <para>We hope that JBoss Tattletale will help you in your development tasks !</para>
+
+   <para>Please, visit the official JBoss Tattletale project page at 
+     <ulink url="http://www.jboss.org/tattletale/">http://www.jboss.org/tattletale/</ulink>.</para>
+
+</chapter>

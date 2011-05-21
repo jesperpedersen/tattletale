@@ -1,0 +1,441 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter id="gettingstarted">
+   <title>Getting started</title>
+
+   <section id="installation">
+     <title>Installation</title>
+
+     <para>JBoss Tattletale can be downloaded in its binary form for easy installation.</para>
+
+     <para>The download location is: 
+       <ulink url="http://www.jboss.org/tattletale/downloads">http://www.jboss.org/tattletale/downloads</ulink>
+     </para>
+
+     <para>Once downloaded extract the files by executing:</para>
+
+     <programlisting>
+unzip jboss-tattletale-1.1.0.GA.zip
+     </programlisting>
+
+     <para>or</para>
+
+     <programlisting>
+tar xzf jboss-tattletale-1.1.0.GA.tar.gz
+     </programlisting>
+
+     <para>depending on which archive type you downloaded.</para>
+
+     <para>JBoss Tattletale is now located in a folder under the directory you extracted the files into.</para>
+     
+     <section id="repo_maven">
+       <title>Maven</title>
+       
+       <para>The JBoss Tattletale project is published in the JBoss Maven2 repository:</para>
+       
+       <programlisting>
+repository.jboss.org
+       </programlisting>
+
+       <para>under the group id of: org.jboss.tattletale</para>
+       
+       <para>The artifacts for the project are</para>
+       
+       <itemizedlist spacing="compact">
+         <listitem>
+           tattletale: The core library
+         </listitem>
+         <listitem>
+           tattletale-ant: The Apache Ant tasks
+         </listitem>
+         <listitem>
+           tattletale-maven: The Apache Maven plugin
+         </listitem>
+       </itemizedlist>
+       
+       <para>Developer snapshots are published on the JBoss Snapshots Maven2 server:</para>
+
+       <programlisting>
+snapshots.jboss.org
+       </programlisting>
+
+     </section>
+
+     <section id="sourcecode">
+       <title>Source code</title>
+       <para>If you want to experiment with the latest developments you may
+         checkout the latest code from SVN. Be aware that the
+         information provided in this manual might then not be accurate.</para>
+
+       <para>The anonymous SVN repository is located under:</para>
+       
+       <programlisting>
+svn co http://anonsvn.jboss.org/repos/tattletale/trunk/ tattletale-trunk
+       </programlisting>
+      
+       <para>The developer SVN repository is located under:</para>
+      
+       <programlisting>
+svn co https://svn.jboss.org/repos/tattletale/trunk/ tattletale-trunk
+       </programlisting>
+
+       <para>The project is compiled using Java Development Kit 1.5 or higher, Apache Ant 1.7 or higher and
+          Apache Ivy 2.1 or higher. Using</para>
+
+       <programlisting>
+ant &lt;target&gt;
+       </programlisting>
+
+       <para>where target is one of</para>
+       <itemizedlist>
+         <listitem>
+           <para>dist</para>
+           <para>Builds the distribution.</para>
+         </listitem>
+         <listitem>
+           <para>release</para>
+           <para>Builds the release archives.</para>
+         </listitem>
+         <listitem>
+           <para>doc</para>
+           <para>Builds the documentation for the project.</para>
+         </listitem>
+         <listitem>
+           <para>clean</para>
+           <para>Cleans the project of temporary files.</para>
+         </listitem>
+       </itemizedlist>
+       <para>See the full list of targets in the main build.xml file.</para>
+
+     </section>
+   </section>
+
+   <section id="configuration">
+     <title>Configuration</title>
+
+     <para>The configuration of JBoss Tattletale is done through its</para>
+
+     <programlisting>
+jboss-tattletale.properties
+     </programlisting>
+     
+     <para>file.</para>
+
+     <para>The current configuration parameters includes:</para>
+
+     <table frame="all">
+       <title>JBoss Tattletale configuration</title>
+       <tgroup cols="2" align="left" colsep="1" rowsep="1">
+         <colspec colname="c1"/>
+         <colspec colname="c2" colwidth="5*"/>
+         <thead>
+           <row>
+             <entry align="left">Key</entry>
+             <entry align="left">Value</entry>
+           </row>
+         </thead>
+         <tbody>
+           <row>
+             <entry><code>reports</code></entry>
+             <entry>
+               A comma separated list of which reports that should be generated.
+               The following reports are supported:
+               <itemizedlist>
+                 <listitem>
+                   <para><code>classdependants</code></para>
+                   <para>The "Class Dependants" report.</para>
+                 </listitem>
+                 <listitem>
+                   <para><code>classdependson</code></para>
+                   <para>The "ClassDependsOn" report.</para>
+                 </listitem>
+                 <listitem>
+                   <para><code>dependants</code></para>
+                   <para>The "Dependants" report.</para>
+                 </listitem>
+                 <listitem>
+                   <para><code>dependson</code></para>
+                   <para>The "DependsOn" report.</para>
+                 </listitem>
+                 <listitem>
+                   <para><code>graphviz</code></para>
+                   <para>The "Graphical dependencies" report.</para>
+                 </listitem>
+                 <listitem>
+                   <para><code>transitivedependants</code></para>
+                   <para>The "Transitive Dependants" report.</para>
+                 </listitem>
+                 <listitem>
+                   <para><code>transitivedependson</code></para>
+                   <para>The "Transitive DependsOn" report.</para>
+                 </listitem>
+                 <listitem>
+                   <para><code>circulardependency</code></para>
+                   <para>The "Circular Dependency" report.</para>
+                 </listitem>
+                 <listitem>
+                   <para><code>classlocation</code></para>
+                   <para>The "Class Location" report.</para>
+                 </listitem>
+                 <listitem>
+                   <para><code>osgi</code></para>
+                   <para>The "OSGi" report.</para>
+                 </listitem>
+                 <listitem>
+                   <para><code>sealed</code></para>
+                   <para>The "Sealed Information" report.</para>
+                 </listitem>
+                 <listitem>
+                   <para><code>sign</code></para>
+                   <para>The "Signing Information" report.</para>
+                 </listitem>
+                 <listitem>
+                   <para><code>eliminatejars</code></para>
+                   <para>The "Eliminate Jar files with different versions" report.</para>
+                 </listitem>
+                 <listitem>
+                   <para><code>invalidversion</code></para>
+                   <para>The "Invalid version" report.</para>
+                 </listitem>
+                 <listitem>
+                   <para><code>multiplejars</code></para>
+                   <para>The "Multiple Jar files" report.</para>
+                 </listitem>
+                 <listitem>
+                   <para><code>multiplejarspackage</code></para>
+                   <para>The "Multiple Jar files (Package)" report.</para>
+                 </listitem>
+                 <listitem>
+                   <para><code>multiplelocations</code></para>
+                   <para>The "Multiple Locations" report.</para>
+                 </listitem>
+                 <listitem>
+                   <para><code>unusedjar</code></para>
+                   <para>The "Unused Jar" report.</para>
+                 </listitem>
+                 <listitem>
+                   <para><code>blacklisted</code></para>
+                   <para>The "Black listed" report.</para>
+                 </listitem>
+                 <listitem>
+                   <para><code>noversion</code></para>
+                   <para>The "No version" report.</para>
+                 </listitem>
+                 <listitem>
+                   <para><code>jar</code></para>
+                   <para>The "Jar archive" report.</para>
+                 </listitem>
+               </itemizedlist>
+               <para>Default: All reports (<code>reports=*</code>)</para>
+             </entry>
+           </row>
+           <row>
+             <entry><code>classloader</code></entry>
+             <entry>
+               Specifies which classloader structure that should be used when scanning the archives. 
+               Can be one of the following:
+               <itemizedlist>
+                 <listitem>
+                   <para><code>org.jboss.tattletale.reporting.classloader.NoopClassLoaderStructure</code></para>
+                   <para>A no-operation classloader structure implementation that doesn't scope any archives.</para>
+                 </listitem>
+                 <listitem>
+                   <para><code>org.jboss.tattletale.reporting.classloader.JBossAS4ClassLoaderStructure</code></para>
+                   <para>A classloader structure implementation that scopes based on JBoss Application Server 4.x directory structures.</para>
+                 </listitem>
+                 <listitem>
+                   <para><code>org.jboss.tattletale.reporting.classloader.JBossAS5ClassLoaderStructure</code></para>
+                   <para>A classloader structure implementation that scopes based on JBoss Application Server 5.x directory structures.</para>
+                 </listitem>
+                 <listitem>
+                   <para><code>org.jboss.tattletale.reporting.classloader.JBossAS6ClassLoaderStructure</code></para>
+                   <para>A classloader structure implementation that scopes based on JBoss Application Server 6.x directory structures.</para>
+                 </listitem>
+               </itemizedlist>
+             </entry>
+           </row>
+           <row>
+             <entry><code>profiles</code></entry>
+             <entry>
+               Specifies a comma separated list of profiles to resolve against. 
+               The following profiles are supported:
+               <itemizedlist>
+                 <listitem>
+                   <para><code>java5</code></para>
+                   <para>The Java 5 API.</para>
+                 </listitem>
+                 <listitem>
+                   <para><code>java6</code></para>
+                   <para>The Java 6 API.</para>
+                 </listitem>
+                 <listitem>
+                   <para><code>ee5</code></para>
+                   <para>The Java Enterprise Edition 5 API.</para>
+                 </listitem>
+                 <listitem>
+                   <para><code>ee6</code></para>
+                   <para>The Java Enterprise Edition 6 API.</para>
+                 </listitem>
+                 <listitem>
+                   <para><code>seam22</code></para>
+                   <para>The JBoss Seam 2.2 API.</para>
+                 </listitem>
+                 <listitem>
+                   <para><code>cdi10</code></para>
+                   <para>The Contexts and Dependency Injection (CDI) 1.0 API.</para>
+                 </listitem>
+                 <listitem>
+                   <para><code>spring25</code></para>
+                   <para>The Spring 2.5 API.</para>
+                 </listitem>
+                 <listitem>
+                   <para><code>spring30</code></para>
+                   <para>The Spring 3.0 API.</para>
+                 </listitem>
+               </itemizedlist>
+             </entry>
+           </row>
+           <row>
+             <entry><code>excludes</code></entry>
+             <entry>
+               A comma separated list of directories or files that should be excluded from the scan. F.ex.
+               <para><code>**/server/**,myjar.jar</code></para>
+             </entry>
+           </row>
+           <row>
+             <entry><code>blacklisted</code></entry>
+             <entry>
+               A comma separated list of black listed classes or packages. F.ex. 
+               <para><code>com.mycompany.forinternaluseonly, com.partner.forinternaluseonly</code></para>
+             </entry>
+           </row>
+           <row>
+             <entry><code>scan</code></entry>
+             <entry>
+               A comma separated list of file extensions that should be scanned
+               <para>Default: <code>.jar</code></para>
+             </entry>
+           </row>
+           <row>
+             <entry><code>enableDot</code></entry>
+             <entry>
+               Should images be generated if the Graphviz DOT application is found
+               <para>Default: <code>true</code></para>
+             </entry>
+           </row>
+           <row>
+             <entry><code>graphvizDot</code></entry>
+             <entry>
+               The full path to the Graphviz DOT executable.  This property is required if you want to generate
+               PNG files and the Graphviz bin directory is not on your path.  F.ex.
+               <para><code>graphvizDot=C:\\Graphviz2.26.3\\bin\\dot.exe</code></para>
+               or
+               <para><code>graphvizDot=/opt/graphiz/bin/dot</code></para>
+             </entry>
+           </row>
+         </tbody>
+       </tgroup>
+     </table>
+
+     <para>The load order for the configuration file is
+       <orderedlist spacing="compact">
+         <listitem>
+           <code>configuration</code> parameter in the Apache Ant / Maven task
+         </listitem>
+         <listitem>
+           <code>-Djboss-tattletale.properties</code> system property
+         </listitem>
+         <listitem>
+           <code>jboss-tattletale.properties</code> file in current directory
+         </listitem>
+         <listitem>
+           <code>jboss-tattletale.properties</code> file in class loader
+         </listitem>
+       </orderedlist>
+     </para>
+
+     <para>NOTE: The classloader structure feature is currently based on directory structures and may therefore fail to
+       identify archives that should be included in the reports. If you want to be sure that all
+       archives are included use the NoopClassLoaderStructure plugin.</para>
+
+     <section id="filtering">
+       <title>Filtering</title>
+
+       <para>JBoss Tattletale supports filtering of the warnings and errors that the reports generates.</para>
+
+       <para>This functionality allows the user to filter out any warnings or errors that should be ignored
+         and thereby allow the application to successful terminate.</para>
+
+       <para>The format of the filter properties file is</para>
+
+       <table frame="all">
+         <title>JBoss Tattletale filter</title>
+         <tgroup cols="2" align="left" colsep="1" rowsep="1">
+           <colspec colname="c1"/>
+           <colspec colname="c2" colwidth="5*"/>
+           <thead>
+             <row>
+               <entry align="left">Key</entry>
+             <entry align="left">Value</entry>
+           </row>
+           </thead>
+           <tbody>
+             <row>
+               <entry><code>report id</code></entry>
+               <entry>The filter
+               </entry>
+             </row>
+           </tbody>
+         </tgroup>
+       </table>
+
+       <para>An example:</para>
+
+       <programlisting>
+myreport=myfilter
+       </programlisting>
+
+       <para>The load order for the filter file is
+
+         <orderedlist spacing="compact">
+           <listitem>
+             <code>filter</code> parameter in the Apache Ant / Maven task
+           </listitem>
+           <listitem>
+             <code>-Djboss-tattletale-filter.properties</code> system property
+           </listitem>
+           <listitem>
+             <code>jboss-tattletale-filter.properties</code> file in current directory
+           </listitem>
+         </orderedlist>
+
+       </para>
+
+       <para>See the individual reports for filtering support.</para>
+
+     </section>
+     
+   </section>
+
+   <section id="running">
+     <title>Running</title>
+
+     <para>Running JBoss Tattletale is very easy</para>
+
+     <programlisting>
+java -Xmx512m -jar tattletale.jar [-exclude=&lt;excludes&gt;] &lt;sourcedir&gt; [&lt;outputdir&gt;]
+     </programlisting>
+     
+     <para>where the "sourcedir" is the directory that contains your Java archives and the optional "outputdir" parameter
+     is the directory where you would like your reports to be generated. The "-exclude" option let you 
+     exclude directories or file on the command line - see the configuration file for syntax.</para>
+
+     <para>The main file will be generated under the output directory as index.html.</para>
+
+     <para>JBoss Tattletale will scan for Java Archives (.JAR) files.</para>
+
+     <para>JBoss Tattletale requires Java Runtime Environment 5 or higher.</para>
+
+   </section>
+
+
+</chapter>

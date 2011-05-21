@@ -260,11 +260,12 @@
         <mkdir dir="${build.dir}/${name}-${major}.${minor}.${patch}.${type}"/>
 
         <move flatten="true" todir="${build.dir}/${name}-${major}.${minor}.${patch}.${type}">
-          <fileset dir="${build.dir}">
+          <fileset dir="${dist.dir}">
             <include name="**/*.pdf"/>
           </fileset>
         </move>
 
+        <delete dir="${build.dir}/docbook"/>
         <delete dir="${build.dir}/en"/>
 
         <move todir="${build.dir}/${name}-${major}.${minor}.${patch}.${type}"

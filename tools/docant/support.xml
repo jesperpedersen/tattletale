@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+
+<project name="docant" default="process" basedir=".">
+  <property name="docant.dir" value="${basedir}"/>
+  <path id="docant.lib.path.id">
+    <fileset dir="${docant.dir}/lib">
+      <include name="**/*.jar"/>
+      <include name="**/*.zip"/>
+    </fileset>
+  </path>
+  
+  <taskdef name="docant"
+         classname="org.jboss.docant.task.GenerationTask"
+         classpathref="docant.lib.path.id"/>
+         
+</project>
+
+
+
+

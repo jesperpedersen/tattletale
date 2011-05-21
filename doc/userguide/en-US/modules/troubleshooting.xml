@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter id="troubleshooting">
+   <title>Troubleshooting</title>
+
+   <section id="noreports">
+      <title>JBoss Tattletale generates empty reports</title>
+
+      <para>JBoss Tattletale generates its reports based on Java archives and not source code. Make sure that 
+      sourcedir you specify when running JBoss Tattletale contains the Java archives (f.ex. .JAR files) that you
+      need scanned.</para>
+
+   </section>
+
+   <section id="oom">
+      <title>JBoss Tattletale throws an OutOfMemoryException</title>
+
+      <para>JBoss Tattletale needs to process the information it gathers in memory, so you need to provide enough
+        memory for that to happen. You can ajust the -Xmx parameter of the command line below if you are using 
+      Sun's Java Runtime Environment.</para>
+
+     <programlisting>
+java -Xmx1024m -jar jboss-tattletale.jar &lt;sourcedir&gt; [&lt;outputdir&gt;]
+     </programlisting>
+
+   </section>
+
+   <section id="howdoi">
+      <title>How do I ?</title>
+
+      <para>We can't cover every single issue in this guide, so feel free to drop by our forums to see if a solution
+        has already been provided. Otherwise feel free to ask your question there.</para>
+
+      <para>Our forum is located at <ulink url="http://www.jboss.org/index.html?module=bb&amp;op=viewforum&amp;f=306">http://www.jboss.org/index.html?module=bb&amp;op=viewforum&amp;f=320</ulink></para>
+
+   </section>
+   
+</chapter>

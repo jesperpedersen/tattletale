@@ -1,0 +1,105 @@
+<!--
+ * JBoss, Home of Professional Open Source.
+ * Copyright 2010, Red Hat Middleware LLC, and individual contributors
+ * as indicated by the @author tags. See the copyright.txt file in the
+ * distribution for a full listing of individual contributors.
+ *
+ * This is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation; either version 2.1 of
+ * the License, or (at your option) any later version.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this software; if not, write to the Free
+ * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+-->
+<project name="docant" 
+         default="support" 
+         basedir=".">
+
+  <available classname="java.lang.Enum" property="HAVE_JDK_1.5"/>
+  <available classname="java.lang.management.LockInfo" property="HAVE_JDK_1.6"/>
+
+  <!-- ================================= 
+       Project              
+       ================================= -->
+  <property name="name" value="docant"/>
+
+  <!-- ================================= 
+       Properties              
+       ================================= -->
+  <property name="docant.dir" value="${basedir}" />
+  <property name="docant.lib.dir" value="${docant.dir}/lib" />
+  <property name="docant.target.dir" value="${docant.dir}/target" />
+
+  <path id="lib.path.id">
+    <fileset dir="${docant.lib.dir}">
+      <include name="**/*.jar"/>
+    </fileset>
+    <fileset dir="${docant.target.dir}">
+      <include name="*.jar"/>
+    </fileset>
+  </path>
+
+
+  <!-- ================================= 
+       Versions              
+       ================================= -->
+
+  <property name="version.docant" value="1.0.0.Final"/>
+
+  <property name="version.jdocbook-core" value="1.0.4"/>
+
+  <property name="version.docbook-xsl" value="1.76.1"/>
+  <property name="version.docbook-xsl-old" value="1.72.0"/>
+
+  <property name="version.jbossorg-docbook-xslt" value="1.1.1"/>
+  <property name="version.jbossorg-jdocbook-style" value="1.1.1"/>
+
+  <!-- ================================= 
+       Target: init              
+       ================================= -->
+  <target name="init">
+    <fail message="The performance test suite requires JDK5+" unless="HAVE_JDK_1.5"/>
+    <mkdir dir="${docant.target.dir}" />
+  </target>
+  
+  <!-- ================================= 
+       Target: compile
+       ================================= -->
+  <target name="support">
+    <property name="staging.dir" value="${docant.target.dir}/docbook/staging"/>
+
+    <unzip src="${docant.lib.dir}/docant-${version.docant}.jar" dest="${staging.dir}">
+      <patternset>
+        <include name="catalog.xml.in"/>
+      </patternset>
+    </unzip>
+    <move file="${staging.dir}/catalog.xml.in" tofile="${staging.dir}/catalog.xml"/>
+
+    <copy todir="${staging.dir}/jbossorg-style">
+      <fileset dir="${docant.dir}/jbossorg-style"/>
+    </copy>
+
+    <unzip src="${docant.lib.dir}/docbook/docbook-xsl-${version.docbook-xsl}.zip" dest="${staging.dir}"/>
+    <unzip src="${docant.lib.dir}/style/jbossorg-jdocbook-style-${version.jbossorg-jdocbook-style}.jdocbook-style" dest="${staging.dir}">
+      <patternset>
+        <exclude name="META-INF/**"/>
+      </patternset>
+    </unzip>
+  </target>
+
+  <!-- ================================= 
+       Target: clean              
+       ================================= -->
+  <target name="clean">
+    <delete dir="${docant.target.dir}"/>
+  </target>
+
+</project>
