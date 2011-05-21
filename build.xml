@@ -29,8 +29,14 @@
     <property name="version" value="${major}.${minor}.${patch}.${type}"/>
 
     <property name="tattletale.jar" value="tattletale.jar"/>
+    <property name="tattletale-sources.jar" value="tattletale-sources.jar"/>
+    <property name="tattletale-javadoc.jar" value="tattletale-javadoc.jar"/>
     <property name="tattletale-ant.jar" value="tattletale-ant.jar"/>
+    <property name="tattletale-ant-sources.jar" value="tattletale-ant-sources.jar"/>
+    <property name="tattletale-ant-javadoc.jar" value="tattletale-ant-javadoc.jar"/>
     <property name="tattletale-maven.jar" value="tattletale-maven.jar"/>
+    <property name="tattletale-maven-sources.jar" value="tattletale-maven-sources.jar"/>
+    <property name="tattletale-maven-javadoc.jar" value="tattletale-maven-javadoc.jar"/>
 
     <!-- ================================= 
          Repositories              
@@ -39,6 +45,21 @@
     <property name="jboss.repo" value="http://repository.jboss.org/nexus/content/groups/public/"/>
     <property name="snapshots.repo" value="http://snapshots.jboss.org/maven2"/>
   
+    <!-- ================================= 
+         Maven repository settings
+         ================================= -->
+    <property name="mavensettings" value="$HOME/.m2/settings.xml"/>
+
+    <condition property="repositoryurl" value="https://repository.jboss.org/nexus/content/repositories/snapshots/">
+      <isset property="snapshot"/>
+    </condition>
+    <property name="repositoryurl" value="https://repository.jboss.org/nexus/service/local/staging/deploy/maven2/"/>
+
+    <condition property="repositoryid" value="jboss-snapshots">
+      <isset property="snapshot"/>
+    </condition>
+    <property name="repositoryid" value="jboss-releases"/>
+
     <!-- ================================= 
          Ivy              
          ================================= -->
@@ -199,6 +220,87 @@
     </target>
 
     <!-- =================================================================== -->
+    <!-- Artifacts                                                           -->
+    <!-- =================================================================== -->
+    <target name="artifacts" depends="jars">
+
+      <!-- Sources -->
+      <jar destfile="${dist.dir}/${tattletale-sources.jar}"
+           basedir="${src.java.dir}"
+           includes="**/*.java"
+           excludes="**/ant/**,**/maven/**"/>
+
+      <jar destfile="${dist.dir}/${tattletale-ant-sources.jar}"
+           basedir="${src.java.dir}"
+           includes="**/ant/*.java"/>
+
+      <jar destfile="${dist.dir}/${tattletale-maven-sources.jar}"
+           basedir="${src.java.dir}"
+           includes="**/maven/*.java"/>
+      
+      <mkdir dir="${build.dir}/artifact-javadoc"/>
+      <javadoc destdir="${build.dir}/artifact-javadoc"
+               author="true"
+               version="true"
+               windowtitle="JBoss Tattletale"
+               doctitle="JBoss Tattletale"
+               use="true"
+               classpathref="class.path"
+               bottom="Copyright &#169; 2011 JBoss (http://www.jboss.com/)">
+        <packageset dir="${build.dir}" defaultexcludes="yes"/>
+        <packageset dir="src/main/java" defaultexcludes="yes">
+          <exclude name="**/ant/**"/>
+          <exclude name="**/maven/**"/>
+        </packageset>
+        <link offline="true" href="http://java.sun.com/j2se/1.5/docs/api/" packagelistLoc="${java.home}/../docs/api"/>
+      </javadoc>
+      <jar destfile="${dist.dir}/${tattletale-javadoc.jar}"
+           basedir="${build.dir}/artifact-javadoc"/>
+      <delete dir="${build.dir}/artifact-javadoc"/>
+
+      <mkdir dir="${build.dir}/artifact-javadoc"/>
+      <javadoc destdir="${build.dir}/artifact-javadoc"
+               author="true"
+               version="true"
+               windowtitle="JBoss Tattletale"
+               doctitle="JBoss Tattletale"
+               use="true"
+               classpathref="class.path"
+               bottom="Copyright &#169; 2011 JBoss (http://www.jboss.com/)">
+        <packageset dir="${build.dir}" defaultexcludes="yes"/>
+        <packageset dir="src/main/java" defaultexcludes="yes">
+          <include name="**/ant/**"/>
+        </packageset>
+        <link offline="true" href="http://java.sun.com/j2se/1.5/docs/api/" packagelistLoc="${java.home}/../docs/api"/>
+      </javadoc>
+      <jar destfile="${dist.dir}/${tattletale-ant-javadoc.jar}"
+           basedir="${build.dir}/artifact-javadoc"
+           includes="**/ant/**"/>
+      <delete dir="${build.dir}/artifact-javadoc"/>
+
+      <mkdir dir="${build.dir}/artifact-javadoc"/>
+      <javadoc destdir="${build.dir}/artifact-javadoc"
+               author="true"
+               version="true"
+               windowtitle="JBoss Tattletale"
+               doctitle="JBoss Tattletale"
+               use="true"
+               classpathref="class.path"
+               bottom="Copyright &#169; 2011 JBoss (http://www.jboss.com/)">
+        <packageset dir="${build.dir}" defaultexcludes="yes"/>
+        <packageset dir="src/main/java" defaultexcludes="yes">
+          <include name="**/maven/**"/>
+        </packageset>
+        <link offline="true" href="http://java.sun.com/j2se/1.5/docs/api/" packagelistLoc="${java.home}/../docs/api"/>
+      </javadoc>
+      <jar destfile="${dist.dir}/${tattletale-maven-javadoc.jar}"
+           basedir="${build.dir}/artifact-javadoc"
+           includes="**/maven/**"/>
+      <delete dir="${build.dir}/artifact-javadoc"/>
+
+    </target>
+
+    <!-- =================================================================== -->
     <!-- Doc                                                                 -->
     <!-- =================================================================== -->
     <target name="doc">
@@ -212,7 +314,7 @@
                  doctitle="JBoss Tattletale"
                  use="true"
                  classpathref="class.path"
-                 bottom="Copyright &#169; 2009 JBoss (http://www.jboss.com/)">
+                 bottom="Copyright &#169; 2011 JBoss (http://www.jboss.com/)">
              <link offline="true" href="http://java.sun.com/j2se/1.5/docs/api/" packagelistLoc="${java.home}/../docs/api"/>
         </javadoc>
         <ant dir="doc/userguide" target="pdf"/>
@@ -339,40 +441,39 @@
     <attribute name="extension"/>
     <sequential>
       <concat destfile="${dist.dir}/@{file}" append="true" force="true" eol="unix">
-mvn deploy:deploy-file -Dfile=$PWD/@{artifact}.@{extension} -DpomFile=@{artifact}.xml $REPOSITORY
+mvn -s ${mavensettings} org.apache.maven.plugins:maven-deploy-plugin:2.6:deploy-file -Dfile=$PWD/@{artifact}.@{extension} -DpomFile=@{artifact}.xml -Dsources=$PWD/@{artifact}-sources.jar -Djavadoc=$PWD/@{artifact}-javadoc.jar $REPOSITORY
 </concat>
     </sequential>
   </macrodef>
 
-  <macrodef name="snapshot-deploy-file">
+  <macrodef name="install-file">
     <attribute name="file"/>
     <attribute name="artifact"/>
     <attribute name="extension"/>
     <sequential>
       <concat destfile="${dist.dir}/@{file}" append="true" force="true" eol="unix">
-mvn deploy:deploy-file -Dfile=$PWD/@{artifact}.@{extension} -DpomFile=@{artifact}.xml -DuniqueVersion=false $REPOSITORY
+mvn install:install-file -Dfile=$PWD/@{artifact}.@{extension} -DpomFile=@{artifact}.xml -Dsources=$PWD/@{artifact}-sources.jar -Djavadoc=$PWD/@{artifact}-javadoc.jar
 </concat>
     </sequential>
   </macrodef>
 
-  <target name="nexus" depends="clean,jars">
+  <target name="nexus" depends="clean,artifacts">
     <ivy:retrieve pattern="${lib.dir}/[conf]/[artifact].[ext]" 
                   conf="${name},${name}-ant,${name}-maven"
                   sync="true"/>
 
-    <delete file="${dist.dir}/release.sh"/>
-    <delete file="${dist.dir}/snapshot.sh"/>
+    <delete file="${dist.dir}/deploy.sh"/>
+    <delete file="${dist.dir}/install.sh"/>
 
-    <concat destfile="${dist.dir}/release.sh" append="true" force="true" eol="unix">#!/bin/sh
+    <concat destfile="${dist.dir}/deploy.sh" append="true" force="true" eol="unix">#!/bin/sh
 PWD=`pwd`
-VERSION=${major}.${minor}.${patch}.${type}
-REPOSITORY='-Durl=https://repository.jboss.org/nexus/service/local/staging/deploy/maven2/ -DrepositoryId=jboss-releases'
+VERSION=${version}
+REPOSITORY='-Durl=${repositoryurl} -DrepositoryId=${repositoryid}'
 </concat>
 
-    <concat destfile="${dist.dir}/snapshot.sh" append="true" force="true" eol="unix">#!/bin/sh
+    <concat destfile="${dist.dir}/install.sh" append="true" force="true" eol="unix">#!/bin/sh
 PWD=`pwd`
-VERSION=${major}.${minor}.${patch}-SNAPSHOT
-REPOSITORY='-Durl=https://repository.jboss.org/nexus/content/repositories/snapshots/ -DrepositoryId=jboss-snapshots'
+VERSION=${version}
 </concat>
 
     <!-- tattletale -->
@@ -387,8 +488,8 @@ REPOSITORY='-Durl=https://repository.jboss.org/nexus/content/repositories/snapsh
       <mapping conf="${name}" scope="runtime"/>
     </ivy:makepom>
 
-    <deploy-file file="release.sh" artifact="${name}" extension="jar"/>
-    <snapshot-deploy-file file="snapshot.sh" artifact="${name}" extension="jar"/>
+    <deploy-file file="deploy.sh" artifact="${name}" extension="jar"/>
+    <install-file file="install.sh" artifact="${name}" extension="jar"/>
 
     <!-- tattletale-ant -->
     <delete file="${dist.dir}/${name}-ant.xml"/>
@@ -403,8 +504,8 @@ REPOSITORY='-Durl=https://repository.jboss.org/nexus/content/repositories/snapsh
       <dependency artifact="${name}" scope="runtime"/>
     </ivy:makepom>
 
-    <deploy-file file="release.sh" artifact="${name}-ant" extension="jar"/>
-    <snapshot-deploy-file file="snapshot.sh" artifact="${name}-ant" extension="jar"/>
+    <deploy-file file="deploy.sh" artifact="${name}-ant" extension="jar"/>
+    <install-file file="install.sh" artifact="${name}-ant" extension="jar"/>
 
     <!-- tattletale-maven -->
     <delete file="${dist.dir}/${name}-maven.xml"/>
@@ -419,11 +520,11 @@ REPOSITORY='-Durl=https://repository.jboss.org/nexus/content/repositories/snapsh
       <dependency artifact="${name}" scope="runtime"/>
     </ivy:makepom>
 
-    <deploy-file file="release.sh" artifact="${name}-maven" extension="jar"/>
-    <snapshot-deploy-file file="snapshot.sh" artifact="${name}-maven" extension="jar"/>
+    <deploy-file file="deploy.sh" artifact="${name}-maven" extension="jar"/>
+    <install-file file="install.sh" artifact="${name}-maven" extension="jar"/>
 
-    <chmod file="${dist.dir}/release.sh" perm="755"/>
-    <chmod file="${dist.dir}/snapshot.sh" perm="755"/>
+    <chmod file="${dist.dir}/deploy.sh" perm="755"/>
+    <chmod file="${dist.dir}/install.sh" perm="755"/>
 
   </target>
 
