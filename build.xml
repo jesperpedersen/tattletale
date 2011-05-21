@@ -122,6 +122,25 @@
         <mkdir dir="${build.dir}"/>
         <mkdir dir="${build.dir}/META-INF"/>
         <mkdir dir="${build.dir}/META-INF/maven"/>
+
+        <copy file="src/main/java/org/jboss/tattletale/Version.java.in"
+              tofile="${build.dir}/org/jboss/tattletale/Version.java">
+          <filterset>
+            <filter token="VERSION" value="${version}"/>
+          </filterset>
+        </copy>
+        <javac
+            destdir="${build.dir}"
+            classpathref="class.path"
+            debug="on"
+            deprecation="on"
+            optimize="off"
+            source="1.5"
+            target="1.5"
+            >
+            <src path="${build.dir}"/>
+        </javac>
+
         <javac
             destdir="${build.dir}"
             classpathref="class.path"
@@ -133,6 +152,7 @@
             >
             <src path="${src.java.dir}"/>
         </javac>
+
         <copy todir="${build.dir}">
             <fileset dir="${etc.dir}">
                <include name="**/jboss-tattletale.properties"/>
