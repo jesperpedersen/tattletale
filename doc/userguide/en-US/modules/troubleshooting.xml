@@ -24,13 +24,41 @@ java -Xmx1024m -jar jboss-tattletale.jar &lt;sourcedir&gt; [&lt;outputdir&gt;]
 
    </section>
 
+   <section id="iwouldliketoimplementafeature">
+      <title>I would like to implement a feature</title>
+
+      <para>So you have found an area where you are missing a feature and would like to submit a patch for it, great !</para>
+
+      <para>There are a couple of steps to get a feature included</para>
+
+      <para>First, you should create a new thread in our 
+        <ulink url="http://community.jboss.org/en/tattletale/dev">development forum</ulink> where you describe
+        the feature, its design and implementation.</para>
+
+      <para>Once there is an agreement on the feature and the design you should proceed with creating the patch.</para>
+
+      <para>To maximize your chances of getting the feature in the official build as soon as possible make sure that
+        you run <code>checkstyle</code> to make sure that the code is correctly formatted:</para>
+
+      <programlisting>
+ant clean checkstyle
+      </programlisting>
+
+      <para>when there are no errors, create a JIRA task (Feature) in our 
+        <ulink url="https://issues.jboss.org/browse/TTALE">JIRA environment</ulink> and attach the patch. 
+        See the developer guide for additional details.</para>
+
+      <para>Happy Coding !</para>
+
+   </section>
+
    <section id="howdoi">
       <title>How do I ?</title>
 
       <para>We can't cover every single issue in this guide, so feel free to drop by our forums to see if a solution
         has already been provided. Otherwise feel free to ask your question there.</para>
 
-      <para>Our forum is located at <ulink url="http://www.jboss.org/index.html?module=bb&amp;op=viewforum&amp;f=306">http://www.jboss.org/index.html?module=bb&amp;op=viewforum&amp;f=320</ulink></para>
+      <para>Our forum is located at <ulink url="http://community.jboss.org/en/tattletale"/>.</para>
 
    </section>
    
