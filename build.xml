@@ -150,6 +150,8 @@
             <filter token="VERSION" value="${version}"/>
           </filterset>
         </copy>
+        <copy file="src/main/java/org/jboss/tattletale/package.html"
+              todir="${build.dir}/org/jboss/tattletale/"/>
         <javac
             destdir="${build.dir}"
             classpathref="class.path"
