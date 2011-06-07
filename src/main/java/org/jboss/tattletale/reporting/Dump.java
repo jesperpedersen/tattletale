@@ -123,9 +123,9 @@ public class Dump
 
          bw.write("<h1>" + Version.FULL_VERSION + "</h1>" + NEW_LINE);
          
-         generateReportItems(bw, dependenciesReports, "Dependencies");
-         generateReportItems(bw, generalReports, "Reports");
-         generateReportItems(bw, archiveReports, "Archives");
+         generateReportItems(bw, dependenciesReports, "Dependencies", false);
+         generateReportItems(bw, generalReports, "Reports", false);
+         generateReportItems(bw, archiveReports, "Archives", true);
 
          bw.write(NEW_LINE);
          bw.write("<p>" + NEW_LINE);
@@ -147,17 +147,22 @@ public class Dump
    }
 
    private static void generateReportItems(BufferedWriter bw, 
-           SortedSet<Report> reports, String heading) throws IOException
+           SortedSet<Report> reports, String heading, boolean useReportName) throws IOException
    {
       if (reports != null && reports.size() > 0)
       {
          bw.write("<h2>" + heading + "</h2>" + NEW_LINE);
          bw.write("<ul>" + NEW_LINE);
 
+         String fileBase = "index";
          for (Report r : reports)
          {
             bw.write("<li>");
-            bw.write("<a href=\"" + r.getDirectory() + "/index.html\">" + r.getName() + "</a> (");
+            if (useReportName)
+            {
+               fileBase = r.getName();
+            }
+            bw.write("<a href=\"" + r.getDirectory() + "/" + fileBase + ".html\">" + r.getName() + "</a> (");
             bw.write("<span");
             bw.write(" style=\"color: " + ReportStatus.getStatusColor(r.getStatus()) + ";\"");
             bw.write(">");
