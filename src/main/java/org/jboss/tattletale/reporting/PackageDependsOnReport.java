@@ -120,5 +120,42 @@ public class PackageDependsOnReport extends CLSReport
 
          }
       }
+      Iterator<Map.Entry<String, SortedSet<String>>> rit = result.entrySet().iterator();
+
+      while (rit.hasNext())
+      {
+         Map.Entry<String, SortedSet<String>> entry = rit.next();
+         String clz = entry.getKey();
+         SortedSet<String> deps = entry.getValue();
+
+         if (odd)
+         {
+            bw.write("  <tr class=\"rowodd\">" + Dump.NEW_LINE);
+         }
+         else
+         {
+            bw.write("  <tr class=\"roweven\">" + Dump.NEW_LINE);
+         }
+         bw.write("     <td>" + clz + "</a></td>" + Dump.NEW_LINE);
+         bw.write("     <td>");
+
+         Iterator<String> sit = deps.iterator();
+         while (sit.hasNext())
+         {
+            String dep = sit.next();
+            bw.write(dep);
+
+            if (sit.hasNext())
+               bw.write(", ");
+         }
+
+         bw.write("</td>" + Dump.NEW_LINE);
+         bw.write("  </tr>" + Dump.NEW_LINE);
+
+         odd = !odd;
+      }
+
+      bw.write("</table>" + Dump.NEW_LINE);
+
    }
 }

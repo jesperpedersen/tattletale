@@ -146,7 +146,7 @@ public class ClassDependsOnReport extends CLSReport
    /**
     * write out the header of the report's content
     * @param bw the writer to use
-    * @throws IOException if an errror occurs
+    * @throws IOException if an error occurs
     */
    void writeHtmlBodyHeader(BufferedWriter bw) throws IOException
    {
