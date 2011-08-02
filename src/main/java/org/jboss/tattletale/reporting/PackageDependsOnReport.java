@@ -87,7 +87,7 @@ public class PackageDependsOnReport extends CLSReport
       bw.write("<table>" + Dump.NEW_LINE);
 
       bw.write("  <tr>" + Dump.NEW_LINE);
-      bw.write("     <th>Class</th>" + Dump.NEW_LINE);
+      bw.write("     <th>Package</th>" + Dump.NEW_LINE);
       bw.write("     <th>Depends On</th>" + Dump.NEW_LINE);
       bw.write("  </tr>" + Dump.NEW_LINE);
 
@@ -104,11 +104,11 @@ public class PackageDependsOnReport extends CLSReport
             {
                Map.Entry<String, SortedSet<String>> entry = dit.next();
                String pack = entry.getKey();
-               SortedSet<String> deps = entry.getValue();
+               SortedSet<String> packDeps = entry.getValue();
 
                SortedSet<String> newDeps = new TreeSet<String>();
 
-               for (String dep : deps)
+               for (String dep : packDeps)
                {
                   if (!dep.equals(pack))
                      newDeps.add(dep);
@@ -125,8 +125,8 @@ public class PackageDependsOnReport extends CLSReport
       while (rit.hasNext())
       {
          Map.Entry<String, SortedSet<String>> entry = rit.next();
-         String clz = entry.getKey();
-         SortedSet<String> deps = entry.getValue();
+         String pack = entry.getKey();
+         SortedSet<String> packDeps = entry.getValue();
 
          if (odd)
          {
@@ -136,10 +136,10 @@ public class PackageDependsOnReport extends CLSReport
          {
             bw.write("  <tr class=\"roweven\">" + Dump.NEW_LINE);
          }
-         bw.write("     <td>" + clz + "</a></td>" + Dump.NEW_LINE);
+         bw.write("     <td>" + pack + "</a></td>" + Dump.NEW_LINE);
          bw.write("     <td>");
 
-         Iterator<String> sit = deps.iterator();
+         Iterator<String> sit = packDeps.iterator();
          while (sit.hasNext())
          {
             String dep = sit.next();

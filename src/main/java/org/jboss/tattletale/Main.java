@@ -858,10 +858,21 @@ public class Main
       if(allReports || reportSet.contains(packageDependsOn.getId()))
       {
          if (filters != null && filters.getProperty(packageDependsOn.getId()) != null)
-            dependsOn.setFilter(filters.getProperty(packageDependsOn.getId()));
+            packageDependsOn.setFilter(filters.getProperty(packageDependsOn.getId()));
 
          packageDependsOn.generate(outputDir);
          dependenciesReports.add(packageDependsOn);
+      }
+
+      Report packageDependants = new PackageDependantsReport(archives, known, classloaderStructure);
+      if(allReports || reportSet.contains((packageDependants.getId())))
+      {
+         if(filters != null && filters.getProperty(packageDependants.getId()) != null)
+            packageDependants.setFilter(filters.getProperty(packageDependants.getId()));
+
+          packageDependants.generate(outputDir);
+          dependenciesReports.add(packageDependants);
+
       }
 
       Report transitiveDependsOn = new TransitiveDependsOnReport(archives,
