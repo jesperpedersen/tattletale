@@ -26,31 +26,7 @@ import org.jboss.tattletale.analyzers.DirectoryScanner;
 import org.jboss.tattletale.core.Archive;
 import org.jboss.tattletale.core.ArchiveTypes;
 import org.jboss.tattletale.core.Location;
-import org.jboss.tattletale.reporting.BlackListedReport;
-import org.jboss.tattletale.reporting.CircularDependencyReport;
-import org.jboss.tattletale.reporting.ClassDependantsReport;
-import org.jboss.tattletale.reporting.ClassDependsOnReport;
-import org.jboss.tattletale.reporting.ClassLocationReport;
-import org.jboss.tattletale.reporting.DependantsReport;
-import org.jboss.tattletale.reporting.DependsOnReport;
-import org.jboss.tattletale.reporting.Dump;
-import org.jboss.tattletale.reporting.EliminateJarsReport;
-import org.jboss.tattletale.reporting.GraphvizReport;
-import org.jboss.tattletale.reporting.InvalidVersionReport;
-import org.jboss.tattletale.reporting.JarReport;
-import org.jboss.tattletale.reporting.MultipleJarsReport;
-import org.jboss.tattletale.reporting.MultipleLocationsReport;
-import org.jboss.tattletale.reporting.NoVersionReport;
-import org.jboss.tattletale.reporting.OSGiReport;
-import org.jboss.tattletale.reporting.PackageMultipleJarsReport;
-import org.jboss.tattletale.reporting.Report;
-import org.jboss.tattletale.reporting.ReportSeverity;
-import org.jboss.tattletale.reporting.ReportStatus;
-import org.jboss.tattletale.reporting.SealedReport;
-import org.jboss.tattletale.reporting.SignReport;
-import org.jboss.tattletale.reporting.TransitiveDependantsReport;
-import org.jboss.tattletale.reporting.TransitiveDependsOnReport;
-import org.jboss.tattletale.reporting.UnusedJarReport;
+import org.jboss.tattletale.reporting.*;
 import org.jboss.tattletale.reporting.profiles.CDI10;
 import org.jboss.tattletale.reporting.profiles.CommonProfile;
 import org.jboss.tattletale.reporting.profiles.JavaEE5;
@@ -804,7 +780,7 @@ public class Main
     *           Where the reports go
     * @param config
     *           Tattletale runtime properties.
-    * @param allReport
+    * @param allReports
     *           Should all reports be generated ?
     * @param reportSet
     *           The set of reports that should be generated
@@ -876,6 +852,16 @@ public class Main
 
          dependants.generate(outputDir);
          dependenciesReports.add(dependants);
+      }
+
+      Report packageDependsOn = new PackageDependsOnReport(archives, known, classloaderStructure);
+      if(allReports || reportSet.contains(packageDependsOn.getId()))
+      {
+         if (filters != null && filters.getProperty(packageDependsOn.getId()) != null)
+            dependsOn.setFilter(filters.getProperty(packageDependsOn.getId()));
+
+         packageDependsOn.generate(outputDir);
+         dependenciesReports.add(packageDependsOn);
       }
 
       Report transitiveDependsOn = new TransitiveDependsOnReport(archives,
