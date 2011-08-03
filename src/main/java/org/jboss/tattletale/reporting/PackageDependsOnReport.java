@@ -27,13 +27,19 @@ import org.jboss.tattletale.core.ArchiveTypes;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
-import java.util.*;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.SortedMap;
+import java.util.SortedSet;
+import java.util.TreeMap;
+import java.util.TreeSet;
 
 /**
- * Reporting class that will generate package level reports like how {@link ClassDependsOnReport} does on class level reports.
+ * Reporting class that will generate package level
+ * reports like how {@link ClassDependsOnReport}
+ * does on class level reports.
  * <br />
- *
- *
  * @author Navin Surtani
  */
 
@@ -94,9 +100,9 @@ public class PackageDependsOnReport extends CLSReport
       SortedMap<String, SortedSet<String>> result = new TreeMap<String, SortedSet<String>>();
       boolean odd = true;
 
-      for(Archive archive : archives)
+      for (Archive archive : archives)
       {
-         if(archive.getType() == ArchiveTypes.JAR)
+         if (archive.getType() == ArchiveTypes.JAR)
          {
             SortedMap<String, SortedSet<String>> packageDependencies = archive.getPackageDependencies();
             Iterator<Map.Entry<String, SortedSet<String>>> dit = packageDependencies.entrySet().iterator();

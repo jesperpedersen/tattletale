@@ -120,7 +120,14 @@ public abstract class Archive implements Serializable, Comparable
     * @param blacklistedDependencies The blacklisted dependencies
     * @param location                The location
     */
-   public Archive(int type, String name, int version, List<String> manifest, List<String> sign, SortedSet<String> requires, SortedMap<String, Long> provides, SortedMap<String, SortedSet<String>> classDependencies, SortedMap<String, SortedSet<String>> packageDependencies, SortedMap<String, SortedSet<String>> blacklistedDependencies, Location location)
+   public Archive(int type, String name,
+                  int version, List<String> manifest,
+                  List<String> sign, SortedSet<String> requires,
+                  SortedMap<String, Long> provides,
+                  SortedMap<String, SortedSet<String>> classDependencies,
+                  SortedMap<String, SortedSet<String>> packageDependencies,
+                  SortedMap<String, SortedSet<String>> blacklistedDependencies,
+                  Location location)
    {
       this.type = type;
       this.name = name;
@@ -220,13 +227,15 @@ public abstract class Archive implements Serializable, Comparable
                int idx = s.indexOf(":");
                value = value.append(s.substring(idx + 1).trim());
                found = true;
-            } else if (found)
+            }
+            else if (found)
             {
                int idx = s.indexOf(":");
                if (idx != -1)
                {
                   return value.toString().trim();
-               } else
+               }
+               else
                {
                   value = value.append(s.trim());
                }

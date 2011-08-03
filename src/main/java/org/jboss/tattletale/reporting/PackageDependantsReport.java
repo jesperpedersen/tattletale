@@ -36,7 +36,9 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 
 /**
- * Reporting class that will generate package level reports like how {@link ClassDependantsReport} does on class level reports.
+ * Reporting class that will generate package level
+ * reports like how {@link ClassDependantsReport} does
+ * on class level reports.
  * @author Navin Surtani
  */
 public class PackageDependantsReport extends CLSReport
