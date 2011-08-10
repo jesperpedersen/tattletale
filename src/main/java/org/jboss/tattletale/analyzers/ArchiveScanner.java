@@ -1,24 +1,24 @@
 /*
- * JBoss, Home of Professional Open Source.
- * Copyright 2009, Red Hat Middleware LLC, and individual contributors
- * as indicated by the @author tags. See the copyright.txt file in the
- * distribution for a full listing of individual contributors.
- *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 2.1 of
- * the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
- */
+* JBoss, Home of Professional Open Source.
+* Copyright 2009, Red Hat Middleware LLC, and individual contributors
+* as indicated by the @author tags. See the copyright.txt file in the
+* distribution for a full listing of individual contributors.
+*
+* This is free software; you can redistribute it and/or modify it
+* under the terms of the GNU Lesser General Public License as
+* published by the Free Software Foundation; either version 2.1 of
+* the License, or (at your option) any later version.
+*
+* This software is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+* Lesser General Public License for more details.
+*
+* You should have received a copy of the GNU Lesser General Public
+* License along with this software; if not, write to the Free
+* Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+* 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+*/
 package org.jboss.tattletale.analyzers;
 
 import org.jboss.tattletale.core.Archive;
@@ -54,33 +54,33 @@ import javassist.CtField;
 import javassist.NotFoundException;
 
 /**
- * Archive scanner
- * @author Jesper Pedersen <jesper.pedersen@jboss.org>
- */
+* Archive scanner
+* @author Jesper Pedersen <jesper.pedersen@jboss.org>
+*/
 public class ArchiveScanner
 {
 
    /**
-    * Scan an archive
-    * @param file The file
-    * @return The archive
-    */
+* Scan an archive
+* @param file The file
+* @return The archive
+*/
    public static Archive scan(File file)
    {
       return scan(file, null, null, null);
    }
 
    /**
-    * Scan an archive
-    * @param file The file
-    * @param gProvides The global provides map
-    * @param known The set of known archives
-    * @param blacklisted The set of black listed packages
-    * @return The archive
-    */
-   public static Archive scan(File file, 
-                              Map<String, SortedSet<String>> gProvides, 
-                              List<Archive> known, 
+* Scan an archive
+* @param file The file
+* @param gProvides The global provides map
+* @param known The set of known archives
+* @param blacklisted The set of black listed packages
+* @return The archive
+*/
+   public static Archive scan(File file,
+                              Map<String, SortedSet<String>> gProvides,
+                              List<Archive> known,
                               Set<String> blacklisted)
    {
       Archive archive = null;
@@ -114,7 +114,7 @@ public class ArchiveScanner
                InputStream is = null;
                try
                {
-                  is = jarFile.getInputStream(jarEntry); 
+                  is = jarFile.getInputStream(jarEntry);
                   CtClass ctClz = classPool.makeClass(is);
 
                   if (classVersion == null)
@@ -237,7 +237,7 @@ public class ArchiveScanner
                InputStream is = null;
                try
                {
-                  is = jarFile.getInputStream(jarEntry); 
+                  is = jarFile.getInputStream(jarEntry);
 
                   InputStreamReader isr = new InputStreamReader(is);
                   LineNumberReader lnr = new LineNumberReader(isr);
@@ -305,7 +305,7 @@ public class ArchiveScanner
          }
          Location location = new Location(filename, version);
 
-         archive = new JarArchive(name, classVersion.intValue(), lManifest, lSign, requires, provides, 
+         archive = new JarArchive(name, classVersion.intValue(), lManifest, lSign, requires, provides,
                                   classDependencies, packageDependencies, blacklistedDependencies, location);
 
          if (profiles.size() > 0)
@@ -362,10 +362,10 @@ public class ArchiveScanner
    }
 
    /**
-    * Read the manifest
-    * @param manifest The manifest
-    * @return The manifest as strings
-    */
+* Read the manifest
+* @param manifest The manifest
+* @return The manifest as strings
+*/
    private static List<String> readManifest(Manifest manifest)
    {
       List<String> result = new ArrayList<String>();

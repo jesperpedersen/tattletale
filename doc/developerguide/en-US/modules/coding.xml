@@ -49,23 +49,29 @@ ant checkstyle
     <para>Adding a new report to JBoss Tattletale is very easy, so if you have found a report that you
       would like to see that shouldn't stop you from adding it.</para>
 
-    <para>You need a class that extends from:</para>
+    <para>You need a class that implements: </para>
 
     <programlisting>
 org.jboss.tattletale.reporting.Report
     </programlisting>
 
-    <para>and implements its abstract methods. The JavaDoc for JBoss Tattletale will show you
-      the class hierarchy as you may want to extend from another class.</para>
+    <para> The JavaDoc for JBoss Tattletale will show you
+      the class hierarchy as you may want to extend from another class (org.jboss.tattletale.reporting.AbstractReport) for example.</para>
 
-    <para>After you have implemented the new report you add it to the correct category inside</para>
+    <para>After you have implemented the new report you add it to the properties file 'jboss-tattletale.properties'. For example:</para>
 
-    <programlisting>
-org.jboss.tattletale.Main
-    </programlisting>
-
-    <para>That is it. See the existing reports in JBoss Tattletale for examples on how to do this.</para>
-
+ 	 <programlisting>
+	 	customreport.1=my.custom.package.customreport
+	 </programlisting>
+	
+	<para>
+		At runtime, as long as your custom jar file is in the classpath your custom report will be generated. 
+		If you were running from the command line for example:
+	</para>
+				
+	<programlisting>
+		java -classpath tattletale.jar:customreporting.jar org.jboss.tattletale.Main [directory-of-source-jar] [output-directory]
+	</programlisting>
   </section>
 
   <section id="cls">

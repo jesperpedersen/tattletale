@@ -27,7 +27,7 @@ import org.jboss.tattletale.core.Archive;
  * Represents an archive report (JAR, WAR, EAR, ...)
  * @author Jesper Pedersen <jesper.pedersen@jboss.org>
  */
-public abstract class ArchiveReport extends Report
+public abstract class ArchiveReport extends AbstractReport
 {
    /** The archive */
    protected Archive archive;
@@ -40,7 +40,7 @@ public abstract class ArchiveReport extends Report
     */
    public ArchiveReport(String id, int severity, Archive archive)
    {
-      super(id, severity, null);
+      super(id, severity);
       this.archive = archive;
    }
 

@@ -28,7 +28,6 @@ import org.jboss.tattletale.core.ArchiveTypes;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import java.util.SortedMap;
 import java.util.SortedSet;
@@ -50,15 +49,10 @@ public class ClassDependantsReport extends CLSReport
 
    /**
     * Constructor
-    * @param archives The archives
-    * @param known The set of known archives
-    * @param classloaderStructure The classloader structure
     */
-   public ClassDependantsReport(SortedSet<Archive> archives,
-                                List<Archive> known,
-                                String classloaderStructure)
+   public ClassDependantsReport()
    {
-      super(DIRECTORY, ReportSeverity.INFO, archives, NAME, DIRECTORY, classloaderStructure, known);
+      super(DIRECTORY, ReportSeverity.INFO, NAME, DIRECTORY);
    }
 
 
@@ -67,14 +61,14 @@ public class ClassDependantsReport extends CLSReport
     * @param bw the writer to use
     * @exception IOException if an error occurs
     */
-   void writeHtmlBodyContent(BufferedWriter bw) throws IOException
+   protected void writeHtmlBodyContent(BufferedWriter bw) throws IOException
    {
-      bw.write("<table>" + Dump.NEW_LINE);
+      bw.write("<table>" + Dump.newLine());
 
-      bw.write("  <tr>" + Dump.NEW_LINE);
-      bw.write("     <th>Class</th>" + Dump.NEW_LINE);
-      bw.write("     <th>Dependants</th>" + Dump.NEW_LINE);
-      bw.write("  </tr>" + Dump.NEW_LINE);
+      bw.write("  <tr>" + Dump.newLine());
+      bw.write("     <th>Class</th>" + Dump.newLine());
+      bw.write("     <th>Dependants</th>" + Dump.newLine());
+      bw.write("  </tr>" + Dump.newLine());
 
       SortedMap<String, SortedSet<String>> result = new TreeMap<String, SortedSet<String>>();
       boolean odd = true;
@@ -139,13 +133,13 @@ public class ClassDependantsReport extends CLSReport
          {
             if (odd)
             {
-               bw.write("  <tr class=\"rowodd\">" + Dump.NEW_LINE);
+               bw.write("  <tr class=\"rowodd\">" + Dump.newLine());
             }
             else
             {
-               bw.write("  <tr class=\"roweven\">" + Dump.NEW_LINE);
+               bw.write("  <tr class=\"roweven\">" + Dump.newLine());
             }
-            bw.write("     <td>" + clz + "</a></td>" + Dump.NEW_LINE);
+            bw.write("     <td>" + clz + "</a></td>" + Dump.newLine());
             bw.write("     <td>");
 
             Iterator<String> sit = deps.iterator();
@@ -158,14 +152,14 @@ public class ClassDependantsReport extends CLSReport
                   bw.write(", ");
             }
 
-            bw.write("</td>" + Dump.NEW_LINE);
-            bw.write("  </tr>" + Dump.NEW_LINE);
+            bw.write("</td>" + Dump.newLine());
+            bw.write("  </tr>" + Dump.newLine());
             
             odd = !odd;
          }
       }
 
-      bw.write("</table>" + Dump.NEW_LINE);
+      bw.write("</table>" + Dump.newLine());
    }
 
    /**
@@ -173,14 +167,14 @@ public class ClassDependantsReport extends CLSReport
     * @param bw the writer to use
     * @throws IOException if an errror occurs
     */
-   void writeHtmlBodyHeader(BufferedWriter bw) throws IOException
+   protected void writeHtmlBodyHeader(BufferedWriter bw) throws IOException
    {
-      bw.write("<body>" + Dump.NEW_LINE);
-      bw.write(Dump.NEW_LINE);
+      bw.write("<body>" + Dump.newLine());
+      bw.write(Dump.newLine());
 
-      bw.write("<h1>" + NAME + "</h1>" + Dump.NEW_LINE);
+      bw.write("<h1>" + NAME + "</h1>" + Dump.newLine());
 
-      bw.write("<a href=\"../index.html\">Main</a>" + Dump.NEW_LINE);
-      bw.write("<p>" + Dump.NEW_LINE);
+      bw.write("<a href=\"../index.html\">Main</a>" + Dump.newLine());
+      bw.write("<p>" + Dump.newLine());
    }
 }

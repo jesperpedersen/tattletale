@@ -25,14 +25,13 @@ import org.jboss.tattletale.core.Archive;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
-import java.util.SortedSet;
 
 /**
  * Sealed information report
  * @author Jesper Pedersen <jesper.pedersen@jboss.org>
  * @author <a href="mailto:torben.jaeger@jit-consulting.de">Torben Jaeger</a>
  */
-public class SealedReport extends Report
+public class SealedReport extends AbstractReport
 {
    /** NAME */
    private static final String NAME = "Sealed information";
@@ -42,11 +41,10 @@ public class SealedReport extends Report
 
    /**
     * Constructor
-    * @param archives The archives
     */
-   public SealedReport(SortedSet<Archive> archives)
+   public SealedReport()
    {
-      super(DIRECTORY, ReportSeverity.INFO, archives, NAME, DIRECTORY);
+      super(DIRECTORY, ReportSeverity.INFO, NAME, DIRECTORY);
    }
 
    /**
@@ -54,14 +52,14 @@ public class SealedReport extends Report
     * @param bw the writer to use
     * @exception IOException if an error occurs
     */
-   void writeHtmlBodyContent(BufferedWriter bw) throws IOException
+   protected void writeHtmlBodyContent(BufferedWriter bw) throws IOException
    {
-      bw.write("<table>" + Dump.NEW_LINE);
+      bw.write("<table>" + Dump.newLine());
 
-      bw.write("  <tr>" + Dump.NEW_LINE);
-      bw.write("     <th>Archive</th>" + Dump.NEW_LINE);
-      bw.write("     <th>Status</th>" + Dump.NEW_LINE);
-      bw.write("  </tr>" + Dump.NEW_LINE);
+      bw.write("  <tr>" + Dump.newLine());
+      bw.write("     <th>Archive</th>" + Dump.newLine());
+      bw.write("     <th>Status</th>" + Dump.newLine());
+      bw.write("  </tr>" + Dump.newLine());
 
       boolean odd = true;
 
@@ -73,73 +71,73 @@ public class SealedReport extends Report
 
          if (odd)
          {
-            bw.write("  <tr class=\"rowodd\">" + Dump.NEW_LINE);
+            bw.write("  <tr class=\"rowodd\">" + Dump.newLine());
          }
          else
          {
-            bw.write("  <tr class=\"roweven\">" + Dump.NEW_LINE);
+            bw.write("  <tr class=\"roweven\">" + Dump.newLine());
          }
          bw.write("     <td><a href=\"../jar/" + archive.getName() + ".html\">" + archive.getName() + "</a></td>" +
-                  Dump.NEW_LINE);
+                  Dump.newLine());
          if (archive.hasManifestKey("Sealed") && 
              Boolean.TRUE.equals(Boolean.valueOf(archive.getManifestValue("Sealed"))))
          {
-            bw.write("     <td style=\"color: red;\">Sealed</td>" + Dump.NEW_LINE);
+            bw.write("     <td style=\"color: red;\">Sealed</td>" + Dump.newLine());
             sealed++;
          }
          else
          {
-            bw.write("     <td style=\"color: green;\">Unsealed</td>" + Dump.NEW_LINE);
+            bw.write("     <td style=\"color: green;\">Unsealed</td>" + Dump.newLine());
             unsealed++;
          }
-         bw.write("  </tr>" + Dump.NEW_LINE);
+         bw.write("  </tr>" + Dump.newLine());
 
          odd = !odd;
       }
 
-      bw.write("</table>" + Dump.NEW_LINE);
+      bw.write("</table>" + Dump.newLine());
 
       boolean filtered = isFiltered();
       if (sealed > 0 && unsealed > 0 && !filtered)
          status = ReportStatus.YELLOW;
 
-      bw.write(Dump.NEW_LINE);
-      bw.write("<p>" + Dump.NEW_LINE);
+      bw.write(Dump.newLine());
+      bw.write("<p>" + Dump.newLine());
 
-      bw.write("<table>" + Dump.NEW_LINE);
+      bw.write("<table>" + Dump.newLine());
 
-      bw.write("  <tr>" + Dump.NEW_LINE);
-      bw.write("     <th>Status</th>" + Dump.NEW_LINE);
-      bw.write("     <th>Archives</th>" + Dump.NEW_LINE);
-      bw.write("  </tr>" + Dump.NEW_LINE);
+      bw.write("  <tr>" + Dump.newLine());
+      bw.write("     <th>Status</th>" + Dump.newLine());
+      bw.write("     <th>Archives</th>" + Dump.newLine());
+      bw.write("  </tr>" + Dump.newLine());
 
-      bw.write("  <tr class=\"rowodd\">" + Dump.NEW_LINE);
-      bw.write("     <td>Sealed</td>" + Dump.NEW_LINE);
+      bw.write("  <tr class=\"rowodd\">" + Dump.newLine());
+      bw.write("     <td>Sealed</td>" + Dump.newLine());
       if (!filtered)
       {
-         bw.write("     <td style=\"color: red;\">" + sealed + "</td>" + Dump.NEW_LINE);
+         bw.write("     <td style=\"color: red;\">" + sealed + "</td>" + Dump.newLine());
       }
       else
       {
          bw.write("     <td style=\"color: red; text-decoration: line-through;\">" + sealed + "</td>" + 
-                  Dump.NEW_LINE);
+                  Dump.newLine());
       }
-      bw.write("  </tr>" + Dump.NEW_LINE);
+      bw.write("  </tr>" + Dump.newLine());
 
-      bw.write("  <tr class=\"roweven\">" + Dump.NEW_LINE);
-      bw.write("     <td>Unsealed</td>" + Dump.NEW_LINE);
+      bw.write("  <tr class=\"roweven\">" + Dump.newLine());
+      bw.write("     <td>Unsealed</td>" + Dump.newLine());
       if (!filtered)
       {
-         bw.write("     <td style=\"color: green;\">" + unsealed + "</td>" + Dump.NEW_LINE);
+         bw.write("     <td style=\"color: green;\">" + unsealed + "</td>" + Dump.newLine());
       }
       else
       {
          bw.write("     <td style=\"color: green; text-decoration: line-through;\">" + unsealed + "</td>" +
-                  Dump.NEW_LINE);
+                  Dump.newLine());
       }
-      bw.write("  </tr>" + Dump.NEW_LINE);
+      bw.write("  </tr>" + Dump.newLine());
 
-      bw.write("</table>" + Dump.NEW_LINE);
+      bw.write("</table>" + Dump.newLine());
    }
 
    /**
@@ -147,15 +145,15 @@ public class SealedReport extends Report
     * @param bw the writer to use
     * @throws IOException if an errror occurs
     */
-   void writeHtmlBodyHeader(BufferedWriter bw) throws IOException
+   protected void writeHtmlBodyHeader(BufferedWriter bw) throws IOException
    {
-      bw.write("<body>" + Dump.NEW_LINE);
-      bw.write(Dump.NEW_LINE);
+      bw.write("<body>" + Dump.newLine());
+      bw.write(Dump.newLine());
 
-      bw.write("<h1>" + NAME + "</h1>" + Dump.NEW_LINE);
+      bw.write("<h1>" + NAME + "</h1>" + Dump.newLine());
 
-      bw.write("<a href=\"../index.html\">Main</a>" + Dump.NEW_LINE);
-      bw.write("<p>" + Dump.NEW_LINE);
+      bw.write("<a href=\"../index.html\">Main</a>" + Dump.newLine());
+      bw.write("<p>" + Dump.newLine());
    }
 
    /**

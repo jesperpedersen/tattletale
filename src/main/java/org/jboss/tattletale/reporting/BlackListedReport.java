@@ -34,7 +34,7 @@ import java.util.SortedSet;
  * @author Jesper Pedersen <jesper.pedersen@jboss.org>
  * @author <a href="mailto:torben.jaeger@jit-consulting.de">Torben Jaeger</a>
  */
-public class BlackListedReport extends Report
+public class BlackListedReport extends AbstractReport
 {
    /** NAME */
    private static final String NAME = "Black listed";
@@ -44,11 +44,10 @@ public class BlackListedReport extends Report
 
    /**
     * Constructor
-    * @param archives The archives
     */
-   public BlackListedReport(SortedSet<Archive> archives)
+   public BlackListedReport()
    {
-      super(DIRECTORY, ReportSeverity.ERROR, archives, NAME, DIRECTORY);
+      super(DIRECTORY, ReportSeverity.ERROR, NAME, DIRECTORY);
    }
 
    /**
@@ -56,14 +55,14 @@ public class BlackListedReport extends Report
     * @param bw the writer to use
     * @exception IOException if an error occurs
     */
-   void writeHtmlBodyContent(BufferedWriter bw) throws IOException
+   protected void writeHtmlBodyContent(BufferedWriter bw) throws IOException
    {
-      bw.write("<table>" + Dump.NEW_LINE);
+      bw.write("<table>" + Dump.newLine());
 
-      bw.write("  <tr>" + Dump.NEW_LINE);
-      bw.write("     <th>Archive</th>" + Dump.NEW_LINE);
-      bw.write("     <th>Usage</th>" + Dump.NEW_LINE);
-      bw.write("  </tr>" + Dump.NEW_LINE);
+      bw.write("  <tr>" + Dump.newLine());
+      bw.write("     <th>Archive</th>" + Dump.newLine());
+      bw.write("     <th>Usage</th>" + Dump.newLine());
+      bw.write("  </tr>" + Dump.newLine());
 
       boolean odd = true;
 
@@ -87,18 +86,18 @@ public class BlackListedReport extends Report
             {
                if (odd)
                {
-                  bw.write("  <tr class=\"rowodd\">" + Dump.NEW_LINE);
+                  bw.write("  <tr class=\"rowodd\">" + Dump.newLine());
                }
                else
                {
-                  bw.write("  <tr class=\"roweven\">" + Dump.NEW_LINE);
+                  bw.write("  <tr class=\"roweven\">" + Dump.newLine());
                }
                bw.write(
                      "     <td><a href=\"../jar/" + archive.getName() + ".html\">" + archive.getName() + "</a></td>" +
-                     Dump.NEW_LINE);
+                     Dump.newLine());
                bw.write("     <td>");
 
-               bw.write("       <table>" + Dump.NEW_LINE);
+               bw.write("       <table>" + Dump.newLine());
 
                for (Map.Entry<String, SortedSet<String>> stringSortedSetEntry : archive.getBlackListedDependencies()
                      .entrySet())
@@ -107,9 +106,9 @@ public class BlackListedReport extends Report
                   String pkg = stringSortedSetEntry.getKey();
                   SortedSet<String> blpkgs = stringSortedSetEntry.getValue();
 
-                  bw.write("      <tr>" + Dump.NEW_LINE);
+                  bw.write("      <tr>" + Dump.newLine());
 
-                  bw.write("        <td>" + pkg + "</td>" + Dump.NEW_LINE);
+                  bw.write("        <td>" + pkg + "</td>" + Dump.newLine());
 
                   if (!filtered)
                   {
@@ -125,22 +124,22 @@ public class BlackListedReport extends Report
                      bw.write(blp + "<br>");
                   }
 
-                  bw.write("</td>" + Dump.NEW_LINE);
+                  bw.write("</td>" + Dump.newLine());
 
-                  bw.write("      </tr>" + Dump.NEW_LINE);
+                  bw.write("      </tr>" + Dump.newLine());
                }
 
-               bw.write("       </table>" + Dump.NEW_LINE);
+               bw.write("       </table>" + Dump.newLine());
 
-               bw.write("</td>" + Dump.NEW_LINE);
-               bw.write("  </tr>" + Dump.NEW_LINE);
+               bw.write("</td>" + Dump.newLine());
+               bw.write("  </tr>" + Dump.newLine());
 
                odd = !odd;
             }
          }
       }
 
-      bw.write("</table>" + Dump.NEW_LINE);
+      bw.write("</table>" + Dump.newLine());
    }
 
    /**
@@ -148,15 +147,15 @@ public class BlackListedReport extends Report
     * @param bw the writer to use
     * @exception IOException if an errror occurs
     */
-   void writeHtmlBodyHeader(BufferedWriter bw) throws IOException
+   protected void writeHtmlBodyHeader(BufferedWriter bw) throws IOException
    {
-      bw.write("<body>" + Dump.NEW_LINE);
-      bw.write(Dump.NEW_LINE);
+      bw.write("<body>" + Dump.newLine());
+      bw.write(Dump.newLine());
 
-      bw.write("<h1>" + NAME + "</h1>" + Dump.NEW_LINE);
+      bw.write("<h1>" + NAME + "</h1>" + Dump.newLine());
 
-      bw.write("<a href=\"../index.html\">Main</a>" + Dump.NEW_LINE);
-      bw.write("<p>" + Dump.NEW_LINE);
+      bw.write("<a href=\"../index.html\">Main</a>" + Dump.newLine());
+      bw.write("<p>" + Dump.newLine());
    }
 
    /**
