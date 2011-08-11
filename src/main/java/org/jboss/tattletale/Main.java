@@ -26,7 +26,6 @@ import org.jboss.tattletale.analyzers.DirectoryScanner;
 import org.jboss.tattletale.core.Archive;
 import org.jboss.tattletale.core.ArchiveTypes;
 import org.jboss.tattletale.core.Location;
-import org.jboss.tattletale.reporting.AbstractReport;
 import org.jboss.tattletale.reporting.BlackListedReport;
 import org.jboss.tattletale.reporting.CircularDependencyReport;
 import org.jboss.tattletale.reporting.ClassDependantsReport;
@@ -44,6 +43,7 @@ import org.jboss.tattletale.reporting.MultipleLocationsReport;
 import org.jboss.tattletale.reporting.NoVersionReport;
 import org.jboss.tattletale.reporting.OSGiReport;
 import org.jboss.tattletale.reporting.PackageMultipleJarsReport;
+import org.jboss.tattletale.reporting.Report;
 import org.jboss.tattletale.reporting.ReportSeverity;
 import org.jboss.tattletale.reporting.ReportStatus;
 import org.jboss.tattletale.reporting.SealedReport;
@@ -925,21 +925,21 @@ public class Main
       {
          reportSetBuilder.addReport(reportDef);
       }
-      SortedSet<AbstractReport> dependencyReportSet = reportSetBuilder.getReportSet();
+      SortedSet<Report> dependencyReportSet = reportSetBuilder.getReportSet();
 
       reportSetBuilder.clear();
       for (Class reportDef : generalReports)
       {
          reportSetBuilder.addReport(reportDef);
       }
-      SortedSet<AbstractReport> generalReportSet = reportSetBuilder.getReportSet();
+      SortedSet<Report> generalReportSet = reportSetBuilder.getReportSet();
 
       reportSetBuilder.clear();
       for (Class reportDef : customReports)
       {
          reportSetBuilder.addReport(reportDef);
       }
-      SortedSet<AbstractReport> customReportSet = reportSetBuilder.getReportSet();
+      SortedSet<Report> customReportSet = reportSetBuilder.getReportSet();
       reportSetBuilder.clear();
 
       for (Archive a : archives)
@@ -950,7 +950,7 @@ public class Main
          }
       }
 
-      SortedSet<AbstractReport> archiveReports = reportSetBuilder.getReportSet();
+      SortedSet<Report> archiveReports = reportSetBuilder.getReportSet();
 
 
       String outputDir = reportSetBuilder.getOutputDir();
@@ -1080,9 +1080,9 @@ public class Main
        *
        * @param reports The reports to check
        */
-      void processReports(Set<AbstractReport> reports)
+      void processReports(Set<Report> reports)
       {
-         for (AbstractReport report : reports)
+         for (Report report : reports)
          {
             processReport(report);
          }
@@ -1093,7 +1093,7 @@ public class Main
        *
        * @param report The report to check
        */
-      void processReport(AbstractReport report)
+      void processReport(Report report)
       {
          if ((ReportStatus.YELLOW == report.getStatus() || ReportStatus.RED == report.getStatus())
                && ((ReportSeverity.INFO == report.getSeverity() && failOnInfo) ||
@@ -1110,7 +1110,7 @@ public class Main
        *
        * @param report A report that meets the failure conditions
        */
-      void appendReportInfo(AbstractReport report)
+      void appendReportInfo(Report report)
       {
          if (!first)
          {
@@ -1148,7 +1148,7 @@ public class Main
       private final String outputDir;
       private final Properties filters;
       private Set<String> reportSet;
-      private SortedSet<AbstractReport> returnReportSet = new TreeSet<AbstractReport>();
+      private SortedSet<Report> returnReportSet = new TreeSet<Report>();
       private final Map<String, Object> reportParameters = new HashMap<String, Object>();
 
       /**
@@ -1187,7 +1187,7 @@ public class Main
       void clear()
       {
          // start a new set, the old sets are still in use for indexing
-         returnReportSet = new TreeSet<AbstractReport>();
+         returnReportSet = new TreeSet<Report>();
       }
 
       /**
@@ -1196,7 +1196,7 @@ public class Main
        *
        * @param report the definition of the report to generate
        */
-      void addReport(AbstractReport report)
+      void addReport(Report report)
       {
          if (allReports || reportSet.contains(report.getId()))
          {
@@ -1220,7 +1220,7 @@ public class Main
       void addReport(Class reportDef) throws Exception
       {
          // build report from empty constructor
-         AbstractReport report = (AbstractReport) reportDef.getConstructor(new Class[0]).newInstance(new Object[0]);
+         Report report = (Report) reportDef.getConstructor(new Class[0]).newInstance(new Object[0]);
 
          // populate required report parameters
          Method[] allMethods = reportDef.getMethods();
@@ -1235,7 +1235,7 @@ public class Main
       }
 
       /** @return A Set of reports generated, useful for building an index */
-      SortedSet<AbstractReport> getReportSet()
+      SortedSet<Report> getReportSet()
       {
          return returnReportSet;
       }

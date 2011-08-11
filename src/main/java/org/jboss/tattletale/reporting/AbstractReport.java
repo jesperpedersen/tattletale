@@ -35,6 +35,7 @@ import java.util.SortedSet;
  *
  * @author Jesper Pedersen <jesper.pedersen@jboss.org>
  * @author <a href="mailto:torben.jaeger@jit-consulting.de">Torben Jaeger</a>
+ * @author Navin Surtani
  */
 public abstract class AbstractReport implements Report
 {
@@ -57,7 +58,7 @@ public abstract class AbstractReport implements Report
    private String directory = null;
 
    /** output directory */
-   private File outputDir;
+   private File outputDirectory;
 
    /** Filter */
    private String filter;
@@ -66,7 +67,7 @@ public abstract class AbstractReport implements Report
    private Filter filterImpl;
 
    /** output filename */
-   private static final String INDEX_HTML = "index.html";
+   protected static final String INDEX_HTML = "index.html";
 
    /**
     * Constructor
@@ -175,20 +176,19 @@ public abstract class AbstractReport implements Report
     *
     * @return a file handle to the output directory
     */
-   File getOutputDir()
+   public File getOutputDirectory()
    {
-      return outputDir;
+      return outputDirectory;
    }
 
    /**
-    * Return size of index.html file
+    * The name of the index file to be used. See {@link Report} for examples.
     *
-    * @return size of index.html file in KB
+    * @return name of the index file that is to contain Report data.
     */
-   String getIndexHtmlSize()
+   public String getIndexName()
    {
-      File indexFile = new File(getOutputDir().getAbsolutePath() + File.separator + INDEX_HTML);
-      return ((indexFile.length() / 1024) + 1) + " KB";
+      return INDEX_HTML;
    }
 
    /**
@@ -228,8 +228,8 @@ public abstract class AbstractReport implements Report
     */
    void createOutputDir(String outputDirectory)
    {
-      outputDir = new File(outputDirectory, getDirectory());
-      outputDir.mkdirs();
+      this.outputDirectory = new File(outputDirectory, getDirectory());
+      this.outputDirectory.mkdirs();
    }
 
    /**
@@ -252,7 +252,7 @@ public abstract class AbstractReport implements Report
     */
    public BufferedWriter getBufferedWriter(String filename) throws IOException
    {
-      FileWriter fw = new FileWriter(getOutputDir().getAbsolutePath() + File.separator + filename);
+      FileWriter fw = new FileWriter(getOutputDirectory().getAbsolutePath() + File.separator + filename);
       return new BufferedWriter(fw, 8192);
    }
 

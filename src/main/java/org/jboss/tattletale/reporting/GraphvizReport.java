@@ -97,7 +97,8 @@ public class GraphvizReport extends CLSReport
 
       boolean odd = true;
 
-      FileWriter alldotfw = new FileWriter(getOutputDir().getAbsolutePath() + File.separator + "dependencies.dot");
+      FileWriter alldotfw = new FileWriter
+      (getOutputDirectory().getAbsolutePath() + File.separator + "dependencies.dot");
       BufferedWriter alldotw = new BufferedWriter(alldotfw, 8192);
 
       alldotw.write("digraph dependencies {" + Dump.newLine());
@@ -154,7 +155,7 @@ public class GraphvizReport extends CLSReport
                   bw.write("<a href=\"" + archive.getName() + "/" + archive.getName() + ".png\">.png</a>");
                }
 
-               File doutput = new File(getOutputDir(), archive.getName());
+               File doutput = new File(getOutputDirectory(), archive.getName());
                doutput.mkdirs();
 
                String dotName = doutput.getAbsolutePath() + File.separator + archive.getName() + ".dot";
@@ -202,7 +203,7 @@ public class GraphvizReport extends CLSReport
                   bw.write("<a href=\"" + archive.getName() + "/" + archive.getName() + "-package.png\">.png</a>");
                }
 
-               File doutput = new File(getOutputDir(), archive.getName());
+               File doutput = new File(getOutputDirectory(), archive.getName());
                doutput.mkdirs();
 
                String dotName = doutput.getAbsolutePath() + File.separator + archive.getName() + "-package.dot";

@@ -24,6 +24,7 @@ package org.jboss.tattletale.reporting;
 import org.jboss.tattletale.Version;
 
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -108,10 +109,10 @@ public class Dump
     * @param customReports       The custom reports as defined by the user in jboss-tattletale.properties
     * @param outputDir           where the reports go
     */
-   public static void generateIndex(SortedSet<AbstractReport> dependenciesReports,
-                                    SortedSet<AbstractReport> generalReports,
-                                    SortedSet<AbstractReport> archiveReports,
-                                    SortedSet<AbstractReport> customReports,
+   public static void generateIndex(SortedSet<Report> dependenciesReports,
+                                    SortedSet<Report> generalReports,
+                                    SortedSet<Report> archiveReports,
+                                    SortedSet<Report> customReports,
                                     String outputDir)
    {
       try
@@ -166,7 +167,7 @@ public class Dump
       return NEW_LINE;
    }
 
-   private static void generateReportItems(BufferedWriter bw, SortedSet<AbstractReport> reports,
+   private static void generateReportItems(BufferedWriter bw, SortedSet<Report> reports,
                                            String heading, boolean useReportName) throws IOException
    {
 
@@ -176,7 +177,7 @@ public class Dump
          bw.write("<ul>" + newLine());
 
          String fileBase = "index";
-         for (AbstractReport r : reports)
+         for (Report r : reports)
          {
             bw.write("<li>");
             if (useReportName)
@@ -190,11 +191,16 @@ public class Dump
 
             bw.write(ReportSeverity.getSeverityString(r.getSeverity()));
             bw.write("</span>");
-            bw.write(") (" + r.getIndexHtmlSize() + ")</li>" + newLine());
+            bw.write(") (" + getIndexHtmlSize(r) + ")</li>" + newLine());
          }
 
          bw.write("</ul>" + newLine());
       }
    }
 
+   private static String getIndexHtmlSize(Report r)
+   {
+      File indexFile = new File(r.getOutputDirectory().getAbsolutePath() + File.separator + r.getIndexName());
+      return ((indexFile.length() / 1024) + 1) + "KB";
+   }
 }

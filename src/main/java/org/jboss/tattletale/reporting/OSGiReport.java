@@ -142,7 +142,7 @@ public class OSGiReport extends AbstractReport
 
    private File writeArchiveOSGIHtml(Archive archive, List<String> osgiInformation) throws IOException
    {
-      File archiveOutput = new File(getOutputDir(), archive.getName());
+      File archiveOutput = new File(getOutputDirectory(), archive.getName());
       archiveOutput.mkdirs();
 
       FileWriter rfw = new FileWriter(archiveOutput.getAbsolutePath() + File.separator + "index.html");
