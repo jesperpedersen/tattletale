@@ -1,24 +1,24 @@
 /*
-* JBoss, Home of Professional Open Source.
-* Copyright 2009, Red Hat Middleware LLC, and individual contributors
-* as indicated by the @author tags. See the copyright.txt file in the
-* distribution for a full listing of individual contributors.
-*
-* This is free software; you can redistribute it and/or modify it
-* under the terms of the GNU Lesser General Public License as
-* published by the Free Software Foundation; either version 2.1 of
-* the License, or (at your option) any later version.
-*
-* This software is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
-* Lesser General Public License for more details.
-*
-* You should have received a copy of the GNU Lesser General Public
-* License along with this software; if not, write to the Free
-* Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
-* 02110-1301 USA, or see the FSF site: http://www.fsf.org.
-*/
+ * JBoss, Home of Professional Open Source.
+ * Copyright 2009, Red Hat Middleware LLC, and individual contributors
+ * as indicated by the @author tags. See the copyright.txt file in the
+ * distribution for a full listing of individual contributors.
+ *
+ * This is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation; either version 2.1 of
+ * the License, or (at your option) any later version.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this software; if not, write to the Free
+ * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ */
 package org.jboss.tattletale;
 
 import org.jboss.tattletale.analyzers.ArchiveScanner;
@@ -43,8 +43,8 @@ import org.jboss.tattletale.reporting.MultipleJarsReport;
 import org.jboss.tattletale.reporting.MultipleLocationsReport;
 import org.jboss.tattletale.reporting.NoVersionReport;
 import org.jboss.tattletale.reporting.OSGiReport;
-//import org.jboss.tattletale.reporting.PackageDependantsReport;
-//import org.jboss.tattletale.reporting.PackageDependsOnReport;
+import org.jboss.tattletale.reporting.PackageDependantsReport;
+import org.jboss.tattletale.reporting.PackageDependsOnReport;
 import org.jboss.tattletale.reporting.PackageMultipleJarsReport;
 import org.jboss.tattletale.reporting.ReportSeverity;
 import org.jboss.tattletale.reporting.ReportStatus;
@@ -87,93 +87,60 @@ import java.util.TreeSet;
  * @author Jesper Pedersen <jesper.pedersen@jboss.org>
  * @author Jay Balunas <jbalunas@jboss.org>
  * @author Mike Moore <mike.moore@amentra.com>
+ * @author Navin Surtani
  */
 public class Main
 {
-   /**
-    * Source
-    */
+   /** Source */
    private String source;
 
-   /**
-    * Destination
-    */
+   /** Destination */
    private String destination;
 
-   /**
-    * Configuration
-    */
+   /** Configuration */
    private String configuration;
 
-   /**
-    * Filter
-    */
+   /** Filter */
    private String filter;
 
-   /**
-    * Class loader structure
-    */
+   /** Class loader structure */
    private String classloaderStructure;
 
-   /**
-    * Profiles
-    */
+   /** Profiles */
    private String profiles;
 
-   /**
-    * Excludes
-    */
+   /** Excludes */
    private String excludes;
 
-   /**
-    * Blacklisted
-    */
+   /** Blacklisted */
    private String blacklisted;
 
-   /**
-    * Fail on info
-    */
+   /** Fail on info */
    private boolean failOnInfo;
 
-   /**
-    * Fail on warning
-    */
+   /** Fail on warning */
    private boolean failOnWarn;
 
-   /**
-    * Fail on error
-    */
+   /** Fail on error */
    private boolean failOnError;
 
-   /**
-    * Reports
-    */
+   /** Reports */
    private String reports;
 
-   /**
-    * Scan
-    */
+   /** Scan */
    private String scan;
 
-   /**
-    * A List of the Constructors used to create dependency reports
-    */
+   /** A List of the Constructors used to create dependency reports */
    private final List<Class> dependencyReports;
 
-   /**
-    * A List of the Constructors used to create general reports
-    */
+   /** A List of the Constructors used to create general reports */
    private final List<Class> generalReports;
 
-   /**
-    * A List of the Constructors used to create custom reports
-    */
+   /** A List of the Constructors used to create custom reports */
    private final List<Class> customReports;
 
 
-   /**
-    * Constructor
-    */
+   /** Constructor */
 
    public Main()
    {
@@ -196,8 +163,8 @@ public class Main
       addDependencyReport(ClassDependantsReport.class);
       addDependencyReport(DependsOnReport.class);
       addDependencyReport(DependantsReport.class);
-//      addDependencyReport(PackageDependsOnReport.class);
-//      addDependencyReport(PackageDependantsReport.class);
+      addDependencyReport(PackageDependantsReport.class);
+      addDependencyReport(PackageDependsOnReport.class);
       addDependencyReport(TransitiveDependsOnReport.class);
       addDependencyReport(TransitiveDependantsReport.class);
       addDependencyReport(CircularDependencyReport.class);
@@ -582,9 +549,8 @@ public class Main
       // Load up selected profiles
       List<Archive> known = new ArrayList<Archive>();
 
-      CommonProfile[] profiles = new CommonProfile[]{new SunJava5(), new SunJava6(),
-         new JavaEE5(), new JavaEE6(), new CDI10(), new Seam22(), new Spring25(),
-         new Spring30()};
+      CommonProfile[] profiles = new CommonProfile[]{new SunJava5(), new SunJava6(), new JavaEE5(), new JavaEE6(),
+         new CDI10(), new Seam22(), new Spring25(), new Spring30()};
 
       for (CommonProfile p : profiles)
       {
@@ -724,7 +690,7 @@ public class Main
                }
                catch (IOException ioe)
                {
-                  System.err.println("Failed to close properties file: " + propertiesFile);
+                  //No op
                }
             }
          }
@@ -817,8 +783,8 @@ public class Main
       }
       catch (Exception e)
       {
-         System.err.println("Exception of type: " + e.getClass().toString() +
-               " thrown in loadCustomReports() in org.jboss.tattletale.Main");
+         System.err.println("Exception of type: " + e.getClass().toString()
+               + " thrown in loadCustomReports() in org.jboss.tattletale.Main");
       }
       finally
       {
@@ -953,6 +919,7 @@ public class Main
     * @param reportSetBuilder Defines the output directory and which
     *                         reports to build
     * @param archives         The archives
+    *
     * @throws Exception In case of fail on settings
     */
    private void outputReport(ReportSetBuilder reportSetBuilder, SortedSet<Archive> archives) throws Exception
@@ -1013,6 +980,7 @@ public class Main
     * Parse excludes
     *
     * @param s The input string
+    *
     * @return The set of excludes
     */
    private Set<String> parseExcludes(String s)
@@ -1040,9 +1008,7 @@ public class Main
       return result;
    }
 
-   /**
-    * The usage method
-    */
+   /** The usage method */
    private static void usage()
    {
       System.out.println("Usage: Tattletale [-exclude=<excludes>]" + " <scan-directory> [output-directory]");
@@ -1133,10 +1099,10 @@ public class Main
        */
       void processReport(AbstractReport report)
       {
-         if ((ReportStatus.YELLOW == report.getStatus() || ReportStatus.RED == report.getStatus()) &&
-            ((ReportSeverity.INFO == report.getSeverity() && failOnInfo) ||
-            (ReportSeverity.WARNING == report.getSeverity() && failOnWarn) ||
-            (ReportSeverity.ERROR == report.getSeverity() && failOnError)))
+         if ((ReportStatus.YELLOW == report.getStatus() || ReportStatus.RED == report.getStatus())
+               && ((ReportSeverity.INFO == report.getSeverity() && failOnInfo) ||
+                  (ReportSeverity.WARNING == report.getSeverity() && failOnWarn) ||
+                  (ReportSeverity.ERROR == report.getSeverity() && failOnError)))
          {
             appendReportInfo(report);
          }
@@ -1194,6 +1160,7 @@ public class Main
        * @param allReports  Should all reports be generated ?
        * @param reportSet   The set of reports that should be generated
        * @param filters     The filters
+       *
        * @throws Exception
        */
       ReportSetBuilder(String destination, boolean allReports, Set<String> reportSet, Properties filters)
@@ -1251,6 +1218,7 @@ public class Main
        * directory.
        *
        * @param reportDef the class definition of the report to generate
+       *
        * @throws Exception
        */
       void addReport(Class reportDef) throws Exception
@@ -1270,17 +1238,13 @@ public class Main
          addReport(report);
       }
 
-      /**
-       * @return A Set of reports generated, useful for building an index
-       */
+      /** @return A Set of reports generated, useful for building an index */
       SortedSet<AbstractReport> getReportSet()
       {
          return returnReportSet;
       }
 
-      /**
-       * @return the String representation of the output directory
-       */
+      /** @return the String representation of the output directory */
       String getOutputDir()
       {
          return outputDir;
@@ -1290,14 +1254,16 @@ public class Main
        * Validate and create the outputDir if needed.
        *
        * @param outputDir Where reports go
+       *
        * @return The verified output path for the reports
+       *
        * @throws IOException If the output directory cant be created
        */
       private String setupOutputDir(String outputDir) throws IOException
       {
          // Verify ending slash
-         outputDir = !outputDir.substring(outputDir.length() - 1).equals(File.separator) ?
-                     outputDir + File.separator : outputDir;
+         outputDir = !outputDir.substring(outputDir.length() - 1).equals(File.separator)
+                     ? outputDir + File.separator : outputDir;
          // Verify output directory exists & create if it does not
          File outputDirFile = new File(outputDir);
 
@@ -1318,6 +1284,7 @@ public class Main
        * Recursive delete
        *
        * @param f The file handler
+       *
        * @throws IOException Thrown if a file could not be deleted
        */
       private void recursiveDelete(File f) throws IOException
