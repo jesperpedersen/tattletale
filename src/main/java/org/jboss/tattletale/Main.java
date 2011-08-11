@@ -42,6 +42,8 @@ import org.jboss.tattletale.reporting.MultipleJarsReport;
 import org.jboss.tattletale.reporting.MultipleLocationsReport;
 import org.jboss.tattletale.reporting.NoVersionReport;
 import org.jboss.tattletale.reporting.OSGiReport;
+import org.jboss.tattletale.reporting.PackageDependantsReport;
+import org.jboss.tattletale.reporting.PackageDependsOnReport;
 import org.jboss.tattletale.reporting.PackageMultipleJarsReport;
 import org.jboss.tattletale.reporting.Report;
 import org.jboss.tattletale.reporting.ReportSeverity;
@@ -161,6 +163,8 @@ public class Main
       addDependencyReport(ClassDependantsReport.class);
       addDependencyReport(DependsOnReport.class);
       addDependencyReport(DependantsReport.class);
+      addDependencyReport(PackageDependantsReport.class);
+      addDependencyReport(PackageDependsOnReport.class);
       addDependencyReport(TransitiveDependsOnReport.class);
       addDependencyReport(TransitiveDependantsReport.class);
       addDependencyReport(CircularDependencyReport.class);
