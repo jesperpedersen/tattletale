@@ -1,0 +1,17 @@
+# Ignore files created by IntelliJ Idea IDE
+.idea/
+src/main/Main.iml
+
+# Ignore files created by Ant when building
+build/
+dist/
+lib/
+out/
+reports/
+
+# Don't ask why the hack files are being ignored :-)
+*hack*
+
+# Annoying tilde's from GEdit
+*~
+

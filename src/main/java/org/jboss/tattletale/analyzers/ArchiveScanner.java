@@ -1,24 +1,24 @@
 /*
- * JBoss, Home of Professional Open Source.
- * Copyright 2009, Red Hat Middleware LLC, and individual contributors
- * as indicated by the @author tags. See the copyright.txt file in the
- * distribution for a full listing of individual contributors.
- *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 2.1 of
- * the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
- */
+* JBoss, Home of Professional Open Source.
+* Copyright 2009, Red Hat Middleware LLC, and individual contributors
+* as indicated by the @author tags. See the copyright.txt file in the
+* distribution for a full listing of individual contributors.
+*
+* This is free software; you can redistribute it and/or modify it
+* under the terms of the GNU Lesser General Public License as
+* published by the Free Software Foundation; either version 2.1 of
+* the License, or (at your option) any later version.
+*
+* This software is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+* Lesser General Public License for more details.
+*
+* You should have received a copy of the GNU Lesser General Public
+* License along with this software; if not, write to the Free
+* Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+* 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+*/
 package org.jboss.tattletale.analyzers;
 
 import org.jboss.tattletale.core.Archive;
@@ -55,6 +55,7 @@ import javassist.NotFoundException;
 
 /**
  * Archive scanner
+ *
  * @author Jesper Pedersen <jesper.pedersen@jboss.org>
  */
 public class ArchiveScanner
@@ -62,6 +63,7 @@ public class ArchiveScanner
 
    /**
     * Scan an archive
+    *
     * @param file The file
     * @return The archive
     */
@@ -72,16 +74,15 @@ public class ArchiveScanner
 
    /**
     * Scan an archive
-    * @param file The file
-    * @param gProvides The global provides map
-    * @param known The set of known archives
+    *
+    * @param file        The file
+    * @param gProvides   The global provides map
+    * @param known       The set of known archives
     * @param blacklisted The set of black listed packages
     * @return The archive
     */
-   public static Archive scan(File file, 
-                              Map<String, SortedSet<String>> gProvides, 
-                              List<Archive> known, 
-                              Set<String> blacklisted)
+   public static Archive scan(File file, Map<String, SortedSet<String>> gProvides,
+                              List<Archive> known, Set<String> blacklisted)
    {
       Archive archive = null;
       JarFile jarFile = null;
@@ -104,7 +105,7 @@ public class ArchiveScanner
 
          jarFile = new JarFile(file);
          Enumeration<JarEntry> e = jarFile.entries();
-         
+
          while (e.hasMoreElements())
          {
             JarEntry jarEntry = e.nextElement();
@@ -114,17 +115,19 @@ public class ArchiveScanner
                InputStream is = null;
                try
                {
-                  is = jarFile.getInputStream(jarEntry); 
+                  is = jarFile.getInputStream(jarEntry);
                   CtClass ctClz = classPool.makeClass(is);
 
                   if (classVersion == null)
+                  {
                      classVersion = Integer.valueOf(ctClz.getClassFile2().getMajorVersion());
+                  }
 
                   Long serialVersionUID = null;
                   try
                   {
                      CtField field = ctClz.getField("serialVersionUID");
-                     serialVersionUID = (Long)field.getConstantValue();
+                     serialVersionUID = (Long) field.getConstantValue();
                   }
                   catch (NotFoundException nfe)
                   {
@@ -135,30 +138,36 @@ public class ArchiveScanner
 
                   int pkgIdx = ctClz.getName().lastIndexOf(".");
                   String pkg = null;
-                  
+
                   if (pkgIdx != -1)
+                  {
                      pkg = ctClz.getName().substring(0, pkgIdx);
+                  }
 
                   Collection c = ctClz.getRefClasses();
                   Iterator it = c.iterator();
 
                   while (it.hasNext())
                   {
-                     String s = (String)it.next();
+                     String s = (String) it.next();
                      requires.add(s);
 
                      SortedSet<String> cd = classDependencies.get(ctClz.getName());
                      if (cd == null)
+                     {
                         cd = new TreeSet<String>();
+                     }
 
                      cd.add(s);
                      classDependencies.put(ctClz.getName(), cd);
 
                      int rPkgIdx = s.lastIndexOf(".");
                      String rPkg = null;
-                  
+
                      if (rPkgIdx != -1)
+                     {
                         rPkg = s.substring(0, rPkgIdx);
+                     }
 
                      boolean include = true;
 
@@ -180,7 +189,9 @@ public class ArchiveScanner
                      {
                         SortedSet<String> pd = packageDependencies.get(pkg);
                         if (pd == null)
+                        {
                            pd = new TreeSet<String>();
+                        }
 
                         pd.add(rPkg);
                         packageDependencies.put(pkg, pd);
@@ -195,7 +206,9 @@ public class ArchiveScanner
                         {
                            String blp = bit.next();
                            if (s.startsWith(blp))
+                           {
                               bl = true;
+                           }
                         }
 
                         if (bl)
@@ -203,11 +216,15 @@ public class ArchiveScanner
                            String key = pkg;
 
                            if (key == null)
+                           {
                               key = "";
+                           }
 
                            SortedSet<String> bld = blacklistedDependencies.get(key);
                            if (bld == null)
+                           {
                               bld = new TreeSet<String>();
+                           }
 
                            bld.add(rPkg);
                            blacklistedDependencies.put(key, bld);
@@ -224,7 +241,9 @@ public class ArchiveScanner
                   try
                   {
                      if (is != null)
+                     {
                         is.close();
+                     }
                   }
                   catch (IOException ioe)
                   {
@@ -237,13 +256,15 @@ public class ArchiveScanner
                InputStream is = null;
                try
                {
-                  is = jarFile.getInputStream(jarEntry); 
+                  is = jarFile.getInputStream(jarEntry);
 
                   InputStreamReader isr = new InputStreamReader(is);
                   LineNumberReader lnr = new LineNumberReader(isr);
 
                   if (lSign == null)
+                  {
                      lSign = new ArrayList<String>();
+                  }
 
                   String s = lnr.readLine();
                   while (s != null)
@@ -261,7 +282,9 @@ public class ArchiveScanner
                   try
                   {
                      if (is != null)
+                     {
                         is.close();
+                     }
                   }
                   catch (IOException ioe)
                   {
@@ -272,7 +295,9 @@ public class ArchiveScanner
          }
 
          if (provides.size() == 0)
+         {
             return null;
+         }
 
          String version = null;
          List<String> lManifest = null;
@@ -282,22 +307,30 @@ public class ArchiveScanner
             Attributes mainAttributes = manifest.getMainAttributes();
             version = mainAttributes.getValue("Specification-Version");
             if (version == null)
+            {
                version = mainAttributes.getValue("Implementation-Version");
+            }
             if (version == null)
+            {
                version = mainAttributes.getValue("Version");
+            }
 
             if (version == null && manifest.getEntries() != null)
             {
                Iterator ait = manifest.getEntries().values().iterator();
                while (version == null && ait.hasNext())
                {
-                  Attributes attributes = (Attributes)ait.next();
+                  Attributes attributes = (Attributes) ait.next();
 
                   version = attributes.getValue("Specification-Version");
                   if (version == null)
+                  {
                      version = attributes.getValue("Implementation-Version");
+                  }
                   if (version == null)
+                  {
                      version = attributes.getValue("Version");
+                  }
                }
             }
 
@@ -305,8 +338,8 @@ public class ArchiveScanner
          }
          Location location = new Location(filename, version);
 
-         archive = new JarArchive(name, classVersion.intValue(), lManifest, lSign, requires, provides, 
-                                  classDependencies, packageDependencies, blacklistedDependencies, location);
+         archive = new JarArchive(name, classVersion.intValue(), lManifest, lSign, requires, provides,
+                     classDependencies, packageDependencies, blacklistedDependencies, location);
 
          if (profiles.size() > 0)
          {
@@ -350,7 +383,9 @@ public class ArchiveScanner
          try
          {
             if (jarFile != null)
+            {
                jarFile.close();
+            }
          }
          catch (IOException ioe)
          {
@@ -363,6 +398,7 @@ public class ArchiveScanner
 
    /**
     * Read the manifest
+    *
     * @param manifest The manifest
     * @return The manifest as strings
     */
@@ -378,7 +414,7 @@ public class ArchiveScanner
          ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
          InputStreamReader isr = new InputStreamReader(bais);
          LineNumberReader lnr = new LineNumberReader(isr);
-         
+
          String s = lnr.readLine();
          while (s != null)
          {

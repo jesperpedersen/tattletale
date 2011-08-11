@@ -23,18 +23,21 @@ package org.jboss.tattletale.reporting;
 
 /**
  * Represents a filter
+ *
  * @author Jesper Pedersen <jesper.pedersen@jboss.org>
  */
 public interface Filter
 {
    /**
     * Is filtered
+    *
     * @return True if filtered; otherwise false
     */
    public boolean isFiltered();
 
    /**
     * Is filtered
+    *
     * @param archive The archive
     * @return True if filtered; otherwise false
     */
@@ -42,14 +45,16 @@ public interface Filter
 
    /**
     * Is filtered
+    *
     * @param archive The archive
-    * @param query The query
+    * @param query   The query
     * @return True if filtered; otherwise false
     */
    public boolean isFiltered(String archive, String query);
 
    /**
     * Init the filter
+    *
     * @param value The filter value
     */
    public void init(String value);

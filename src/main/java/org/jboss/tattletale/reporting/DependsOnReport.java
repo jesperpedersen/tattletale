@@ -28,12 +28,12 @@ import org.jboss.tattletale.core.ArchiveTypes;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.util.Iterator;
-import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
 /**
  * Depends On report
+ *
  * @author Jesper Pedersen <jesper.pedersen@jboss.org>
  * @author <a href="mailto:torben.jaeger@jit-consulting.de">Torben Jaeger</a>
  */
@@ -46,33 +46,27 @@ public class DependsOnReport extends CLSReport
    private static final String DIRECTORY = "dependson";
 
 
-   /**
-    * Constructor
-    * @param archives The archives
-    * @param known The set of known archives
-    * @param classloaderStructure The classloader structure
-    */
-   public DependsOnReport(SortedSet<Archive> archives,
-                          List<Archive> known,
-                          String classloaderStructure)
+   /** Constructor */
+   public DependsOnReport()
    {
-      super(DIRECTORY, ReportSeverity.INFO, archives, NAME, DIRECTORY, classloaderStructure, known);
+      super(DIRECTORY, ReportSeverity.INFO, NAME, DIRECTORY);
    }
 
 
    /**
     * write out the report's content
+    *
     * @param bw the writer to use
-    * @exception IOException if an error occurs
+    * @throws IOException if an error occurs
     */
-   void writeHtmlBodyContent(BufferedWriter bw) throws IOException
+   protected void writeHtmlBodyContent(BufferedWriter bw) throws IOException
    {
-      bw.write("<table>" + Dump.NEW_LINE);
+      bw.write("<table>" + Dump.newLine());
 
-      bw.write("  <tr>" + Dump.NEW_LINE);
-      bw.write("     <th>Archive</th>" + Dump.NEW_LINE);
-      bw.write("     <th>Depends On</th>" + Dump.NEW_LINE);
-      bw.write("  </tr>" + Dump.NEW_LINE);
+      bw.write("  <tr>" + Dump.newLine());
+      bw.write("     <th>Archive</th>" + Dump.newLine());
+      bw.write("     <th>Depends On</th>" + Dump.newLine());
+      bw.write("  </tr>" + Dump.newLine());
 
       boolean odd = true;
 
@@ -83,14 +77,14 @@ public class DependsOnReport extends CLSReport
          {
             if (odd)
             {
-               bw.write("  <tr class=\"rowodd\">" + Dump.NEW_LINE);
+               bw.write("  <tr class=\"rowodd\">" + Dump.newLine());
             }
             else
             {
-               bw.write("  <tr class=\"roweven\">" + Dump.NEW_LINE);
+               bw.write("  <tr class=\"roweven\">" + Dump.newLine());
             }
-            bw.write("     <td><a href=\"../jar/" + archive.getName() + ".html\">" + archive.getName() + "</a></td>" +
-                     Dump.NEW_LINE);
+            bw.write("     <td><a href=\"../jar/" + archive.getName() + ".html\">" +
+                     archive.getName() + "</a></td>" + Dump.newLine());
             bw.write("     <td>");
 
             SortedSet<String> result = new TreeSet<String>();
@@ -165,30 +159,31 @@ public class DependsOnReport extends CLSReport
                }
             }
 
-            bw.write("</td>" + Dump.NEW_LINE);
-            bw.write("  </tr>" + Dump.NEW_LINE);
+            bw.write("</td>" + Dump.newLine());
+            bw.write("  </tr>" + Dump.newLine());
 
             odd = !odd;
          }
       }
 
-      bw.write("</table>" + Dump.NEW_LINE);
+      bw.write("</table>" + Dump.newLine());
    }
 
    /**
     * write out the header of the report's content
+    *
     * @param bw the writer to use
-    * @throws IOException if an errror occurs
+    * @throws IOException if an error occurs
     */
-   void writeHtmlBodyHeader(BufferedWriter bw) throws IOException
+   protected void writeHtmlBodyHeader(BufferedWriter bw) throws IOException
    {
-      bw.write("<body>" + Dump.NEW_LINE);
-      bw.write(Dump.NEW_LINE);
+      bw.write("<body>" + Dump.newLine());
+      bw.write(Dump.newLine());
 
-      bw.write("<h1>" + NAME + "</h1>" + Dump.NEW_LINE);
+      bw.write("<h1>" + NAME + "</h1>" + Dump.newLine());
 
-      bw.write("<a href=\"../index.html\">Main</a>" + Dump.NEW_LINE);
-      bw.write("<p>" + Dump.NEW_LINE);
+      bw.write("<a href=\"../index.html\">Main</a>" + Dump.newLine());
+      bw.write("<p>" + Dump.newLine());
 
    }
 

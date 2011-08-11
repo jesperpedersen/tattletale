@@ -25,6 +25,7 @@ import java.io.Serializable;
 
 /**
  * Location
+ *
  * @author Jesper Pedersen <jesper.pedersen@jboss.org>
  */
 public class Location implements Serializable, Comparable
@@ -40,8 +41,9 @@ public class Location implements Serializable, Comparable
 
    /**
     * Constructor
+    *
     * @param filename The filename
-    * @param version The version
+    * @param version  The version
     */
    public Location(String filename, String version)
    {
@@ -51,6 +53,7 @@ public class Location implements Serializable, Comparable
 
    /**
     * Get the filename
+    *
     * @return The value
     */
    public String getFilename()
@@ -60,6 +63,7 @@ public class Location implements Serializable, Comparable
 
    /**
     * Get the version
+    *
     * @return The value
     */
    public String getVersion()
@@ -69,23 +73,27 @@ public class Location implements Serializable, Comparable
 
    /**
     * Comparable
+    *
     * @param o The other object
     * @return The compareTo value
     */
    public int compareTo(Object o)
    {
-      Location l = (Location)o;
+      Location l = (Location) o;
 
       int result = filename.compareTo(l.getFilename());
 
       if (result == 0)
+      {
          result = (version != null ? version.compareTo(l.getVersion()) : 0);
+      }
 
       return result;
    }
 
    /**
     * Equals
+    *
     * @param obj The other object
     * @return True if equals; otherwise false
     */
@@ -96,13 +104,14 @@ public class Location implements Serializable, Comparable
          return false;
       }
 
-      Location l = (Location)obj;
+      Location l = (Location) obj;
 
       return filename.equals(l.getFilename()) && (version != null ? version.equals(l.getVersion()) : true);
    }
 
    /**
     * Hash code
+    *
     * @return The hash code
     */
    public int hashCode()
@@ -112,13 +121,16 @@ public class Location implements Serializable, Comparable
       hash += 31 * filename.hashCode();
 
       if (version != null)
+      {
          hash += 31 * version.hashCode();
+      }
 
       return hash;
    }
 
    /**
     * String representation
+    *
     * @return The string
     */
    public String toString()

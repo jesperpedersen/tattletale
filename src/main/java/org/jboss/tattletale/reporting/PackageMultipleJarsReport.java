@@ -21,8 +21,6 @@
  */
 package org.jboss.tattletale.reporting;
 
-import org.jboss.tattletale.core.Archive;
-
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.util.Iterator;
@@ -34,10 +32,11 @@ import java.util.TreeSet;
 
 /**
  * Packages in multiple JAR files report
+ *
  * @author Jesper Pedersen <jesper.pedersen@jboss.org>
  * @author <a href="mailto:torben.jaeger@jit-consulting.de">Torben Jaeger</a>
  */
-public class PackageMultipleJarsReport extends Report
+public class PackageMultipleJarsReport extends AbstractReport
 {
    /** NAME */
    private static final String NAME = "Multiple Jar files (Packages)";
@@ -48,39 +47,45 @@ public class PackageMultipleJarsReport extends Report
    /** Globally provides */
    private SortedMap<String, SortedSet<String>> gProvides;
 
-   /**
-    * Constructor
-    * @param archives The archives
-    * @param gProvides The global provides
-    */
-   public PackageMultipleJarsReport(SortedSet<Archive> archives,
-                                    SortedMap<String, SortedSet<String>> gProvides)
+   /** Constructor */
+   public PackageMultipleJarsReport()
    {
-      super(DIRECTORY, ReportSeverity.WARNING, archives, NAME, DIRECTORY);
+      super(DIRECTORY, ReportSeverity.WARNING, NAME, DIRECTORY);
+   }
+
+
+   /**
+    * Set the globally provides map to be used in generating this report
+    *
+    * @param gProvides the map of global provides
+    */
+   public void setGlobalProvides(SortedMap<String, SortedSet<String>> gProvides)
+   {
       this.gProvides = gProvides;
    }
 
    /**
     * write the report's content
+    *
     * @param bw the BufferedWriter to use
     * @throws IOException if an error occurs
     */
    @Override
-   void writeHtmlBodyContent(BufferedWriter bw) throws IOException
+   protected void writeHtmlBodyContent(BufferedWriter bw) throws IOException
    {
-      bw.write("<table>" + Dump.NEW_LINE);
+      bw.write("<table>" + Dump.newLine());
 
-      bw.write("  <tr>" + Dump.NEW_LINE);
-      bw.write("     <th>Package</th>" + Dump.NEW_LINE);
-      bw.write("     <th>Jar files</th>" + Dump.NEW_LINE);
-      bw.write("  </tr>" + Dump.NEW_LINE);
+      bw.write("  <tr>" + Dump.newLine());
+      bw.write("     <th>Package</th>" + Dump.newLine());
+      bw.write("     <th>Jar files</th>" + Dump.newLine());
+      bw.write("  </tr>" + Dump.newLine());
 
       SortedMap<String, SortedSet<String>> packageProvides = new TreeMap<String, SortedSet<String>>();
 
       for (Map.Entry<String, SortedSet<String>> entry : gProvides.entrySet())
       {
-         String clz = (String)((Map.Entry)entry).getKey();
-         SortedSet archives = (SortedSet)((Map.Entry)entry).getValue();
+         String clz = (String) ((Map.Entry) entry).getKey();
+         SortedSet archives = (SortedSet) ((Map.Entry) entry).getValue();
 
          String packageName = null;
 
@@ -108,8 +113,8 @@ public class PackageMultipleJarsReport extends Report
 
       for (Map.Entry<String, SortedSet<String>> entry : packageProvides.entrySet())
       {
-         String pkg = (String)((Map.Entry)entry).getKey();
-         SortedSet archives = (SortedSet)((Map.Entry)entry).getValue();
+         String pkg = (String) ((Map.Entry) entry).getKey();
+         SortedSet archives = (SortedSet) ((Map.Entry) entry).getValue();
 
          if (archives.size() > 1)
          {
@@ -121,13 +126,13 @@ public class PackageMultipleJarsReport extends Report
 
             if (odd)
             {
-               bw.write("  <tr class=\"rowodd\">" + Dump.NEW_LINE);
+               bw.write("  <tr class=\"rowodd\">" + Dump.newLine());
             }
             else
             {
-               bw.write("  <tr class=\"roweven\">" + Dump.NEW_LINE);
+               bw.write("  <tr class=\"roweven\">" + Dump.newLine());
             }
-            bw.write("     <td>" + pkg + "</td>" + Dump.NEW_LINE);
+            bw.write("     <td>" + pkg + "</td>" + Dump.newLine());
             if (!filtered)
             {
                bw.write("        <td>");
@@ -140,8 +145,8 @@ public class PackageMultipleJarsReport extends Report
             Iterator sit = archives.iterator();
             while (sit.hasNext())
             {
-               String archive = (String)sit.next();
-               bw.write("<a href=\"../jar/" + archive + ".html\">" + archive + "</a>" + Dump.NEW_LINE);
+               String archive = (String) sit.next();
+               bw.write("<a href=\"../jar/" + archive + ".html\">" + archive + "</a>" + Dump.newLine());
 
                if (sit.hasNext())
                {
@@ -149,30 +154,31 @@ public class PackageMultipleJarsReport extends Report
                }
             }
 
-            bw.write("</td>" + Dump.NEW_LINE);
-            bw.write("  </tr>" + Dump.NEW_LINE);
+            bw.write("</td>" + Dump.newLine());
+            bw.write("  </tr>" + Dump.newLine());
 
             odd = !odd;
          }
       }
 
-      bw.write("</table>" + Dump.NEW_LINE);
+      bw.write("</table>" + Dump.newLine());
    }
 
    @Override
-   void writeHtmlBodyHeader(BufferedWriter bw) throws IOException
+   protected void writeHtmlBodyHeader(BufferedWriter bw) throws IOException
    {
-      bw.write("<body>" + Dump.NEW_LINE);
-      bw.write(Dump.NEW_LINE);
+      bw.write("<body>" + Dump.newLine());
+      bw.write(Dump.newLine());
 
-      bw.write("<h1>" + NAME + "</h1>" + Dump.NEW_LINE);
+      bw.write("<h1>" + NAME + "</h1>" + Dump.newLine());
 
-      bw.write("<a href=\"../index.html\">Main</a>" + Dump.NEW_LINE);
-      bw.write("<p>" + Dump.NEW_LINE);
+      bw.write("<a href=\"../index.html\">Main</a>" + Dump.newLine());
+      bw.write("<p>" + Dump.newLine());
    }
 
    /**
     * Create filter
+    *
     * @return The filter
     */
    @Override

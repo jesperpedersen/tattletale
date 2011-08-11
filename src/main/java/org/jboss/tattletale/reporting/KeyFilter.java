@@ -28,6 +28,7 @@ import java.util.TreeSet;
 
 /**
  * Represents a key filter
+ *
  * @author Jesper Pedersen <jesper.pedersen@jboss.org>
  */
 public class KeyFilter implements Filter
@@ -35,9 +36,7 @@ public class KeyFilter implements Filter
    /** Key Filters */
    private SortedSet<String> keyFilters;
 
-   /**
-    * Constructor
-    */
+   /** Constructor */
    public KeyFilter()
    {
       keyFilters = new TreeSet<String>(new SizeComparator());
@@ -45,6 +44,7 @@ public class KeyFilter implements Filter
 
    /**
     * Is filtered
+    *
     * @return True if filtered; otherwise false
     */
    public boolean isFiltered()
@@ -54,6 +54,7 @@ public class KeyFilter implements Filter
 
    /**
     * Is filtered
+    *
     * @param archive The archive
     * @return True if filtered; otherwise false
     */
@@ -73,7 +74,7 @@ public class KeyFilter implements Filter
       {
          archive = archive.substring(0, archive.indexOf(".*"));
       }
-            
+
       archive = archive.replace('.', '/');
 
       Iterator<String> it = keyFilters.iterator();
@@ -82,7 +83,9 @@ public class KeyFilter implements Filter
          String v = it.next();
 
          if (archive.startsWith(v))
+         {
             return true;
+         }
       }
 
       return false;
@@ -90,8 +93,9 @@ public class KeyFilter implements Filter
 
    /**
     * Is filtered
+    *
     * @param archive The archive
-    * @param query The query
+    * @param query   The query
     * @return True if filtered; otherwise false
     */
    public boolean isFiltered(String archive, String query)
@@ -101,6 +105,7 @@ public class KeyFilter implements Filter
 
    /**
     * Init the filter
+    *
     * @param filter The filter value
     */
    public void init(String filter)
@@ -133,7 +138,9 @@ public class KeyFilter implements Filter
             value = value.replace('.', '/');
 
             if (includeAll)
+            {
                value = value + '/';
+            }
 
             keyFilters.add(value);
          }

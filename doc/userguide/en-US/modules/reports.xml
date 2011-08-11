@@ -825,8 +825,44 @@ noversion=myjar1.jar,myjar2.jar
           </tgroup>
         </table>
       </section>
-
-
    </section>
 
+	<section id="Custom Reports">
+		<title>Custom Reports</title>
+		
+		<para>
+			As a user, you can define your own custom report types to tattletale. However, there are some restrictions to this and there is 
+			some required configuration. These are as follows: 
+		</para>
+		
+		<itemizedlist>
+			<listitem>
+				<para>Your custom report class has to be an implementation of org.jboss.tattletale.reporting.Report</para>
+			</listitem>
+			
+			<listitem>
+				<para>
+					You have to define your required reports in jboss-tattletale.properties. Each key string has to be of the form 
+					'customreport.{int}' where int has to start with 1 and increase by 1 with each extra custom report that is required.
+				</para>
+				
+				<para>For example</para>
+				
+				<programlisting>
+					customreport.1=my.custom.package.customreport
+				</programlisting>
+			</listitem>
+			
+			<listitem>
+				<para>
+					At runtime, as long as your custom jar file is in the classpath your custom report will be generated. 
+					If you were running from the command line for example:
+				</para>
+				
+				<programlisting>
+					java -classpath tattletale.jar:customreporting.jar org.jboss.tattletale.Main [directory-of-source-jar] [output-directory]
+				</programlisting>
+			</listitem>			
+		</itemizedlist>	
+	</section>
 </chapter>

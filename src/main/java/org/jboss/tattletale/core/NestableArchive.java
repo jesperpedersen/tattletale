@@ -28,6 +28,7 @@ import java.util.SortedSet;
 
 /**
  * Nestable archive
+ *
  * @author Jesper Pedersen <jesper.pedersen@jboss.org>
  */
 public abstract class NestableArchive extends Archive
@@ -40,31 +41,26 @@ public abstract class NestableArchive extends Archive
 
    /**
     * Constructor
-    * @param type The type
-    * @param name The name
-    * @param version The version number
-    * @param manifest The manifest
-    * @param sign The signing information
-    * @param requires The requires
-    * @param provides The provides
-    * @param classDependencies The class dependencies
-    * @param packageDependencies The package dependencies
+    *
+    * @param type                    The type
+    * @param name                    The name
+    * @param version                 The version number
+    * @param manifest                The manifest
+    * @param sign                    The signing information
+    * @param requires                The requires
+    * @param provides                The provides
+    * @param classDependencies       The class dependencies
+    * @param packageDependencies     The package dependencies
     * @param blacklistedDependencies The blacklisted dependencies
-    * @param location The location
+    * @param location                The location
     */
-   public NestableArchive(int type, 
-                          String name, 
-                          int version,
-                          List<String> manifest, 
-                          List<String> sign, 
-                          SortedSet<String> requires, 
-                          SortedMap<String, Long> provides, 
+   public NestableArchive(int type, String name, int version, List<String> manifest, List<String> sign,
+                          SortedSet<String> requires, SortedMap<String, Long> provides,
                           SortedMap<String, SortedSet<String>> classDependencies,
                           SortedMap<String, SortedSet<String>> packageDependencies,
-                          SortedMap<String, SortedSet<String>> blacklistedDependencies,
-                          Location location)
+                          SortedMap<String, SortedSet<String>> blacklistedDependencies, Location location)
    {
-      super(type, name, version, manifest, sign, requires, provides, 
+      super(type, name, version, manifest, sign, requires, provides,
             classDependencies, packageDependencies, blacklistedDependencies, location);
 
       this.subArchives = null;
@@ -72,6 +68,7 @@ public abstract class NestableArchive extends Archive
 
    /**
     * Get the sub-archives
+    *
     * @return The value
     */
    public List<Archive> getSubArchives()
@@ -81,12 +78,15 @@ public abstract class NestableArchive extends Archive
 
    /**
     * Add a sub-archive
+    *
     * @param value The value
     */
    public void addSubArchive(Archive value)
    {
       if (subArchives == null)
+      {
          subArchives = new ArrayList<Archive>(1);
+      }
 
       subArchives.add(value);
    }

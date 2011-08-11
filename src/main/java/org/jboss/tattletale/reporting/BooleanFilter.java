@@ -23,6 +23,7 @@ package org.jboss.tattletale.reporting;
 
 /**
  * Represents a boolean filter
+ *
  * @author Jesper Pedersen <jesper.pedersen@jboss.org>
  */
 public class BooleanFilter implements Filter
@@ -30,9 +31,7 @@ public class BooleanFilter implements Filter
    /** Boolean Filter */
    private Boolean booleanFilter;
 
-   /**
-    * Constructor
-    */
+   /** Constructor */
    public BooleanFilter()
    {
       this.booleanFilter = Boolean.FALSE;
@@ -40,6 +39,7 @@ public class BooleanFilter implements Filter
 
    /**
     * Is filtered
+    *
     * @return True if filtered; otherwise false
     */
    public boolean isFiltered()
@@ -49,6 +49,7 @@ public class BooleanFilter implements Filter
 
    /**
     * Is filtered
+    *
     * @param archive The archive
     * @return True if filtered; otherwise false
     */
@@ -59,8 +60,9 @@ public class BooleanFilter implements Filter
 
    /**
     * Is filtered
+    *
     * @param archive The archive
-    * @param query The query
+    * @param query   The query
     * @return True if filtered; otherwise false
     */
    public boolean isFiltered(String archive, String query)
@@ -70,15 +72,14 @@ public class BooleanFilter implements Filter
 
    /**
     * Init the filter
+    *
     * @param filter The filter value
     */
    public void init(String filter)
    {
       if (filter != null)
       {
-         if ("yes".equalsIgnoreCase(filter) ||
-             "on".equalsIgnoreCase(filter) ||
-             "true".equalsIgnoreCase(filter))
+         if ("yes".equalsIgnoreCase(filter) || "on".equalsIgnoreCase(filter) || "true".equalsIgnoreCase(filter))
          {
             booleanFilter = Boolean.TRUE;
          }

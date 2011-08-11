@@ -27,7 +27,7 @@ import javassist.bytecode.ClassFile;
 
 /**
  * Contexts and Dependency Injection (CDI) 1.0 profile
- * 
+ *
  * @author Jesper Pedersen <jesper.pedersen@jboss.org>
  */
 public class CDI10 extends CommonProfile
@@ -40,13 +40,10 @@ public class CDI10 extends CommonProfile
    private static final int ARCHIVE_TYPE = ArchiveTypes.JAR;
    private static final int CLASSFILE_VERSION = ClassFile.JAVA_5;
 
-   /**
-    * Constructor
-    */
+   /** Constructor */
    public CDI10()
    {
-      super(CLASS_SET, ARCHIVE_TYPE, PROFILE_NAME, CLASSFILE_VERSION,
-            PROFILE_LOCATION);
+      super(CLASS_SET, ARCHIVE_TYPE, PROFILE_NAME, CLASSFILE_VERSION, PROFILE_LOCATION);
    }
 
    @Override

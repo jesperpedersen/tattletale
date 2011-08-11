@@ -27,7 +27,7 @@ import javassist.bytecode.ClassFile;
 
 /**
  * Sun: Java 6 (JCE)
- * 
+ *
  * @author Jesper Pedersen <jesper.pedersen@jboss.org>
  */
 public class SunJava6JCE extends CommonProfile
@@ -40,13 +40,10 @@ public class SunJava6JCE extends CommonProfile
    private static final int ARCHIVE_TYPE = ArchiveTypes.JAR;
    private static final int CLASSFILE_VERSION = ClassFile.JAVA_6;
 
-   /**
-    * Constructor
-    */
+   /** Constructor */
    public SunJava6JCE()
    {
-      super(CLASS_SET, ARCHIVE_TYPE, PROFILE_NAME, CLASSFILE_VERSION,
-            PROFILE_LOCATION);
+      super(CLASS_SET, ARCHIVE_TYPE, PROFILE_NAME, CLASSFILE_VERSION, PROFILE_LOCATION);
    }
 
    @Override

@@ -25,21 +25,21 @@ import org.jboss.tattletale.core.Archive;
 
 /**
  * A no operation classloader structure class that always returns true
+ *
  * @author Jesper Pedersen <jesper.pedersen@jboss.org>
  */
 public class NoopClassLoaderStructure implements ClassLoaderStructure
 {
-   /**
-    * Constructor
-    */
+   /** Constructor */
    public NoopClassLoaderStructure()
    {
    }
 
    /**
     * Can one archive see the other
+    *
     * @param from The from archive
-    * @param to The to archive
+    * @param to   The to archive
     * @return True if from can see to; otherwise false
     */
    public boolean isVisible(Archive from, Archive to)

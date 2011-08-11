@@ -35,45 +35,35 @@ import java.util.zip.GZIPInputStream;
 
 /**
  * Base profile class.
- * 
+ *
  * @author Michele
- * 
  */
 public abstract class CommonProfile extends NestableArchive
 {
 
    /**
     * Constructor
-    * 
-    * @param classSet
-    *           The .gz file with the classes
-    * @param type
-    *           Archive type
-    * @param name
-    *           Profile name
-    * @param version
-    *           Profile's class version
-    * @param location
-    *           Profile's location
+    *
+    * @param classSet The .gz file with the classes
+    * @param type     Archive type
+    * @param name     Profile name
+    * @param version  Profile's class version
+    * @param location Profile's location
     */
-   public CommonProfile(String classSet, int type, String name, int version,
-         String location)
+   public CommonProfile(String classSet, int type, String name, int version, String location)
    {
       super(type, name, version, null, null, null, null, null, null, null, null);
       loadClassList(classSet);
       addLocation(new Location(location, name));
    }
 
-   /**
-    * Content of the class set file
-    */
+   /** Content of the class set file */
    protected SortedSet<String> classSet = new TreeSet<String>();
 
    /**
     * Loads this profile's classlist from the resources.
-    * 
-    * @param resourceFile
-    *           File name
+    *
+    * @param resourceFile File name
     */
    protected void loadClassList(String resourceFile)
    {
@@ -102,7 +92,9 @@ public abstract class CommonProfile extends NestableArchive
          try
          {
             if (is != null)
+            {
                is.close();
+            }
          }
          catch (IOException ioe)
          {
@@ -114,45 +106,36 @@ public abstract class CommonProfile extends NestableArchive
    /**
     * Returns true if this profile is selected by the supplied configuration
     * information.
-    * 
-    * @param allProfiles
-    *           All-Profiles flag
-    * @param profileSet
-    *           Selected profiles as specified in the configuration
+    *
+    * @param allProfiles All-Profiles flag
+    * @param profileSet  Selected profiles as specified in the configuration
     * @return True if the Profile is to be included
     */
    public boolean included(boolean allProfiles, Set<String> profileSet)
    {
-      return allProfiles
-            || profileSet != null
-            && (profileSet.contains(getProfileCode()) || profileSet
-                  .contains(getProfileName()));
+      return allProfiles || profileSet != null && (profileSet.contains(getProfileCode())
+            || profileSet.contains(getProfileName()));
    }
 
-   /**
-    * 
-    * @return The code name of the profile
-    */
+   /** @return The code name of the profile */
    public abstract String getProfileCode();
 
-   /**
-    * 
-    * @return The long name of the profile
-    */
+   /** @return The long name of the profile */
    protected abstract String getProfileName();
 
    /**
     * Does the archives provide this class
-    * 
-    * @param clz
-    *           The class name
+    *
+    * @param clz The class name
     * @return True if the class is provided; otherwise false
     */
    @Override
    public boolean doesProvide(String clz)
    {
       if (classSet.contains(clz))
+      {
          return true;
+      }
 
       return false;
    }

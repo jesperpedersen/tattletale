@@ -35,6 +35,7 @@ import java.util.TreeSet;
 
 /**
  * Transitive dependants report
+ *
  * @author Jesper Pedersen <jesper.pedersen@jboss.org>
  * @author <a href="mailto:torben.jaeger@jit-consulting.de">Torben Jaeger</a>
  */
@@ -47,30 +48,26 @@ public class TransitiveDependantsReport extends CLSReport
    private static final String DIRECTORY = "transitivedependants";
 
 
-   /**
-    * Constructor
-    * @param archives The archives
-    * @param classloaderStructure The classloader structure
-    */
-   public TransitiveDependantsReport(SortedSet<Archive> archives,
-                                     String classloaderStructure)
+   /** Constructor */
+   public TransitiveDependantsReport()
    {
-      super(DIRECTORY, ReportSeverity.INFO, archives, NAME, DIRECTORY, classloaderStructure);
+      super(DIRECTORY, ReportSeverity.INFO, NAME, DIRECTORY);
    }
 
    /**
     * write out the report's content
+    *
     * @param bw the writer to use
-    * @exception IOException if an error occurs
-    */   
-   void writeHtmlBodyContent(BufferedWriter bw) throws IOException
+    * @throws IOException if an error occurs
+    */
+   protected void writeHtmlBodyContent(BufferedWriter bw) throws IOException
    {
-      bw.write("<table>" + Dump.NEW_LINE);
+      bw.write("<table>" + Dump.newLine());
 
-      bw.write("  <tr>" + Dump.NEW_LINE);
-      bw.write("     <th>Archive</th>" + Dump.NEW_LINE);
-      bw.write("     <th>Dependants</th>" + Dump.NEW_LINE);
-      bw.write("  </tr>" + Dump.NEW_LINE);
+      bw.write("  <tr>" + Dump.newLine());
+      bw.write("     <th>Archive</th>" + Dump.newLine());
+      bw.write("     <th>Dependants</th>" + Dump.newLine());
+      bw.write("  </tr>" + Dump.newLine());
 
       SortedMap<String, SortedSet<String>> dependantsMap = new TreeMap<String, SortedSet<String>>();
 
@@ -106,10 +103,10 @@ public class TransitiveDependantsReport extends CLSReport
       Iterator mit = dependantsMap.entrySet().iterator();
       while (mit.hasNext())
       {
-         Map.Entry entry = (Map.Entry)mit.next();
+         Map.Entry entry = (Map.Entry) mit.next();
 
-         String archive = (String)entry.getKey();
-         SortedSet<String> value = (SortedSet<String>)entry.getValue();
+         String archive = (String) entry.getKey();
+         SortedSet<String> value = (SortedSet<String>) entry.getValue();
 
          SortedSet<String> result = new TreeSet<String>();
 
@@ -129,20 +126,20 @@ public class TransitiveDependantsReport extends CLSReport
       mit = transitiveDependantsMap.entrySet().iterator();
       while (mit.hasNext())
       {
-         Map.Entry entry = (Map.Entry)mit.next();
+         Map.Entry entry = (Map.Entry) mit.next();
 
-         String archive = (String)entry.getKey();
-         SortedSet<String> value = (SortedSet<String>)entry.getValue();
+         String archive = (String) entry.getKey();
+         SortedSet<String> value = (SortedSet<String>) entry.getValue();
 
          if (odd)
          {
-            bw.write("  <tr class=\"rowodd\">" + Dump.NEW_LINE);
+            bw.write("  <tr class=\"rowodd\">" + Dump.newLine());
          }
          else
          {
-            bw.write("  <tr class=\"roweven\">" + Dump.NEW_LINE);
+            bw.write("  <tr class=\"roweven\">" + Dump.newLine());
          }
-         bw.write("     <td><a href=\"../jar/" + archive + ".html\">" + archive + "</a></td>" + Dump.NEW_LINE);
+         bw.write("     <td><a href=\"../jar/" + archive + ".html\">" + archive + "</a></td>" + Dump.newLine());
          bw.write("     <td>");
 
          if (value.size() == 0)
@@ -171,42 +168,42 @@ public class TransitiveDependantsReport extends CLSReport
             }
          }
 
-         bw.write("</td>" + Dump.NEW_LINE);
-         bw.write("  </tr>" + Dump.NEW_LINE);
+         bw.write("</td>" + Dump.newLine());
+         bw.write("  </tr>" + Dump.newLine());
 
          odd = !odd;
       }
 
-      bw.write("</table>" + Dump.NEW_LINE);
+      bw.write("</table>" + Dump.newLine());
    }
 
    /**
     * write out the header of the report's content
+    *
     * @param bw the writer to use
     * @throws IOException if an errror occurs
     */
-   void writeHtmlBodyHeader(BufferedWriter bw) throws IOException
+   protected void writeHtmlBodyHeader(BufferedWriter bw) throws IOException
    {
-      bw.write("<body>" + Dump.NEW_LINE);
-      bw.write(Dump.NEW_LINE);
+      bw.write("<body>" + Dump.newLine());
+      bw.write(Dump.newLine());
 
-      bw.write("<h1>" + NAME + "</h1>" + Dump.NEW_LINE);
+      bw.write("<h1>" + NAME + "</h1>" + Dump.newLine());
 
-      bw.write("<a href=\"../index.html\">Main</a>" + Dump.NEW_LINE);
-      bw.write("<p>" + Dump.NEW_LINE);
+      bw.write("<a href=\"../index.html\">Main</a>" + Dump.newLine());
+      bw.write("<p>" + Dump.newLine());
    }
 
    /**
     * Get dependants
+    *
     * @param scanArchive The scan archive
-    * @param archive The archive
-    * @param map The dependants map
-    * @param result The result
+    * @param archive     The archive
+    * @param map         The dependants map
+    * @param result      The result
     */
-   private void resolveDependants(String scanArchive,
-                                  String archive,
-                                  SortedMap<String, SortedSet<String>> map,
-                                  SortedSet<String> result)
+   private void resolveDependants(String scanArchive, String archive,
+                                  SortedMap<String, SortedSet<String>> map, SortedSet<String> result)
    {
       if (!archive.equals(scanArchive) && !result.contains(scanArchive))
       {

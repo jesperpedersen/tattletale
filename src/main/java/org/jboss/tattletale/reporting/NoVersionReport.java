@@ -32,10 +32,11 @@ import java.util.SortedSet;
 
 /**
  * Multiple locations report
+ *
  * @author Jesper Pedersen <jesper.pedersen@jboss.org>
  * @author <a href="mailto:torben.jaeger@jit-consulting.de">Torben Jaeger</a>
  */
-public class NoVersionReport extends Report
+public class NoVersionReport extends AbstractReport
 {
    /** NAME */
    private static final String NAME = "No version";
@@ -43,28 +44,26 @@ public class NoVersionReport extends Report
    /** DIRECTORY */
    private static final String DIRECTORY = "noversion";
 
-   /**
-    * Constructor
-    * @param archives The archives
-    */
-   public NoVersionReport(SortedSet<Archive> archives)
+   /** Constructor */
+   public NoVersionReport()
    {
-      super(DIRECTORY, ReportSeverity.ERROR, archives, NAME, DIRECTORY);
+      super(DIRECTORY, ReportSeverity.ERROR, NAME, DIRECTORY);
    }
 
    /**
     * write out the report's content
+    *
     * @param bw the writer to use
-    * @exception IOException if an error occurs
+    * @throws IOException if an error occurs
     */
-   void writeHtmlBodyContent(BufferedWriter bw) throws IOException
+   protected void writeHtmlBodyContent(BufferedWriter bw) throws IOException
    {
-      bw.write("<table>" + Dump.NEW_LINE);
+      bw.write("<table>" + Dump.newLine());
 
-      bw.write("  <tr>" + Dump.NEW_LINE);
-      bw.write("     <th>Name</th>" + Dump.NEW_LINE);
-      bw.write("     <th>Location</th>" + Dump.NEW_LINE);
-      bw.write("  </tr>" + Dump.NEW_LINE);
+      bw.write("  <tr>" + Dump.newLine());
+      bw.write("     <th>Name</th>" + Dump.newLine());
+      bw.write("     <th>Location</th>" + Dump.newLine());
+      bw.write("  </tr>" + Dump.newLine());
 
       boolean odd = true;
 
@@ -80,7 +79,7 @@ public class NoVersionReport extends Report
 
             boolean include = false;
             boolean filtered = isFiltered(archive.getName());
-            
+
             while (!include && lit.hasNext())
             {
                location = lit.next();
@@ -90,7 +89,9 @@ public class NoVersionReport extends Report
                   include = true;
 
                   if (!filtered)
+                  {
                      status = ReportStatus.RED;
+                  }
                }
             }
 
@@ -98,27 +99,26 @@ public class NoVersionReport extends Report
             {
                if (odd)
                {
-                  bw.write("  <tr class=\"rowodd\">" + Dump.NEW_LINE);
+                  bw.write("  <tr class=\"rowodd\">" + Dump.newLine());
                }
                else
                {
-                  bw.write("  <tr class=\"roweven\">" + Dump.NEW_LINE);
+                  bw.write("  <tr class=\"roweven\">" + Dump.newLine());
                }
-               bw.write(
-                     "     <td><a href=\"../jar/" + archive.getName() + ".html\">" + archive.getName() + "</a></td>" +
-                     Dump.NEW_LINE);
+               bw.write("     <td><a href=\"../jar/" + archive.getName() + ".html\">" +
+                        archive.getName() + "</a></td>" + Dump.newLine());
                bw.write("     <td>");
 
-               bw.write("       <table>" + Dump.NEW_LINE);
+               bw.write("       <table>" + Dump.newLine());
 
                lit = locations.iterator();
                while (lit.hasNext())
                {
                   location = lit.next();
 
-                  bw.write("      <tr>" + Dump.NEW_LINE);
+                  bw.write("      <tr>" + Dump.newLine());
 
-                  bw.write("        <td>" + location.getFilename() + "</td>" + Dump.NEW_LINE);
+                  bw.write("        <td>" + location.getFilename() + "</td>" + Dump.newLine());
                   if (!filtered)
                   {
                      bw.write("        <td>");
@@ -135,42 +135,44 @@ public class NoVersionReport extends Report
                   {
                      bw.write("<i>Not listed</i>");
                   }
-                  bw.write("</td>" + Dump.NEW_LINE);
+                  bw.write("</td>" + Dump.newLine());
 
-                  bw.write("      </tr>" + Dump.NEW_LINE);
+                  bw.write("      </tr>" + Dump.newLine());
                }
 
-               bw.write("       </table>" + Dump.NEW_LINE);
+               bw.write("       </table>" + Dump.newLine());
 
-               bw.write("</td>" + Dump.NEW_LINE);
-               bw.write("  </tr>" + Dump.NEW_LINE);
+               bw.write("</td>" + Dump.newLine());
+               bw.write("  </tr>" + Dump.newLine());
 
                odd = !odd;
             }
          }
       }
 
-      bw.write("</table>" + Dump.NEW_LINE);
+      bw.write("</table>" + Dump.newLine());
    }
 
    /**
     * write out the header of the report's content
+    *
     * @param bw the writer to use
     * @throws IOException if an errror occurs
     */
-   void writeHtmlBodyHeader(BufferedWriter bw) throws IOException
+   protected void writeHtmlBodyHeader(BufferedWriter bw) throws IOException
    {
-      bw.write("<body>" + Dump.NEW_LINE);
-      bw.write(Dump.NEW_LINE);
+      bw.write("<body>" + Dump.newLine());
+      bw.write(Dump.newLine());
 
-      bw.write("<h1>" + NAME + "</h1>" + Dump.NEW_LINE);
+      bw.write("<h1>" + NAME + "</h1>" + Dump.newLine());
 
-      bw.write("<a href=\"../index.html\">Main</a>" + Dump.NEW_LINE);
-      bw.write("<p>" + Dump.NEW_LINE);
+      bw.write("<a href=\"../index.html\">Main</a>" + Dump.newLine());
+      bw.write("<p>" + Dump.newLine());
    }
 
    /**
     * Create filter
+    *
     * @return The filter
     */
    @Override

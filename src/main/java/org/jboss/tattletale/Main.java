@@ -65,6 +65,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -80,9 +81,11 @@ import java.util.TreeSet;
 
 /**
  * Main
- * 
+ *
  * @author Jesper Pedersen <jesper.pedersen@jboss.org>
  * @author Jay Balunas <jbalunas@jboss.org>
+ * @author Mike Moore <mike.moore@amentra.com>
+ * @author Navin Surtani
  */
 public class Main
 {
@@ -125,9 +128,18 @@ public class Main
    /** Scan */
    private String scan;
 
-   /**
-    * Constructor
-    */
+   /** A List of the Constructors used to create dependency reports */
+   private final List<Class> dependencyReports;
+
+   /** A List of the Constructors used to create general reports */
+   private final List<Class> generalReports;
+
+   /** A List of the Constructors used to create custom reports */
+   private final List<Class> customReports;
+
+
+   /** Constructor */
+
    public Main()
    {
       this.source = ".";
@@ -143,13 +155,38 @@ public class Main
       this.failOnError = false;
       this.reports = null;
       this.scan = ".jar";
+
+      this.dependencyReports = new ArrayList<Class>();
+      addDependencyReport(ClassDependsOnReport.class);
+      addDependencyReport(ClassDependantsReport.class);
+      addDependencyReport(DependsOnReport.class);
+      addDependencyReport(DependantsReport.class);
+      addDependencyReport(TransitiveDependsOnReport.class);
+      addDependencyReport(TransitiveDependantsReport.class);
+      addDependencyReport(CircularDependencyReport.class);
+      addDependencyReport(GraphvizReport.class);
+
+      this.generalReports = new ArrayList<Class>();
+      addGeneralReport(MultipleJarsReport.class);
+      addGeneralReport(MultipleLocationsReport.class);
+      addGeneralReport(PackageMultipleJarsReport.class);
+      addGeneralReport(EliminateJarsReport.class);
+      addGeneralReport(NoVersionReport.class);
+      addGeneralReport(ClassLocationReport.class);
+      addGeneralReport(OSGiReport.class);
+      addGeneralReport(SignReport.class);
+      addGeneralReport(SealedReport.class);
+      addGeneralReport(InvalidVersionReport.class);
+      addGeneralReport(BlackListedReport.class);
+      addGeneralReport(UnusedJarReport.class);
+
+      this.customReports = new ArrayList<Class>();
    }
 
    /**
     * Set source
-    * 
-    * @param source
-    *           The value
+    *
+    * @param source The value
     */
    public void setSource(String source)
    {
@@ -158,9 +195,8 @@ public class Main
 
    /**
     * Set destination
-    * 
-    * @param destination
-    *           The value
+    *
+    * @param destination The value
     */
    public void setDestination(String destination)
    {
@@ -169,9 +205,8 @@ public class Main
 
    /**
     * Set configuration
-    * 
-    * @param configuration
-    *           The value
+    *
+    * @param configuration The value
     */
    public void setConfiguration(String configuration)
    {
@@ -180,9 +215,8 @@ public class Main
 
    /**
     * Set filter
-    * 
-    * @param filter
-    *           The value
+    *
+    * @param filter The value
     */
    public void setFilter(String filter)
    {
@@ -191,9 +225,8 @@ public class Main
 
    /**
     * Set class loader structure
-    * 
-    * @param cls
-    *           The value
+    *
+    * @param cls The value
     */
    public void setClassLoaderStructure(String cls)
    {
@@ -202,9 +235,8 @@ public class Main
 
    /**
     * Set profiles
-    * 
-    * @param profiles
-    *           The value
+    *
+    * @param profiles The value
     */
    public void setProfiles(String profiles)
    {
@@ -213,9 +245,8 @@ public class Main
 
    /**
     * Set excludes
-    * 
-    * @param excludes
-    *           The value
+    *
+    * @param excludes The value
     */
    public void setExcludes(String excludes)
    {
@@ -223,10 +254,40 @@ public class Main
    }
 
    /**
+    * Add a dependency report to the list of those to be generated
+    *
+    * @param clazz The class definition of the dependency report
+    */
+   public final void addDependencyReport(Class clazz)
+   {
+      dependencyReports.add(clazz);
+   }
+
+   /**
+    * Add a report to the list of those to be generated
+    *
+    * @param clazz The class definition of the report
+    */
+   public final void addGeneralReport(Class clazz)
+   {
+      generalReports.add(clazz);
+   }
+
+   /**
+    * Add a report to the list of those to be generated
+    *
+    * @param clazz The class definition of the custom report
+    */
+   public final void addCustomReport(Class clazz)
+   {
+      customReports.add(clazz);
+   }
+
+   /**
+    * /**
     * Set blacklisted
-    * 
-    * @param blacklisted
-    *           The value
+    *
+    * @param blacklisted The value
     */
    public void setBlacklisted(String blacklisted)
    {
@@ -235,9 +296,8 @@ public class Main
 
    /**
     * Set fail on info
-    * 
-    * @param b
-    *           The value
+    *
+    * @param b The value
     */
    public void setFailOnInfo(boolean b)
    {
@@ -246,9 +306,8 @@ public class Main
 
    /**
     * Set fail on warn
-    * 
-    * @param b
-    *           The value
+    *
+    * @param b The value
     */
    public void setFailOnWarn(boolean b)
    {
@@ -257,9 +316,8 @@ public class Main
 
    /**
     * Set fail on error
-    * 
-    * @param b
-    *           The value
+    *
+    * @param b The value
     */
    public void setFailOnError(boolean b)
    {
@@ -268,9 +326,8 @@ public class Main
 
    /**
     * Set the reports
-    * 
-    * @param reports
-    *           The value
+    *
+    * @param reports The value
     */
    public void setReports(String reports)
    {
@@ -279,9 +336,8 @@ public class Main
 
    /**
     * Set the scan
-    * 
-    * @param scan
-    *           The value
+    *
+    * @param scan The value
     */
    public void setScan(String scan)
    {
@@ -290,9 +346,8 @@ public class Main
 
    /**
     * Execute
-    * 
-    * @exception Exception
-    *               Thrown if an error occurs
+    *
+    * @throws Exception Thrown if an error occurs
     */
    public void execute() throws Exception
    {
@@ -328,7 +383,9 @@ public class Main
       Set<String> reportSet = null;
 
       if (classloaderStructure == null)
+      {
          classloaderStructure = config.getProperty("classloader");
+      }
 
       if (profiles != null)
       {
@@ -354,8 +411,7 @@ public class Main
       {
          profileSet = new HashSet<String>();
 
-         StringTokenizer st = new StringTokenizer(config
-            .getProperty("profiles"), ",");
+         StringTokenizer st = new StringTokenizer(config.getProperty("profiles"), ",");
          while (st.hasMoreTokens())
          {
             String token = st.nextToken().trim();
@@ -398,8 +454,7 @@ public class Main
       {
          blacklistedSet = new HashSet<String>();
 
-         StringTokenizer st = new StringTokenizer(config
-            .getProperty("blacklisted"), ",");
+         StringTokenizer st = new StringTokenizer(config.getProperty("blacklisted"), ",");
          while (st.hasMoreTokens())
          {
             String token = st.nextToken().trim();
@@ -431,7 +486,9 @@ public class Main
       }
 
       if (reports == null)
+      {
          reports = config.getProperty("reports");
+      }
 
       if (reports == null || (reports != null && reports.trim().equals("*")))
       {
@@ -450,13 +507,11 @@ public class Main
          }
       }
 
-      if (!allReports && reportSet == null
-         && config.getProperty("reports") != null)
+      if (!allReports && reportSet == null && config.getProperty("reports") != null)
       {
          reportSet = new HashSet<String>();
 
-         StringTokenizer st = new StringTokenizer(
-            config.getProperty("reports"), ",");
+         StringTokenizer st = new StringTokenizer(config.getProperty("reports"), ",");
          while (st.hasMoreTokens())
          {
             String token = st.nextToken().trim();
@@ -465,10 +520,11 @@ public class Main
       }
 
       if (!allReports && reportSet == null)
+      {
          allReports = true;
+      }
 
-      if (classloaderStructure == null
-         || classloaderStructure.trim().equals(""))
+      if (classloaderStructure == null || classloaderStructure.trim().equals(""))
       {
          classloaderStructure = "org.jboss.tattletale.reporting.classloader.NoopClassLoaderStructure";
       }
@@ -489,13 +545,16 @@ public class Main
       // Load up selected profiles
       List<Archive> known = new ArrayList<Archive>();
 
-      CommonProfile[] profiles = new CommonProfile[] {new SunJava5(),
-         new SunJava6(), new JavaEE5(), new JavaEE6(), new CDI10(),
-         new Seam22(), new Spring25(), new Spring30() };
+      CommonProfile[] profiles = new CommonProfile[]{new SunJava5(), new SunJava6(), new JavaEE5(), new JavaEE6(),
+         new CDI10(), new Seam22(), new Spring25(), new Spring30()};
 
       for (CommonProfile p : profiles)
+      {
          if (p.included(allProfiles, profileSet))
+         {
             known.add(p);
+         }
+      }
 
       StringTokenizer st = new StringTokenizer(source, File.pathSeparator);
 
@@ -509,13 +568,11 @@ public class Main
 
             for (File file : fileList)
             {
-               Archive archive = ArchiveScanner.scan(file, gProvides, known,
-                  blacklistedSet);
+               Archive archive = ArchiveScanner.scan(file, gProvides, known, blacklistedSet);
 
                if (archive != null)
                {
-                  SortedSet<Location> locations = locationsMap.get(archive
-                     .getName());
+                  SortedSet<Location> locations = locationsMap.get(archive.getName());
                   if (locations == null)
                   {
                      locations = new TreeSet<Location>();
@@ -545,15 +602,22 @@ public class Main
       // Write out report
       if (archives != null && archives.size() > 0)
       {
-         String outputDir = setupOutputDir(destination);
-         outputReport(outputDir, config, allReports, reportSet,
-            classloaderStructure, filters, archives, gProvides, known);
+         ReportSetBuilder reportSetBuilder = new ReportSetBuilder(destination, allReports, reportSet, filters);
+
+         reportSetBuilder.addReportParameter("setCLS", classloaderStructure);
+         reportSetBuilder.addReportParameter("setKnown", known);
+         reportSetBuilder.addReportParameter("setArchives", archives);
+         reportSetBuilder.addReportParameter("setConfig", config);
+         reportSetBuilder.addReportParameter("setGlobalProvides", gProvides);
+
+         loadCustomReports(config);
+         outputReport(reportSetBuilder, archives);
       }
    }
 
    /**
-    * Load cpnfiguration
-    * 
+    * Load configuration
+    *
     * @return The properties
     */
    private Properties loadConfiguration()
@@ -590,7 +654,7 @@ public class Main
 
    /**
     * Load default configuration values
-    * 
+    *
     * @return The properties
     */
    private Properties loadDefaultConfiguration()
@@ -622,7 +686,7 @@ public class Main
                }
                catch (IOException ioe)
                {
-                  // Nothing to do
+                  //No op
                }
             }
          }
@@ -689,8 +753,57 @@ public class Main
    }
 
    /**
+    * Method that loads the custom reports based on the configuration in the
+    * jboss-tattletale.properties file.
+    *
+    * @param config - the Properties configuration.
+    */
+
+   private void loadCustomReports(Properties config)
+   {
+      FileInputStream inputStream = null;
+      try
+      {
+         int index = 1;
+         String keyString = "customreport." + index;
+
+         while (config.getProperty(keyString) != null)
+         {
+            ClassLoader cl = Main.class.getClassLoader();
+            String reportName = config.getProperty(keyString);
+            Class customReportClass = Class.forName(reportName, true, cl);
+            addCustomReport(customReportClass);
+            index++;
+            keyString = "customreport." + index;
+         }
+      }
+      catch (Exception e)
+      {
+         System.err.println("Exception of type: " + e.getClass().toString()
+               + " thrown in loadCustomReports() in org.jboss.tattletale.Main");
+      }
+      finally
+      {
+         if (inputStream != null)
+         {
+            try
+            {
+               inputStream.close();
+            }
+            catch (IOException e)
+            {
+               // No op.
+            }
+         }
+
+      }
+
+   }
+
+
+   /**
     * Load filters
-    * 
+    *
     * @return The filters
     */
    private Properties loadFilters()
@@ -727,14 +840,13 @@ public class Main
 
    /**
     * Load default filter values
-    * 
+    *
     * @return The properties
     */
    private Properties loadDefaultFilters()
    {
       Properties properties = new Properties();
-      String propertiesFile = System
-         .getProperty("jboss-tattletale-filter.properties");
+      String propertiesFile = System.getProperty("jboss-tattletale-filter.properties");
       boolean loaded = false;
 
       if (propertiesFile != null)
@@ -799,573 +911,72 @@ public class Main
 
    /**
     * Generate the basic reports to the output directory
-    * 
-    * @param outputDir
-    *           Where the reports go
-    * @param config
-    *           Tattletale runtime properties.
-    * @param allReport
-    *           Should all reports be generated ?
-    * @param reportSet
-    *           The set of reports that should be generated
-    * @param classloaderStructure
-    *           The class loader structure
-    * @param filters
-    *           The filters
-    * @param archives
-    *           The archives
-    * @param gProvides
-    *           The global provides
-    * @param known
-    *           The known archives
-    * @exception Exception
-    *               In case of fail on settings
+    *
+    * @param reportSetBuilder Defines the output directory and which
+    *                         reports to build
+    * @param archives         The archives
+    *
+    * @throws Exception In case of fail on settings
     */
-   private void outputReport(String outputDir, Properties config,
-      boolean allReports, Set<String> reportSet, String classloaderStructure,
-      Properties filters, SortedSet<Archive> archives,
-      SortedMap<String, SortedSet<String>> gProvides, List<Archive> known)
-      throws Exception
+   private void outputReport(ReportSetBuilder reportSetBuilder, SortedSet<Archive> archives) throws Exception
    {
-      SortedSet<Report> dependenciesReports = new TreeSet<Report>();
-      SortedSet<Report> generalReports = new TreeSet<Report>();
-      SortedSet<Report> archiveReports = new TreeSet<Report>();
-
-      Report classDependsOn = new ClassDependsOnReport(archives, known,
-         classloaderStructure);
-      if (allReports || reportSet.contains(classDependsOn.getId()))
+      reportSetBuilder.clear();
+      for (Class reportDef : dependencyReports)
       {
-         if (filters != null
-            && filters.getProperty(classDependsOn.getId()) != null)
-            classDependsOn.setFilter(filters
-               .getProperty(classDependsOn.getId()));
-
-         classDependsOn.generate(outputDir);
-         dependenciesReports.add(classDependsOn);
+         reportSetBuilder.addReport(reportDef);
       }
+      SortedSet<Report> dependencyReportSet = reportSetBuilder.getReportSet();
 
-      Report classDependants = new ClassDependantsReport(archives, known,
-         classloaderStructure);
-      if (allReports || reportSet.contains(classDependants.getId()))
+      reportSetBuilder.clear();
+      for (Class reportDef : generalReports)
       {
-         if (filters != null
-            && filters.getProperty(classDependants.getId()) != null)
-            classDependants.setFilter(filters.getProperty(classDependants
-               .getId()));
-
-         classDependants.generate(outputDir);
-         dependenciesReports.add(classDependants);
+         reportSetBuilder.addReport(reportDef);
       }
+      SortedSet<Report> generalReportSet = reportSetBuilder.getReportSet();
 
-      Report dependsOn = new DependsOnReport(archives, known,
-         classloaderStructure);
-      if (allReports || reportSet.contains(dependsOn.getId()))
+      reportSetBuilder.clear();
+      for (Class reportDef : customReports)
       {
-         if (filters != null && filters.getProperty(dependsOn.getId()) != null)
-            dependsOn.setFilter(filters.getProperty(dependsOn.getId()));
-
-         dependsOn.generate(outputDir);
-         dependenciesReports.add(dependsOn);
+         reportSetBuilder.addReport(reportDef);
       }
-
-      Report dependants = new DependantsReport(archives, classloaderStructure);
-      if (allReports || reportSet.contains(dependants.getId()))
-      {
-         if (filters != null && filters.getProperty(dependants.getId()) != null)
-            dependants.setFilter(filters.getProperty(dependants.getId()));
-
-         dependants.generate(outputDir);
-         dependenciesReports.add(dependants);
-      }
-
-      Report transitiveDependsOn = new TransitiveDependsOnReport(archives,
-         known, classloaderStructure);
-      if (allReports || reportSet.contains(transitiveDependsOn.getId()))
-      {
-         if (filters != null
-            && filters.getProperty(transitiveDependsOn.getId()) != null)
-            transitiveDependsOn.setFilter(filters
-               .getProperty(transitiveDependsOn.getId()));
-
-         transitiveDependsOn.generate(outputDir);
-         dependenciesReports.add(transitiveDependsOn);
-      }
-
-      Report transitiveDependants = new TransitiveDependantsReport(archives,
-         classloaderStructure);
-      if (allReports || reportSet.contains(transitiveDependants.getId()))
-      {
-         if (filters != null
-            && filters.getProperty(transitiveDependants.getId()) != null)
-            transitiveDependants.setFilter(filters
-               .getProperty(transitiveDependants.getId()));
-
-         transitiveDependants.generate(outputDir);
-         dependenciesReports.add(transitiveDependants);
-      }
-
-      Report circularDependency = new CircularDependencyReport(archives,
-         classloaderStructure);
-      if (allReports || reportSet.contains(circularDependency.getId()))
-      {
-         if (filters != null
-            && filters.getProperty(circularDependency.getId()) != null)
-            circularDependency.setFilter(filters.getProperty(circularDependency
-               .getId()));
-
-         circularDependency.generate(outputDir);
-         dependenciesReports.add(circularDependency);
-      }
-
-      Report graphviz = new GraphvizReport(archives, known,
-         classloaderStructure, config);
-      if (allReports || reportSet.contains(graphviz.getId()))
-      {
-         if (filters != null && filters.getProperty(graphviz.getId()) != null)
-            graphviz.setFilter(filters.getProperty(graphviz.getId()));
-
-         graphviz.generate(outputDir);
-         dependenciesReports.add(graphviz);
-      }
+      SortedSet<Report> customReportSet = reportSetBuilder.getReportSet();
+      reportSetBuilder.clear();
 
       for (Archive a : archives)
       {
          if (a.getType() == ArchiveTypes.JAR)
          {
-            Report jar = new JarReport(a);
-            if (allReports || reportSet.contains(jar.getId()))
-            {
-               if (filters != null && filters.getProperty(jar.getId()) != null)
-                  jar.setFilter(filters.getProperty(jar.getId()));
-
-               jar.generate(outputDir);
-               archiveReports.add(jar);
-            }
+            reportSetBuilder.addReport(new JarReport(a));
          }
       }
 
-      Report multipleJars = new MultipleJarsReport(archives, gProvides);
-      if (allReports || reportSet.contains(multipleJars.getId()))
-      {
-         if (filters != null
-            && filters.getProperty(multipleJars.getId()) != null)
-            multipleJars.setFilter(filters.getProperty(multipleJars.getId()));
+      SortedSet<Report> archiveReports = reportSetBuilder.getReportSet();
 
-         multipleJars.generate(outputDir);
-         generalReports.add(multipleJars);
-      }
 
-      Report multipleLocations = new MultipleLocationsReport(archives);
-      if (allReports || reportSet.contains(multipleLocations.getId()))
-      {
-         if (filters != null
-            && filters.getProperty(multipleLocations.getId()) != null)
-            multipleLocations.setFilter(filters.getProperty(multipleLocations
-               .getId()));
-
-         multipleLocations.generate(outputDir);
-         generalReports.add(multipleLocations);
-      }
-
-      Report packageMultipleJars = new PackageMultipleJarsReport(archives,
-         gProvides);
-      if (allReports || reportSet.contains(packageMultipleJars.getId()))
-      {
-         if (filters != null
-            && filters.getProperty(packageMultipleJars.getId()) != null)
-            packageMultipleJars.setFilter(filters
-               .getProperty(packageMultipleJars.getId()));
-
-         packageMultipleJars.generate(outputDir);
-         generalReports.add(packageMultipleJars);
-      }
-
-      Report eliminateJars = new EliminateJarsReport(archives);
-      if (allReports || reportSet.contains(eliminateJars.getId()))
-      {
-         if (filters != null
-            && filters.getProperty(eliminateJars.getId()) != null)
-            eliminateJars.setFilter(filters.getProperty(eliminateJars.getId()));
-
-         eliminateJars.generate(outputDir);
-         generalReports.add(eliminateJars);
-      }
-
-      Report noVersion = new NoVersionReport(archives);
-      if (allReports || reportSet.contains(noVersion.getId()))
-      {
-         if (filters != null && filters.getProperty(noVersion.getId()) != null)
-            noVersion.setFilter(filters.getProperty(noVersion.getId()));
-
-         noVersion.generate(outputDir);
-         generalReports.add(noVersion);
-      }
-
-      Report classLocation = new ClassLocationReport(archives, gProvides);
-      if (allReports || reportSet.contains(classLocation.getId()))
-      {
-         if (filters != null
-            && filters.getProperty(classLocation.getId()) != null)
-            classLocation.setFilter(filters.getProperty(classLocation.getId()));
-
-         classLocation.generate(outputDir);
-         generalReports.add(classLocation);
-      }
-
-      Report osgi = new OSGiReport(archives, known);
-      if (allReports || reportSet.contains(osgi.getId()))
-      {
-         if (filters != null && filters.getProperty(osgi.getId()) != null)
-            osgi.setFilter(filters.getProperty(osgi.getId()));
-
-         osgi.generate(outputDir);
-         generalReports.add(osgi);
-      }
-
-      Report sign = new SignReport(archives);
-      if (allReports || reportSet.contains(sign.getId()))
-      {
-         if (filters != null && filters.getProperty(sign.getId()) != null)
-            sign.setFilter(filters.getProperty(sign.getId()));
-
-         sign.generate(outputDir);
-         generalReports.add(sign);
-      }
-
-      Report sealed = new SealedReport(archives);
-      if (allReports || reportSet.contains(sealed.getId()))
-      {
-         if (filters != null && filters.getProperty(sealed.getId()) != null)
-            sealed.setFilter(filters.getProperty(sealed.getId()));
-
-         sealed.generate(outputDir);
-         generalReports.add(sealed);
-      }
-
-      Report invalidversion = new InvalidVersionReport(archives);
-      if (allReports || reportSet.contains(invalidversion.getId()))
-      {
-         if (filters != null
-            && filters.getProperty(invalidversion.getId()) != null)
-            invalidversion.setFilter(filters
-               .getProperty(invalidversion.getId()));
-
-         invalidversion.generate(outputDir);
-         generalReports.add(invalidversion);
-      }
-
-      Report blacklisted = new BlackListedReport(archives);
-      if (allReports || reportSet.contains(blacklisted.getId()))
-      {
-         if (filters != null
-            && filters.getProperty(blacklisted.getId()) != null)
-            blacklisted.setFilter(filters.getProperty(blacklisted.getId()));
-
-         blacklisted.generate(outputDir);
-         generalReports.add(blacklisted);
-      }
-
-      Report unusedjar = new UnusedJarReport(archives);
-      if (allReports || reportSet.contains(unusedjar.getId()))
-      {
-         if (filters != null && filters.getProperty(unusedjar.getId()) != null)
-            unusedjar.setFilter(filters.getProperty(unusedjar.getId()));
-
-         unusedjar.generate(outputDir);
-         generalReports.add(unusedjar);
-      }
-
-      Dump.generateIndex(dependenciesReports, generalReports, archiveReports,
-         outputDir);
+      String outputDir = reportSetBuilder.getOutputDir();
+      Dump.generateIndex(dependencyReportSet, generalReportSet, archiveReports, customReportSet, outputDir);
       Dump.generateCSS(outputDir);
 
       if (failOnInfo || failOnWarn || failOnError)
       {
-         boolean foundError = false;
+         FailureCheck failureCheck = new FailureCheck();
+         failureCheck.processReports(dependencyReportSet);
+         failureCheck.processReports(generalReportSet);
+         failureCheck.processReports(customReportSet);
+         failureCheck.processReports(archiveReports);
 
-         boolean first = true;
-         StringBuilder sb = new StringBuilder();
-
-         for (Report report : dependenciesReports)
+         if (failureCheck.errorReport() != null)
          {
-            if (ReportStatus.YELLOW == report.getStatus()
-               || ReportStatus.RED == report.getStatus())
-            {
-               if (ReportSeverity.INFO == report.getSeverity() && failOnInfo)
-               {
-                  if (!first)
-                     sb = sb.append(System.getProperty("line.separator"));
-
-                  sb = sb.append(report.getId());
-                  sb = sb.append("=");
-
-                  if (ReportStatus.YELLOW == report.getStatus())
-                  {
-                     sb = sb.append("YELLOW");
-                  }
-                  else if (ReportStatus.RED == report.getStatus())
-                  {
-                     sb = sb.append("RED");
-                  }
-
-                  foundError = true;
-                  first = false;
-               }
-               else if (ReportSeverity.WARNING == report.getSeverity()
-                  && failOnWarn)
-               {
-                  if (!first)
-                     sb = sb.append(System.getProperty("line.separator"));
-
-                  sb = sb.append(report.getId());
-                  sb = sb.append("=");
-
-                  if (ReportStatus.YELLOW == report.getStatus())
-                  {
-                     sb = sb.append("YELLOW");
-                  }
-                  else if (ReportStatus.RED == report.getStatus())
-                  {
-                     sb = sb.append("RED");
-                  }
-
-                  foundError = true;
-                  first = false;
-               }
-               else if (ReportSeverity.ERROR == report.getSeverity()
-                  && failOnError)
-               {
-                  if (!first)
-                     sb = sb.append(System.getProperty("line.separator"));
-
-                  sb = sb.append(report.getId());
-                  sb = sb.append("=");
-
-                  if (ReportStatus.YELLOW == report.getStatus())
-                  {
-                     sb = sb.append("YELLOW");
-                  }
-                  else if (ReportStatus.RED == report.getStatus())
-                  {
-                     sb = sb.append("RED");
-                  }
-
-                  foundError = true;
-                  first = false;
-               }
-            }
+            throw new Exception(failureCheck.errorReport());
          }
-
-         for (Report report : generalReports)
-         {
-            if (ReportStatus.YELLOW == report.getStatus()
-               || ReportStatus.RED == report.getStatus())
-            {
-               if (ReportSeverity.INFO == report.getSeverity() && failOnInfo)
-               {
-                  if (!first)
-                     sb = sb.append(System.getProperty("line.separator"));
-
-                  sb = sb.append(report.getId());
-                  sb = sb.append("=");
-
-                  if (ReportStatus.YELLOW == report.getStatus())
-                  {
-                     sb = sb.append("YELLOW");
-                  }
-                  else if (ReportStatus.RED == report.getStatus())
-                  {
-                     sb = sb.append("RED");
-                  }
-
-                  foundError = true;
-                  first = false;
-               }
-               else if (ReportSeverity.WARNING == report.getSeverity()
-                  && failOnWarn)
-               {
-                  if (!first)
-                     sb = sb.append(System.getProperty("line.separator"));
-
-                  sb = sb.append(report.getId());
-                  sb = sb.append("=");
-
-                  if (ReportStatus.YELLOW == report.getStatus())
-                  {
-                     sb = sb.append("YELLOW");
-                  }
-                  else if (ReportStatus.RED == report.getStatus())
-                  {
-                     sb = sb.append("RED");
-                  }
-
-                  foundError = true;
-                  first = false;
-               }
-               else if (ReportSeverity.ERROR == report.getSeverity()
-                  && failOnError)
-               {
-                  if (!first)
-                     sb = sb.append(System.getProperty("line.separator"));
-
-                  sb = sb.append(report.getId());
-                  sb = sb.append("=");
-
-                  if (ReportStatus.YELLOW == report.getStatus())
-                  {
-                     sb = sb.append("YELLOW");
-                  }
-                  else if (ReportStatus.RED == report.getStatus())
-                  {
-                     sb = sb.append("RED");
-                  }
-
-                  foundError = true;
-                  first = false;
-               }
-            }
-         }
-
-         for (Report report : archiveReports)
-         {
-            if (ReportStatus.YELLOW == report.getStatus()
-               || ReportStatus.RED == report.getStatus())
-            {
-               if (ReportSeverity.INFO == report.getSeverity() && failOnInfo)
-               {
-                  if (!first)
-                     sb = sb.append(System.getProperty("line.separator"));
-
-                  sb = sb.append(report.getId());
-                  sb = sb.append("=");
-
-                  if (ReportStatus.YELLOW == report.getStatus())
-                  {
-                     sb = sb.append("YELLOW");
-                  }
-                  else if (ReportStatus.RED == report.getStatus())
-                  {
-                     sb = sb.append("RED");
-                  }
-
-                  foundError = true;
-                  first = false;
-               }
-               else if (ReportSeverity.WARNING == report.getSeverity()
-                  && failOnWarn)
-               {
-                  if (!first)
-                     sb = sb.append(System.getProperty("line.separator"));
-
-                  sb = sb.append(report.getId());
-                  sb = sb.append("=");
-
-                  if (ReportStatus.YELLOW == report.getStatus())
-                  {
-                     sb = sb.append("YELLOW");
-                  }
-                  else if (ReportStatus.RED == report.getStatus())
-                  {
-                     sb = sb.append("RED");
-                  }
-
-                  foundError = true;
-                  first = false;
-               }
-               else if (ReportSeverity.ERROR == report.getSeverity()
-                  && failOnError)
-               {
-                  if (!first)
-                     sb = sb.append(System.getProperty("line.separator"));
-
-                  sb = sb.append(report.getId());
-                  sb = sb.append("=");
-
-                  if (ReportStatus.YELLOW == report.getStatus())
-                  {
-                     sb = sb.append("YELLOW");
-                  }
-                  else if (ReportStatus.RED == report.getStatus())
-                  {
-                     sb = sb.append("RED");
-                  }
-
-                  foundError = true;
-                  first = false;
-               }
-            }
-         }
-
-         if (foundError)
-            throw new Exception(sb.toString());
-      }
-   }
-
-   /**
-    * Validate and create the outputDir if needed.
-    * 
-    * @param outputDir
-    *           Where reports go
-    * @return The verified output path for the reports
-    * @exception IOException
-    *               If the output directory cant be created
-    */
-   private String setupOutputDir(String outputDir) throws IOException
-   {
-      // Verify ending slash
-      outputDir = !outputDir.substring(outputDir.length() - 1).equals(
-         File.separator) ? outputDir + File.separator : outputDir;
-
-      // Verify output directory exists & create if it does not
-      File outputDirFile = new File(outputDir);
-
-      if (outputDirFile.exists() && !outputDirFile.equals(new File(".")))
-         recursiveDelete(outputDirFile);
-
-      if (!outputDirFile.equals(new File(".")) && !outputDirFile.mkdirs())
-         throw new IOException("Cannot create directory: " + outputDir);
-
-      return outputDir;
-   }
-
-   /**
-    * Recursive delete
-    * 
-    * @param f
-    *           The file handler
-    * @exception IOException
-    *               Thrown if a file could not be deleted
-    */
-   private void recursiveDelete(File f) throws IOException
-   {
-      if (f != null && f.exists())
-      {
-         File[] files = f.listFiles();
-         if (files != null)
-         {
-            for (int i = 0; i < files.length; i++)
-            {
-               if (files[i].isDirectory())
-               {
-                  recursiveDelete(files[i]);
-               }
-               else
-               {
-                  if (!files[i].delete())
-                     throw new IOException("Could not delete " + files[i]);
-               }
-            }
-         }
-         if (!f.delete())
-            throw new IOException("Could not delete " + f);
       }
    }
 
    /**
     * Parse excludes
-    * 
-    * @param s
-    *           The input string
+    *
+    * @param s The input string
+    *
     * @return The set of excludes
     */
    private Set<String> parseExcludes(String s)
@@ -1378,10 +989,14 @@ public class Main
          String token = st.nextToken().trim();
 
          if (token.startsWith("**"))
+         {
             token = token.substring(2);
+         }
 
          if (token.endsWith("**"))
+         {
             token = token.substring(0, token.indexOf("**"));
+         }
 
          result.add(token);
       }
@@ -1389,20 +1004,16 @@ public class Main
       return result;
    }
 
-   /**
-    * The usage method
-    */
+   /** The usage method */
    private static void usage()
    {
-      System.out
-         .println("Usage: Tattletale [-exclude=<excludes>] <scan-directory> [output-directory]");
+      System.out.println("Usage: Tattletale [-exclude=<excludes>]" + " <scan-directory> [output-directory]");
    }
 
    /**
     * The main method
-    * 
-    * @param args
-    *           The arguments
+    *
+    * @param args The arguments
     */
    public static void main(String[] args)
    {
@@ -1415,11 +1026,9 @@ public class Main
 
             if (args[arg].startsWith("-exclude="))
             {
-               main
-                  .setExcludes(args[arg].substring(args[arg].indexOf("=") + 1));
+               main.setExcludes(args[arg].substring(args[arg].indexOf("=") + 1));
                arg++;
             }
-
             main.setSource(args[arg]);
             main.setDestination(args.length > arg + 1 ? args[arg + 1] : ".");
             main.setFailOnInfo(false);
@@ -1439,4 +1048,269 @@ public class Main
          usage();
       }
    }
+
+   /**
+    * This helper class checks reports to determine whether they should fail,
+    * according to the rules set.
+    *
+    * @author MikeMoore
+    */
+   private class FailureCheck
+   {
+
+      private boolean foundError = false;
+      private boolean first = true;
+      private StringBuilder stringbuffer = new StringBuilder();
+
+      /**
+       * @return the error report as a String if errors were found, null
+       *         otherwise
+       */
+      String errorReport()
+      {
+         if (foundError)
+         {
+            return stringbuffer.toString();
+         }
+         return null;
+      }
+
+      /**
+       * Checks a set of reports for failure conditions
+       *
+       * @param reports The reports to check
+       */
+      void processReports(Set<Report> reports)
+      {
+         for (Report report : reports)
+         {
+            processReport(report);
+         }
+      }
+
+      /**
+       * Checks a single report for failure conditions
+       *
+       * @param report The report to check
+       */
+      void processReport(Report report)
+      {
+         if ((ReportStatus.YELLOW == report.getStatus() || ReportStatus.RED == report.getStatus())
+               && ((ReportSeverity.INFO == report.getSeverity() && failOnInfo) ||
+                  (ReportSeverity.WARNING == report.getSeverity() && failOnWarn) ||
+                  (ReportSeverity.ERROR == report.getSeverity() && failOnError)))
+         {
+            appendReportInfo(report);
+         }
+
+      }
+
+      /**
+       * Record a report failure for the error report
+       *
+       * @param report A report that meets the failure conditions
+       */
+      void appendReportInfo(Report report)
+      {
+         if (!first)
+         {
+            stringbuffer = stringbuffer.append(System.getProperty("line.separator"));
+         }
+
+         stringbuffer = stringbuffer.append(report.getId());
+         stringbuffer = stringbuffer.append("=");
+
+         if (ReportStatus.YELLOW == report.getStatus())
+         {
+            stringbuffer = stringbuffer.append("YELLOW");
+         }
+         else if (ReportStatus.RED == report.getStatus())
+         {
+            stringbuffer = stringbuffer.append("RED");
+         }
+
+         foundError = true;
+         first = false;
+      }
+
+   }
+
+   /**
+    * This helper class generates reports from report definitions and gathers
+    * report definitions into a SortedSet which can be used to build the index.
+    *
+    * @author MikeMoore
+    */
+   private class ReportSetBuilder
+   {
+
+      private final boolean allReports;
+      private final String outputDir;
+      private final Properties filters;
+      private Set<String> reportSet;
+      private SortedSet<Report> returnReportSet = new TreeSet<Report>();
+      private final Map<String, Object> reportParameters = new HashMap<String, Object>();
+
+      /**
+       * @param destination Where the reports go
+       * @param allReports  Should all reports be generated ?
+       * @param reportSet   The set of reports that should be generated
+       * @param filters     The filters
+       *
+       * @throws Exception
+       */
+      ReportSetBuilder(String destination, boolean allReports, Set<String> reportSet, Properties filters)
+         throws Exception
+      {
+         this.outputDir = setupOutputDir(destination);
+         this.allReports = allReports;
+         this.reportSet = reportSet;
+         this.filters = filters;
+      }
+
+      /**
+       * Add a parameter which will be used to initialize the reports built
+       *
+       * @param setMethodName The name of the method that will set the parameter on the
+       *                      report
+       * @param parameter     The parameter to set
+       */
+      public void addReportParameter(String setMethodName, Object parameter)
+      {
+         reportParameters.put(setMethodName, parameter);
+      }
+
+      /**
+       * Starts a new report set. This allows a single ReportSetBuilder to be
+       * used to generate multiple report sets
+       */
+      void clear()
+      {
+         // start a new set, the old sets are still in use for indexing
+         returnReportSet = new TreeSet<Report>();
+      }
+
+      /**
+       * Generates the report from the definition, output goes to the output
+       * directory.
+       *
+       * @param report the definition of the report to generate
+       */
+      void addReport(Report report)
+      {
+         if (allReports || reportSet.contains(report.getId()))
+         {
+            if (filters != null && filters.getProperty(report.getId()) != null)
+            {
+               report.setFilter(filters.getProperty(report.getId()));
+            }
+            report.generate(outputDir);
+            returnReportSet.add(report);
+         }
+      }
+
+      /**
+       * Generates the report from the definition, output goes to the output
+       * directory.
+       *
+       * @param reportDef the class definition of the report to generate
+       *
+       * @throws Exception
+       */
+      void addReport(Class reportDef) throws Exception
+      {
+         // build report from empty constructor
+         Report report = (Report) reportDef.getConstructor(new Class[0]).newInstance(new Object[0]);
+
+         // populate required report parameters
+         Method[] allMethods = reportDef.getMethods();
+         for (Method m : allMethods)
+         {
+            if (reportParameters.containsKey(m.getName()))
+            {
+               m.invoke(report, reportParameters.get(m.getName()));
+            }
+         }
+         addReport(report);
+      }
+
+      /** @return A Set of reports generated, useful for building an index */
+      SortedSet<Report> getReportSet()
+      {
+         return returnReportSet;
+      }
+
+      /** @return the String representation of the output directory */
+      String getOutputDir()
+      {
+         return outputDir;
+      }
+
+      /**
+       * Validate and create the outputDir if needed.
+       *
+       * @param outputDir Where reports go
+       *
+       * @return The verified output path for the reports
+       *
+       * @throws IOException If the output directory cant be created
+       */
+      private String setupOutputDir(String outputDir) throws IOException
+      {
+         // Verify ending slash
+         outputDir = !outputDir.substring(outputDir.length() - 1).equals(File.separator)
+                     ? outputDir + File.separator : outputDir;
+         // Verify output directory exists & create if it does not
+         File outputDirFile = new File(outputDir);
+
+         if (outputDirFile.exists() && !outputDirFile.equals(new File(".")))
+         {
+            recursiveDelete(outputDirFile);
+         }
+
+         if (!outputDirFile.equals(new File(".")) && !outputDirFile.mkdirs())
+         {
+            throw new IOException("Cannot create directory: " + outputDir);
+         }
+
+         return outputDir;
+      }
+
+      /**
+       * Recursive delete
+       *
+       * @param f The file handler
+       *
+       * @throws IOException Thrown if a file could not be deleted
+       */
+      private void recursiveDelete(File f) throws IOException
+      {
+         if (f != null && f.exists())
+         {
+            File[] files = f.listFiles();
+            if (files != null)
+            {
+               for (int i = 0; i < files.length; i++)
+               {
+                  if (files[i].isDirectory())
+                  {
+                     recursiveDelete(files[i]);
+                  }
+                  else
+                  {
+                     if (!files[i].delete())
+                     {
+                        throw new IOException("Could not delete " + files[i]);
+                     }
+                  }
+               }
+            }
+            if (!f.delete())
+            {
+               throw new IOException("Could not delete " + f);
+            }
+         }
+      }
+   }
 }
+

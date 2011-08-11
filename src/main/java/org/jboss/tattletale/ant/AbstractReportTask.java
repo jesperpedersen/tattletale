@@ -29,33 +29,22 @@ import org.apache.tools.ant.Task;
  *
  * @author Jesper Pedersen <jesper.pedersen@jboss.org>
  * @author Jay Balunas jbalunas@jboss.org
- *
  */
 public abstract class AbstractReportTask extends Task
-{   
-   /**
-    * Source directory
-    */
+{
+   /** Source directory */
    private String source;
-   
-   /**
-    * Destination directory
-    */
+
+   /** Destination directory */
    private String destination;
-   
-   /**
-    * Configuration
-    */
+
+   /** Configuration */
    private String configuration;
-      
-   /**
-    * Filter
-    */
+
+   /** Filter */
    private String filter;
-      
-   /**
-    * Constructor
-    */
+
+   /** Constructor */
    public AbstractReportTask()
    {
       source = ".";
@@ -64,117 +53,118 @@ public abstract class AbstractReportTask extends Task
       filter = null;
    }
 
-   /**
-    * @return the scanDir
-    */
+   /** @return the scanDir */
    @Deprecated
-   public String getScanDir() 
+   public String getScanDir()
    {
       return source;
    }
 
-   /**
-    * @param scanDir the scanDir to set
-    */
+   /** @param scanDir the scanDir to set */
    @Deprecated
-   public void setScanDir(String scanDir) 
+   public void setScanDir(String scanDir)
    {
       this.source = scanDir;
    }
 
-   /**
-    * @return the outputDir
-    */
+   /** @return the outputDir */
    @Deprecated
-   public String getOutputDir() 
+   public String getOutputDir()
    {
       return destination;
    }
 
-   /**
-    * @param outputDir the outputDir to set
-    */
+   /** @param outputDir the outputDir to set */
    @Deprecated
-   public void setOutputDir(String outputDir) 
+   public void setOutputDir(String outputDir)
    {
       this.destination = outputDir;
    }
 
    /**
     * Get the source
+    *
     * @return The value
     */
-   public String getSource() 
+   public String getSource()
    {
       return source;
    }
 
    /**
-    * Set the source 
+    * Set the source
+    *
     * @param source The value
     */
-   public void setSource(String source) 
+   public void setSource(String source)
    {
       this.source = source;
    }
 
    /**
     * Get the destination
+    *
     * @return The value
     */
-   public String getDestination() 
+   public String getDestination()
    {
       return destination;
    }
 
    /**
     * Set the destination
+    *
     * @param destination The value
     */
-   public void setDestination(String destination) 
+   public void setDestination(String destination)
    {
       this.destination = destination;
    }
 
    /**
     * Get the configuration
+    *
     * @return The value
     */
-   public String getConfiguration() 
+   public String getConfiguration()
    {
       return configuration;
    }
 
    /**
     * Set the configuration
+    *
     * @param configuration The value
     */
-   public void setConfiguration(String configuration) 
+   public void setConfiguration(String configuration)
    {
       this.configuration = configuration;
    }
 
    /**
     * Get the filter
+    *
     * @return The value
     */
-   public String getFilter() 
+   public String getFilter()
    {
       return filter;
    }
 
    /**
     * Set the filter
+    *
     * @param filter The value
     */
-   public void setFilter(String filter) 
+   public void setFilter(String filter)
    {
       this.filter = filter;
    }
 
    /**
     * Execute Ant task
-    * @exception BuildException If an error occurs
+    *
+    * @throws BuildException If an error occurs
     */
    public abstract void execute() throws BuildException;
 

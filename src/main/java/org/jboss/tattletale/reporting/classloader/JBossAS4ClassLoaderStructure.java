@@ -29,21 +29,21 @@ import java.util.SortedSet;
 
 /**
  * A classloader structure class that represents the JBoss Application Server 4.x
+ *
  * @author Jesper Pedersen <jesper.pedersen@jboss.org>
  */
 public class JBossAS4ClassLoaderStructure extends JBossASClassLoaderStructure
 {
-   /**
-    * Constructor
-    */
+   /** Constructor */
    public JBossAS4ClassLoaderStructure()
    {
    }
 
    /**
     * Can one archive see the other
+    *
     * @param from The from archive
-    * @param to The to archive
+    * @param to   The to archive
     * @return True if from can see to; otherwise false
     */
    public boolean isVisible(Archive from, Archive to)
@@ -64,7 +64,7 @@ public class JBossAS4ClassLoaderStructure extends JBossASClassLoaderStructure
             for (Location toLocation : toLocations)
             {
                String toPath = toLocation.getFilename();
-               
+
                int tIdx = toPath.indexOf(to.getName());
                String t = toPath.substring(0, tIdx);
                t = stripPrefix(t);
@@ -132,6 +132,7 @@ public class JBossAS4ClassLoaderStructure extends JBossASClassLoaderStructure
 
    /**
     * Strip prefix
+    *
     * @param input The inout string
     * @return The result
     */

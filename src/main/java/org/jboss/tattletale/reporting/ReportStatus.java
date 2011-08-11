@@ -23,6 +23,7 @@ package org.jboss.tattletale.reporting;
 
 /**
  * Represents a report status
+ *
  * @author Jesper Pedersen <jesper.pedersen@jboss.org>
  */
 public class ReportStatus
@@ -38,6 +39,7 @@ public class ReportStatus
 
    /**
     * Constructor
+    *
     * @param actions The actions
     */
    private ReportStatus()
@@ -46,6 +48,7 @@ public class ReportStatus
 
    /**
     * Returns status display color
+    *
     * @param status status constant value
     * @return status display color
     */
