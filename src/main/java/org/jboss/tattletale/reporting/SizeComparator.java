@@ -26,14 +26,13 @@ import java.util.Comparator;
 
 /**
  * Size comparator
+ *
  * @author Jesper Pedersen <jesper.pedersen@jboss.org>
  */
 public class SizeComparator implements Comparator<String>, Serializable
 {
 
-   /**
-    * Constructor
-    */
+   /** Constructor */
    public SizeComparator()
    {
 
@@ -41,6 +40,7 @@ public class SizeComparator implements Comparator<String>, Serializable
 
    /**
     * Compare two objects
+    *
     * @param sa String
     * @param sb String
     * @return Positive if sb greater than sa; zero if equal; otherwise negative

@@ -23,13 +23,12 @@ package org.jboss.tattletale.reporting.classloader;
 
 /**
  * A classloader structure class that represents the JBoss Application Server 6.x
+ *
  * @author Jesper Pedersen <jesper.pedersen@jboss.org>
  */
 public class JBossAS6ClassLoaderStructure extends JBossAS5ClassLoaderStructure
 {
-   /**
-    * Constructor
-    */
+   /** Constructor */
    public JBossAS6ClassLoaderStructure()
    {
    }

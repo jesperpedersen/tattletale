@@ -33,6 +33,7 @@ import javassist.bytecode.ClassFile;
 
 /**
  * JAR report
+ *
  * @author Jesper Pedersen <jesper.pedersen@jboss.org>
  * @author <a href="mailto:torben.jaeger@jit-consulting.de">Torben Jaeger</a>
  */
@@ -44,6 +45,7 @@ public class JarReport extends ArchiveReport
 
    /**
     * Constructor
+    *
     * @param archive The archive
     */
    public JarReport(Archive archive)
@@ -56,6 +58,7 @@ public class JarReport extends ArchiveReport
 
    /**
     * Get the name of the directory
+    *
     * @return The directory
     */
    @Override
@@ -67,6 +70,7 @@ public class JarReport extends ArchiveReport
    /**
     * returns a Jar report specific writer.
     * Jar reports don't use a index.html but a html per archive.
+    *
     * @return the BufferedWriter
     * @throws IOException if an error occurs
     */
@@ -78,8 +82,9 @@ public class JarReport extends ArchiveReport
 
    /**
     * write out the report's content
+    *
     * @param bw the writer to use
-    * @exception IOException if an error occurs
+    * @throws IOException if an error occurs
     */
    protected void writeHtmlBodyContent(BufferedWriter bw) throws IOException
    {
@@ -274,6 +279,7 @@ public class JarReport extends ArchiveReport
 
    /**
     * write out the header of the report's content
+    *
     * @param bw the writer to use
     * @throws IOException if an errror occurs
     */

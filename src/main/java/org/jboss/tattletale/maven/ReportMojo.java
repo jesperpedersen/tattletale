@@ -33,7 +33,7 @@ import org.apache.maven.plugin.MojoFailureException;
  */
 public class ReportMojo extends TattletaleMojo
 {
-   /** Class loader structure  */
+   /** Class loader structure */
    private String classloaderStructure;
 
    /** Reports */
@@ -60,9 +60,7 @@ public class ReportMojo extends TattletaleMojo
    /** Scan */
    private String scan;
 
-   /**
-    * Constructor
-    */
+   /** Constructor */
    public ReportMojo()
    {
       this.classloaderStructure = null;
@@ -78,96 +76,107 @@ public class ReportMojo extends TattletaleMojo
 
    /**
     * Get the class loader structure
+    *
     * @return The value
     */
-   public String getClassloader() 
+   public String getClassloader()
    {
       return classloaderStructure;
    }
 
    /**
     * Set the class loader structure
+    *
     * @param cls The value
     */
-   public void setClassloader(String cls) 
+   public void setClassloader(String cls)
    {
       this.classloaderStructure = cls;
    }
 
    /**
     * Get the reports
+    *
     * @return The value
     */
-   public String[] getReports() 
+   public String[] getReports()
    {
       return reports;
    }
 
    /**
     * Set the reports
+    *
     * @param reports The value
     */
-   public void setReports(String[] reports) 
+   public void setReports(String[] reports)
    {
       this.reports = reports;
    }
 
    /**
     * Get the profiles
+    *
     * @return The value
     */
-   public String[] getProfiles() 
+   public String[] getProfiles()
    {
       return profiles;
    }
 
    /**
     * Set the profiles
+    *
     * @param profiles The value
     */
-   public void setProfiles(String[] profiles) 
+   public void setProfiles(String[] profiles)
    {
       this.profiles = profiles;
    }
 
    /**
     * Get the excludes
+    *
     * @return The value
     */
-   public String[] getExcludes() 
+   public String[] getExcludes()
    {
       return excludes;
    }
 
    /**
     * Set the excludes
+    *
     * @param excludes The value
     */
-   public void setExcludes(String[] excludes) 
+   public void setExcludes(String[] excludes)
    {
       this.excludes = excludes;
    }
 
    /**
     * Get the blacklisted
+    *
     * @return The value
     */
-   public String[] getBlacklisted() 
+   public String[] getBlacklisted()
    {
       return blacklisted;
    }
 
    /**
     * Set the blacklisted
+    *
     * @param blacklisted The value
     */
-   public void setBlacklisted(String[] blacklisted) 
+   public void setBlacklisted(String[] blacklisted)
    {
       this.blacklisted = blacklisted;
    }
 
    /**
     * Get fail on info
+    *
     * @return The value
     */
    public boolean getFailOnInfo()
@@ -177,6 +186,7 @@ public class ReportMojo extends TattletaleMojo
 
    /**
     * Set fail on info
+    *
     * @param b The value
     */
    public void setFailOnInfo(boolean b)
@@ -186,6 +196,7 @@ public class ReportMojo extends TattletaleMojo
 
    /**
     * Get fail on warn
+    *
     * @return The value
     */
    public boolean getFailOnWarn()
@@ -195,6 +206,7 @@ public class ReportMojo extends TattletaleMojo
 
    /**
     * Set fail on warn
+    *
     * @param b The value
     */
    public void setFailOnWarn(boolean b)
@@ -204,6 +216,7 @@ public class ReportMojo extends TattletaleMojo
 
    /**
     * Get fail on error
+    *
     * @return The value
     */
    public boolean getFailOnError()
@@ -213,6 +226,7 @@ public class ReportMojo extends TattletaleMojo
 
    /**
     * Set fail on error
+    *
     * @param b The value
     */
    public void setFailOnError(boolean b)
@@ -222,31 +236,34 @@ public class ReportMojo extends TattletaleMojo
 
    /**
     * Get the scan
+    *
     * @return The value
     */
-   public String getScan() 
+   public String getScan()
    {
       return scan;
    }
 
    /**
     * Set the scan
+    *
     * @param scan The value
     */
-   public void setScan(String scan) 
+   public void setScan(String scan)
    {
       this.scan = scan;
    }
 
    /**
     * Execute
-    * @exception MojoExecutionException Thrown if the plugin cant be executed
-    * @exception MojoFailureException Thrown if there is an error
+    *
+    * @throws MojoExecutionException Thrown if the plugin cant be executed
+    * @throws MojoFailureException   Thrown if there is an error
     */
    @Override
    public void execute() throws MojoExecutionException, MojoFailureException
    {
-      try 
+      try
       {
          Main main = new Main();
 
@@ -254,10 +271,14 @@ public class ReportMojo extends TattletaleMojo
          main.setDestination(getDestination().getAbsolutePath());
 
          if (getConfiguration() != null)
+         {
             main.setConfiguration(getConfiguration().getAbsolutePath());
+         }
 
          if (getFilter() != null)
+         {
             main.setFilter(getFilter().getAbsolutePath());
+         }
 
          main.setClassLoaderStructure(getClassloader());
 
@@ -268,7 +289,9 @@ public class ReportMojo extends TattletaleMojo
             {
                sb = sb.append(getReports()[i]);
                if (i < getReports().length - 1)
+               {
                   sb = sb.append(",");
+               }
             }
             main.setReports(sb.toString());
          }
@@ -280,7 +303,9 @@ public class ReportMojo extends TattletaleMojo
             {
                sb = sb.append(getProfiles()[i]);
                if (i < getProfiles().length - 1)
+               {
                   sb = sb.append(",");
+               }
             }
             main.setProfiles(sb.toString());
          }
@@ -292,7 +317,9 @@ public class ReportMojo extends TattletaleMojo
             {
                sb = sb.append(getExcludes()[i]);
                if (i < getExcludes().length - 1)
+               {
                   sb = sb.append(",");
+               }
             }
             main.setExcludes(sb.toString());
          }
@@ -304,7 +331,9 @@ public class ReportMojo extends TattletaleMojo
             {
                sb = sb.append(getBlacklisted()[i]);
                if (i < getBlacklisted().length - 1)
+               {
                   sb = sb.append(",");
+               }
             }
             main.setBlacklisted(sb.toString());
          }
@@ -319,7 +348,7 @@ public class ReportMojo extends TattletaleMojo
 
          main.execute();
       }
-      catch (Throwable t) 
+      catch (Throwable t)
       {
          throw new MojoFailureException(t.getMessage());
       }

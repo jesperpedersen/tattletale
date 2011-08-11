@@ -32,6 +32,7 @@ import java.util.TreeSet;
 
 /**
  * Dependants report
+ *
  * @author Jesper Pedersen <jesper.pedersen@jboss.org>
  * @author <a href="mailto:torben.jaeger@jit-consulting.de">Torben Jaeger</a>
  */
@@ -44,9 +45,7 @@ public class DependantsReport extends CLSReport
    private static final String DIRECTORY = "dependants";
 
 
-   /**
-    * Constructor
-    */
+   /** Constructor */
    public DependantsReport()
    {
       super(DIRECTORY, ReportSeverity.INFO, NAME, DIRECTORY);
@@ -54,8 +53,9 @@ public class DependantsReport extends CLSReport
 
    /**
     * write out the report's content
+    *
     * @param bw the writer to use
-    * @exception IOException if an error occurs
+    * @throws IOException if an error occurs
     */
    protected void writeHtmlBodyContent(BufferedWriter bw) throws IOException
    {
@@ -81,8 +81,8 @@ public class DependantsReport extends CLSReport
             {
                bw.write("  <tr class=\"roweven\">" + Dump.newLine());
             }
-            bw.write("     <td><a href=\"../jar/" + archive.getName() + ".html\">" + archive.getName() + "</a></td>" +
-                     Dump.newLine());
+            bw.write("     <td><a href=\"../jar/" + archive.getName() + ".html\">" +
+                  archive.getName() + "</a></td>" + Dump.newLine());
             bw.write("     <td>");
 
 
@@ -139,6 +139,7 @@ public class DependantsReport extends CLSReport
 
    /**
     * write out the header of the report's content
+    *
     * @param bw the writer to use
     * @throws IOException if an errror occurs
     */

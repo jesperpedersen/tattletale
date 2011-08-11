@@ -35,74 +35,46 @@ import java.util.TreeSet;
  */
 public abstract class Archive implements Serializable, Comparable
 {
-   /**
-    * SerialVersionUID
-    */
+   /** SerialVersionUID */
    static final long serialVersionUID = 8349128019949046037L;
 
-   /**
-    * Archive type
-    */
+   /** Archive type */
    private int type;
 
-   /**
-    * The name
-    */
+   /** The name */
    private String name;
 
-   /**
-    * The version
-    */
+   /** The version */
    private int version;
 
-   /**
-    * Manifest
-    */
+   /** Manifest */
    private List<String> manifest;
 
-   /**
-    * Signing information
-    */
+   /** Signing information */
    private List<String> sign;
 
-   /**
-    * Requires
-    */
+   /** Requires */
    private SortedSet<String> requires;
 
-   /**
-    * Provides
-    */
+   /** Provides */
    private SortedMap<String, Long> provides;
 
-   /**
-    * Profiles
-    */
+   /** Profiles */
    private SortedSet<String> profiles;
 
-   /**
-    * Class dependencies
-    */
+   /** Class dependencies */
    private SortedMap<String, SortedSet<String>> classDependencies;
 
-   /**
-    * Package dependencies
-    */
+   /** Package dependencies */
    private SortedMap<String, SortedSet<String>> packageDependencies;
 
-   /**
-    * Blacklisted dependencies
-    */
+   /** Blacklisted dependencies */
    private SortedMap<String, SortedSet<String>> blacklistedDependencies;
 
-   /**
-    * Locations
-    */
+   /** Locations */
    private SortedSet<Location> locations;
 
-   /**
-    * OSGi archive
-    */
+   /** OSGi archive */
    private transient Boolean osgi;
 
    /**
@@ -120,10 +92,8 @@ public abstract class Archive implements Serializable, Comparable
     * @param blacklistedDependencies The blacklisted dependencies
     * @param location                The location
     */
-   public Archive(int type, String name,
-                  int version, List<String> manifest,
-                  List<String> sign, SortedSet<String> requires,
-                  SortedMap<String, Long> provides,
+   public Archive(int type, String name, int version, List<String> manifest, List<String> sign,
+                  SortedSet<String> requires, SortedMap<String, Long> provides,
                   SortedMap<String, SortedSet<String>> classDependencies,
                   SortedMap<String, SortedSet<String>> packageDependencies,
                   SortedMap<String, SortedSet<String>> blacklistedDependencies,
@@ -143,7 +113,10 @@ public abstract class Archive implements Serializable, Comparable
       this.locations = new TreeSet<Location>();
       this.osgi = null;
 
-      if (location != null) this.locations.add(location);
+      if (location != null)
+      {
+         this.locations.add(location);
+      }
    }
 
    /**
@@ -198,7 +171,10 @@ public abstract class Archive implements Serializable, Comparable
       {
          for (String s : manifest)
          {
-            if (s.startsWith(key)) return true;
+            if (s.startsWith(key))
+            {
+               return true;
+            }
          }
       }
 
@@ -364,14 +340,15 @@ public abstract class Archive implements Serializable, Comparable
     */
    public boolean isOSGi()
    {
-      if (osgi == null) initOSGi();
+      if (osgi == null)
+      {
+         initOSGi();
+      }
 
       return osgi.booleanValue();
    }
 
-   /**
-    * Init OSGi
-    */
+   /** Init OSGi */
    private void initOSGi()
    {
       osgi = hasManifestKey("Bundle-SymbolicName");

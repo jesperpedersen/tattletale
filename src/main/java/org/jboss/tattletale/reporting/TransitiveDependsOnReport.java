@@ -35,6 +35,7 @@ import java.util.TreeSet;
 
 /**
  * Transitive Depends On report
+ *
  * @author Jesper Pedersen <jesper.pedersen@jboss.org>
  * @author <a href="mailto:torben.jaeger@jit-consulting.de">Torben Jaeger</a>
  */
@@ -46,9 +47,7 @@ public class TransitiveDependsOnReport extends CLSReport
    /** DIRECTORY */
    private static final String DIRECTORY = "transitivedependson";
 
-   /**
-    * Constructor
-    */
+   /** Constructor */
    public TransitiveDependsOnReport()
    {
       super(DIRECTORY, ReportSeverity.INFO, NAME, DIRECTORY);
@@ -56,8 +55,9 @@ public class TransitiveDependsOnReport extends CLSReport
 
    /**
     * write out the report's content
+    *
     * @param bw the writer to use
-    * @exception IOException if an error occurs
+    * @throws IOException if an error occurs
     */
    protected void writeHtmlBodyContent(BufferedWriter bw) throws IOException
    {
@@ -130,10 +130,10 @@ public class TransitiveDependsOnReport extends CLSReport
       Iterator mit = dependsOnMap.entrySet().iterator();
       while (mit.hasNext())
       {
-         Map.Entry entry = (Map.Entry)mit.next();
+         Map.Entry entry = (Map.Entry) mit.next();
 
-         String archive = (String)entry.getKey();
-         SortedSet<String> value = (SortedSet<String>)entry.getValue();
+         String archive = (String) entry.getKey();
+         SortedSet<String> value = (SortedSet<String>) entry.getValue();
 
          SortedSet<String> result = new TreeSet<String>();
 
@@ -153,10 +153,10 @@ public class TransitiveDependsOnReport extends CLSReport
       mit = transitiveDependsOnMap.entrySet().iterator();
       while (mit.hasNext())
       {
-         Map.Entry entry = (Map.Entry)mit.next();
+         Map.Entry entry = (Map.Entry) mit.next();
 
-         String archive = (String)entry.getKey();
-         SortedSet<String> value = (SortedSet<String>)entry.getValue();
+         String archive = (String) entry.getKey();
+         SortedSet<String> value = (SortedSet<String>) entry.getValue();
 
          if (odd)
          {
@@ -214,6 +214,7 @@ public class TransitiveDependsOnReport extends CLSReport
 
    /**
     * write out the header of the report's content
+    *
     * @param bw the writer to use
     * @throws IOException if an errror occurs
     */
@@ -230,15 +231,14 @@ public class TransitiveDependsOnReport extends CLSReport
 
    /**
     * Get depends on
+    *
     * @param scanArchive The scan archive
-    * @param archive The archive
-    * @param map The depends on map
-    * @param result The result
+    * @param archive     The archive
+    * @param map         The depends on map
+    * @param result      The result
     */
-   private void resolveDependsOn(String scanArchive,
-                                 String archive,
-                                 SortedMap<String, SortedSet<String>> map,
-                                 SortedSet<String> result)
+   private void resolveDependsOn(String scanArchive, String archive,
+                                 SortedMap<String, SortedSet<String>> map, SortedSet<String> result)
    {
       if (!archive.equals(scanArchive) && !result.contains(scanArchive))
       {

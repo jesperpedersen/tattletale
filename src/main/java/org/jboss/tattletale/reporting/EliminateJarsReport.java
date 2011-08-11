@@ -32,6 +32,7 @@ import java.util.SortedSet;
 
 /**
  * Eliminate JAR files with multiple versions
+ *
  * @author Jesper Pedersen <jesper.pedersen@jboss.org>
  * @author <a href="mailto:torben.jaeger@jit-consulting.de">Torben Jaeger</a>
  */
@@ -43,9 +44,7 @@ public class EliminateJarsReport extends AbstractReport
    /** DIRECTORY */
    private static final String DIRECTORY = "eliminatejars";
 
-   /**
-    * Constructor
-    */
+   /** Constructor */
    public EliminateJarsReport()
    {
       super(DIRECTORY, ReportSeverity.WARNING, NAME, DIRECTORY);
@@ -53,8 +52,9 @@ public class EliminateJarsReport extends AbstractReport
 
    /**
     * write out the report's content
+    *
     * @param bw the writer to use
-    * @exception IOException if an error occurs
+    * @throws IOException if an error occurs
     */
    protected void writeHtmlBodyContent(BufferedWriter bw) throws IOException
    {
@@ -86,8 +86,7 @@ public class EliminateJarsReport extends AbstractReport
                location = lit.next();
 
                //noinspection StringEquality
-               if (version == location.getVersion() ||
-                      (version != null && version.equals(location.getVersion())))
+               if (version == location.getVersion() || (version != null && version.equals(location.getVersion())))
                {
                   // Same version identifier - just continue
                }
@@ -96,7 +95,9 @@ public class EliminateJarsReport extends AbstractReport
                   include = true;
 
                   if (!filtered)
+                  {
                      status = ReportStatus.RED;
+                  }
                }
             }
 
@@ -110,9 +111,8 @@ public class EliminateJarsReport extends AbstractReport
                {
                   bw.write("  <tr class=\"roweven\">" + Dump.newLine());
                }
-               bw.write(
-                     "     <td><a href=\"../jar/" + archive.getName() + ".html\">" + archive.getName() + "</a></td>" +
-                     Dump.newLine());
+               bw.write("     <td><a href=\"../jar/" + archive.getName() +
+                        ".html\">" + archive.getName() + "</a></td>" + Dump.newLine());
                bw.write("     <td>");
 
                bw.write("       <table>" + Dump.newLine());
@@ -161,8 +161,9 @@ public class EliminateJarsReport extends AbstractReport
 
    /**
     * write out the header of the report's content
+    *
     * @param bw the writer to use
-    * @exception IOException if an errror occurs
+    * @throws IOException if an errror occurs
     */
    protected void writeHtmlBodyHeader(BufferedWriter bw) throws IOException
    {
@@ -177,6 +178,7 @@ public class EliminateJarsReport extends AbstractReport
 
    /**
     * Create filter
+    *
     * @return The filter
     */
    @Override

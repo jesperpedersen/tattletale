@@ -31,6 +31,7 @@ import java.util.Iterator;
 
 /**
  * Multiple locations report
+ *
  * @author Jesper Pedersen <jesper.pedersen@jboss.org>
  * @author <a href="mailto:torben.jaeger@jit-consulting.de">Torben Jaeger</a>
  */
@@ -42,9 +43,7 @@ public class MultipleLocationsReport extends AbstractReport
    /** DIRECTORY */
    private static final String DIRECTORY = "multiplelocations";
 
-   /**
-    * Constructor
-    */
+   /** Constructor */
    public MultipleLocationsReport()
    {
       super(DIRECTORY, ReportSeverity.WARNING, NAME, DIRECTORY);
@@ -52,8 +51,9 @@ public class MultipleLocationsReport extends AbstractReport
 
    /**
     * write out the report's content
+    *
     * @param bw the writer to use
-    * @exception IOException if an error occurs
+    * @throws IOException if an error occurs
     */
    protected void writeHtmlBodyContent(BufferedWriter bw) throws IOException
    {
@@ -85,8 +85,8 @@ public class MultipleLocationsReport extends AbstractReport
             {
                bw.write("  <tr class=\"roweven\">" + Dump.newLine());
             }
-            bw.write("     <td><a href=\"../jar/" + a.getName() + ".html\">" + a.getName() + "</a></td>" +
-                     Dump.newLine());
+            bw.write("     <td><a href=\"../jar/" + a.getName() + ".html\">" +
+                     a.getName() + "</a></td>" + Dump.newLine());
             if (!filtered)
             {
                bw.write("     <td>");
@@ -120,6 +120,7 @@ public class MultipleLocationsReport extends AbstractReport
 
    /**
     * write out the header of the report's content
+    *
     * @param bw the writer to use
     * @throws IOException if an errror occurs
     */
@@ -136,6 +137,7 @@ public class MultipleLocationsReport extends AbstractReport
 
    /**
     * Create filter
+    *
     * @return The filter
     */
    @Override

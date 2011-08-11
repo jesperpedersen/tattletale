@@ -30,6 +30,7 @@ import java.util.SortedSet;
 
 /**
  * Class location report
+ *
  * @author Jesper Pedersen <jesper.pedersen@jboss.org>
  * @author <a href="mailto:torben.jaeger@jit-consulting.de">Torben Jaeger</a>
  */
@@ -44,16 +45,15 @@ public class ClassLocationReport extends AbstractReport
    /** Globally provides */
    private SortedMap<String, SortedSet<String>> gProvides;
 
-   /**
-    * Constructor
-    */
+   /** Constructor */
    public ClassLocationReport()
    {
       super(DIRECTORY, ReportSeverity.INFO, NAME, DIRECTORY);
    }
 
-   /**  Set the globally provides map to be used in generating this report
-    * 
+   /**
+    * Set the globally provides map to be used in generating this report
+    *
     * @param gProvides the map of global provides
     */
    public void setGlobalProvides(SortedMap<String, SortedSet<String>> gProvides)
@@ -63,6 +63,7 @@ public class ClassLocationReport extends AbstractReport
 
    /**
     * write the report's content
+    *
     * @param bw the BufferedWriter to use
     * @throws IOException if an error occurs
     */
@@ -80,8 +81,8 @@ public class ClassLocationReport extends AbstractReport
 
       for (Map.Entry<String, SortedSet<String>> entry : gProvides.entrySet())
       {
-         String clz = (String)((Map.Entry)entry).getKey();
-         SortedSet archives = (SortedSet)((Map.Entry)entry).getValue();
+         String clz = (String) ((Map.Entry) entry).getKey();
+         SortedSet archives = (SortedSet) ((Map.Entry) entry).getValue();
          boolean filtered = isFiltered(clz);
 
          if (!filtered)
@@ -113,7 +114,7 @@ public class ClassLocationReport extends AbstractReport
          Iterator sit = archives.iterator();
          while (sit.hasNext())
          {
-            String archive = (String)sit.next();
+            String archive = (String) sit.next();
             bw.write("<a href=\"../jar/" + archive + ".html\">" + archive + "</a>" + Dump.newLine());
 
             if (sit.hasNext())
@@ -145,6 +146,7 @@ public class ClassLocationReport extends AbstractReport
 
    /**
     * Create filter
+    *
     * @return The filter
     */
    @Override

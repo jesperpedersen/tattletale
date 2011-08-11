@@ -29,6 +29,7 @@ import java.util.Iterator;
 
 /**
  * A report that shows unused JAR archives
+ *
  * @author Jesper Pedersen <jesper.pedersen@jboss.org>
  */
 public class UnusedJarReport extends AbstractReport
@@ -39,9 +40,7 @@ public class UnusedJarReport extends AbstractReport
    /** DIRECTORY */
    private static final String DIRECTORY = "unusedjar";
 
-   /**
-    * Constructor
-    */
+   /** Constructor */
    public UnusedJarReport()
    {
       super(DIRECTORY, ReportSeverity.WARNING, NAME, DIRECTORY);
@@ -49,8 +48,9 @@ public class UnusedJarReport extends AbstractReport
 
    /**
     * Write out the report's content
+    *
     * @param bw the writer to use
-    * @exception IOException if an error occurs
+    * @throws IOException if an error occurs
     */
    protected void writeHtmlBodyContent(BufferedWriter bw) throws IOException
    {
@@ -98,8 +98,8 @@ public class UnusedJarReport extends AbstractReport
          {
             bw.write("  <tr class=\"roweven\">" + Dump.newLine());
          }
-         bw.write("     <td><a href=\"../jar/" + archive.getName() + ".html\">" + archive.getName() + "</a></td>" +
-                  Dump.newLine());
+         bw.write("     <td><a href=\"../jar/" + archive.getName() +
+                  ".html\">" + archive.getName() + "</a></td>" + Dump.newLine());
 
          if (archiveStatus)
          {
@@ -153,6 +153,7 @@ public class UnusedJarReport extends AbstractReport
 
    /**
     * write out the header of the report's content
+    *
     * @param bw the writer to use
     * @throws IOException if an errror occurs
     */
@@ -169,6 +170,7 @@ public class UnusedJarReport extends AbstractReport
 
    /**
     * Create filter
+    *
     * @return The filter
     */
    @Override

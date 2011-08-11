@@ -28,6 +28,7 @@ import java.io.IOException;
 
 /**
  * Sealed information report
+ *
  * @author Jesper Pedersen <jesper.pedersen@jboss.org>
  * @author <a href="mailto:torben.jaeger@jit-consulting.de">Torben Jaeger</a>
  */
@@ -39,9 +40,7 @@ public class SealedReport extends AbstractReport
    /** DIRECTORY */
    private static final String DIRECTORY = "sealed";
 
-   /**
-    * Constructor
-    */
+   /** Constructor */
    public SealedReport()
    {
       super(DIRECTORY, ReportSeverity.INFO, NAME, DIRECTORY);
@@ -49,8 +48,9 @@ public class SealedReport extends AbstractReport
 
    /**
     * write out the report's content
+    *
     * @param bw the writer to use
-    * @exception IOException if an error occurs
+    * @throws IOException if an error occurs
     */
    protected void writeHtmlBodyContent(BufferedWriter bw) throws IOException
    {
@@ -77,10 +77,10 @@ public class SealedReport extends AbstractReport
          {
             bw.write("  <tr class=\"roweven\">" + Dump.newLine());
          }
-         bw.write("     <td><a href=\"../jar/" + archive.getName() + ".html\">" + archive.getName() + "</a></td>" +
-                  Dump.newLine());
-         if (archive.hasManifestKey("Sealed") && 
-             Boolean.TRUE.equals(Boolean.valueOf(archive.getManifestValue("Sealed"))))
+         bw.write("     <td><a href=\"../jar/" + archive.getName() + ".html\">" + archive.getName()
+                  + "</a></td>" + Dump.newLine());
+         if (archive.hasManifestKey("Sealed")
+               && Boolean.TRUE.equals(Boolean.valueOf(archive.getManifestValue("Sealed"))))
          {
             bw.write("     <td style=\"color: red;\">Sealed</td>" + Dump.newLine());
             sealed++;
@@ -99,7 +99,9 @@ public class SealedReport extends AbstractReport
 
       boolean filtered = isFiltered();
       if (sealed > 0 && unsealed > 0 && !filtered)
+      {
          status = ReportStatus.YELLOW;
+      }
 
       bw.write(Dump.newLine());
       bw.write("<p>" + Dump.newLine());
@@ -119,8 +121,7 @@ public class SealedReport extends AbstractReport
       }
       else
       {
-         bw.write("     <td style=\"color: red; text-decoration: line-through;\">" + sealed + "</td>" + 
-                  Dump.newLine());
+         bw.write("     <td style=\"color: red; text-decoration: line-through;\">" + sealed + "</td>" + Dump.newLine());
       }
       bw.write("  </tr>" + Dump.newLine());
 
@@ -132,8 +133,8 @@ public class SealedReport extends AbstractReport
       }
       else
       {
-         bw.write("     <td style=\"color: green; text-decoration: line-through;\">" + unsealed + "</td>" +
-                  Dump.newLine());
+         bw.write("     <td style=\"color: green; text-decoration: line-through;\">"
+                  + unsealed + "</td>" + Dump.newLine());
       }
       bw.write("  </tr>" + Dump.newLine());
 
@@ -142,6 +143,7 @@ public class SealedReport extends AbstractReport
 
    /**
     * write out the header of the report's content
+    *
     * @param bw the writer to use
     * @throws IOException if an errror occurs
     */
@@ -158,6 +160,7 @@ public class SealedReport extends AbstractReport
 
    /**
     * Create filter
+    *
     * @return The filter
     */
    @Override

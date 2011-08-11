@@ -31,6 +31,7 @@ import java.util.SortedSet;
 
 /**
  * Blacklisted report
+ *
  * @author Jesper Pedersen <jesper.pedersen@jboss.org>
  * @author <a href="mailto:torben.jaeger@jit-consulting.de">Torben Jaeger</a>
  */
@@ -42,9 +43,7 @@ public class BlackListedReport extends AbstractReport
    /** DIRECTORY */
    private static final String DIRECTORY = "blacklisted";
 
-   /**
-    * Constructor
-    */
+   /** Constructor */
    public BlackListedReport()
    {
       super(DIRECTORY, ReportSeverity.ERROR, NAME, DIRECTORY);
@@ -52,8 +51,9 @@ public class BlackListedReport extends AbstractReport
 
    /**
     * write out the report's content
+    *
     * @param bw the writer to use
-    * @exception IOException if an error occurs
+    * @throws IOException if an error occurs
     */
    protected void writeHtmlBodyContent(BufferedWriter bw) throws IOException
    {
@@ -79,7 +79,9 @@ public class BlackListedReport extends AbstractReport
                include = true;
 
                if (!filtered)
+               {
                   status = ReportStatus.RED;
+               }
             }
 
             if (include)
@@ -92,15 +94,14 @@ public class BlackListedReport extends AbstractReport
                {
                   bw.write("  <tr class=\"roweven\">" + Dump.newLine());
                }
-               bw.write(
-                     "     <td><a href=\"../jar/" + archive.getName() + ".html\">" + archive.getName() + "</a></td>" +
-                     Dump.newLine());
+               bw.write("     <td><a href=\"../jar/" + archive.getName() + ".html\">"
+                     + archive.getName() + "</a></td>" + Dump.newLine());
                bw.write("     <td>");
 
                bw.write("       <table>" + Dump.newLine());
 
-               for (Map.Entry<String, SortedSet<String>> stringSortedSetEntry : archive.getBlackListedDependencies()
-                     .entrySet())
+               for (Map.Entry<String, SortedSet<String>> stringSortedSetEntry :
+                     archive.getBlackListedDependencies().entrySet())
                {
 
                   String pkg = stringSortedSetEntry.getKey();
@@ -144,8 +145,9 @@ public class BlackListedReport extends AbstractReport
 
    /**
     * write out the header of the report's content
+    *
     * @param bw the writer to use
-    * @exception IOException if an errror occurs
+    * @throws IOException if an errror occurs
     */
    protected void writeHtmlBodyHeader(BufferedWriter bw) throws IOException
    {
@@ -160,6 +162,7 @@ public class BlackListedReport extends AbstractReport
 
    /**
     * Create filter
+    *
     * @return The filter
     */
    @Override

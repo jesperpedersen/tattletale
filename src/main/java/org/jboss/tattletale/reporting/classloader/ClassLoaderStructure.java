@@ -25,14 +25,16 @@ import org.jboss.tattletale.core.Archive;
 
 /**
  * An interface that defines how the classloader structure is setup
+ *
  * @author Jesper Pedersen <jesper.pedersen@jboss.org>
  */
 public interface ClassLoaderStructure
 {
    /**
     * Can one archive see the other
+    *
     * @param from The from archive
-    * @param to The to archive
+    * @param to   The to archive
     * @return True if from can see to; otherwise false
     */
    public boolean isVisible(Archive from, Archive to);

@@ -35,6 +35,7 @@ import java.util.TreeSet;
 
 /**
  * Circular dependency report
+ *
  * @author Jesper Pedersen <jesper.pedersen@jboss.org>
  */
 public class CircularDependencyReport extends CLSReport
@@ -45,9 +46,7 @@ public class CircularDependencyReport extends CLSReport
    /** DIRECTORY */
    private static final String DIRECTORY = "circulardependency";
 
-   /**
-    * Constructor
-    */
+   /** Constructor */
    public CircularDependencyReport()
    {
       super(DIRECTORY, ReportSeverity.ERROR, NAME, DIRECTORY);
@@ -55,8 +54,9 @@ public class CircularDependencyReport extends CLSReport
 
    /**
     * write out the report's content
+    *
     * @param bw the writer to use
-    * @exception IOException if an error occurs
+    * @throws IOException if an error occurs
     */
    protected void writeHtmlBodyContent(BufferedWriter bw) throws IOException
    {
@@ -145,14 +145,18 @@ public class CircularDependencyReport extends CLSReport
                String r = valueIt.next();
                SortedSet<String> td = transitiveDependsOnMap.get(r);
                if (td != null && td.contains(archive))
+               {
                   circular.add(r);
+               }
             }
 
             if (circular.size() > 0)
             {
                boolean filtered = isFiltered(archive);
                if (!filtered)
+               {
                   status = ReportStatus.RED;
+               }
 
                if (odd)
                {
@@ -205,6 +209,7 @@ public class CircularDependencyReport extends CLSReport
 
    /**
     * write out the header of the report's content
+    *
     * @param bw the writer to use
     * @throws IOException if an errror occurs
     */
@@ -221,15 +226,14 @@ public class CircularDependencyReport extends CLSReport
 
    /**
     * Get depends on
+    *
     * @param scanArchive The scan archive
-    * @param archive The archive
-    * @param map The depends on map
-    * @param result The result
+    * @param archive     The archive
+    * @param map         The depends on map
+    * @param result      The result
     */
-   private void resolveDependsOn(String scanArchive,
-                                 String archive,
-                                 SortedMap<String, SortedSet<String>> map,
-                                 SortedSet<String> result)
+   private void resolveDependsOn(String scanArchive, String archive,
+                                 SortedMap<String, SortedSet<String>> map, SortedSet<String> result)
    {
       if (!archive.equals(scanArchive) && !result.contains(scanArchive))
       {
@@ -248,6 +252,7 @@ public class CircularDependencyReport extends CLSReport
 
    /**
     * Create filter
+    *
     * @return The filter
     */
    @Override

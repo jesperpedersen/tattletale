@@ -32,6 +32,7 @@ import java.util.SortedSet;
 
 /**
  * Multiple locations report
+ *
  * @author Jesper Pedersen <jesper.pedersen@jboss.org>
  * @author <a href="mailto:torben.jaeger@jit-consulting.de">Torben Jaeger</a>
  */
@@ -43,9 +44,7 @@ public class NoVersionReport extends AbstractReport
    /** DIRECTORY */
    private static final String DIRECTORY = "noversion";
 
-   /**
-    * Constructor
-    */
+   /** Constructor */
    public NoVersionReport()
    {
       super(DIRECTORY, ReportSeverity.ERROR, NAME, DIRECTORY);
@@ -53,8 +52,9 @@ public class NoVersionReport extends AbstractReport
 
    /**
     * write out the report's content
+    *
     * @param bw the writer to use
-    * @exception IOException if an error occurs
+    * @throws IOException if an error occurs
     */
    protected void writeHtmlBodyContent(BufferedWriter bw) throws IOException
    {
@@ -79,7 +79,7 @@ public class NoVersionReport extends AbstractReport
 
             boolean include = false;
             boolean filtered = isFiltered(archive.getName());
-            
+
             while (!include && lit.hasNext())
             {
                location = lit.next();
@@ -89,7 +89,9 @@ public class NoVersionReport extends AbstractReport
                   include = true;
 
                   if (!filtered)
+                  {
                      status = ReportStatus.RED;
+                  }
                }
             }
 
@@ -103,9 +105,8 @@ public class NoVersionReport extends AbstractReport
                {
                   bw.write("  <tr class=\"roweven\">" + Dump.newLine());
                }
-               bw.write(
-                     "     <td><a href=\"../jar/" + archive.getName() + ".html\">" + archive.getName() + "</a></td>" +
-                     Dump.newLine());
+               bw.write("     <td><a href=\"../jar/" + archive.getName() + ".html\">" +
+                        archive.getName() + "</a></td>" + Dump.newLine());
                bw.write("     <td>");
 
                bw.write("       <table>" + Dump.newLine());
@@ -154,6 +155,7 @@ public class NoVersionReport extends AbstractReport
 
    /**
     * write out the header of the report's content
+    *
     * @param bw the writer to use
     * @throws IOException if an errror occurs
     */
@@ -170,6 +172,7 @@ public class NoVersionReport extends AbstractReport
 
    /**
     * Create filter
+    *
     * @return The filter
     */
    @Override

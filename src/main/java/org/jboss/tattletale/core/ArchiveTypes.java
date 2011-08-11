@@ -23,6 +23,7 @@ package org.jboss.tattletale.core;
 
 /**
  * Archive types
+ *
  * @author Jesper Pedersen <jesper.pedersen@jboss.org>
  */
 public class ArchiveTypes
@@ -30,9 +31,7 @@ public class ArchiveTypes
    /** JAR */
    public static final int JAR = 0;
 
-   /**
-    * Constructor
-    */
+   /** Constructor */
    private ArchiveTypes()
    {
    }

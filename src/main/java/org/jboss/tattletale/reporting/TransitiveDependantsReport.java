@@ -35,6 +35,7 @@ import java.util.TreeSet;
 
 /**
  * Transitive dependants report
+ *
  * @author Jesper Pedersen <jesper.pedersen@jboss.org>
  * @author <a href="mailto:torben.jaeger@jit-consulting.de">Torben Jaeger</a>
  */
@@ -47,9 +48,7 @@ public class TransitiveDependantsReport extends CLSReport
    private static final String DIRECTORY = "transitivedependants";
 
 
-   /**
-    * Constructor
-    */
+   /** Constructor */
    public TransitiveDependantsReport()
    {
       super(DIRECTORY, ReportSeverity.INFO, NAME, DIRECTORY);
@@ -57,9 +56,10 @@ public class TransitiveDependantsReport extends CLSReport
 
    /**
     * write out the report's content
+    *
     * @param bw the writer to use
-    * @exception IOException if an error occurs
-    */   
+    * @throws IOException if an error occurs
+    */
    protected void writeHtmlBodyContent(BufferedWriter bw) throws IOException
    {
       bw.write("<table>" + Dump.newLine());
@@ -103,10 +103,10 @@ public class TransitiveDependantsReport extends CLSReport
       Iterator mit = dependantsMap.entrySet().iterator();
       while (mit.hasNext())
       {
-         Map.Entry entry = (Map.Entry)mit.next();
+         Map.Entry entry = (Map.Entry) mit.next();
 
-         String archive = (String)entry.getKey();
-         SortedSet<String> value = (SortedSet<String>)entry.getValue();
+         String archive = (String) entry.getKey();
+         SortedSet<String> value = (SortedSet<String>) entry.getValue();
 
          SortedSet<String> result = new TreeSet<String>();
 
@@ -126,10 +126,10 @@ public class TransitiveDependantsReport extends CLSReport
       mit = transitiveDependantsMap.entrySet().iterator();
       while (mit.hasNext())
       {
-         Map.Entry entry = (Map.Entry)mit.next();
+         Map.Entry entry = (Map.Entry) mit.next();
 
-         String archive = (String)entry.getKey();
-         SortedSet<String> value = (SortedSet<String>)entry.getValue();
+         String archive = (String) entry.getKey();
+         SortedSet<String> value = (SortedSet<String>) entry.getValue();
 
          if (odd)
          {
@@ -179,6 +179,7 @@ public class TransitiveDependantsReport extends CLSReport
 
    /**
     * write out the header of the report's content
+    *
     * @param bw the writer to use
     * @throws IOException if an errror occurs
     */
@@ -195,15 +196,14 @@ public class TransitiveDependantsReport extends CLSReport
 
    /**
     * Get dependants
+    *
     * @param scanArchive The scan archive
-    * @param archive The archive
-    * @param map The dependants map
-    * @param result The result
+    * @param archive     The archive
+    * @param map         The dependants map
+    * @param result      The result
     */
-   private void resolveDependants(String scanArchive,
-                                  String archive,
-                                  SortedMap<String, SortedSet<String>> map,
-                                  SortedSet<String> result)
+   private void resolveDependants(String scanArchive, String archive,
+                                  SortedMap<String, SortedSet<String>> map, SortedSet<String> result)
    {
       if (!archive.equals(scanArchive) && !result.contains(scanArchive))
       {

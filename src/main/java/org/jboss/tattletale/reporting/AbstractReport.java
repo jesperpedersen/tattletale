@@ -32,6 +32,7 @@ import java.util.SortedSet;
 
 /**
  * Represents a report
+ *
  * @author Jesper Pedersen <jesper.pedersen@jboss.org>
  * @author <a href="mailto:torben.jaeger@jit-consulting.de">Torben Jaeger</a>
  */
@@ -69,7 +70,8 @@ public abstract class AbstractReport implements Report
 
    /**
     * Constructor
-    * @param id The report id
+    *
+    * @param id       The report id
     * @param severity The severity
     */
    public AbstractReport(String id, int severity)
@@ -83,9 +85,10 @@ public abstract class AbstractReport implements Report
 
    /**
     * Constructor
-    * @param id The report id
-    * @param severity The severity
-    * @param name The name of the report
+    *
+    * @param id        The report id
+    * @param severity  The severity
+    * @param name      The name of the report
     * @param directory The name of the output directory
     */
    public AbstractReport(String id, int severity, String name, String directory)
@@ -97,6 +100,7 @@ public abstract class AbstractReport implements Report
 
    /**
     * Get the report id
+    *
     * @return The value
     */
    public String getId()
@@ -106,6 +110,7 @@ public abstract class AbstractReport implements Report
 
    /**
     * Get the severity
+    *
     * @return The value
     */
    public int getSeverity()
@@ -115,6 +120,7 @@ public abstract class AbstractReport implements Report
 
    /**
     * Get the status
+    *
     * @return The value
     */
    public int getStatus()
@@ -124,6 +130,7 @@ public abstract class AbstractReport implements Report
 
    /**
     * Get the name of the directory
+    *
     * @return The directory
     */
    public String getDirectory()
@@ -133,6 +140,7 @@ public abstract class AbstractReport implements Report
 
    /**
     * Get the name of the report
+    *
     * @return The name
     */
    public String getName()
@@ -142,6 +150,7 @@ public abstract class AbstractReport implements Report
 
    /**
     * Get the filter for the report
+    *
     * @return The filter
     */
    public String getFilter()
@@ -151,6 +160,7 @@ public abstract class AbstractReport implements Report
 
    /**
     * Set the filter for the report
+    *
     * @param filter The value
     */
    public void setFilter(String filter)
@@ -162,6 +172,7 @@ public abstract class AbstractReport implements Report
 
    /**
     * the output directory
+    *
     * @return a file handle to the output directory
     */
    File getOutputDir()
@@ -171,6 +182,7 @@ public abstract class AbstractReport implements Report
 
    /**
     * Return size of index.html file
+    *
     * @return size of index.html file in KB
     */
    String getIndexHtmlSize()
@@ -181,6 +193,7 @@ public abstract class AbstractReport implements Report
 
    /**
     * Generate the report(s)
+    *
     * @param outputDirectory The top-level output directory
     */
    public void generate(String outputDirectory)
@@ -210,6 +223,7 @@ public abstract class AbstractReport implements Report
 
    /**
     * create the output directory
+    *
     * @param outputDirectory the name of the directory
     */
    void createOutputDir(String outputDirectory)
@@ -220,6 +234,7 @@ public abstract class AbstractReport implements Report
 
    /**
     * get a default writer for writing to an index html file.
+    *
     * @return a buffered writer
     * @throws IOException if an error occurs
     */
@@ -230,6 +245,7 @@ public abstract class AbstractReport implements Report
 
    /**
     * get a writer.
+    *
     * @param filename the filename to use
     * @return a buffered writer
     * @throws IOException if an error occurs
@@ -242,17 +258,17 @@ public abstract class AbstractReport implements Report
 
    /**
     * Set the archives to be represented by this report
-    * 
-    * @param archives
-    *           The archives represented by this report
+    *
+    * @param archives The archives represented by this report
     */
    public void setArchives(SortedSet<Archive> archives)
    {
       this.archives = archives;
    }
-   
+
    /**
     * write the header of a html file.
+    *
     * @param bw the buffered writer
     * @throws IOException if an error occurs
     */
@@ -270,6 +286,7 @@ public abstract class AbstractReport implements Report
 
    /**
     * write out the header of the report's content
+    *
     * @param bw the writer to use
     * @throws IOException if an error occurs
     */
@@ -277,13 +294,15 @@ public abstract class AbstractReport implements Report
 
    /**
     * write out the report's content
+    *
     * @param bw the writer to use
-    * @exception IOException if an error occurs
+    * @throws IOException if an error occurs
     */
    protected abstract void writeHtmlBodyContent(BufferedWriter bw) throws IOException;
 
    /**
     * write out the footer of the report's content
+    *
     * @param bw the writer to use
     * @throws IOException if an error occurs
     */
@@ -292,14 +311,15 @@ public abstract class AbstractReport implements Report
       bw.write(Dump.newLine());
       bw.write("<p>" + Dump.newLine());
       bw.write("<hr>" + Dump.newLine());
-      bw.write("Generated by: <a href=\"http://www.jboss.org/projects/tattletale\">" + Version.FULL_VERSION + "</a>" +
-               Dump.newLine());
+      bw.write("Generated by: <a href=\"http://www.jboss.org/projects/tattletale\">" +
+               Version.FULL_VERSION + "</a>" + Dump.newLine());
       bw.write(Dump.newLine());
       bw.write("</body>" + Dump.newLine());
    }
 
    /**
     * write out the footer of the html page.
+    *
     * @param bw the writer to use
     * @throws IOException if an errror occurs
     */
@@ -310,6 +330,7 @@ public abstract class AbstractReport implements Report
 
    /**
     * Comparable
+    *
     * @param o The other object
     * @return The compareTo value
     */
@@ -333,6 +354,7 @@ public abstract class AbstractReport implements Report
 
    /**
     * Equals
+    *
     * @param obj The other object
     * @return True if equals; otherwise false
     */
@@ -343,13 +365,14 @@ public abstract class AbstractReport implements Report
          return false;
       }
 
-      AbstractReport r = (AbstractReport)obj;
+      AbstractReport r = (AbstractReport) obj;
 
       return getName().equals(r.getName());
    }
 
    /**
     * Hash code
+    *
     * @return The hash code
     */
    public int hashCode()
@@ -359,6 +382,7 @@ public abstract class AbstractReport implements Report
 
    /**
     * Create filter
+    *
     * @return The filter
     */
    protected Filter createFilter()
@@ -368,6 +392,7 @@ public abstract class AbstractReport implements Report
 
    /**
     * Is filtered
+    *
     * @return True if filtered; otherwise false
     */
    protected boolean isFiltered()
@@ -382,6 +407,7 @@ public abstract class AbstractReport implements Report
 
    /**
     * Is filtered
+    *
     * @param archive The archive
     * @return True if filtered; otherwise false
     */
@@ -397,8 +423,9 @@ public abstract class AbstractReport implements Report
 
    /**
     * Is filtered
+    *
     * @param archive The archive
-    * @param query The query
+    * @param query   The query
     * @return True if filtered; otherwise false
     */
    protected boolean isFiltered(String archive, String query)

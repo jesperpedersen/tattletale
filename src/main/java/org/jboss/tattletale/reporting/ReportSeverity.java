@@ -23,6 +23,7 @@ package org.jboss.tattletale.reporting;
 
 /**
  * Represents a report severity
+ *
  * @author Jesper Pedersen <jesper.pedersen@jboss.org>
  */
 public class ReportSeverity
@@ -38,14 +39,16 @@ public class ReportSeverity
 
    /**
     * Constructor
+    *
     * @param actions The actions
     */
    private ReportSeverity()
    {
    }
-   
+
    /**
     * Returns severity string
+    *
     * @param severity constant value
     * @return severity string
     */

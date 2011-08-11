@@ -32,6 +32,7 @@ import java.util.TreeSet;
 
 /**
  * Packages in multiple JAR files report
+ *
  * @author Jesper Pedersen <jesper.pedersen@jboss.org>
  * @author <a href="mailto:torben.jaeger@jit-consulting.de">Torben Jaeger</a>
  */
@@ -46,17 +47,16 @@ public class PackageMultipleJarsReport extends AbstractReport
    /** Globally provides */
    private SortedMap<String, SortedSet<String>> gProvides;
 
-   /**
-    * Constructor
-    */
+   /** Constructor */
    public PackageMultipleJarsReport()
    {
       super(DIRECTORY, ReportSeverity.WARNING, NAME, DIRECTORY);
    }
 
 
-   /**  Set the globally provides map to be used in generating this report
-    * 
+   /**
+    * Set the globally provides map to be used in generating this report
+    *
     * @param gProvides the map of global provides
     */
    public void setGlobalProvides(SortedMap<String, SortedSet<String>> gProvides)
@@ -66,6 +66,7 @@ public class PackageMultipleJarsReport extends AbstractReport
 
    /**
     * write the report's content
+    *
     * @param bw the BufferedWriter to use
     * @throws IOException if an error occurs
     */
@@ -83,8 +84,8 @@ public class PackageMultipleJarsReport extends AbstractReport
 
       for (Map.Entry<String, SortedSet<String>> entry : gProvides.entrySet())
       {
-         String clz = (String)((Map.Entry)entry).getKey();
-         SortedSet archives = (SortedSet)((Map.Entry)entry).getValue();
+         String clz = (String) ((Map.Entry) entry).getKey();
+         SortedSet archives = (SortedSet) ((Map.Entry) entry).getValue();
 
          String packageName = null;
 
@@ -112,8 +113,8 @@ public class PackageMultipleJarsReport extends AbstractReport
 
       for (Map.Entry<String, SortedSet<String>> entry : packageProvides.entrySet())
       {
-         String pkg = (String)((Map.Entry)entry).getKey();
-         SortedSet archives = (SortedSet)((Map.Entry)entry).getValue();
+         String pkg = (String) ((Map.Entry) entry).getKey();
+         SortedSet archives = (SortedSet) ((Map.Entry) entry).getValue();
 
          if (archives.size() > 1)
          {
@@ -144,7 +145,7 @@ public class PackageMultipleJarsReport extends AbstractReport
             Iterator sit = archives.iterator();
             while (sit.hasNext())
             {
-               String archive = (String)sit.next();
+               String archive = (String) sit.next();
                bw.write("<a href=\"../jar/" + archive + ".html\">" + archive + "</a>" + Dump.newLine());
 
                if (sit.hasNext())
@@ -177,6 +178,7 @@ public class PackageMultipleJarsReport extends AbstractReport
 
    /**
     * Create filter
+    *
     * @return The filter
     */
    @Override

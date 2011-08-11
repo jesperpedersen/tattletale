@@ -33,7 +33,7 @@ import org.apache.tools.ant.BuildException;
  */
 public class ReportTask extends AbstractReportTask
 {
-   /** Class loader structure  */
+   /** Class loader structure */
    private String classloaderStructure;
 
    /** Profiles */
@@ -60,9 +60,7 @@ public class ReportTask extends AbstractReportTask
    /** Scan */
    private String scan;
 
-   /**
-    * Constructor
-    */
+   /** Constructor */
    public ReportTask()
    {
       this.classloaderStructure = null;
@@ -78,78 +76,87 @@ public class ReportTask extends AbstractReportTask
 
    /**
     * Get the class loader structure
+    *
     * @return The value
     */
-   public String getClassloader() 
+   public String getClassloader()
    {
       return classloaderStructure;
    }
 
    /**
     * Set the class loader structure
+    *
     * @param cls The value
     */
-   public void setClassloader(String cls) 
+   public void setClassloader(String cls)
    {
       this.classloaderStructure = cls;
    }
 
    /**
     * Get the profiles
+    *
     * @return The value
     */
-   public String getProfiles() 
+   public String getProfiles()
    {
       return profiles;
    }
 
    /**
     * Set the profiles
+    *
     * @param profiles The value
     */
-   public void setProfiles(String profiles) 
+   public void setProfiles(String profiles)
    {
       this.profiles = profiles;
    }
 
    /**
     * Get the excludes
+    *
     * @return The value
     */
-   public String getExcludes() 
+   public String getExcludes()
    {
       return excludes;
    }
 
    /**
     * Set the excludes
+    *
     * @param excludes The value
     */
-   public void setExcludes(String excludes) 
+   public void setExcludes(String excludes)
    {
       this.excludes = excludes;
    }
 
    /**
     * Get the blacklisted
+    *
     * @return The value
     */
-   public String getBlacklisted() 
+   public String getBlacklisted()
    {
       return blacklisted;
    }
 
    /**
     * Set the blacklisted
+    *
     * @param blacklisted The value
     */
-   public void setBlacklisted(String blacklisted) 
+   public void setBlacklisted(String blacklisted)
    {
       this.blacklisted = blacklisted;
    }
 
    /**
     * Get fail on info
+    *
     * @return The value
     */
    public boolean getFailOnInfo()
@@ -159,6 +166,7 @@ public class ReportTask extends AbstractReportTask
 
    /**
     * Set fail on info
+    *
     * @param b The value
     */
    public void setFailOnInfo(boolean b)
@@ -168,6 +176,7 @@ public class ReportTask extends AbstractReportTask
 
    /**
     * Get fail on warn
+    *
     * @return The value
     */
    public boolean getFailOnWarn()
@@ -177,6 +186,7 @@ public class ReportTask extends AbstractReportTask
 
    /**
     * Set fail on warn
+    *
     * @param b The value
     */
    public void setFailOnWarn(boolean b)
@@ -186,6 +196,7 @@ public class ReportTask extends AbstractReportTask
 
    /**
     * Get fail on error
+    *
     * @return The value
     */
    public boolean getFailOnError()
@@ -195,6 +206,7 @@ public class ReportTask extends AbstractReportTask
 
    /**
     * Set fail on error
+    *
     * @param b The value
     */
    public void setFailOnError(boolean b)
@@ -204,48 +216,53 @@ public class ReportTask extends AbstractReportTask
 
    /**
     * Get the reports
+    *
     * @return The value
     */
-   public String getReports() 
+   public String getReports()
    {
       return reports;
    }
 
    /**
     * Set the reports
+    *
     * @param reports The value
     */
-   public void setReports(String reports) 
+   public void setReports(String reports)
    {
       this.reports = reports;
    }
 
    /**
     * Get the scan
+    *
     * @return The value
     */
-   public String getScan() 
+   public String getScan()
    {
       return scan;
    }
 
    /**
     * Set the scan
+    *
     * @param scan The value
     */
-   public void setScan(String scan) 
+   public void setScan(String scan)
    {
       this.scan = scan;
    }
 
    /**
     * Execute
-    * @exception BuildException If the build fails
+    *
+    * @throws BuildException If the build fails
     */
    @Override
-   public void execute() throws BuildException 
+   public void execute() throws BuildException
    {
-      try 
+      try
       {
          Main main = new Main();
 
@@ -267,7 +284,7 @@ public class ReportTask extends AbstractReportTask
 
          main.execute();
       }
-      catch (Throwable t) 
+      catch (Throwable t)
       {
          throw new BuildException(t.getMessage(), t);
       }

@@ -27,35 +27,32 @@ import java.util.SortedSet;
 
 /**
  * JAR Archive
+ *
  * @author Jesper Pedersen <jesper.pedersen@jboss.org>
  */
 public class JarArchive extends Archive
 {
    /**
     * Constructor
-    * @param name The name
-    * @param version The version number
-    * @param manifest The manifest
-    * @param sign The signing information
-    * @param requires The requires
-    * @param provides The provides
-    * @param classDependencies The class dependencies
-    * @param packageDependencies The package dependencies
+    *
+    * @param name                    The name
+    * @param version                 The version number
+    * @param manifest                The manifest
+    * @param sign                    The signing information
+    * @param requires                The requires
+    * @param provides                The provides
+    * @param classDependencies       The class dependencies
+    * @param packageDependencies     The package dependencies
     * @param blacklistedDependencies The blacklisted dependencies
-    * @param location The location
+    * @param location                The location
     */
-   public JarArchive(String name, 
-                     int version,
-                     List<String> manifest, 
-                     List<String> sign, 
-                     SortedSet<String> requires, 
-                     SortedMap<String, Long> provides, 
+   public JarArchive(String name, int version, List<String> manifest, List<String> sign, SortedSet<String> requires,
+                     SortedMap<String, Long> provides,
                      SortedMap<String, SortedSet<String>> classDependencies,
                      SortedMap<String, SortedSet<String>> packageDependencies,
-                     SortedMap<String, SortedSet<String>> blacklistedDependencies,
-                     Location location)
+                     SortedMap<String, SortedSet<String>> blacklistedDependencies, Location location)
    {
-      super(ArchiveTypes.JAR, name, version, manifest, sign, requires, provides, 
-            classDependencies, packageDependencies, blacklistedDependencies, location);
+      super(ArchiveTypes.JAR, name, version, manifest, sign, requires, provides, classDependencies,
+            packageDependencies, blacklistedDependencies, location);
    }
 }

@@ -28,6 +28,7 @@ import java.util.List;
 
 /**
  * Abstract base class for all CLS based reports.
+ *
  * @author <a href="mailto:torben.jaeger@jit-consulting.de">Torben Jaeger</a>
  */
 public abstract class CLSReport extends AbstractReport
@@ -40,21 +41,20 @@ public abstract class CLSReport extends AbstractReport
 
    /**
     * Constructor
-    * @param id The report id
-    * @param severity The severity
-    * @param name The name of the report
+    *
+    * @param id        The report id
+    * @param severity  The severity
+    * @param name      The name of the report
     * @param directory The name of the output directory
     */
-   public CLSReport(String id,
-                    int severity,
-                    String name,
-                    String directory)
+   public CLSReport(String id, int severity, String name, String directory)
    {
       super(id, severity, name, directory);
    }
 
    /**
     * get the ClassLoaderStructure
+    *
     * @return the ClassLoaderStructure
     * @see org.jboss.tattletale.reporting.classloader.ClassLoaderStructure
     */
@@ -65,21 +65,22 @@ public abstract class CLSReport extends AbstractReport
 
    /**
     * Set the ClassLoader Structure
-    * @param classloaderStructure  The Classloader Structure to be used in generating this report
+    *
+    * @param classloaderStructure The Classloader Structure to be used in generating this report
     */
    public void setCLS(String classloaderStructure)
    {
       try
       {
          Class c = Thread.currentThread().getContextClassLoader().loadClass(classloaderStructure);
-         cls = (ClassLoaderStructure)c.newInstance();
+         cls = (ClassLoaderStructure) c.newInstance();
       }
       catch (Exception e)
       {
          try
          {
             Class c = CLSReport.class.getClassLoader().loadClass(classloaderStructure);
-            cls = (ClassLoaderStructure)c.newInstance();
+            cls = (ClassLoaderStructure) c.newInstance();
          }
          catch (Exception ntd)
          {
@@ -90,6 +91,7 @@ public abstract class CLSReport extends AbstractReport
 
    /**
     * Set the known archives
+    *
     * @param known The list of known archives
     */
    public void setKnown(List<Archive> known)
@@ -99,6 +101,7 @@ public abstract class CLSReport extends AbstractReport
 
    /**
     * Get the known archives
+    *
     * @return The list of known archives
     */
    public List<Archive> getKnown()

@@ -30,6 +30,7 @@ import java.util.TreeSet;
 
 /**
  * Represents a key/value filter
+ *
  * @author Jesper Pedersen <jesper.pedersen@jboss.org>
  */
 public class KeyValueFilter implements Filter
@@ -37,9 +38,7 @@ public class KeyValueFilter implements Filter
    /** KeyValue Filters */
    private Map<String, SortedSet<String>> keyValueFilters;
 
-   /**
-    * Constructor
-    */
+   /** Constructor */
    public KeyValueFilter()
    {
       keyValueFilters = new HashMap<String, SortedSet<String>>();
@@ -47,6 +46,7 @@ public class KeyValueFilter implements Filter
 
    /**
     * Is filtered
+    *
     * @return True if filtered; otherwise false
     */
    public boolean isFiltered()
@@ -56,6 +56,7 @@ public class KeyValueFilter implements Filter
 
    /**
     * Is filtered
+    *
     * @param archive The archive
     * @return True if filtered; otherwise false
     */
@@ -66,8 +67,9 @@ public class KeyValueFilter implements Filter
 
    /**
     * Is filtered
+    *
     * @param archive The archive
-    * @param query The query
+    * @param query   The query
     * @return True if filtered; otherwise false
     */
    public boolean isFiltered(String archive, String query)
@@ -90,7 +92,7 @@ public class KeyValueFilter implements Filter
          {
             query = query.substring(0, query.indexOf(".*"));
          }
-            
+
          query = query.replace('.', '/');
 
          Iterator<String> it = ss.iterator();
@@ -99,7 +101,9 @@ public class KeyValueFilter implements Filter
             String v = it.next();
 
             if (query.startsWith(v))
+            {
                return true;
+            }
          }
       }
 
@@ -108,6 +112,7 @@ public class KeyValueFilter implements Filter
 
    /**
     * Init the filter
+    *
     * @param filter The filter value
     */
    public void init(String filter)
@@ -152,7 +157,9 @@ public class KeyValueFilter implements Filter
                value = value.replace('.', '/');
 
                if (includeAll)
+               {
                   value = value + '/';
+               }
 
                v.add(value);
             }

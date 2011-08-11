@@ -28,6 +28,7 @@ import java.io.IOException;
 
 /**
  * Signing information report
+ *
  * @author Jesper Pedersen <jesper.pedersen@jboss.org>
  * @author <a href="mailto:torben.jaeger@jit-consulting.de">Torben Jaeger</a>
  */
@@ -39,9 +40,7 @@ public class SignReport extends AbstractReport
    /** DIRECTORY */
    private static final String DIRECTORY = "sign";
 
-   /**
-    * Constructor
-    */
+   /** Constructor */
    public SignReport()
    {
       super(DIRECTORY, ReportSeverity.INFO, NAME, DIRECTORY);
@@ -49,8 +48,9 @@ public class SignReport extends AbstractReport
 
    /**
     * write out the report's content
+    *
     * @param bw the writer to use
-    * @exception IOException if an error occurs
+    * @throws IOException if an error occurs
     */
    protected void writeHtmlBodyContent(BufferedWriter bw) throws IOException
    {
@@ -77,8 +77,8 @@ public class SignReport extends AbstractReport
          {
             bw.write("  <tr class=\"roweven\">" + Dump.newLine());
          }
-         bw.write("     <td><a href=\"../jar/" + archive.getName() + ".html\">" + archive.getName() + "</a></td>" +
-                  Dump.newLine());
+         bw.write("     <td><a href=\"../jar/" + archive.getName() +
+                  ".html\">" + archive.getName() + "</a></td>" + Dump.newLine());
          if (archive.getSign() != null)
          {
             bw.write("     <td style=\"color: red;\">Signed</td>" + Dump.newLine());
@@ -98,7 +98,9 @@ public class SignReport extends AbstractReport
 
       boolean filtered = isFiltered();
       if (signed > 0 && unsigned > 0 && !filtered)
+      {
          status = ReportStatus.YELLOW;
+      }
 
       bw.write(Dump.newLine());
       bw.write("<p>" + Dump.newLine());
@@ -118,8 +120,7 @@ public class SignReport extends AbstractReport
       }
       else
       {
-         bw.write("     <td style=\"color: red; text-decoration: line-through;\">" + signed + "</td>" + 
-                  Dump.newLine());
+         bw.write("     <td style=\"color: red; text-decoration: line-through;\">" + signed + "</td>" + Dump.newLine());
       }
       bw.write("  </tr>" + Dump.newLine());
 
@@ -131,8 +132,8 @@ public class SignReport extends AbstractReport
       }
       else
       {
-         bw.write("     <td style=\"color: green; text-decoration: line-through;\">" + unsigned + "</td>" +
-                  Dump.newLine());
+         bw.write("     <td style=\"color: green; text-decoration: line-through;\">"
+                  + unsigned + "</td>" + Dump.newLine());
       }
       bw.write("  </tr>" + Dump.newLine());
 
@@ -141,6 +142,7 @@ public class SignReport extends AbstractReport
 
    /**
     * write out the header of the report's content
+    *
     * @param bw the writer to use
     * @throws IOException if an errror occurs
     */
@@ -157,6 +159,7 @@ public class SignReport extends AbstractReport
 
    /**
     * Create filter
+    *
     * @return The filter
     */
    @Override

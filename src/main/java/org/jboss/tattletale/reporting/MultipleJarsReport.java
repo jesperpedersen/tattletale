@@ -30,6 +30,7 @@ import java.util.SortedSet;
 
 /**
  * Multiple jars report
+ *
  * @author Jesper Pedersen <jesper.pedersen@jboss.org>
  * @author <a href="mailto:torben.jaeger@jit-consulting.de">Torben Jaeger</a>
  */
@@ -44,28 +45,28 @@ public class MultipleJarsReport extends AbstractReport
    /** Globally provides */
    private SortedMap<String, SortedSet<String>> gProvides;
 
-   /**
-    * Constructor
-    */
+   /** Constructor */
    public MultipleJarsReport()
    {
       super(DIRECTORY, ReportSeverity.WARNING, NAME, DIRECTORY);
    }
 
-   /**  Set the globally provides map to be used in generating this report
-    * 
+   /**
+    * Set the globally provides map to be used in generating this report
+    *
     * @param gProvides the map of global provides
     */
    public void setGlobalProvides(SortedMap<String, SortedSet<String>> gProvides)
    {
       this.gProvides = gProvides;
    }
-   
-   
+
+
    /**
     * write out the report's content
+    *
     * @param bw the writer to use
-    * @exception IOException if an error occurs
+    * @throws IOException if an error occurs
     */
    protected void writeHtmlBodyContent(BufferedWriter bw) throws IOException
    {
@@ -88,7 +89,9 @@ public class MultipleJarsReport extends AbstractReport
          {
             boolean filtered = isFiltered(clz);
             if (!filtered)
+            {
                status = ReportStatus.RED;
+            }
 
             if (odd)
             {
@@ -111,7 +114,7 @@ public class MultipleJarsReport extends AbstractReport
             Iterator sit = archives.iterator();
             while (sit.hasNext())
             {
-               String archive = (String)sit.next();
+               String archive = (String) sit.next();
                bw.write("<a href=\"../jar/" + archive + ".html\">" + archive + "</a>" + Dump.newLine());
 
                if (sit.hasNext())
@@ -132,6 +135,7 @@ public class MultipleJarsReport extends AbstractReport
 
    /**
     * write out the header of the report's content
+    *
     * @param bw the writer to use
     * @throws IOException if an errror occurs
     */
@@ -148,6 +152,7 @@ public class MultipleJarsReport extends AbstractReport
 
    /**
     * Create filter
+    *
     * @return The filter
     */
    @Override

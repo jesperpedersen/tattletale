@@ -29,7 +29,7 @@ import javassist.bytecode.ClassFile;
 
 /**
  * Sun: Java 5
- * 
+ *
  * @author Jesper Pedersen <jesper.pedersen@jboss.org>
  */
 public class SunJava5 extends CommonProfile
@@ -42,13 +42,10 @@ public class SunJava5 extends CommonProfile
    private static final int ARCHIVE_TYPE = ArchiveTypes.JAR;
    private static final int CLASSFILE_VERSION = ClassFile.JAVA_5;
 
-   /**
-    * Constructor
-    */
+   /** Constructor */
    public SunJava5()
    {
-      super(CLASS_SET, ARCHIVE_TYPE, PROFILE_NAME, CLASSFILE_VERSION,
-            PROFILE_LOCATION);
+      super(CLASS_SET, ARCHIVE_TYPE, PROFILE_NAME, CLASSFILE_VERSION, PROFILE_LOCATION);
 
       addSubArchive(new SunJava5JCE());
       addSubArchive(new SunJava5JSSE());
@@ -69,10 +66,7 @@ public class SunJava5 extends CommonProfile
    @Override
    public boolean included(boolean allProfiles, Set<String> profileSet)
    {
-      return allProfiles
-            || profileSet == null
-            || profileSet.isEmpty()
-            && (profileSet.contains(getProfileCode()) || profileSet
-                  .contains(getProfileName()));
+      return allProfiles || profileSet == null || profileSet.isEmpty() && (profileSet.contains(getProfileCode())
+            || profileSet.contains(getProfileName()));
    }
 }

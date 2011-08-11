@@ -36,6 +36,7 @@ import java.util.TreeSet;
 
 /**
  * Class level Dependants report
+ *
  * @author Jesper Pedersen <jesper.pedersen@jboss.org>
  */
 public class ClassDependantsReport extends CLSReport
@@ -47,9 +48,7 @@ public class ClassDependantsReport extends CLSReport
    private static final String DIRECTORY = "classdependants";
 
 
-   /**
-    * Constructor
-    */
+   /** Constructor */
    public ClassDependantsReport()
    {
       super(DIRECTORY, ReportSeverity.INFO, NAME, DIRECTORY);
@@ -58,8 +57,9 @@ public class ClassDependantsReport extends CLSReport
 
    /**
     * write out the report's content
+    *
     * @param bw the writer to use
-    * @exception IOException if an error occurs
+    * @throws IOException if an error occurs
     */
    protected void writeHtmlBodyContent(BufferedWriter bw) throws IOException
    {
@@ -90,7 +90,7 @@ public class ClassDependantsReport extends CLSReport
                while (sit.hasNext())
                {
                   String dep = sit.next();
-                  
+
                   if (!dep.equals(clz))
                   {
                      boolean include = true;
@@ -101,18 +101,22 @@ public class ClassDependantsReport extends CLSReport
                         Archive a = kit.next();
 
                         if (a.doesProvide(dep))
+                        {
                            include = false;
+                        }
                      }
-                  
+
                      if (include)
                      {
                         SortedSet<String> deps = result.get(dep);
 
                         if (deps == null)
+                        {
                            deps = new TreeSet<String>();
+                        }
 
                         deps.add(clz);
-                        
+
                         result.put(dep, deps);
                      }
                   }
@@ -149,12 +153,14 @@ public class ClassDependantsReport extends CLSReport
                bw.write(dep);
 
                if (sit.hasNext())
+               {
                   bw.write(", ");
+               }
             }
 
             bw.write("</td>" + Dump.newLine());
             bw.write("  </tr>" + Dump.newLine());
-            
+
             odd = !odd;
          }
       }
@@ -164,6 +170,7 @@ public class ClassDependantsReport extends CLSReport
 
    /**
     * write out the header of the report's content
+    *
     * @param bw the writer to use
     * @throws IOException if an errror occurs
     */

@@ -36,6 +36,7 @@ import java.util.TreeSet;
 
 /**
  * Class level Depends On report
+ *
  * @author Jesper Pedersen <jesper.pedersen@jboss.org>
  */
 public class ClassDependsOnReport extends CLSReport
@@ -47,9 +48,7 @@ public class ClassDependsOnReport extends CLSReport
    private static final String DIRECTORY = "classdependson";
 
 
-   /**
-    * Constructor
-    */
+   /** Constructor */
    public ClassDependsOnReport()
    {
       super(DIRECTORY, ReportSeverity.INFO, NAME, DIRECTORY);
@@ -58,8 +57,9 @@ public class ClassDependsOnReport extends CLSReport
 
    /**
     * write out the report's content
+    *
     * @param bw the writer to use
-    * @exception IOException if an error occurs
+    * @throws IOException if an error occurs
     */
    protected void writeHtmlBodyContent(BufferedWriter bw) throws IOException
    {
@@ -87,11 +87,13 @@ public class ClassDependsOnReport extends CLSReport
                SortedSet<String> deps = entry.getValue();
 
                SortedSet<String> newDeps = new TreeSet<String>();
-               
+
                for (String dep : deps)
                {
                   if (!dep.equals(clz))
+                  {
                      newDeps.add(dep);
+                  }
                }
 
                result.put(clz, newDeps);
@@ -125,12 +127,14 @@ public class ClassDependsOnReport extends CLSReport
             bw.write(dep);
 
             if (sit.hasNext())
+            {
                bw.write(", ");
+            }
          }
 
          bw.write("</td>" + Dump.newLine());
          bw.write("  </tr>" + Dump.newLine());
-         
+
          odd = !odd;
       }
 
@@ -139,6 +143,7 @@ public class ClassDependsOnReport extends CLSReport
 
    /**
     * write out the header of the report's content
+    *
     * @param bw the writer to use
     * @throws IOException if an error occurs
     */

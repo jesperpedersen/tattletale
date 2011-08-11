@@ -33,30 +33,20 @@ import org.apache.maven.plugin.MojoFailureException;
  * @author Jesper Pedersen <jesper.pedersen@jboss.org>
  */
 public abstract class TattletaleMojo extends AbstractMojo
-{   
-   /**
-    * Source directory
-    */
+{
+   /** Source directory */
    private File source;
-   
-   /**
-    * Destination directory
-    */
+
+   /** Destination directory */
    private File destination;
-   
-   /**
-    * Configuration
-    */
+
+   /** Configuration */
    private File configuration;
-      
-   /**
-    * Filter
-    */
+
+   /** Filter */
    private File filter;
-      
-   /**
-    * Constructor
-    */
+
+   /** Constructor */
    public TattletaleMojo()
    {
       source = new File(".");
@@ -67,80 +57,89 @@ public abstract class TattletaleMojo extends AbstractMojo
 
    /**
     * Get the source
+    *
     * @return The value
     */
-   public File getSource() 
+   public File getSource()
    {
       return source;
    }
 
    /**
-    * Set the source 
+    * Set the source
+    *
     * @param source The value
     */
-   public void setSource(File source) 
+   public void setSource(File source)
    {
       this.source = source;
    }
 
    /**
     * Get the destination
+    *
     * @return The value
     */
-   public File getDestination() 
+   public File getDestination()
    {
       return destination;
    }
 
    /**
     * Set the destination
+    *
     * @param destination The value
     */
-   public void setDestination(File destination) 
+   public void setDestination(File destination)
    {
       this.destination = destination;
    }
 
    /**
     * Get the configuration
+    *
     * @return The value
     */
-   public File getConfiguration() 
+   public File getConfiguration()
    {
       return configuration;
    }
 
    /**
     * Set the configuration
+    *
     * @param configuration The value
     */
-   public void setConfiguration(File configuration) 
+   public void setConfiguration(File configuration)
    {
       this.configuration = configuration;
    }
 
    /**
     * Get the filter
+    *
     * @return The value
     */
-   public File getFilter() 
+   public File getFilter()
    {
       return filter;
    }
 
    /**
     * Set the filter
+    *
     * @param filter The value
     */
-   public void setFilter(File filter) 
+   public void setFilter(File filter)
    {
       this.filter = filter;
    }
 
    /**
     * Execute
-    * @exception MojoExecutionException Thrown if the plugin cant be executed
-    * @exception MojoFailureException Thrown if there is an error
+    *
+    * @throws MojoExecutionException Thrown if the plugin cant be executed
+    * @throws MojoFailureException   Thrown if there is an error
     */
    public abstract void execute() throws MojoExecutionException, MojoFailureException;
 }
