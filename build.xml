@@ -37,6 +37,9 @@
     <property name="tattletale-maven.jar" value="tattletale-maven.jar"/>
     <property name="tattletale-maven-sources.jar" value="tattletale-maven-sources.jar"/>
     <property name="tattletale-maven-javadoc.jar" value="tattletale-maven-javadoc.jar"/>
+    <property name="tattletale-tools.jar" value="tattletale-tools.jar"/>
+    <property name="tattletale-tools-sources.jar" value="tattletale-tools-sources.jar"/>
+    <property name="tattletale-tools-javadoc.jar" value="tattletale-tools-javadoc.jar"/>
 
     <!-- ================================= 
          Repositories              
@@ -205,7 +208,7 @@
              basedir="${build.dir}"
              manifest="${etc.dir}/core-manifest.mf"
              includes="org/jboss/tattletale/**,**/*.properties,**/*.clz,**/*.clz.gz,**/*.css"
-             excludes="**/ant/**,**/maven/**,**/*.java"/>
+             excludes="**/ant/**,**/maven/**,**/tools/**,**/*.java"/>
 
         <jar destfile="${dist.dir}/${tattletale-ant.jar}"
              basedir="${build.dir}"
@@ -217,6 +220,13 @@
              basedir="${build.dir}"
              manifest="${etc.dir}/maven-manifest.mf"
              includes="org/jboss/tattletale/maven/**,META-INF/**"
+             excludes="**/*.java">
+        </jar>
+
+        <jar destfile="${dist.dir}/${tattletale-tools.jar}"
+             basedir="${build.dir}"
+             manifest="${etc.dir}/tools-manifest.mf"
+             includes="org/jboss/tattletale/tools/**,META-INF/**"
              excludes="**/*.java">
         </jar>
     </target>

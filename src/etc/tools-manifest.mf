@@ -1,0 +1,5 @@
+Manifest-Version: 1.0
+Implementation-Title: JBoss Tattletale Tools
+Implementation-Vendor: Red Hat Middleware LLC
+Implementation-Vendor-Id: org.jboss
+Implementation-Version: 1.0
