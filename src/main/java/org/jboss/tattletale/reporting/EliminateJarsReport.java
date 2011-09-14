@@ -22,11 +22,12 @@
 package org.jboss.tattletale.reporting;
 
 import org.jboss.tattletale.core.Archive;
-import org.jboss.tattletale.core.ArchiveTypes;
 import org.jboss.tattletale.core.Location;
+import org.jboss.tattletale.core.NestableArchive;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.SortedSet;
 
@@ -65,12 +66,23 @@ public class EliminateJarsReport extends AbstractReport
       bw.write("     <th>Location</th>" + Dump.newLine());
       bw.write("  </tr>" + Dump.newLine());
 
+      recursivelyWriteContent(bw, archives);
+
+      bw.write("</table>" + Dump.newLine());
+   }
+
+   private void recursivelyWriteContent(BufferedWriter bw, Collection<Archive> archives) throws IOException
+   {
       boolean odd = true;
 
       for (Archive archive : archives)
       {
-
-         if (archive.getType() == ArchiveTypes.JAR)
+         if (archive instanceof NestableArchive)
+         {
+            NestableArchive nestableArchive = (NestableArchive) archive;
+            recursivelyWriteContent(bw, nestableArchive.getSubArchives());
+         }
+         else
          {
             SortedSet<Location> locations = archive.getLocations();
             Iterator<Location> lit = locations.iterator();
@@ -156,9 +168,7 @@ public class EliminateJarsReport extends AbstractReport
          }
       }
 
-      bw.write("</table>" + Dump.newLine());
    }
-
    /**
     * write out the header of the report's content
     *

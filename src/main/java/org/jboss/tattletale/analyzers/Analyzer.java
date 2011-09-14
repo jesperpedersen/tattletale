@@ -22,43 +22,40 @@
 
 package org.jboss.tattletale.analyzers;
 
-import org.jboss.tattletale.core.Archive;
-
 import java.io.File;
-import java.io.IOException;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.SortedSet;
 
 /**
- * Interface that will be used on the top level in order to scan different archive types (.jar, .war, .ear etc).
- * @author Jesper Pedersen <jesper.pedersen@jboss.org>
+ * Class used to figure out if a given file would be a .jar, .war and then return the appropriate implementation of
+ * {@link ArchiveScanner}
+ *
  * @author Navin Surtani
  * */
-public interface ArchiveScanner
+public class Analyzer
 {
    /**
-    * Scan an archive
-    *
-    * @param file -  The file to be scanned.
-    * @return The archive
-    *
-    * @throws IOException - If there is an error with the input streams.
+    * Returns the appropriate scanner implementation based on the type of file that is passed as a parameter.
+    * @param file - the .jar, .war file etc.
+    * @return the implementation of {@link ArchiveScanner}
     */
-   public Archive scan(File file) throws IOException;
-
-   /**
-    * Scan an archive
-    * @param file        The File to be scanned
-    * @param gProvides   The global provides map
-    * @param known       The set of known archives
-    * @param blacklisted The set of black listed packages
-    * @throws IOException - If there is an error with the input streams.
-    * @return The archive
-    */
-
-   public Archive scan(File file, Map<String, SortedSet<String>> gProvides,
-                              List<Archive> known, Set<String> blacklisted) throws IOException;
+   public ArchiveScanner getScanner(File file)
+   {
+      String fileName = file.getName();
+      if (fileName.contains(".jar"))
+      {
+         return new JarScanner();
+      }
+      else if (fileName.contains(".war"))
+      {
+         return new WarScanner();
+      }
+      else if (fileName.contains(".ear"))
+      {
+         return new EarScanner();
+      }
+      else
+      {
+         throw new IllegalArgumentException("The file parameter passed does not have the correct file extension.");
+      }
+   }
 
 }

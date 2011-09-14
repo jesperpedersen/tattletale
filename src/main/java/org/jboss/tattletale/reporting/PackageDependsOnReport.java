@@ -23,10 +23,11 @@
 package org.jboss.tattletale.reporting;
 
 import org.jboss.tattletale.core.Archive;
-import org.jboss.tattletale.core.ArchiveTypes;
+import org.jboss.tattletale.core.NestableArchive;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.SortedMap;
@@ -91,35 +92,9 @@ public class PackageDependsOnReport extends CLSReport
       bw.write("     <th>Depends On</th>" + Dump.newLine());
       bw.write("  </tr>" + Dump.newLine());
 
-      SortedMap<String, SortedSet<String>> result = new TreeMap<String, SortedSet<String>>();
+      SortedMap<String, SortedSet<String>> result = recursivelyBuildResultFromArchive(archives);
       boolean odd = true;
 
-      for (Archive archive : archives)
-      {
-         if (archive.getType() == ArchiveTypes.JAR)
-         {
-            SortedMap<String, SortedSet<String>> packageDependencies = archive.getPackageDependencies();
-            Iterator<Map.Entry<String, SortedSet<String>>> dit = packageDependencies.entrySet().iterator();
-            while (dit.hasNext())
-            {
-               Map.Entry<String, SortedSet<String>> entry = dit.next();
-               String pack = entry.getKey();
-               SortedSet<String> packDeps = entry.getValue();
-
-               SortedSet<String> newDeps = new TreeSet<String>();
-
-               for (String dep : packDeps)
-               {
-                  if (!dep.equals(pack))
-                     newDeps.add(dep);
-               }
-
-               result.put(pack, newDeps);
-            }
-
-
-         }
-      }
       Iterator<Map.Entry<String, SortedSet<String>>> rit = result.entrySet().iterator();
 
       while (rit.hasNext())
@@ -157,5 +132,42 @@ public class PackageDependsOnReport extends CLSReport
 
       bw.write("</table>" + Dump.newLine());
 
+   }
+
+   private SortedMap<String, SortedSet<String>> recursivelyBuildResultFromArchive(Collection<Archive> archives)
+   {
+      SortedMap<String, SortedSet<String>> result = new TreeMap<String, SortedSet<String>>();
+      for (Archive archive : archives)
+      {
+         if (archive instanceof NestableArchive)
+         {
+            NestableArchive nestableArchive = (NestableArchive) archive;
+            SortedMap<String, SortedSet<String>> subResult = recursivelyBuildResultFromArchive(nestableArchive
+                  .getSubArchives());
+            result.putAll(subResult);
+         }
+         else
+         {
+            SortedMap<String, SortedSet<String>> packageDependencies = archive.getPackageDependencies();
+            Iterator<Map.Entry<String, SortedSet<String>>> dit = packageDependencies.entrySet().iterator();
+            while (dit.hasNext())
+            {
+               Map.Entry<String, SortedSet<String>> entry = dit.next();
+               String pack = entry.getKey();
+               SortedSet<String> packDeps = entry.getValue();
+
+               SortedSet<String> newDeps = new TreeSet<String>();
+
+               for (String dep : packDeps)
+               {
+                  if (!dep.equals(pack))
+                     newDeps.add(dep);
+               }
+
+               result.put(pack, newDeps);
+            }
+         }
+      }
+      return result;
    }
 }

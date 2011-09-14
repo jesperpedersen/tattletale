@@ -45,6 +45,7 @@ public class DirectoryScanner
    static
    {
       archives.add(".jar");
+      archives.add(".war");
    }
 
    /** Constructor */
@@ -80,6 +81,7 @@ public class DirectoryScanner
       if (archives.isEmpty())
       {
          archives.add(".jar");
+         archives.add(".war");
       }
    }
 
@@ -100,13 +102,14 @@ public class DirectoryScanner
     *
     * @param file     The root directory
     * @param excludes The set of excludes
-    * @return The list of JAR files
+    * @return The list of files
     */
    public static List<File> scan(File file, Set<String> excludes)
    {
       try
       {
          return getFileListing(file, excludes);
+
       }
       catch (Exception e)
       {
@@ -123,6 +126,8 @@ public class DirectoryScanner
     *
     * @param aStartingDir is a valid directory, which can be read.
     * @param excludes     The set of excludes
+    * @return - the list of the files without the specific exclusions
+    * @throws Exception
     */
    private static List<File> getFileListing(File aStartingDir, Set<String> excludes) throws Exception
    {

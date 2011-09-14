@@ -22,11 +22,12 @@
 package org.jboss.tattletale.reporting;
 
 import org.jboss.tattletale.core.Archive;
-import org.jboss.tattletale.core.ArchiveTypes;
 import org.jboss.tattletale.core.Location;
+import org.jboss.tattletale.core.NestableArchive;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
+import java.util.Collection;
 import java.util.Iterator;
 
 /**
@@ -63,12 +64,22 @@ public class MultipleLocationsReport extends AbstractReport
       bw.write("     <th>Name</th>" + Dump.newLine());
       bw.write("     <th>Location</th>" + Dump.newLine());
       bw.write("  </tr>" + Dump.newLine());
+      recursivelyWriteContent(bw, archives);
+      bw.write("</table>" + Dump.newLine());
+   }
 
+   private void recursivelyWriteContent(BufferedWriter bw, Collection<Archive> archives) throws IOException
+   {
       boolean odd = true;
 
       for (Archive a : archives)
       {
-         if (a.getType() == ArchiveTypes.JAR && a.getLocations().size() > 1)
+         if (a instanceof NestableArchive)
+         {
+            NestableArchive nestableArchive = (NestableArchive) a;
+            recursivelyWriteContent(bw, nestableArchive.getSubArchives());
+         }
+         else if (a.getLocations().size() > 1)
          {
             boolean filtered = isFiltered(a.getName());
 
@@ -115,7 +126,6 @@ public class MultipleLocationsReport extends AbstractReport
          }
       }
 
-      bw.write("</table>" + Dump.newLine());
    }
 
    /**

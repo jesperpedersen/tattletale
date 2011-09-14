@@ -23,9 +23,11 @@ package org.jboss.tattletale.reporting;
 
 import org.jboss.tattletale.core.Archive;
 import org.jboss.tattletale.core.ArchiveTypes;
+import org.jboss.tattletale.core.NestableArchive;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.SortedMap;
@@ -68,62 +70,7 @@ public class TransitiveDependsOnReport extends CLSReport
       bw.write("     <th>Depends On</th>" + Dump.newLine());
       bw.write("  </tr>" + Dump.newLine());
 
-      SortedMap<String, SortedSet<String>> dependsOnMap = new TreeMap<String, SortedSet<String>>();
-
-      for (Archive archive : archives)
-      {
-
-         if (archive.getType() == ArchiveTypes.JAR)
-         {
-            SortedSet<String> result = dependsOnMap.get(archive.getName());
-            if (result == null)
-            {
-               result = new TreeSet<String>();
-            }
-
-            for (String require : archive.getRequires())
-            {
-
-               boolean found = false;
-               Iterator<Archive> ait = archives.iterator();
-               while (!found && ait.hasNext())
-               {
-                  Archive a = ait.next();
-
-                  if (a.getType() == ArchiveTypes.JAR)
-                  {
-                     if (a.doesProvide(require) && (getCLS() == null || getCLS().isVisible(archive, a)))
-                     {
-                        result.add(a.getName());
-                        found = true;
-                     }
-                  }
-               }
-
-               if (!found)
-               {
-                  Iterator<Archive> kit = getKnown().iterator();
-                  while (!found && kit.hasNext())
-                  {
-                     Archive a = kit.next();
-
-                     if (a.doesProvide(require))
-                     {
-                        found = true;
-                     }
-                  }
-               }
-
-               if (!found)
-               {
-                  result.add(require);
-               }
-            }
-
-            dependsOnMap.put(archive.getName(), result);
-         }
-      }
-
+      SortedMap<String, SortedSet<String>> dependsOnMap = recursivelyBuildDependsOnMap(archives);
 
       SortedMap<String, SortedSet<String>> transitiveDependsOnMap = new TreeMap<String, SortedSet<String>>();
 
@@ -210,6 +157,73 @@ public class TransitiveDependsOnReport extends CLSReport
       }
 
       bw.write("</table>" + Dump.newLine());
+   }
+
+   private SortedMap<String, SortedSet<String>> recursivelyBuildDependsOnMap(Collection<Archive> archives)
+   {
+      SortedMap<String, SortedSet<String>> dependsOnMap = new TreeMap<String, SortedSet<String>>();
+
+      for (Archive archive : archives)
+      {
+         if (archive instanceof NestableArchive)
+         {
+            NestableArchive nestableArchive = (NestableArchive) archive;
+            SortedMap<String, SortedSet<String>> subDependsOn = recursivelyBuildDependsOnMap(nestableArchive
+                  .getSubArchives());
+            dependsOnMap.putAll(subDependsOn);
+         }
+         {
+            SortedSet<String> result = dependsOnMap.get(archive.getName());
+            if (result == null)
+            {
+               result = new TreeSet<String>();
+            }
+
+            for (String require : archive.getRequires())
+            {
+
+               boolean found = false;
+               Iterator<Archive> ait = archives.iterator();
+               while (!found && ait.hasNext())
+               {
+                  Archive a = ait.next();
+
+                  if (a.getType() == ArchiveTypes.JAR)
+                  {
+                     if (a.doesProvide(require) && (getCLS() == null || getCLS().isVisible(archive, a)))
+                     {
+                        result.add(a.getName());
+                        found = true;
+                     }
+                  }
+               }
+
+               if (!found)
+               {
+                  Iterator<Archive> kit = getKnown().iterator();
+                  while (!found && kit.hasNext())
+                  {
+                     Archive a = kit.next();
+
+                     if (a.doesProvide(require))
+                     {
+                        found = true;
+                     }
+                  }
+               }
+
+               if (!found)
+               {
+                  result.add(require);
+               }
+            }
+
+            dependsOnMap.put(archive.getName(), result);
+         }
+      }
+
+
+      return dependsOnMap;
    }
 
    /**

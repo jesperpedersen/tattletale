@@ -22,7 +22,8 @@
 package org.jboss.tattletale.reporting;
 
 import org.jboss.tattletale.core.Archive;
-import org.jboss.tattletale.core.ArchiveTypes;
+import org.jboss.tattletale.core.ClassesArchive;
+import org.jboss.tattletale.core.NestableArchive;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -30,6 +31,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
@@ -93,9 +95,6 @@ public class GraphvizReport extends CLSReport
       bw.write("     <th>Packages</th>" + Dump.newLine());
       bw.write("  </tr>" + Dump.newLine());
 
-      boolean hasDot = testDot();
-
-      boolean odd = true;
 
       FileWriter alldotfw = new FileWriter
       (getOutputDirectory().getAbsolutePath() + File.separator + "dependencies.dot");
@@ -104,10 +103,35 @@ public class GraphvizReport extends CLSReport
       alldotw.write("digraph dependencies {" + Dump.newLine());
       alldotw.write("  node [shape = box, fontsize=10.0];" + Dump.newLine());
 
+      recusivelyWriteContent(bw, alldotw, archives);
+
+      alldotw.write("}" + Dump.newLine());
+
+      alldotw.flush();
+      alldotw.close();
+
+      bw.write("</table>" + Dump.newLine());
+   }
+
+   private void recusivelyWriteContent(BufferedWriter bw, BufferedWriter alldotw, Collection<Archive> archives) throws
+         IOException
+   {
+      boolean hasDot = testDot();
+      boolean odd = true;
+
       for (Archive archive : archives)
       {
 
-         if (archive.getType() == ArchiveTypes.JAR)
+         if (archive instanceof NestableArchive)
+         {
+            NestableArchive nestableArchive = (NestableArchive) archive;
+            recusivelyWriteContent(bw, alldotw, nestableArchive.getSubArchives());
+         }
+         else if (archive instanceof ClassesArchive)
+         {
+            // No op.
+         }
+         else
          {
             if (odd)
             {
@@ -246,12 +270,6 @@ public class GraphvizReport extends CLSReport
          }
       }
 
-      alldotw.write("}" + Dump.newLine());
-
-      alldotw.flush();
-      alldotw.close();
-
-      bw.write("</table>" + Dump.newLine());
    }
 
    /**
