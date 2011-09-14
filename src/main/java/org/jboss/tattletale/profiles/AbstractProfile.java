@@ -55,8 +55,8 @@ public abstract class AbstractProfile implements Profile
    /** Set of locations */
    private SortedSet<Location> locations = new TreeSet<Location>();
 
-   /** Set of sub-profiles */
-   private SortedSet<Profile> profiles = new TreeSet<Profile>();
+   /** Set of sub-subProfiles */
+   private SortedSet<Profile> subProfiles = new TreeSet<Profile>();
 
 
    /**
@@ -78,14 +78,28 @@ public abstract class AbstractProfile implements Profile
    }
 
    /**
-    * Checks whether or not the
+    * Checks whether or not the class is provided by the profile.
     *
     * @param clz The class name
     * @return True if the class is provided; otherwise false
     */
    public boolean doesProvide(String clz)
    {
-      return classSet.contains(clz);
+      if (classSet.contains(clz))
+      {
+         return true;
+      }
+      else if (subProfiles != null)
+      {
+         for (Profile subProfile : subProfiles)
+         {
+            if (subProfile.doesProvide(clz))
+            {
+               return true;
+            }
+         }
+      }
+      return false;
    }
 
    /**
@@ -110,13 +124,13 @@ public abstract class AbstractProfile implements Profile
    }
 
    /**
-    * Adds the profile passed to the private collection of sub profiles.
+    * Adds the profile passed to the private collection of sub subProfiles.
     *
     * @param profile - the profile object.
     */
    public void addSubProfile(Profile profile)
    {
-      this.profiles.add(profile);
+      this.subProfiles.add(profile);
    }
 
    /**
@@ -129,7 +143,7 @@ public abstract class AbstractProfile implements Profile
       InputStream is = null;
       try
       {
-         is = CDI10.class.getClassLoader().getResourceAsStream(resourceFile);
+         is = this.getClass().getClassLoader().getResourceAsStream(resourceFile);
 
          GZIPInputStream gis = new GZIPInputStream(is);
          InputStreamReader isr = new InputStreamReader(gis);
@@ -167,7 +181,7 @@ public abstract class AbstractProfile implements Profile
     * information.
     *
     * @param allProfiles All-Profiles flag
-    * @param profileSet  Selected profiles as specified in the configuration
+    * @param profileSet  Selected subProfiles as specified in the configuration
     * @return True if the Profile is to be included
     */
    public boolean included(boolean allProfiles, Set<String> profileSet)
