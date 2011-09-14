@@ -23,9 +23,11 @@ package org.jboss.tattletale.reporting;
 
 import org.jboss.tattletale.core.Archive;
 import org.jboss.tattletale.core.ArchiveTypes;
+import org.jboss.tattletale.core.NestableArchive;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.SortedMap;
@@ -69,34 +71,8 @@ public class TransitiveDependantsReport extends CLSReport
       bw.write("     <th>Dependants</th>" + Dump.newLine());
       bw.write("  </tr>" + Dump.newLine());
 
-      SortedMap<String, SortedSet<String>> dependantsMap = new TreeMap<String, SortedSet<String>>();
+      SortedMap<String, SortedSet<String>> dependantsMap = recursivelyBuildDependantsMap(archives);
 
-      for (Archive archive : archives)
-      {
-
-         if (archive.getType() == ArchiveTypes.JAR)
-         {
-            SortedSet<String> result = new TreeSet<String>();
-
-            for (Archive a : archives)
-            {
-
-               if (a.getType() == ArchiveTypes.JAR)
-               {
-                  for (String require : a.getRequires())
-                  {
-
-                     if (archive.doesProvide(require) && (getCLS() == null || getCLS().isVisible(a, archive)))
-                     {
-                        result.add(a.getName());
-                     }
-                  }
-               }
-            }
-
-            dependantsMap.put(archive.getName(), result);
-         }
-      }
 
       SortedMap<String, SortedSet<String>> transitiveDependantsMap = new TreeMap<String, SortedSet<String>>();
 
@@ -177,11 +153,50 @@ public class TransitiveDependantsReport extends CLSReport
       bw.write("</table>" + Dump.newLine());
    }
 
+   private SortedMap<String, SortedSet<String>> recursivelyBuildDependantsMap(Collection<Archive> archives)
+   {
+      SortedMap<String, SortedSet<String>> dependantsMap = new TreeMap<String, SortedSet<String>>();
+
+      for (Archive archive : archives)
+      {
+         if (archive instanceof NestableArchive)
+         {
+            NestableArchive nestableArchive = (NestableArchive) archive;
+            SortedMap<String, SortedSet<String>> subDependants = recursivelyBuildDependantsMap(nestableArchive
+                  .getSubArchives());
+            dependantsMap.putAll(subDependants);
+         }
+         else
+         {
+            SortedSet<String> result = new TreeSet<String>();
+
+            for (Archive a : archives)
+            {
+
+               if (a.getType() == ArchiveTypes.JAR)
+               {
+                  for (String require : a.getRequires())
+                  {
+
+                     if (archive.doesProvide(require) && (getCLS() == null || getCLS().isVisible(a, archive)))
+                     {
+                        result.add(a.getName());
+                     }
+                  }
+               }
+            }
+
+            dependantsMap.put(archive.getName(), result);
+         }
+      }
+      return dependantsMap;
+   }
+
    /**
     * write out the header of the report's content
     *
     * @param bw the writer to use
-    * @throws IOException if an errror occurs
+    * @throws IOException if an error occurs
     */
    protected void writeHtmlBodyHeader(BufferedWriter bw) throws IOException
    {

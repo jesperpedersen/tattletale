@@ -21,6 +21,7 @@
  */
 package org.jboss.tattletale;
 
+import org.jboss.tattletale.analyzers.Analyzer;
 import org.jboss.tattletale.analyzers.ArchiveScanner;
 import org.jboss.tattletale.analyzers.DirectoryScanner;
 import org.jboss.tattletale.core.Archive;
@@ -34,6 +35,7 @@ import org.jboss.tattletale.reporting.ClassLocationReport;
 import org.jboss.tattletale.reporting.DependantsReport;
 import org.jboss.tattletale.reporting.DependsOnReport;
 import org.jboss.tattletale.reporting.Dump;
+import org.jboss.tattletale.reporting.EarReport;
 import org.jboss.tattletale.reporting.EliminateJarsReport;
 import org.jboss.tattletale.reporting.GraphvizReport;
 import org.jboss.tattletale.reporting.InvalidVersionReport;
@@ -53,6 +55,7 @@ import org.jboss.tattletale.reporting.SignReport;
 import org.jboss.tattletale.reporting.TransitiveDependantsReport;
 import org.jboss.tattletale.reporting.TransitiveDependsOnReport;
 import org.jboss.tattletale.reporting.UnusedJarReport;
+import org.jboss.tattletale.reporting.WarReport;
 import org.jboss.tattletale.reporting.profiles.CDI10;
 import org.jboss.tattletale.reporting.profiles.CommonProfile;
 import org.jboss.tattletale.reporting.profiles.JavaEE5;
@@ -69,6 +72,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -156,7 +160,7 @@ public class Main
       this.failOnWarn = false;
       this.failOnError = false;
       this.reports = null;
-      this.scan = ".jar";
+      this.scan = ".jar,.war,.ear";
 
       this.dependencyReports = new ArrayList<Class>();
       addDependencyReport(ClassDependsOnReport.class);
@@ -355,6 +359,7 @@ public class Main
     */
    public void execute() throws Exception
    {
+
       Properties config = null;
       Properties filters = null;
 
@@ -539,7 +544,7 @@ public class Main
       }
       else
       {
-         DirectoryScanner.setArchives(".jar");
+         DirectoryScanner.setArchives(".jar, .war, .ear");
       }
 
       Map<String, SortedSet<Location>> locationsMap = new HashMap<String, SortedSet<Location>>();
@@ -569,11 +574,12 @@ public class Main
          if (f.isDirectory())
          {
             List<File> fileList = DirectoryScanner.scan(f, excludeSet);
+            Analyzer analyzer = new Analyzer();
 
             for (File file : fileList)
             {
-               Archive archive = ArchiveScanner.scan(file, gProvides, known, blacklistedSet);
-
+               ArchiveScanner scanner = analyzer.getScanner(file);
+               Archive archive = scanner.scan(file, gProvides, known, blacklistedSet);
                if (archive != null)
                {
                   SortedSet<Location> locations = locationsMap.get(archive.getName());
@@ -600,6 +606,7 @@ public class Main
                   a.addLocation(l);
                }
             }
+
          }
       }
 
@@ -946,13 +953,7 @@ public class Main
       SortedSet<Report> customReportSet = reportSetBuilder.getReportSet();
       reportSetBuilder.clear();
 
-      for (Archive a : archives)
-      {
-         if (a.getType() == ArchiveTypes.JAR)
-         {
-            reportSetBuilder.addReport(new JarReport(a));
-         }
-      }
+      addJarReports(archives, reportSetBuilder);
 
       SortedSet<Report> archiveReports = reportSetBuilder.getReportSet();
 
@@ -1015,6 +1016,31 @@ public class Main
    }
 
    /**
+    * Add the reports based on the archive that we have.
+    * @param archives - the collection of Archives.
+    * @param reportSetBuilder - the Report Set Builder required to add a new JarReport if there is a JarArchive found.
+    */
+
+   private void addJarReports(Collection<Archive> archives, ReportSetBuilder reportSetBuilder)
+   {
+      for (Archive a : archives)
+      {
+         if (a.getType() == ArchiveTypes.WAR)
+         {
+            reportSetBuilder.addReport(new WarReport(a));
+         }
+         else if (a.getType() == ArchiveTypes.JAR)
+         {
+            reportSetBuilder.addReport(new JarReport(a));
+         }
+         else if (a.getType() == ArchiveTypes.EAR)
+         {
+            reportSetBuilder.addReport(new EarReport(a));
+         }
+      }
+   }
+
+   /**
     * The main method
     *
     * @param args The arguments
@@ -1052,6 +1078,7 @@ public class Main
          usage();
       }
    }
+
 
    /**
     * This helper class checks reports to determine whether they should fail,
@@ -1143,7 +1170,7 @@ public class Main
     * This helper class generates reports from report definitions and gathers
     * report definitions into a SortedSet which can be used to build the index.
     *
-    * @author MikeMoore
+    * @author Mike Moore
     */
    private class ReportSetBuilder
    {

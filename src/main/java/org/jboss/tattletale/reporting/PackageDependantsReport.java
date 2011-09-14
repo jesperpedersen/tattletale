@@ -23,10 +23,11 @@
 package org.jboss.tattletale.reporting;
 
 import org.jboss.tattletale.core.Archive;
-import org.jboss.tattletale.core.ArchiveTypes;
+import org.jboss.tattletale.core.NestableArchive;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.SortedMap;
@@ -72,57 +73,8 @@ public class PackageDependantsReport extends CLSReport
       bw.write("     <th>Dependants</th>" + Dump.newLine());
       bw.write("  </tr>" + Dump.newLine());
 
-      SortedMap<String, SortedSet<String>> result = new TreeMap<String, SortedSet<String>>();
+      SortedMap<String, SortedSet<String>> result = recursivelyBuildResultFromArchive(archives);
       boolean odd = true;
-
-      for (Archive archive : archives)
-      {
-         if (archive.getType() == ArchiveTypes.JAR)
-         {
-            SortedMap<String, SortedSet<String>> packageDependencies = archive.getPackageDependencies();
-
-            Iterator<Map.Entry<String, SortedSet<String>>> dit = packageDependencies.entrySet().iterator();
-            while (dit.hasNext())
-            {
-               Map.Entry<String, SortedSet<String>> entry = dit.next();
-               String pack = entry.getKey();
-               SortedSet<String> packDeps = entry.getValue();
-
-               Iterator<String> sit = packDeps.iterator();
-               while (sit.hasNext())
-               {
-                  String dep = sit.next();
-                  
-                  if (!dep.equals(pack))
-                  {
-                     boolean include = true;
-
-                     Iterator<Archive> kit = getKnown().iterator();
-                     while (include && kit.hasNext())
-                     {
-                        Archive a = kit.next();
-
-                        if (a.doesProvide(dep))
-                           include = false;
-                     }
-                  
-                     if (include)
-                     {
-                        SortedSet<String> deps = result.get(dep);
-
-                        if (deps == null)
-                           deps = new TreeSet<String>();
-
-                        deps.add(pack);
-                        
-                        result.put(dep, deps);
-                     }
-                  }
-               }
-            }
-         }
-      }
-
       Iterator<Map.Entry<String, SortedSet<String>>> rit = result.entrySet().iterator();
 
       while (rit.hasNext())
@@ -162,6 +114,66 @@ public class PackageDependantsReport extends CLSReport
       }
 
       bw.write("</table>" + Dump.newLine());
+   }
+
+   private SortedMap<String, SortedSet<String>> recursivelyBuildResultFromArchive(Collection<Archive> archives)
+   {
+      SortedMap<String, SortedSet<String>> result = new TreeMap<String, SortedSet<String>>();
+
+      for (Archive archive : archives)
+      {
+         if (archive instanceof NestableArchive)
+         {
+            NestableArchive nestableArchive = (NestableArchive) archive;
+            SortedMap<String, SortedSet<String>> subResult = recursivelyBuildResultFromArchive(nestableArchive
+                  .getSubArchives());
+            result.putAll(subResult);
+         }
+         else
+         {
+            SortedMap<String, SortedSet<String>> packageDependencies = archive.getPackageDependencies();
+            Iterator<Map.Entry<String, SortedSet<String>>> dit = packageDependencies.entrySet().iterator();
+            while (dit.hasNext())
+            {
+               Map.Entry<String, SortedSet<String>> entry = dit.next();
+               String pack = entry.getKey();
+               SortedSet<String> packDeps = entry.getValue();
+
+               Iterator<String> sit = packDeps.iterator();
+               while (sit.hasNext())
+               {
+                  String dep = sit.next();
+
+                  if (!dep.equals(pack))
+                  {
+                     boolean include = true;
+
+                     Iterator<Archive> kit = getKnown().iterator();
+                     while (include && kit.hasNext())
+                     {
+                        Archive a = kit.next();
+
+                        if (a.doesProvide(dep))
+                           include = false;
+                     }
+
+                     if (include)
+                     {
+                        SortedSet<String> deps = result.get(dep);
+
+                        if (deps == null)
+                           deps = new TreeSet<String>();
+
+                        deps.add(pack);
+
+                        result.put(dep, deps);
+                     }
+                  }
+               }
+            }
+         }
+      }
+      return result;
    }
 
    /**

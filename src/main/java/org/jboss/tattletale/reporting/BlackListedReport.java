@@ -22,10 +22,11 @@
 package org.jboss.tattletale.reporting;
 
 import org.jboss.tattletale.core.Archive;
-import org.jboss.tattletale.core.ArchiveTypes;
+import org.jboss.tattletale.core.NestableArchive;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
+import java.util.Collection;
 import java.util.Map;
 import java.util.SortedSet;
 
@@ -63,13 +64,22 @@ public class BlackListedReport extends AbstractReport
       bw.write("     <th>Archive</th>" + Dump.newLine());
       bw.write("     <th>Usage</th>" + Dump.newLine());
       bw.write("  </tr>" + Dump.newLine());
+      recursivelyWriteContent(bw, archives);
+      bw.write("</table>" + Dump.newLine());
+   }
 
+   private void recursivelyWriteContent (BufferedWriter bw, Collection<Archive> archives) throws IOException
+   {
       boolean odd = true;
 
       for (Archive archive : archives)
       {
-
-         if (archive.getType() == ArchiveTypes.JAR)
+         if (archive instanceof NestableArchive)
+         {
+            NestableArchive nestableArchive = (NestableArchive) archive;
+            recursivelyWriteContent(bw, nestableArchive.getSubArchives());
+         }
+         else
          {
             boolean include = false;
             boolean filtered = isFiltered(archive.getName());
@@ -140,7 +150,7 @@ public class BlackListedReport extends AbstractReport
          }
       }
 
-      bw.write("</table>" + Dump.newLine());
+
    }
 
    /**

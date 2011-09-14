@@ -23,9 +23,11 @@ package org.jboss.tattletale.reporting;
 
 import org.jboss.tattletale.core.Archive;
 import org.jboss.tattletale.core.ArchiveTypes;
+import org.jboss.tattletale.core.NestableArchive;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.SortedMap;
@@ -67,43 +69,8 @@ public class CircularDependencyReport extends CLSReport
       bw.write("     <th>Circular Dependencies</th>" + Dump.newLine());
       bw.write("  </tr>" + Dump.newLine());
 
-      SortedMap<String, SortedSet<String>> dependsOnMap = new TreeMap<String, SortedSet<String>>();
-
-      for (Archive archive : archives)
-      {
-         if (archive.getType() == ArchiveTypes.JAR)
-         {
-            SortedSet<String> result = dependsOnMap.get(archive.getName());
-            if (result == null)
-            {
-               result = new TreeSet<String>();
-            }
-
-            for (String require : archive.getRequires())
-            {
-               boolean found = false;
-               Iterator<Archive> ait = archives.iterator();
-               while (!found && ait.hasNext())
-               {
-                  Archive a = ait.next();
-
-                  if (a.getType() == ArchiveTypes.JAR)
-                  {
-                     if (a.doesProvide(require) && (getCLS() == null || getCLS().isVisible(archive, a)))
-                     {
-                        result.add(a.getName());
-                        found = true;
-                     }
-                  }
-               }
-            }
-
-            dependsOnMap.put(archive.getName(), result);
-         }
-      }
-
+      SortedMap<String, SortedSet<String>> dependsOnMap = recursivelyBuildDependsOnFromArchive(archives);
       SortedMap<String, SortedSet<String>> transitiveDependsOnMap = new TreeMap<String, SortedSet<String>>();
-
       Iterator<Map.Entry<String, SortedSet<String>>> dit = dependsOnMap.entrySet().iterator();
       while (dit.hasNext())
       {
@@ -205,6 +172,51 @@ public class CircularDependencyReport extends CLSReport
       }
 
       bw.write("</table>" + Dump.newLine());
+   }
+
+   private SortedMap<String, SortedSet<String>> recursivelyBuildDependsOnFromArchive(Collection<Archive> archives)
+   {
+      SortedMap<String, SortedSet<String>> dependsOnMap = new TreeMap<String, SortedSet<String>>();
+      for (Archive archive : archives)
+      {
+         if (archive instanceof NestableArchive)
+         {
+            NestableArchive nestableArchive = (NestableArchive) archive;
+            SortedMap<String, SortedSet<String>> subMap = recursivelyBuildDependsOnFromArchive(nestableArchive
+                  .getSubArchives());
+            dependsOnMap.putAll(subMap);
+         }
+         else
+         {
+            SortedSet<String> result = dependsOnMap.get(archive.getName());
+            if (result == null)
+            {
+               result = new TreeSet<String>();
+            }
+
+            for (String require : archive.getRequires())
+            {
+               boolean found = false;
+               Iterator<Archive> ait = archives.iterator();
+               while (!found && ait.hasNext())
+               {
+                  Archive a = ait.next();
+
+                  if (a.getType() == ArchiveTypes.JAR)
+                  {
+                     if (a.doesProvide(require) && (getCLS() == null || getCLS().isVisible(archive, a)))
+                     {
+                        result.add(a.getName());
+                        found = true;
+                     }
+                  }
+               }
+            }
+
+            dependsOnMap.put(archive.getName(), result);
+         }
+      }
+      return dependsOnMap;
    }
 
    /**
