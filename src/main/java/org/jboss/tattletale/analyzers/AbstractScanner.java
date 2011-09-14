@@ -23,6 +23,7 @@
 package org.jboss.tattletale.analyzers;
 
 import org.jboss.tattletale.core.Archive;
+import org.jboss.tattletale.profiles.Profile;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -45,7 +46,6 @@ import javassist.ClassPool;
 import javassist.CtClass;
 import javassist.CtField;
 import javassist.NotFoundException;
-import org.jboss.tattletale.profiles.Profile;
 
 
 /**
