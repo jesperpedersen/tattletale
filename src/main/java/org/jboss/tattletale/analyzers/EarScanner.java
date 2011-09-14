@@ -25,6 +25,7 @@ package org.jboss.tattletale.analyzers;
 import org.jboss.tattletale.core.Archive;
 import org.jboss.tattletale.core.EarArchive;
 import org.jboss.tattletale.core.Location;
+import org.jboss.tattletale.profiles.Profile;
 
 import java.io.File;
 import java.io.IOException;
@@ -78,7 +79,7 @@ public class EarScanner extends AbstractScanner
     * @return the archive
     * @throws IOException - if there is a problem with the file parameter
     */
-   public Archive scan(File ear, Map<String, SortedSet<String>> gProvides, List<Archive> known,
+   public Archive scan(File ear, Map<String, SortedSet<String>> gProvides, List<Profile> known,
                        Set<String> blacklisted) throws IOException
    {
       EarArchive earArchive = null;

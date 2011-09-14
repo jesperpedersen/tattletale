@@ -1,6 +1,6 @@
 /*
  * JBoss, Home of Professional Open Source.
- * Copyright 2009, Red Hat Middleware LLC, and individual contributors
+ * Copyright 2010, Red Hat Middleware LLC, and individual contributors
  * as indicated by the @author tags. See the copyright.txt file in the
  * distribution for a full listing of individual contributors.
  *
@@ -19,29 +19,29 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.tattletale.reporting.profiles;
+package org.jboss.tattletale.profiles;
 
 import org.jboss.tattletale.core.ArchiveTypes;
 
 import javassist.bytecode.ClassFile;
 
 /**
- * Sun: Java 5 (JSSE)
+ * Spring 3.0
  *
  * @author Jesper Pedersen <jesper.pedersen@jboss.org>
  */
-public class SunJava5JSSE extends CommonProfile
+public class Spring30 extends AbstractProfile
 {
 
-   private static final String CLASS_SET = "sunjdk5-jsse.clz.gz";
-   private static final String PROFILE_NAME = "Sun Java 5 (JSSE)";
-   private static final String PROFILE_CODE = "jsse5";
-   private static final String PROFILE_LOCATION = "jsse.jar";
+   private static final String CLASS_SET = "spring30.clz.gz";
+   private static final String PROFILE_NAME = "Spring 3.0";
+   private static final String PROFILE_CODE = "spring30";
+   private static final String PROFILE_LOCATION = "spring.jar";
    private static final int ARCHIVE_TYPE = ArchiveTypes.JAR;
    private static final int CLASSFILE_VERSION = ClassFile.JAVA_5;
 
    /** Constructor */
-   public SunJava5JSSE()
+   public Spring30()
    {
       super(CLASS_SET, ARCHIVE_TYPE, PROFILE_NAME, CLASSFILE_VERSION, PROFILE_LOCATION);
    }

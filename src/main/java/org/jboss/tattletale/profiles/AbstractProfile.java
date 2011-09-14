@@ -19,10 +19,9 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.tattletale.reporting.profiles;
+package org.jboss.tattletale.profiles;
 
 import org.jboss.tattletale.core.Location;
-import org.jboss.tattletale.core.NestableArchive;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -37,9 +36,28 @@ import java.util.zip.GZIPInputStream;
  * Base profile class.
  *
  * @author Michele
+ * @author Navin Surtani
  */
-public abstract class CommonProfile extends NestableArchive
+public abstract class AbstractProfile implements Profile
 {
+   /** The type of Profile */
+   private int type;
+
+   /** The version */
+   private int version;
+
+   /** The name of the profile */
+   private String name;
+
+   /** Content of the class set file */
+   protected SortedSet<String> classSet = new TreeSet<String>();
+
+   /** Set of locations */
+   private SortedSet<Location> locations = new TreeSet<Location>();
+
+   /** Set of sub-subProfiles */
+   private SortedSet<Profile> subProfiles = new TreeSet<Profile>();
+
 
    /**
     * Constructor
@@ -50,18 +68,73 @@ public abstract class CommonProfile extends NestableArchive
     * @param version  Profile's class version
     * @param location Profile's location
     */
-   public CommonProfile(String classSet, int type, String name, int version, String location)
+   public AbstractProfile(String classSet, int type, String name, int version, String location)
    {
-      super(type, name, version, null, null, null, null, null, null, null, null);
+      this.type = type;
+      this.name = name;
+      this.version = version;
       loadClassList(classSet);
       addLocation(new Location(location, name));
    }
 
-   /** Content of the class set file */
-   protected SortedSet<String> classSet = new TreeSet<String>();
+   /**
+    * Checks whether or not the class is provided by the profile.
+    *
+    * @param clz The class name
+    * @return True if the class is provided; otherwise false
+    */
+   public boolean doesProvide(String clz)
+   {
+      if (classSet.contains(clz))
+      {
+         return true;
+      }
+      else if (subProfiles != null)
+      {
+         for (Profile subProfile : subProfiles)
+         {
+            if (subProfile.doesProvide(clz))
+            {
+               return true;
+            }
+         }
+      }
+      return false;
+   }
 
    /**
-    * Loads this profile's classlist from the resources.
+    * Simple getter that will return the name of the Profile.
+    *
+    * @return the name of the profile.
+    */
+   public String getName()
+   {
+      return name;
+   }
+
+   /**
+    * Adds the location parameter to the private collection of Locations.
+    *
+    * @param location - the location object.
+    */
+
+   public void addLocation(Location location)
+   {
+      this.locations.add(location);
+   }
+
+   /**
+    * Adds the profile passed to the private collection of sub subProfiles.
+    *
+    * @param profile - the profile object.
+    */
+   public void addSubProfile(Profile profile)
+   {
+      this.subProfiles.add(profile);
+   }
+
+   /**
+    * Loads this profile's class list from the resources.
     *
     * @param resourceFile File name
     */
@@ -70,7 +143,7 @@ public abstract class CommonProfile extends NestableArchive
       InputStream is = null;
       try
       {
-         is = CDI10.class.getClassLoader().getResourceAsStream(resourceFile);
+         is = this.getClass().getClassLoader().getResourceAsStream(resourceFile);
 
          GZIPInputStream gis = new GZIPInputStream(is);
          InputStreamReader isr = new InputStreamReader(gis);
@@ -108,7 +181,7 @@ public abstract class CommonProfile extends NestableArchive
     * information.
     *
     * @param allProfiles All-Profiles flag
-    * @param profileSet  Selected profiles as specified in the configuration
+    * @param profileSet  Selected subProfiles as specified in the configuration
     * @return True if the Profile is to be included
     */
    public boolean included(boolean allProfiles, Set<String> profileSet)
@@ -123,20 +196,4 @@ public abstract class CommonProfile extends NestableArchive
    /** @return The long name of the profile */
    protected abstract String getProfileName();
 
-   /**
-    * Does the archives provide this class
-    *
-    * @param clz The class name
-    * @return True if the class is provided; otherwise false
-    */
-   @Override
-   public boolean doesProvide(String clz)
-   {
-      if (classSet.contains(clz))
-      {
-         return true;
-      }
-
-      return false;
-   }
 }

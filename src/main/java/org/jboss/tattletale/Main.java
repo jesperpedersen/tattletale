@@ -27,6 +27,16 @@ import org.jboss.tattletale.analyzers.DirectoryScanner;
 import org.jboss.tattletale.core.Archive;
 import org.jboss.tattletale.core.ArchiveTypes;
 import org.jboss.tattletale.core.Location;
+import org.jboss.tattletale.profiles.AbstractProfile;
+import org.jboss.tattletale.profiles.CDI10;
+import org.jboss.tattletale.profiles.JavaEE5;
+import org.jboss.tattletale.profiles.JavaEE6;
+import org.jboss.tattletale.profiles.Profile;
+import org.jboss.tattletale.profiles.Seam22;
+import org.jboss.tattletale.profiles.Spring25;
+import org.jboss.tattletale.profiles.Spring30;
+import org.jboss.tattletale.profiles.SunJava5;
+import org.jboss.tattletale.profiles.SunJava6;
 import org.jboss.tattletale.reporting.BlackListedReport;
 import org.jboss.tattletale.reporting.CircularDependencyReport;
 import org.jboss.tattletale.reporting.ClassDependantsReport;
@@ -56,15 +66,6 @@ import org.jboss.tattletale.reporting.TransitiveDependantsReport;
 import org.jboss.tattletale.reporting.TransitiveDependsOnReport;
 import org.jboss.tattletale.reporting.UnusedJarReport;
 import org.jboss.tattletale.reporting.WarReport;
-import org.jboss.tattletale.reporting.profiles.CDI10;
-import org.jboss.tattletale.reporting.profiles.CommonProfile;
-import org.jboss.tattletale.reporting.profiles.JavaEE5;
-import org.jboss.tattletale.reporting.profiles.JavaEE6;
-import org.jboss.tattletale.reporting.profiles.Seam22;
-import org.jboss.tattletale.reporting.profiles.Spring25;
-import org.jboss.tattletale.reporting.profiles.Spring30;
-import org.jboss.tattletale.reporting.profiles.SunJava5;
-import org.jboss.tattletale.reporting.profiles.SunJava6;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -552,12 +553,12 @@ public class Main
       SortedMap<String, SortedSet<String>> gProvides = new TreeMap<String, SortedSet<String>>();
 
       // Load up selected profiles
-      List<Archive> known = new ArrayList<Archive>();
+      List<Profile> known = new ArrayList<Profile>();
 
-      CommonProfile[] profiles = new CommonProfile[]{new SunJava5(), new SunJava6(), new JavaEE5(), new JavaEE6(),
+      AbstractProfile[] profiles = new AbstractProfile[]{new SunJava5(), new SunJava6(), new JavaEE5(), new JavaEE6(),
          new CDI10(), new Seam22(), new Spring25(), new Spring30()};
 
-      for (CommonProfile p : profiles)
+      for (AbstractProfile p : profiles)
       {
          if (p.included(allProfiles, profileSet))
          {

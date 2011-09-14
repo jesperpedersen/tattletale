@@ -1,6 +1,6 @@
 /*
  * JBoss, Home of Professional Open Source.
- * Copyright 2010, Red Hat Middleware LLC, and individual contributors
+ * Copyright 2009, Red Hat Middleware LLC, and individual contributors
  * as indicated by the @author tags. See the copyright.txt file in the
  * distribution for a full listing of individual contributors.
  *
@@ -19,29 +19,29 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.tattletale.reporting.profiles;
+package org.jboss.tattletale.profiles;
 
 import org.jboss.tattletale.core.ArchiveTypes;
 
 import javassist.bytecode.ClassFile;
 
 /**
- * Spring 3.0
+ * Seam 2.2
  *
  * @author Jesper Pedersen <jesper.pedersen@jboss.org>
  */
-public class Spring30 extends CommonProfile
+public class Seam22 extends AbstractProfile
 {
 
-   private static final String CLASS_SET = "spring30.clz.gz";
-   private static final String PROFILE_NAME = "Spring 3.0";
-   private static final String PROFILE_CODE = "spring30";
-   private static final String PROFILE_LOCATION = "spring.jar";
+   private static final String CLASS_SET = "seam22.clz.gz";
+   private static final String PROFILE_NAME = "Seam 2.2";
+   private static final String PROFILE_CODE = "seam22";
+   private static final String PROFILE_LOCATION = "jboss-seam-2.2.0.GA.jar";
    private static final int ARCHIVE_TYPE = ArchiveTypes.JAR;
    private static final int CLASSFILE_VERSION = ClassFile.JAVA_5;
 
    /** Constructor */
-   public Spring30()
+   public Seam22()
    {
       super(CLASS_SET, ARCHIVE_TYPE, PROFILE_NAME, CLASSFILE_VERSION, PROFILE_LOCATION);
    }
@@ -57,4 +57,5 @@ public class Spring30 extends CommonProfile
    {
       return PROFILE_NAME;
    }
+
 }

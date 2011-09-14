@@ -23,6 +23,7 @@
 package org.jboss.tattletale.analyzers;
 
 import org.jboss.tattletale.core.Archive;
+import org.jboss.tattletale.profiles.Profile;
 
 import java.io.File;
 import java.io.IOException;
@@ -59,6 +60,6 @@ public interface ArchiveScanner
     */
 
    public Archive scan(File file, Map<String, SortedSet<String>> gProvides,
-                              List<Archive> known, Set<String> blacklisted) throws IOException;
+                              List<Profile> known, Set<String> blacklisted) throws IOException;
 
 }

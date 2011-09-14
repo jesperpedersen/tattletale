@@ -19,43 +19,30 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.tattletale.reporting.profiles;
 
-import org.jboss.tattletale.core.ArchiveTypes;
+package org.jboss.tattletale.profiles;
 
-import javassist.bytecode.ClassFile;
 
 /**
- * Contexts and Dependency Injection (CDI) 1.0 profile
+ * Interface that will define what all Profiles need to implement.
  *
- * @author Jesper Pedersen <jesper.pedersen@jboss.org>
+ * @author Navin Surtani
  */
-public class CDI10 extends CommonProfile
+public interface Profile
 {
+   /**
+    * Method to check whether or not the String representation of the class parameter is provided or not.
+    *
+    * @param clz - the string representation of the class.
+    * @return whether or not the class is provided.
+    */
+   public boolean doesProvide(String clz);
 
-   private static final String CLASS_SET = "cdi10.clz.gz";
-   private static final String PROFILE_NAME = "CDI 1.0";
-   private static final String PROFILE_CODE = "cdi10";
-   private static final String PROFILE_LOCATION = "cdi-api-1.0.jar";
-   private static final int ARCHIVE_TYPE = ArchiveTypes.JAR;
-   private static final int CLASSFILE_VERSION = ClassFile.JAVA_5;
-
-   /** Constructor */
-   public CDI10()
-   {
-      super(CLASS_SET, ARCHIVE_TYPE, PROFILE_NAME, CLASSFILE_VERSION, PROFILE_LOCATION);
-   }
-
-   @Override
-   public String getProfileCode()
-   {
-      return PROFILE_CODE;
-   }
-
-   @Override
-   protected String getProfileName()
-   {
-      return PROFILE_NAME;
-   }
+   /**
+    * Simple getter.
+    *
+    * @return - the name of the profile.
+    */
+   public String getName();
 
 }

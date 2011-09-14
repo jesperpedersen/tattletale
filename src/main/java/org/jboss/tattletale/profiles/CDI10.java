@@ -19,29 +19,29 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.tattletale.reporting.profiles;
+package org.jboss.tattletale.profiles;
 
 import org.jboss.tattletale.core.ArchiveTypes;
 
 import javassist.bytecode.ClassFile;
 
 /**
- * Sun: Java 6 (JCE)
+ * Contexts and Dependency Injection (CDI) 1.0 profile
  *
  * @author Jesper Pedersen <jesper.pedersen@jboss.org>
  */
-public class SunJava6JCE extends CommonProfile
+public class CDI10 extends AbstractProfile
 {
 
-   private static final String CLASS_SET = "sunjdk6-jce.clz.gz";
-   private static final String PROFILE_NAME = "Sun Java 6 (JCE)";
-   private static final String PROFILE_CODE = "jce6";
-   private static final String PROFILE_LOCATION = "jce.jar";
+   private static final String CLASS_SET = "cdi10.clz.gz";
+   private static final String PROFILE_NAME = "CDI 1.0";
+   private static final String PROFILE_CODE = "cdi10";
+   private static final String PROFILE_LOCATION = "cdi-api-1.0.jar";
    private static final int ARCHIVE_TYPE = ArchiveTypes.JAR;
-   private static final int CLASSFILE_VERSION = ClassFile.JAVA_6;
+   private static final int CLASSFILE_VERSION = ClassFile.JAVA_5;
 
    /** Constructor */
-   public SunJava6JCE()
+   public CDI10()
    {
       super(CLASS_SET, ARCHIVE_TYPE, PROFILE_NAME, CLASSFILE_VERSION, PROFILE_LOCATION);
    }
@@ -57,4 +57,5 @@ public class SunJava6JCE extends CommonProfile
    {
       return PROFILE_NAME;
    }
+
 }

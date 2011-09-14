@@ -19,31 +19,36 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.tattletale.reporting.profiles;
+package org.jboss.tattletale.profiles;
 
 import org.jboss.tattletale.core.ArchiveTypes;
+
+import java.util.Set;
 
 import javassist.bytecode.ClassFile;
 
 /**
- * Seam 2.2
+ * Sun: Java 5
  *
  * @author Jesper Pedersen <jesper.pedersen@jboss.org>
  */
-public class Seam22 extends CommonProfile
+public class SunJava5 extends AbstractProfile
 {
 
-   private static final String CLASS_SET = "seam22.clz.gz";
-   private static final String PROFILE_NAME = "Seam 2.2";
-   private static final String PROFILE_CODE = "seam22";
-   private static final String PROFILE_LOCATION = "jboss-seam-2.2.0.GA.jar";
+   private static final String CLASS_SET = "sunjdk5.clz.gz";
+   private static final String PROFILE_NAME = "Sun Java 5";
+   private static final String PROFILE_CODE = "java5";
+   private static final String PROFILE_LOCATION = "rt.jar";
    private static final int ARCHIVE_TYPE = ArchiveTypes.JAR;
    private static final int CLASSFILE_VERSION = ClassFile.JAVA_5;
 
    /** Constructor */
-   public Seam22()
+   public SunJava5()
    {
       super(CLASS_SET, ARCHIVE_TYPE, PROFILE_NAME, CLASSFILE_VERSION, PROFILE_LOCATION);
+
+      addSubProfile(new SunJava5JCE());
+      addSubProfile(new SunJava5JSSE());
    }
 
    @Override
@@ -58,4 +63,10 @@ public class Seam22 extends CommonProfile
       return PROFILE_NAME;
    }
 
+   @Override
+   public boolean included(boolean allProfiles, Set<String> profileSet)
+   {
+      return allProfiles || profileSet == null || profileSet.isEmpty() && (profileSet.contains(getProfileCode())
+            || profileSet.contains(getProfileName()));
+   }
 }

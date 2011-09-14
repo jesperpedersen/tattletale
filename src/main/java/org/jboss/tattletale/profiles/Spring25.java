@@ -19,29 +19,29 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.tattletale.reporting.profiles;
+package org.jboss.tattletale.profiles;
 
 import org.jboss.tattletale.core.ArchiveTypes;
 
 import javassist.bytecode.ClassFile;
 
 /**
- * Java Enterprise 5
+ * Spring 2.5
  *
  * @author Jesper Pedersen <jesper.pedersen@jboss.org>
  */
-public class JavaEE5 extends CommonProfile
+public class Spring25 extends AbstractProfile
 {
 
-   private static final String CLASS_SET = "ee5.clz.gz";
-   private static final String PROFILE_NAME = "Java Enterprise 5";
-   private static final String PROFILE_CODE = "ee5";
-   private static final String PROFILE_LOCATION = "javaee-api-5.jar";
+   private static final String CLASS_SET = "spring25.clz.gz";
+   private static final String PROFILE_NAME = "Spring 2.5";
+   private static final String PROFILE_CODE = "spring25";
+   private static final String PROFILE_LOCATION = "spring.jar";
    private static final int ARCHIVE_TYPE = ArchiveTypes.JAR;
-   private static final int CLASSFILE_VERSION = ClassFile.JAVA_5;
+   private static final int CLASSFILE_VERSION = ClassFile.JAVA_4;
 
    /** Constructor */
-   public JavaEE5()
+   public Spring25()
    {
       super(CLASS_SET, ARCHIVE_TYPE, PROFILE_NAME, CLASSFILE_VERSION, PROFILE_LOCATION);
    }
@@ -57,5 +57,4 @@ public class JavaEE5 extends CommonProfile
    {
       return PROFILE_NAME;
    }
-
 }
