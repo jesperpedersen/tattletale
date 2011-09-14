@@ -101,7 +101,9 @@
     </module>
 
     <!-- Simplify your code -->
-    <module name="AvoidStarImport"/>
+    <module name="AvoidStarImport">
+      <property name="allowStaticMemberImports" value="true"/>
+    </module>
     <module name="RedundantImport"/>
     <module name="UnusedImports"/>
     <module name="SimplifyBooleanExpression"/>
@@ -129,7 +131,7 @@
       <property name="max" value="150"/>
     </module>
     <module name="ParameterNumber">
-      <property name="max" value="20"/>
+      <property name="max" value="30"/>
     </module>
 
     <!-- Indentation -->
@@ -140,6 +142,13 @@
 
     <!-- StringLiteralEquality -->
     <module name="StringLiteralEquality"/>
+
+    <!-- Annotations -->
+    <module name="AnnotationUseStyle">
+      <property name="elementStyle" value="ignore"/>
+      <property name="trailingArrayComma" value="never"/>
+      <property name="closingParens" value="ignore"/>
+    </module>
 
   </module>
 
