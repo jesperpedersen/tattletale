@@ -62,7 +62,7 @@ public class Extractor
       {
          target = new File(basedir, warName);
       }
-      System.out.println("Target destination is: " + target.getCanonicalPath());
+
 
       if (target.exists())
       {
