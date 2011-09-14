@@ -45,8 +45,7 @@ import javassist.ClassPool;
 import javassist.CtClass;
 import javassist.CtField;
 import javassist.NotFoundException;
-
-
+import org.jboss.tattletale.profiles.Profile;
 
 
 /**
@@ -169,7 +168,7 @@ public abstract class AbstractScanner implements ArchiveScanner
     * @throws IOException - if the Javassist ClassPool cannot make the CtClass based on the input stream.
     */
 
-   public Integer scanClasses(InputStream is, Set<String> blacklisted, List<Archive> known, Integer classVersion,
+   public Integer scanClasses(InputStream is, Set<String> blacklisted, List<Profile> known, Integer classVersion,
                            SortedMap<String, Long> provides, SortedSet<String> requires,
                            SortedSet<String> profiles, SortedMap<String, SortedSet<String>> classDependencies,
                            SortedMap<String, SortedSet<String>> packageDependencies,
@@ -234,13 +233,13 @@ public abstract class AbstractScanner implements ArchiveScanner
 
          if (known != null)
          {
-            Iterator<Archive> kit = known.iterator();
+            Iterator<Profile> kit = known.iterator();
             while (include && kit.hasNext())
             {
-               Archive a = kit.next();
-               if (a.doesProvide(s))
+               Profile p = kit.next();
+               if (p.doesProvide(s))
                {
-                  profiles.add(a.getName());
+                  profiles.add(p.getName());
                   include = false;
                }
             }

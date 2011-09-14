@@ -19,36 +19,31 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.tattletale.reporting.profiles;
+package org.jboss.tattletale.profiles;
 
 import org.jboss.tattletale.core.ArchiveTypes;
-
-import java.util.Set;
 
 import javassist.bytecode.ClassFile;
 
 /**
- * Sun: Java 5
+ * Sun: Java 6 (JCE)
  *
  * @author Jesper Pedersen <jesper.pedersen@jboss.org>
  */
-public class SunJava5 extends CommonProfile
+public class SunJava6JCE extends AbstractProfile
 {
 
-   private static final String CLASS_SET = "sunjdk5.clz.gz";
-   private static final String PROFILE_NAME = "Sun Java 5";
-   private static final String PROFILE_CODE = "java5";
-   private static final String PROFILE_LOCATION = "rt.jar";
+   private static final String CLASS_SET = "sunjdk6-jce.clz.gz";
+   private static final String PROFILE_NAME = "Sun Java 6 (JCE)";
+   private static final String PROFILE_CODE = "jce6";
+   private static final String PROFILE_LOCATION = "jce.jar";
    private static final int ARCHIVE_TYPE = ArchiveTypes.JAR;
-   private static final int CLASSFILE_VERSION = ClassFile.JAVA_5;
+   private static final int CLASSFILE_VERSION = ClassFile.JAVA_6;
 
    /** Constructor */
-   public SunJava5()
+   public SunJava6JCE()
    {
       super(CLASS_SET, ARCHIVE_TYPE, PROFILE_NAME, CLASSFILE_VERSION, PROFILE_LOCATION);
-
-      addSubArchive(new SunJava5JCE());
-      addSubArchive(new SunJava5JSSE());
    }
 
    @Override
@@ -61,12 +56,5 @@ public class SunJava5 extends CommonProfile
    protected String getProfileName()
    {
       return PROFILE_NAME;
-   }
-
-   @Override
-   public boolean included(boolean allProfiles, Set<String> profileSet)
-   {
-      return allProfiles || profileSet == null || profileSet.isEmpty() && (profileSet.contains(getProfileCode())
-            || profileSet.contains(getProfileName()));
    }
 }

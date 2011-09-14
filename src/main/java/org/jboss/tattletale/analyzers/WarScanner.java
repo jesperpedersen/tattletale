@@ -26,6 +26,7 @@ import org.jboss.tattletale.core.Archive;
 import org.jboss.tattletale.core.ClassesArchive;
 import org.jboss.tattletale.core.Location;
 import org.jboss.tattletale.core.WarArchive;
+import org.jboss.tattletale.profiles.Profile;
 
 import java.io.File;
 import java.io.IOException;
@@ -73,8 +74,7 @@ public class WarScanner extends AbstractScanner
     * @param blacklisted The set of black listed packages
     * @return The archive
     */
-   public Archive scan(File war, Map<String, SortedSet<String>> gProvides,
-                       List<Archive> known,
+   public Archive scan(File war, Map<String, SortedSet<String>> gProvides, List<Profile> known,
                        Set<String> blacklisted)
    {
 
