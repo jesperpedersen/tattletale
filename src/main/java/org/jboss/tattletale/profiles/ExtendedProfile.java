@@ -22,34 +22,17 @@
 
 package org.jboss.tattletale.profiles;
 
-
-
 /**
- * Interface that will define what all Profiles need to implement.
- *
+ * Interface that will define what is required from custom, extended profiles.
  * @author Navin Surtani
  */
-public interface Profile
+public interface ExtendedProfile extends Profile
 {
    /**
-    * Method to check whether or not the String representation of the class parameter is provided or not.
+    * Simple get call to obtain the module identifier based on the name passed.
     *
-    * @param clz - the string representation of the class.
-    * @return whether or not the class is provided.
+    * @param   archiveName    - the archive name.
+    * @return                 - the module identifier.
     */
-   public boolean doesProvide(String clz);
-
-   /**
-    * Simple getter.
-    *
-    * @return - the name of the profile.
-    */
-   public String getName();
-
-   /**
-    * Simple get call to obtain the module identifier for a given implementation.
-    *
-    * @return - the module identifier.
-    */
-   public String getModuleIdentifier();
+   public String getModuleIdentifier(String archiveName);
 }

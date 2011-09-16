@@ -53,10 +53,10 @@ public abstract class AbstractProfile implements Profile
    protected SortedSet<String> classSet = new TreeSet<String>();
 
    /** Set of locations */
-   private SortedSet<Location> locations = new TreeSet<Location>();
+   protected SortedSet<Location> locations = new TreeSet<Location>();
 
    /** Set of sub-subProfiles */
-   private SortedSet<Profile> subProfiles = new TreeSet<Profile>();
+   protected SortedSet<Profile> subProfiles = new TreeSet<Profile>();
 
 
    /**
@@ -70,10 +70,23 @@ public abstract class AbstractProfile implements Profile
     */
    public AbstractProfile(String classSet, int type, String name, int version, String location)
    {
+      this (type, name, version, location);
+      loadProfile(classSet);
+   }
+
+   /**
+    * Constructor
+    *
+    * @param type     Archive type
+    * @param name     Profile name
+    * @param version  Profile's class version
+    * @param location Profile's location
+    */
+   public AbstractProfile(int type, String name, int version, String location)
+   {
       this.type = type;
       this.name = name;
       this.version = version;
-      loadClassList(classSet);
       addLocation(new Location(location, name));
    }
 
@@ -134,11 +147,24 @@ public abstract class AbstractProfile implements Profile
    }
 
    /**
+    * Getter call to return the module identifier. Default implementation here is to return null ALWAYS. For
+    * different implementations, this method call MUST be overridden.
+    *
+    * @return null.
+    */
+
+   public String getModuleIdentifier()
+   {
+      // Default implementation.
+      return null;
+   }
+
+   /**
     * Loads this profile's class list from the resources.
     *
     * @param resourceFile File name
     */
-   protected void loadClassList(String resourceFile)
+   protected void loadProfile(String resourceFile)
    {
       InputStream is = null;
       try
