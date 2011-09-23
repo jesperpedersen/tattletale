@@ -24,6 +24,7 @@ package org.jboss.tattletale.reporting;
 
 import org.jboss.tattletale.core.Archive;
 import org.jboss.tattletale.core.NestableArchive;
+import org.jboss.tattletale.profiles.Profile;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -121,12 +122,12 @@ public class DependsOnReport extends CLSReport
 
                if (!found)
                {
-                  Iterator<Archive> kit = getKnown().iterator();
+                  Iterator<Profile> kit = getKnown().iterator();
                   while (!found && kit.hasNext())
                   {
-                     Archive a = kit.next();
+                     Profile profile = kit.next();
 
-                     if (a.doesProvide(require))
+                     if (profile.doesProvide(require))
                      {
                         found = true;
                      }

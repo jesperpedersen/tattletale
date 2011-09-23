@@ -21,7 +21,7 @@
  */
 package org.jboss.tattletale.reporting;
 
-import org.jboss.tattletale.core.Archive;
+import org.jboss.tattletale.profiles.Profile;
 import org.jboss.tattletale.reporting.classloader.ClassLoaderStructure;
 
 import java.util.List;
@@ -33,8 +33,8 @@ import java.util.List;
  */
 public abstract class CLSReport extends AbstractReport
 {
-   /** Known archives */
-   private List<Archive> known;
+   /** Known Profiles */
+   private List<Profile> known;
 
    /** the CLS */
    private ClassLoaderStructure cls = null;
@@ -94,7 +94,7 @@ public abstract class CLSReport extends AbstractReport
     *
     * @param known The list of known archives
     */
-   public void setKnown(List<Archive> known)
+   public void setKnown(List<Profile> known)
    {
       this.known = known;
    }
@@ -102,9 +102,9 @@ public abstract class CLSReport extends AbstractReport
    /**
     * Get the known archives
     *
-    * @return The list of known archives
+    * @return The list of known profiles
     */
-   public List<Archive> getKnown()
+   public List<Profile> getKnown()
    {
       return known;
    }

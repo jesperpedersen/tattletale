@@ -40,7 +40,7 @@ import javassist.bytecode.ClassFile;
  *
  * @author Navin Surtani
  */
-public class JBossAS7 extends AbstractProfile implements ExtendedProfile
+public class JBossAS7Profile extends AbstractProfile implements ExtendedProfile
 {
    private static final String CLASS_SET = "jbossas7.clz.gz";
    private static final String PROFILE_NAME = "JBoss AS 7";
@@ -50,7 +50,7 @@ public class JBossAS7 extends AbstractProfile implements ExtendedProfile
    private static final int CLASSFILE_VERSION = ClassFile.JAVA_6;
 
    /** Constructor */
-   public JBossAS7()
+   public JBossAS7Profile()
    {
       super(ARCHIVE_TYPE, PROFILE_NAME, CLASSFILE_VERSION, PROFILE_LOCATION);
       this.loadProfile(CLASS_SET);

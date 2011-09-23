@@ -31,8 +31,8 @@ public interface ExtendedProfile extends Profile
    /**
     * Simple get call to obtain the module identifier based on the name passed.
     *
-    * @param   archiveName    - the archive name.
+    * @param   clazz          - class name.
     * @return                 - the module identifier.
     */
-   public String getModuleIdentifier(String archiveName);
+   public String getModuleIdentifier(String clazz);
 }
