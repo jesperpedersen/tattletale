@@ -29,6 +29,7 @@ import org.jboss.tattletale.core.ArchiveTypes;
 import org.jboss.tattletale.core.Location;
 import org.jboss.tattletale.profiles.AbstractProfile;
 import org.jboss.tattletale.profiles.CDI10;
+import org.jboss.tattletale.profiles.JBossAS7Profile;
 import org.jboss.tattletale.profiles.JavaEE5;
 import org.jboss.tattletale.profiles.JavaEE6;
 import org.jboss.tattletale.profiles.Profile;
@@ -37,6 +38,7 @@ import org.jboss.tattletale.profiles.Spring25;
 import org.jboss.tattletale.profiles.Spring30;
 import org.jboss.tattletale.profiles.SunJava5;
 import org.jboss.tattletale.profiles.SunJava6;
+import org.jboss.tattletale.reporting.AS7Report;
 import org.jboss.tattletale.reporting.BlackListedReport;
 import org.jboss.tattletale.reporting.CircularDependencyReport;
 import org.jboss.tattletale.reporting.ClassDependantsReport;
@@ -176,6 +178,7 @@ public class Main
       addDependencyReport(GraphvizReport.class);
 
       this.generalReports = new ArrayList<Class>();
+      addGeneralReport(AS7Report.class);
       addGeneralReport(MultipleJarsReport.class);
       addGeneralReport(MultipleLocationsReport.class);
       addGeneralReport(PackageMultipleJarsReport.class);
@@ -556,7 +559,7 @@ public class Main
       List<Profile> known = new ArrayList<Profile>();
 
       AbstractProfile[] profiles = new AbstractProfile[]{new SunJava5(), new SunJava6(), new JavaEE5(), new JavaEE6(),
-         new CDI10(), new Seam22(), new Spring25(), new Spring30()};
+         new CDI10(), new Seam22(), new Spring25(), new Spring30(), new JBossAS7Profile()};
 
       for (AbstractProfile p : profiles)
       {

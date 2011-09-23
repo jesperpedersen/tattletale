@@ -27,9 +27,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.HashSet;
 import java.util.Set;
-import java.util.SortedSet;
-import java.util.TreeSet;
 import java.util.zip.GZIPInputStream;
 
 /**
@@ -50,13 +49,13 @@ public abstract class AbstractProfile implements Profile
    private String name;
 
    /** Content of the class set file */
-   protected SortedSet<String> classSet = new TreeSet<String>();
+   protected Set<String> classSet = new HashSet<String>();
 
    /** Set of locations */
-   protected SortedSet<Location> locations = new TreeSet<Location>();
+   protected Set<Location> locations = new HashSet<Location>();
 
    /** Set of sub-subProfiles */
-   protected SortedSet<Profile> subProfiles = new TreeSet<Profile>();
+   protected Set<Profile> subProfiles = new HashSet<Profile>();
 
 
    /**

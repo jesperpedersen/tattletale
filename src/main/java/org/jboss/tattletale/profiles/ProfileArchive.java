@@ -22,8 +22,8 @@
 
 package org.jboss.tattletale.profiles;
 
-import java.util.SortedSet;
-import java.util.TreeSet;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @author Navin Surtani
@@ -37,7 +37,7 @@ public class ProfileArchive implements Profile
    private String moduleIdentifier;
 
    /** Set of classes*/
-   private SortedSet<String> classes;
+   private Set<String> classes;
 
    /**
     * Constructor
@@ -49,7 +49,7 @@ public class ProfileArchive implements Profile
    {
       this.archiveName = archiveName;
       this.moduleIdentifier = moduleIdentifier;
-      this.classes = new TreeSet<String>();
+      this.classes = new HashSet<String>();
    }
 
    /**

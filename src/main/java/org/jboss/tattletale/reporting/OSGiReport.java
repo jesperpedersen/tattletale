@@ -438,6 +438,10 @@ public class OSGiReport extends AbstractReport
 
       for (Archive archive : archives)
       {
+         String archiveName = archive.getName();
+         int finalDot = archiveName.lastIndexOf(".");
+         String extension = archiveName.substring(finalDot + 1);
+
          if (odd)
          {
             bw.write("  <tr class=\"rowodd\">" + Dump.newLine());
@@ -446,8 +450,8 @@ public class OSGiReport extends AbstractReport
          {
             bw.write("  <tr class=\"roweven\">" + Dump.newLine());
          }
-         bw.write("     <td><a href=\"../jar/" + archive.getName() + ".html\">" +
-                  archive.getName() + "</a></td>" + Dump.newLine());
+         bw.write("     <td><a href=\"../" + extension + "/" + archiveName + ".html\">" +
+                  archiveName + "</a></td>" + Dump.newLine());
          if (archive.isOSGi())
          {
             bw.write("     <td style=\"color: green;\">Yes</td>" + Dump.newLine());
@@ -457,7 +461,7 @@ public class OSGiReport extends AbstractReport
          {
             osgiNotReady++;
 
-            if (!isFiltered(archive.getName()))
+            if (!isFiltered(archiveName))
             {
                status = ReportStatus.RED;
                bw.write("     <td style=\"color: red;\">No</td>" + Dump.newLine());
@@ -467,8 +471,8 @@ public class OSGiReport extends AbstractReport
                bw.write("     <td style=\"color: red; text-decoration: line-through;\">No</td>" + Dump.newLine());
             }
          }
-         bw.write("     <td><a href=\"" + archive.getName() + "/index.html\">Report</a></td>" + Dump.newLine());
-         bw.write("     <td><a href=\"" + archive.getName() + "/MANIFEST.MF\">Manifest</a></td>" + Dump.newLine());
+         bw.write("     <td><a href=\"" + archiveName + "/index.html\">Report</a></td>" + Dump.newLine());
+         bw.write("     <td><a href=\"" + archiveName + "/MANIFEST.MF\">Manifest</a></td>" + Dump.newLine());
          bw.write("  </tr>" + Dump.newLine());
 
          odd = !odd;

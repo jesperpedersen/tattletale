@@ -84,6 +84,10 @@ public class EliminateJarsReport extends AbstractReport
          }
          else
          {
+            String archiveName = archive.getName();
+            int finalDot = archiveName.lastIndexOf(".");
+            String extension = archiveName.substring(finalDot + 1);
+
             SortedSet<Location> locations = archive.getLocations();
             Iterator<Location> lit = locations.iterator();
 
@@ -123,8 +127,8 @@ public class EliminateJarsReport extends AbstractReport
                {
                   bw.write("  <tr class=\"roweven\">" + Dump.newLine());
                }
-               bw.write("     <td><a href=\"../jar/" + archive.getName() +
-                        ".html\">" + archive.getName() + "</a></td>" + Dump.newLine());
+               bw.write("     <td><a href=\"../" + extension + "/" + archiveName +
+                        ".html\">" + archiveName + "</a></td>" + Dump.newLine());
                bw.write("     <td>");
 
                bw.write("       <table>" + Dump.newLine());
