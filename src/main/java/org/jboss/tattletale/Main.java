@@ -569,48 +569,52 @@ public class Main
          }
       }
 
-      StringTokenizer st = new StringTokenizer(source, File.pathSeparator);
+      StringTokenizer st = new StringTokenizer(source, ":");
+
+      List<File> fileList = new ArrayList<File>();
+      Analyzer analyzer = new Analyzer();
 
       while (st.hasMoreTokens())
       {
          File f = new File(st.nextToken());
-
          if (f.isDirectory())
          {
-            List<File> fileList = DirectoryScanner.scan(f, excludeSet);
-            Analyzer analyzer = new Analyzer();
+            fileList.addAll(DirectoryScanner.scan(f, excludeSet));
+         }
+         else
+         {
+            fileList.add(f);
+         }
+      }
 
-            for (File file : fileList)
+      for (File file : fileList)
+      {
+         ArchiveScanner scanner = analyzer.getScanner(file);
+         Archive archive = scanner.scan(file, gProvides, known, blacklistedSet);
+         if (archive != null)
+         {
+            SortedSet<Location> locations = locationsMap.get(archive.getName());
+            if (locations == null)
             {
-               ArchiveScanner scanner = analyzer.getScanner(file);
-               Archive archive = scanner.scan(file, gProvides, known, blacklistedSet);
-               if (archive != null)
-               {
-                  SortedSet<Location> locations = locationsMap.get(archive.getName());
-                  if (locations == null)
-                  {
-                     locations = new TreeSet<Location>();
-                  }
-                  locations.addAll(archive.getLocations());
-                  locationsMap.put(archive.getName(), locations);
-
-                  if (!archives.contains(archive))
-                  {
-                     archives.add(archive);
-                  }
-               }
+               locations = new TreeSet<Location>();
             }
+            locations.addAll(archive.getLocations());
+            locationsMap.put(archive.getName(), locations);
 
-            for (Archive a : archives)
+            if (!archives.contains(archive))
             {
-               SortedSet<Location> locations = locationsMap.get(a.getName());
-
-               for (Location l : locations)
-               {
-                  a.addLocation(l);
-               }
+               archives.add(archive);
             }
+         }
+      }
 
+      for (Archive a : archives)
+      {
+         SortedSet<Location> locations = locationsMap.get(a.getName());
+
+         for (Location l : locations)
+         {
+            a.addLocation(l);
          }
       }
 
@@ -1016,7 +1020,7 @@ public class Main
    /** The usage method */
    private static void usage()
    {
-      System.out.println("Usage: Tattletale [-exclude=<excludes>]" + " <scan-directory> [output-directory]");
+      System.out.println("Usage: Tattletale [-exclude=<excludes>]" + " <source>[:<source>]* [output-directory]");
    }
 
    /**
