@@ -422,16 +422,23 @@ myreport=myfilter
      <para>Running JBoss Tattletale is very easy</para>
 
      <programlisting>
-java -Xmx512m -jar tattletale.jar [-exclude=&lt;excludes&gt;] &lt;sourcedir&gt; [&lt;outputdir&gt;]
+	  java -Xmx512m -jar tattletale.jar [-exclude=&lt;excludes&gt;] &lt;sourcedir&gt; [&lt;outputdir&gt;]
      </programlisting>
      
      <para>where the "sourcedir" is the directory that contains your Java archives and the optional "outputdir" parameter
      is the directory where you would like your reports to be generated. The "-exclude" option let you 
      exclude directories or file on the command line - see the configuration file for syntax.</para>
+     
+     <para>Tattletale can also be run against specific compiled Archives. These can be singular or multiple files provided 
+     in the command line and separated using a : delimeter.</para>
+     
+     <programlisting>
+     java -Xmx512m -jar tattletale.jar myApp.jar:yourApp.war:amazingApp.ear report
+     </programlisting>
+     
+     <para>The main file will be generated under the report directory as index.html.</para>
 
-     <para>The main file will be generated under the output directory as index.html.</para>
-
-     <para>JBoss Tattletale will scan for Java Archives (.JAR) files.</para>
+     <para>JBoss Tattletale will scan for Java (.jar), Web (.war) and Enterprise (.ear) Archive files.</para>
 
      <para>JBoss Tattletale requires Java Runtime Environment 5 or higher.</para>
 
