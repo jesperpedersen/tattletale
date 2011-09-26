@@ -39,6 +39,7 @@ public class SunJava6 extends AbstractProfile
    private static final String PROFILE_NAME = "Sun Java 6";
    private static final String PROFILE_CODE = "java6";
    private static final String PROFILE_LOCATION = "rt.jar";
+   private static final String MODULE_IDENTIFIER = "system";
    private static final int ARCHIVE_TYPE = ArchiveTypes.JAR;
    private static final int CLASSFILE_VERSION = ClassFile.JAVA_6;
 
@@ -69,4 +70,11 @@ public class SunJava6 extends AbstractProfile
       return allProfiles || profileSet == null || (profileSet.contains(getProfileCode())
             || profileSet.contains(getProfileName()));
    }
+
+   @Override
+   public String getModuleIdentifier()
+   {
+      return MODULE_IDENTIFIER;
+   }
 }
+

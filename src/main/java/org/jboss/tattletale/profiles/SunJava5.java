@@ -39,6 +39,7 @@ public class SunJava5 extends AbstractProfile
    private static final String PROFILE_NAME = "Sun Java 5";
    private static final String PROFILE_CODE = "java5";
    private static final String PROFILE_LOCATION = "rt.jar";
+   private static final String MODULE_IDENTIFIER = "system";
    private static final int ARCHIVE_TYPE = ArchiveTypes.JAR;
    private static final int CLASSFILE_VERSION = ClassFile.JAVA_5;
 
@@ -69,4 +70,11 @@ public class SunJava5 extends AbstractProfile
       return allProfiles || profileSet == null || profileSet.isEmpty() && (profileSet.contains(getProfileCode())
             || profileSet.contains(getProfileName()));
    }
+
+   @Override
+   public String getModuleIdentifier()
+   {
+      return MODULE_IDENTIFIER;
+   }
 }
+
