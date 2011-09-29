@@ -26,8 +26,8 @@ import org.jboss.tattletale.core.NestableArchive;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
-import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -66,87 +66,98 @@ public class DependantsReport extends CLSReport
       bw.write("  <tr>" + Dump.newLine());
       bw.write("     <th>Archive</th>" + Dump.newLine());
       bw.write("     <th>Dependants</th>" + Dump.newLine());
-      bw.write("  </tr>" + Dump.newLine());
-      recursivelyWriteContent(bw, archives);
-      bw.write("</table>" + Dump.newLine());
-   }
 
-
-   private void recursivelyWriteContent(BufferedWriter bw, Collection<Archive> archives) throws IOException
-   {
       boolean odd = true;
 
       for (Archive archive : archives)
       {
-         if (archive instanceof NestableArchive)
+         String archiveName = archive.getName();
+         int finalDot = archiveName.lastIndexOf(".");
+         String extension = archiveName.substring(finalDot + 1);
+
+         if (odd)
          {
-            NestableArchive nestableArchive = (NestableArchive) archive;
-            recursivelyWriteContent(bw, nestableArchive.getSubArchives());
+            bw.write("  <tr class=\"rowodd\">" + Dump.newLine());
          }
          else
          {
-            if (odd)
-            {
-               bw.write("  <tr class=\"rowodd\">" + Dump.newLine());
-            }
-            else
-            {
-               bw.write("  <tr class=\"roweven\">" + Dump.newLine());
-            }
-            bw.write("     <td><a href=\"../jar/" + archive.getName() + ".html\">" +
-                  archive.getName() + "</a></td>" + Dump.newLine());
-            bw.write("     <td>");
-
-
-            SortedSet<String> result = new TreeSet<String>();
-
-            for (Archive a : archives)
-            {
-
-               for (String require : a.getRequires())
-               {
-
-                  if (archive.doesProvide(require) && (getCLS() == null || getCLS().isVisible(a, archive)))
-                  {
-                     result.add(a.getName());
-                  }
-               }
-            }
-
-            if (result.size() == 0)
-            {
-               bw.write("&nbsp;");
-            }
-            else
-            {
-               Iterator<String> resultIt = result.iterator();
-               while (resultIt.hasNext())
-               {
-                  String r = resultIt.next();
-                  if (r.endsWith(".jar"))
-                  {
-                     bw.write("<a href=\"../jar/" + r + ".html\">" + r + "</a>");
-                  }
-                  else
-                  {
-                     bw.write("<i>" + r + "</i>");
-                  }
-
-                  if (resultIt.hasNext())
-                  {
-                     bw.write(", ");
-                  }
-               }
-            }
-
-            bw.write("</td>" + Dump.newLine());
-            bw.write("  </tr>" + Dump.newLine());
-
-            odd = !odd;
+            bw.write("  <tr class=\"roweven\">" + Dump.newLine());
          }
+         bw.write("     <td><a href=\"../" + extension + "/" + archiveName + ".html\">" +
+               archiveName + "</a></td>" + Dump.newLine());
+         bw.write("     <td>");
+
+
+         SortedSet<String> result = new TreeSet<String>();
+
+         for (Archive a : archives)
+         {
+
+            for (String require : getRequires(archive))
+            {
+
+               if (archive.doesProvide(require) && (getCLS() == null || getCLS().isVisible(a, archive)))
+               {
+                  result.add(a.getName());
+               }
+            }
+         }
+
+         if (result.size() == 0)
+         {
+            bw.write("&nbsp;");
+         }
+         else
+         {
+            Iterator<String> resultIt = result.iterator();
+            while (resultIt.hasNext())
+            {
+               String r = resultIt.next();
+               if (r.endsWith(".jar"))
+               {
+                  bw.write("<a href=\"../jar/" + r + ".html\">" + r + "</a>");
+               }
+               else
+               {
+                  bw.write("<i>" + r + "</i>");
+               }
+
+               if (resultIt.hasNext())
+               {
+                  bw.write(", ");
+               }
+            }
+         }
+
+         bw.write("</td>" + Dump.newLine());
+         bw.write("  </tr>" + Dump.newLine());
+
+         odd = !odd;
       }
+
+      bw.write("  </tr>" + Dump.newLine());
+      bw.write("</table>" + Dump.newLine());
    }
 
+   private SortedSet<String> getRequires(Archive archive)
+   {
+      SortedSet<String> requires = new TreeSet<String>();
+      if (archive instanceof NestableArchive)
+      {
+         NestableArchive nestableArchive = (NestableArchive) archive;
+         List<Archive> subArchives = nestableArchive.getSubArchives();
+         requires.addAll(nestableArchive.getRequires());
+         for (Archive sa : subArchives)
+         {
+            requires.addAll(getRequires(sa));
+         }
+      }
+      else
+      {
+         requires.addAll(archive.getRequires());
+      }
+      return requires;
+   }
 
    /**
     * write out the header of the report's content

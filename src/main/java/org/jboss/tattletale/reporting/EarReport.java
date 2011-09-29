@@ -50,6 +50,9 @@ public class EarReport extends ArchiveReport
    public EarReport(Archive archive)
    {
       super(DIRECTORY, ReportSeverity.INFO, archive);
+      StringBuffer sb = new StringBuffer(archive.getName());
+      setFilename(sb.append(".html").toString());
+
    }
 
    /**
@@ -281,4 +284,10 @@ public class EarReport extends ArchiveReport
       bw.write("<a href=\"../index.html\">Main</a>" + Dump.newLine());
       bw.write("<p>" + Dump.newLine());
    }
+
+   private void setFilename(String fileName)
+   {
+      this.fileName = fileName;
+   }
+
 }

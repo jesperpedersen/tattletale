@@ -63,21 +63,17 @@ snapshots.jboss.org
      <section id="sourcecode">
        <title>Source code</title>
        <para>If you want to experiment with the latest developments you may
-         checkout the latest code from SVN. Be aware that the
+         checkout the latest code from GitHub (formerly in SVN). Be aware that the
          information provided in this manual might then not be accurate.</para>
 
-       <para>The anonymous SVN repository is located under:</para>
+       <para>You can clone the repository onto your computer by the following command. This automatically creates a directory 'tattletale' within your current directory. Please note that this would be a read-only directory.</para>
        
        <programlisting>
-svn co http://anonsvn.jboss.org/repos/tattletale/trunk/ tattletale-trunk
+git clone git://github.com/jesperpedersen/tattletale.git
        </programlisting>
+       
+       <para>Should you want to edit the sources yourself, it is best to create your own fork of the repository and then clone that particular fork on your command line. Should you need help with Git and GitHub then read the help files (http://help.github.com/)</para>
       
-       <para>The developer SVN repository is located under:</para>
-      
-       <programlisting>
-svn co https://svn.jboss.org/repos/tattletale/trunk/ tattletale-trunk
-       </programlisting>
-
        <para>The project is compiled using Java Development Kit 1.5 or higher, Apache Ant 1.7 or higher and
           Apache Ivy 2.1 or higher. Using</para>
 

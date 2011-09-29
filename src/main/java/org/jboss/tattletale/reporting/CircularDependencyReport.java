@@ -102,6 +102,9 @@ public class CircularDependencyReport extends CLSReport
          String archive = entry.getKey();
          SortedSet<String> value = entry.getValue();
 
+         int finalDot = archive.lastIndexOf(".");
+         String extension = archive.substring(finalDot + 1);
+
          if (value.size() != 0)
          {
             SortedSet<String> circular = new TreeSet<String>();
@@ -133,7 +136,8 @@ public class CircularDependencyReport extends CLSReport
                {
                   bw.write("  <tr class=\"roweven\">" + Dump.newLine());
                }
-               bw.write("     <td><a href=\"../jar/" + archive + ".html\">" + archive + "</a></td>" + Dump.newLine());
+               bw.write("     <td><a href=\"../" + extension + "/" + archive + ".html\">" + archive + "</a></td>" +
+                     Dump.newLine());
                if (!filtered)
                {
                   bw.write("     <td>");
@@ -150,11 +154,11 @@ public class CircularDependencyReport extends CLSReport
 
                   if (circular.contains(r))
                   {
-                     bw.write("<a href=\"../jar/" + r + ".html\">" + r + " (*)</a>");
+                     bw.write("<a href=\"../" + extension + "/" + r + ".html\">" + r + " (*)</a>");
                   }
                   else
                   {
-                     bw.write("<a href=\"../jar/" + r + ".html\">" + r + "</a>");
+                     bw.write("<a href=\"../" + extension + "/" + r + ".html\">" + r + "</a>");
                   }
 
                   if (valueIt.hasNext())

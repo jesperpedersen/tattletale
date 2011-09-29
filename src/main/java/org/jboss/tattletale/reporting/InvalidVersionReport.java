@@ -27,9 +27,10 @@ import org.jboss.tattletale.core.NestableArchive;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
-import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
 import java.util.SortedSet;
+import java.util.TreeSet;
 
 /**
  * Multiple locations report
@@ -67,96 +68,103 @@ public class InvalidVersionReport extends AbstractReport
       bw.write("     <th>Location</th>" + Dump.newLine());
       bw.write("  </tr>" + Dump.newLine());
 
-      recursivelyWriteContent(bw, archives);
-
-      bw.write("</table>" + Dump.newLine());
-   }
-
-   private void recursivelyWriteContent(BufferedWriter bw, Collection<Archive> archives) throws IOException
-   {
       boolean odd = true;
 
       for (Archive archive : archives)
       {
+         String archiveName = archive.getName();
+         int finalDot = archiveName.lastIndexOf(".");
+         String extension = archiveName.substring(finalDot + 1);
 
-         if (archive instanceof NestableArchive)
+         SortedSet<Location> locations = getLocations(archive);
+         Iterator<Location> lit = locations.iterator();
+
+         Location location = lit.next();
+         String version = location.getVersion();
+
+         if (version != null && !version.matches("\\d+(\\.\\d+(\\.\\d+(\\.[0-9a-zA-Z\\_\\-]+)?)?)?"))
          {
-            NestableArchive nestableArchive = (NestableArchive) archive;
-            recursivelyWriteContent(bw, nestableArchive.getSubArchives());
-         }
-         else
-         {
-            String archiveName = archive.getName();
-            int finalDot = archiveName.lastIndexOf(".");
-            String extension = archiveName.substring(finalDot + 1);
+            boolean filtered = isFiltered(archive.getName());
 
-            SortedSet<Location> locations = archive.getLocations();
-            Iterator<Location> lit = locations.iterator();
-
-            Location location = lit.next();
-            String version = location.getVersion();
-
-            if (version != null && !version.matches("\\d+(\\.\\d+(\\.\\d+(\\.[0-9a-zA-Z\\_\\-]+)?)?)?"))
+            if (!filtered)
             {
-               boolean filtered = isFiltered(archive.getName());
+               status = ReportStatus.RED;
+            }
 
+            if (odd)
+            {
+               bw.write("  <tr class=\"rowodd\">" + Dump.newLine());
+            }
+            else
+            {
+               bw.write("  <tr class=\"roweven\">" + Dump.newLine());
+            }
+            bw.write("     <td><a href=\"../" + extension + "/" + archiveName + ".html\">" + archiveName
+                  + "</a></td>" + Dump.newLine());
+            bw.write("     <td>");
+
+            bw.write("       <table>" + Dump.newLine());
+
+            lit = locations.iterator();
+            while (lit.hasNext())
+            {
+               location = lit.next();
+
+               bw.write("      <tr>" + Dump.newLine());
+
+               bw.write("        <td>" + location.getFilename() + "</td>" + Dump.newLine());
                if (!filtered)
                {
-                  status = ReportStatus.RED;
-               }
-
-               if (odd)
-               {
-                  bw.write("  <tr class=\"rowodd\">" + Dump.newLine());
+                  bw.write("        <td>");
                }
                else
                {
-                  bw.write("  <tr class=\"roweven\">" + Dump.newLine());
+                  bw.write("        <td style=\"text-decoration: line-through;\">");
                }
-               bw.write("     <td><a href=\"../" + extension + "/" + archiveName + ".html\">" + archiveName
-                     + "</a></td>" + Dump.newLine());
-               bw.write("     <td>");
-
-               bw.write("       <table>" + Dump.newLine());
-
-               lit = locations.iterator();
-               while (lit.hasNext())
+               if (location.getVersion() != null)
                {
-                  location = lit.next();
-
-                  bw.write("      <tr>" + Dump.newLine());
-
-                  bw.write("        <td>" + location.getFilename() + "</td>" + Dump.newLine());
-                  if (!filtered)
-                  {
-                     bw.write("        <td>");
-                  }
-                  else
-                  {
-                     bw.write("        <td style=\"text-decoration: line-through;\">");
-                  }
-                  if (location.getVersion() != null)
-                  {
-                     bw.write(location.getVersion());
-                  }
-                  else
-                  {
-                     bw.write("<i>Not listed</i>");
-                  }
-                  bw.write("</td>" + Dump.newLine());
-
-                  bw.write("      </tr>" + Dump.newLine());
+                  bw.write(location.getVersion());
                }
-
-               bw.write("       </table>" + Dump.newLine());
-
+               else
+               {
+                  bw.write("<i>Not listed</i>");
+               }
                bw.write("</td>" + Dump.newLine());
-               bw.write("  </tr>" + Dump.newLine());
 
-               odd = !odd;
+               bw.write("      </tr>" + Dump.newLine());
             }
+
+            bw.write("       </table>" + Dump.newLine());
+
+            bw.write("</td>" + Dump.newLine());
+            bw.write("  </tr>" + Dump.newLine());
+
+            odd = !odd;
+         }
+
+         bw.write("</table>" + Dump.newLine());
+      }
+   }
+
+
+   private SortedSet<Location> getLocations(Archive archive)
+   {
+      SortedSet<Location> locations = new TreeSet<Location>();
+      if (archive instanceof NestableArchive)
+      {
+         NestableArchive nestableArchive = (NestableArchive) archive;
+         List<Archive> subArchives = nestableArchive.getSubArchives();
+
+         for (Archive sa : subArchives)
+         {
+            locations.addAll(getLocations(sa));
          }
       }
+      else
+      {
+         locations.addAll(archive.getLocations());
+      }
+      return locations;
    }
 
    /**

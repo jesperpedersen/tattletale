@@ -24,13 +24,14 @@ package org.jboss.tattletale.reporting;
 import org.jboss.tattletale.core.Archive;
 import org.jboss.tattletale.core.ArchiveTypes;
 import org.jboss.tattletale.core.NestableArchive;
-import org.jboss.tattletale.profiles.Profile;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
-import java.util.Collection;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.SortedMap;
 import java.util.SortedSet;
 import java.util.TreeMap;
@@ -71,7 +72,30 @@ public class TransitiveDependsOnReport extends CLSReport
       bw.write("     <th>Depends On</th>" + Dump.newLine());
       bw.write("  </tr>" + Dump.newLine());
 
-      SortedMap<String, SortedSet<String>> dependsOnMap = recursivelyBuildDependsOnMap(archives);
+      SortedMap<String, SortedSet<String>> dependsOnMap = new TreeMap<String, SortedSet<String>>();
+
+      for (Archive archive : archives)
+      {
+         SortedSet<String> result = new TreeSet<String>();
+
+         for (Archive a : archives)
+         {
+
+            if (a.getType() == ArchiveTypes.JAR)
+            {
+               for (String require : getRequires(a))
+               {
+
+                  if (archive.doesProvide(require) && (getCLS() == null || getCLS().isVisible(a, archive)))
+                  {
+                     result.add(a.getName());
+                  }
+               }
+            }
+         }
+
+         dependsOnMap.put(archive.getName(), result);
+      }
 
       SortedMap<String, SortedSet<String>> transitiveDependsOnMap = new TreeMap<String, SortedSet<String>>();
 
@@ -160,73 +184,26 @@ public class TransitiveDependsOnReport extends CLSReport
       bw.write("</table>" + Dump.newLine());
    }
 
-   private SortedMap<String, SortedSet<String>> recursivelyBuildDependsOnMap(Collection<Archive> archives)
+   private Set<String> getRequires(Archive a)
    {
-      SortedMap<String, SortedSet<String>> dependsOnMap = new TreeMap<String, SortedSet<String>>();
-
-      for (Archive archive : archives)
+      Set<String> requires = new HashSet<String>();
+      if (a instanceof NestableArchive)
       {
-         if (archive instanceof NestableArchive)
+         NestableArchive na = (NestableArchive) a;
+         List<Archive> subArchives = na.getSubArchives();
+         requires.addAll(na.getRequires());
+
+         for (Archive sa : subArchives)
          {
-            NestableArchive nestableArchive = (NestableArchive) archive;
-            SortedMap<String, SortedSet<String>> subDependsOn = recursivelyBuildDependsOnMap(nestableArchive
-                  .getSubArchives());
-            dependsOnMap.putAll(subDependsOn);
-         }
-         {
-            SortedSet<String> result = dependsOnMap.get(archive.getName());
-            if (result == null)
-            {
-               result = new TreeSet<String>();
-            }
-
-            for (String require : archive.getRequires())
-            {
-
-               boolean found = false;
-               Iterator<Archive> ait = archives.iterator();
-               while (!found && ait.hasNext())
-               {
-                  Archive a = ait.next();
-
-                  if (a.getType() == ArchiveTypes.JAR)
-                  {
-                     if (a.doesProvide(require) && (getCLS() == null || getCLS().isVisible(archive, a)))
-                     {
-                        result.add(a.getName());
-                        found = true;
-                     }
-                  }
-               }
-
-               if (!found)
-               {
-                  Iterator<Profile> kit = getKnown().iterator();
-                  while (!found && kit.hasNext())
-                  {
-                     Profile profile = kit.next();
-
-                     if (profile.doesProvide(require))
-                     {
-                        found = true;
-                     }
-                  }
-               }
-
-               if (!found)
-               {
-                  result.add(require);
-               }
-            }
-
-            dependsOnMap.put(archive.getName(), result);
+            requires.addAll(getRequires(sa));
          }
       }
-
-
-      return dependsOnMap;
+      else
+      {
+         requires.addAll(a.getRequires());
+      }
+      return requires;
    }
-
    /**
     * write out the header of the report's content
     *

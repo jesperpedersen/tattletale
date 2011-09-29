@@ -27,9 +27,11 @@ import org.jboss.tattletale.core.NestableArchive;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
-import java.util.Collection;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.SortedMap;
 import java.util.SortedSet;
 import java.util.TreeMap;
@@ -71,7 +73,30 @@ public class TransitiveDependantsReport extends CLSReport
       bw.write("     <th>Dependants</th>" + Dump.newLine());
       bw.write("  </tr>" + Dump.newLine());
 
-      SortedMap<String, SortedSet<String>> dependantsMap = recursivelyBuildDependantsMap(archives);
+      SortedMap<String, SortedSet<String>> dependantsMap = new TreeMap<String, SortedSet<String>>();
+
+      for (Archive archive : archives)
+      {
+         SortedSet<String> result = new TreeSet<String>();
+
+         for (Archive a : archives)
+         {
+
+            if (a.getType() == ArchiveTypes.JAR)
+            {
+               for (String require : getRequires(a))
+               {
+
+                  if (archive.doesProvide(require) && (getCLS() == null || getCLS().isVisible(a, archive)))
+                  {
+                     result.add(a.getName());
+                  }
+               }
+            }
+         }
+
+         dependantsMap.put(archive.getName(), result);
+      }
 
 
       SortedMap<String, SortedSet<String>> transitiveDependantsMap = new TreeMap<String, SortedSet<String>>();
@@ -153,44 +178,27 @@ public class TransitiveDependantsReport extends CLSReport
       bw.write("</table>" + Dump.newLine());
    }
 
-   private SortedMap<String, SortedSet<String>> recursivelyBuildDependantsMap(Collection<Archive> archives)
+   private Set<String> getRequires(Archive a)
    {
-      SortedMap<String, SortedSet<String>> dependantsMap = new TreeMap<String, SortedSet<String>>();
-
-      for (Archive archive : archives)
+      Set<String> requires = new HashSet<String>();
+      if (a instanceof NestableArchive)
       {
-         if (archive instanceof NestableArchive)
+         NestableArchive na = (NestableArchive) a;
+         List<Archive> subArchives = na.getSubArchives();
+         requires.addAll(na.getRequires());
+
+         for (Archive sa : subArchives)
          {
-            NestableArchive nestableArchive = (NestableArchive) archive;
-            SortedMap<String, SortedSet<String>> subDependants = recursivelyBuildDependantsMap(nestableArchive
-                  .getSubArchives());
-            dependantsMap.putAll(subDependants);
-         }
-         else
-         {
-            SortedSet<String> result = new TreeSet<String>();
-
-            for (Archive a : archives)
-            {
-
-               if (a.getType() == ArchiveTypes.JAR)
-               {
-                  for (String require : a.getRequires())
-                  {
-
-                     if (archive.doesProvide(require) && (getCLS() == null || getCLS().isVisible(a, archive)))
-                     {
-                        result.add(a.getName());
-                     }
-                  }
-               }
-            }
-
-            dependantsMap.put(archive.getName(), result);
+            requires.addAll(getRequires(sa));
          }
       }
-      return dependantsMap;
+      else
+      {
+         requires.addAll(a.getRequires());
+      }
+      return requires;
    }
+
 
    /**
     * write out the header of the report's content

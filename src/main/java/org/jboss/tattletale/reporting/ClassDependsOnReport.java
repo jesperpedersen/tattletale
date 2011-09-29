@@ -27,8 +27,8 @@ import org.jboss.tattletale.core.NestableArchive;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
-import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.SortedMap;
 import java.util.SortedSet;
@@ -71,10 +71,35 @@ public class ClassDependsOnReport extends CLSReport
       bw.write("     <th>Depends On</th>" + Dump.newLine());
       bw.write("  </tr>" + Dump.newLine());
 
-      SortedMap<String, SortedSet<String>> result = recursivelyBuildResultFromArchive(archives);
-      boolean odd = true;
+      SortedMap<String, SortedSet<String>> result = new TreeMap<String, SortedSet<String>>();
+
+      for (Archive archive : archives)
+      {
+         SortedMap<String, SortedSet<String>> classDependencies = getClassDependencies(archive);
+
+         Iterator<Map.Entry<String, SortedSet<String>>> dit = classDependencies.entrySet().iterator();
+         while (dit.hasNext())
+         {
+            Map.Entry<String, SortedSet<String>> entry = dit.next();
+            String clz = entry.getKey();
+            SortedSet<String> deps = entry.getValue();
+
+            SortedSet<String> newDeps = new TreeSet<String>();
+
+            for (String dep : deps)
+            {
+               if (!dep.equals(clz))
+               {
+                  newDeps.add(dep);
+               }
+            }
+
+            result.put(clz, newDeps);
+         }
+      }
 
       Iterator<Map.Entry<String, SortedSet<String>>> rit = result.entrySet().iterator();
+      boolean odd = true;
 
       while (rit.hasNext())
       {
@@ -114,47 +139,29 @@ public class ClassDependsOnReport extends CLSReport
       bw.write("</table>" + Dump.newLine());
    }
 
-   private SortedMap<String, SortedSet<String>> recursivelyBuildResultFromArchive(Collection<Archive> archives)
+   private SortedMap<String, SortedSet<String>> getClassDependencies(Archive archive)
    {
-      SortedMap<String, SortedSet<String>> result = new TreeMap<String, SortedSet<String>>();
+      SortedMap<String, SortedSet<String>> classDeps = new TreeMap<String, SortedSet<String>>();
 
-      for (Archive archive : archives)
+      if (archive instanceof NestableArchive)
       {
-         if (archive instanceof NestableArchive)
+         NestableArchive nestableArchive = (NestableArchive) archive;
+         List<Archive> subArchives = nestableArchive.getSubArchives();
+
+         for (Archive sa : subArchives)
          {
-            NestableArchive nestableArchive = (NestableArchive) archive;
-            SortedMap<String, SortedSet<String>> subResult = recursivelyBuildResultFromArchive(nestableArchive
-                  .getSubArchives());
-            result.putAll(subResult);
+            classDeps.putAll(getClassDependencies(sa));
          }
-         else
-         {
-            SortedMap<String, SortedSet<String>> classDependencies = archive.getClassDependencies();
 
-            Iterator<Map.Entry<String, SortedSet<String>>> dit = classDependencies.entrySet().iterator();
-            while (dit.hasNext())
-            {
-               Map.Entry<String, SortedSet<String>> entry = dit.next();
-               String clz = entry.getKey();
-               SortedSet<String> deps = entry.getValue();
-
-               SortedSet<String> newDeps = new TreeSet<String>();
-
-               for (String dep : deps)
-               {
-                  if (!dep.equals(clz))
-                  {
-                     newDeps.add(dep);
-                  }
-               }
-
-               result.put(clz, newDeps);
-            }
-         }
+         classDeps.putAll(nestableArchive.getClassDependencies());
       }
-
-      return result;
+      else
+      {
+         classDeps.putAll(archive.getClassDependencies());
+      }
+      return classDeps;
    }
+
 
    /**
     * write out the header of the report's content
