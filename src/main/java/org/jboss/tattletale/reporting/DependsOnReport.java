@@ -28,8 +28,8 @@ import org.jboss.tattletale.profiles.Profile;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
-import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -70,116 +70,127 @@ public class DependsOnReport extends CLSReport
       bw.write("     <th>Depends On</th>" + Dump.newLine());
       bw.write("  </tr>" + Dump.newLine());
 
-      recursivelyWriteContent(bw, archives);
+      boolean odd = true;
+
+      for (Archive archive : archives)
+      {
+         String archiveName = archive.getName();
+         int finalDot = archiveName.lastIndexOf(".");
+         String extension = archiveName.substring(finalDot + 1);
+
+         if (odd)
+         {
+            bw.write("  <tr class=\"rowodd\">" + Dump.newLine());
+         }
+         else
+         {
+            bw.write("  <tr class=\"roweven\">" + Dump.newLine());
+         }
+         bw.write("     <td><a href=\"../" + extension + "/" + archiveName + ".html\">" +
+               archiveName + "</a></td>" + Dump.newLine());
+         bw.write("     <td>");
+
+         SortedSet<String> result = new TreeSet<String>();
+
+         for (String require : getRequires(archive))
+         {
+
+            boolean found = false;
+            Iterator<Archive> ait = archives.iterator();
+            while (!found && ait.hasNext())
+            {
+               Archive a = ait.next();
+
+               if (a.doesProvide(require) && (getCLS() == null || getCLS().isVisible(archive, a)))
+               {
+                  result.add(a.getName());
+                  found = true;
+               }
+            }
+
+            if (!found)
+            {
+               Iterator<Profile> kit = getKnown().iterator();
+               while (!found && kit.hasNext())
+               {
+                  Profile profile = kit.next();
+
+                  if (profile.doesProvide(require))
+                  {
+                     found = true;
+                  }
+               }
+            }
+
+            if (!found)
+            {
+               result.add(require);
+            }
+         }
+
+         if (result.size() == 0)
+         {
+            bw.write("&nbsp;");
+         }
+         else
+         {
+            Iterator<String> resultIt = result.iterator();
+            while (resultIt.hasNext())
+            {
+               String r = resultIt.next();
+               if (r.endsWith(".jar") || r.endsWith(".war") || r.endsWith(".ear"))
+               {
+                  bw.write("<a href=\"../" + extension + "/" + r + ".html\">" + r + "</a>");
+               }
+               else
+               {
+                  if (!isFiltered(archive.getName(), r))
+                  {
+                     bw.write("<i>" + r + "</i>");
+                     status = ReportStatus.YELLOW;
+                  }
+                  else
+                  {
+                     bw.write("<i style=\"text-decoration: line-through;\">" + r + "</i>");
+                  }
+               }
+
+               if (resultIt.hasNext())
+               {
+                  bw.write(", ");
+               }
+            }
+         }
+
+         bw.write("</td>" + Dump.newLine());
+         bw.write("  </tr>" + Dump.newLine());
+
+         odd = !odd;
+
+      }
 
       bw.write("</table>" + Dump.newLine());
    }
 
-   private void recursivelyWriteContent(BufferedWriter bw, Collection<Archive> archives) throws IOException
+   private SortedSet<String> getRequires(Archive archive)
    {
-      boolean odd = true;
-
-
-      for (Archive archive : archives)
+      SortedSet<String> requires = new TreeSet<String>();
+      if (archive instanceof NestableArchive)
       {
-
-         if (archive instanceof NestableArchive)
+         NestableArchive nestableArchive = (NestableArchive) archive;
+         List<Archive> subArchives = nestableArchive.getSubArchives();
+         for (Archive sa : subArchives)
          {
-            NestableArchive nestableArchive = (NestableArchive) archive;
-            recursivelyWriteContent(bw, nestableArchive.getSubArchives());
+            requires.addAll(getRequires(sa));
          }
-         else
-         {
-            if (odd)
-            {
-               bw.write("  <tr class=\"rowodd\">" + Dump.newLine());
-            }
-            else
-            {
-               bw.write("  <tr class=\"roweven\">" + Dump.newLine());
-            }
-            bw.write("     <td><a href=\"../jar/" + archive.getName() + ".html\">" +
-                     archive.getName() + "</a></td>" + Dump.newLine());
-            bw.write("     <td>");
 
-            SortedSet<String> result = new TreeSet<String>();
-
-            for (String require : archive.getRequires())
-            {
-
-               boolean found = false;
-               Iterator<Archive> ait = archives.iterator();
-               while (!found && ait.hasNext())
-               {
-                  Archive a = ait.next();
-
-                  if (a.doesProvide(require) && (getCLS() == null || getCLS().isVisible(archive, a)))
-                  {
-                     result.add(a.getName());
-                     found = true;
-                  }
-               }
-
-               if (!found)
-               {
-                  Iterator<Profile> kit = getKnown().iterator();
-                  while (!found && kit.hasNext())
-                  {
-                     Profile profile = kit.next();
-
-                     if (profile.doesProvide(require))
-                     {
-                        found = true;
-                     }
-                  }
-               }
-
-               if (!found)
-               {
-                  result.add(require);
-               }
-            }
-
-            if (result.size() == 0)
-            {
-               bw.write("&nbsp;");
-            }
-            else
-            {
-               Iterator<String> resultIt = result.iterator();
-               while (resultIt.hasNext())
-               {
-                  String r = resultIt.next();
-                  if (r.endsWith(".jar"))
-                  {
-                     bw.write("<a href=\"../jar/" + r + ".html\">" + r + "</a>");
-                  }
-                  else
-                  {
-                     if (!isFiltered(archive.getName(), r))
-                     {
-                        bw.write("<i>" + r + "</i>");
-                        status = ReportStatus.YELLOW;
-                     }
-                     else
-                     {
-                        bw.write("<i style=\"text-decoration: line-through;\">" + r + "</i>");
-                     }
-                  }
-
-                  if (resultIt.hasNext())
-                  {
-                     bw.write(", ");
-                  }
-               }
-            }
-
-            bw.write("</td>" + Dump.newLine());
-            bw.write("  </tr>" + Dump.newLine());
-
-            odd = !odd;
-         }
+         requires.addAll(nestableArchive.getRequires());
       }
+      else
+      {
+         requires.addAll(archive.getRequires());
+      }
+      return requires;
    }
 
    /**

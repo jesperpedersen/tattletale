@@ -229,6 +229,10 @@ public abstract class AbstractReport implements Report
    void createOutputDir(String outputDirectory)
    {
       this.outputDirectory = new File(outputDirectory, getDirectory());
+      if (this.outputDirectory.getName().contains("ear"))
+      {
+         System.out.println("Output directory is: " + this.outputDirectory);
+      }
       this.outputDirectory.mkdirs();
    }
 

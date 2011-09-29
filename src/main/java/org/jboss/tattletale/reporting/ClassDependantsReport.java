@@ -28,8 +28,8 @@ import org.jboss.tattletale.profiles.Profile;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
-import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.SortedMap;
 import java.util.SortedSet;
@@ -72,9 +72,58 @@ public class ClassDependantsReport extends CLSReport
       bw.write("     <th>Dependants</th>" + Dump.newLine());
       bw.write("  </tr>" + Dump.newLine());
 
-      SortedMap<String, SortedSet<String>> result = recursivelyBuildResultFromArchive(archives);
+      SortedMap<String, SortedSet<String>> result = new TreeMap<String, SortedSet<String>>();
 
       boolean odd = true;
+
+      for (Archive archive : archives)
+      {
+         SortedMap<String, SortedSet<String>> classDependencies = getClassDependencies(archive);
+
+         Iterator<Map.Entry<String, SortedSet<String>>> dit = classDependencies.entrySet().iterator();
+         while (dit.hasNext())
+         {
+            Map.Entry<String, SortedSet<String>> entry = dit.next();
+            String clz = entry.getKey();
+            SortedSet<String> clzDeps = entry.getValue();
+
+            Iterator<String> sit = clzDeps.iterator();
+            while (sit.hasNext())
+            {
+               String dep = sit.next();
+
+               if (!dep.equals(clz))
+               {
+                  boolean include = true;
+
+                  Iterator<Profile> kit = getKnown().iterator();
+                  while (include && kit.hasNext())
+                  {
+                     Profile profile = kit.next();
+
+                     if (profile.doesProvide(dep))
+                     {
+                        include = false;
+                     }
+                  }
+
+                  if (include)
+                  {
+                     SortedSet<String> deps = result.get(dep);
+
+                     if (deps == null)
+                     {
+                        deps = new TreeSet<String>();
+                     }
+
+                     deps.add(clz);
+
+                     result.put(dep, deps);
+                  }
+               }
+            }
+         }
+      }
 
       Iterator<Map.Entry<String, SortedSet<String>>> rit = result.entrySet().iterator();
 
@@ -119,70 +168,27 @@ public class ClassDependantsReport extends CLSReport
       bw.write("</table>" + Dump.newLine());
    }
 
-   private SortedMap<String, SortedSet<String>> recursivelyBuildResultFromArchive(Collection<Archive> archives)
+   private SortedMap<String, SortedSet<String>> getClassDependencies(Archive archive)
    {
-      SortedMap<String, SortedSet<String>> result = new TreeMap<String, SortedSet<String>>();
+      SortedMap<String, SortedSet<String>> classDeps = new TreeMap<String, SortedSet<String>>();
 
-      for (Archive archive : archives)
+      if (archive instanceof NestableArchive)
       {
-         if (archive instanceof NestableArchive)
+         NestableArchive nestableArchive = (NestableArchive) archive;
+         List<Archive> subArchives = nestableArchive.getSubArchives();
+
+         for (Archive sa : subArchives)
          {
-            NestableArchive nestableArchive = (NestableArchive) archive;
-            SortedMap<String, SortedSet<String>> subResult = recursivelyBuildResultFromArchive(nestableArchive
-                  .getSubArchives());
-            result.putAll(subResult);
+            classDeps.putAll(getClassDependencies(sa));
          }
-         else
-         {
-            SortedMap<String, SortedSet<String>> classDependencies = archive.getClassDependencies();
 
-            Iterator<Map.Entry<String, SortedSet<String>>> dit = classDependencies.entrySet().iterator();
-            while (dit.hasNext())
-            {
-               Map.Entry<String, SortedSet<String>> entry = dit.next();
-               String clz = entry.getKey();
-               SortedSet<String> clzDeps = entry.getValue();
-
-               Iterator<String> sit = clzDeps.iterator();
-               while (sit.hasNext())
-               {
-                  String dep = sit.next();
-
-                  if (!dep.equals(clz))
-                  {
-                     boolean include = true;
-
-                     Iterator<Profile> kit = getKnown().iterator();
-                     while (include && kit.hasNext())
-                     {
-                        Profile profile = kit.next();
-
-                        if (profile.doesProvide(dep))
-                        {
-                           include = false;
-                        }
-                     }
-
-                     if (include)
-                     {
-                        SortedSet<String> deps = result.get(dep);
-
-                        if (deps == null)
-                        {
-                           deps = new TreeSet<String>();
-                        }
-
-                        deps.add(clz);
-
-                        result.put(dep, deps);
-                     }
-                  }
-               }
-            }
-         }
+         classDeps.putAll(nestableArchive.getClassDependencies());
       }
-
-      return result;
+      else
+      {
+         classDeps.putAll(archive.getClassDependencies());
+      }
+      return classDeps;
    }
 
    /**

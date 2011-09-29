@@ -115,7 +115,10 @@ public class ClassLocationReport extends AbstractReport
          while (sit.hasNext())
          {
             String archive = (String) sit.next();
-            bw.write("<a href=\"../jar/" + archive + ".html\">" + archive + "</a>" + Dump.newLine());
+            int finalDot = archive.lastIndexOf(".");
+            String extension = archive.substring(finalDot + 1);
+
+            bw.write("<a href=\"../" + extension + "/" + archive + ".html\">" + archive + "</a>" + Dump.newLine());
 
             if (sit.hasNext())
             {

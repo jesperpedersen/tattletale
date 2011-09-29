@@ -69,6 +69,10 @@ public class UnusedJarReport extends AbstractReport
       {
          boolean archiveStatus = false;
 
+         String archiveName = archive.getName();
+         int finalDot = archiveName.lastIndexOf(".");
+         String extension = archiveName.substring(finalDot + 1);
+
          Iterator<Archive> it = archives.iterator();
          while (!archiveStatus && it.hasNext())
          {
@@ -98,8 +102,8 @@ public class UnusedJarReport extends AbstractReport
          {
             bw.write("  <tr class=\"roweven\">" + Dump.newLine());
          }
-         bw.write("     <td><a href=\"../jar/" + archive.getName() +
-                  ".html\">" + archive.getName() + "</a></td>" + Dump.newLine());
+         bw.write("     <td><a href=\"../" + extension + "/" + archiveName +
+                  ".html\">" + archiveName + "</a></td>" + Dump.newLine());
 
          if (archiveStatus)
          {

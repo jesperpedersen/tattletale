@@ -190,6 +190,60 @@ dot -Tpng myarchive.dot &gt; myarchive.png
           </tgroup>
         </table>
       </section>
+      
+      <!-- Package Dependants Report -->
+      <section id="packagedependants">
+      	<title> Package Dependants report</title>
+      	
+      	<para> The package dependants report lists the packages that depend on a specific package within your archive that you are analyzing.
+      	</para>
+      	        <table frame="all">
+          <title>Package Dependants Report</title>
+          <tgroup cols="2" align="left" colsep="1" rowsep="1">
+            <colspec colname="c1"/>
+            <colspec colname="c2" colwidth="4*"/>
+            <thead>
+              <row>
+                <entry align="left">Package</entry>
+                <entry align="left">Dependants</entry>
+              </row>
+            </thead>
+            <tbody>
+              <row>
+                <entry>The package</entry>
+                <entry>A list of packages that depend on this package</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </table>
+      </section>
+      
+      <!-- Package Depends On Report -->
+      <section id="packagedependson">
+      	<title> Package Dependants report</title>
+      	
+      	<para> The package dependants report lists the packages that your package depends on.
+      	</para>
+      	        <table frame="all">
+          <title>Package Dependants Report</title>
+          <tgroup cols="2" align="left" colsep="1" rowsep="1">
+            <colspec colname="c1"/>
+            <colspec colname="c2" colwidth="4*"/>
+            <thead>
+              <row>
+                <entry align="left">Package</entry>
+                <entry align="left">Depends On</entry>
+              </row>
+            </thead>
+            <tbody>
+              <row>
+                <entry>The package</entry>
+                <entry>A list of packages that your package depends on</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </table>
+      </section>
 
       <!-- Transitive Depends On report -->
       <section id="transitivedependson">

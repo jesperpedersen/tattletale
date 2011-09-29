@@ -31,8 +31,8 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.SortedSet;
@@ -103,7 +103,151 @@ public class GraphvizReport extends CLSReport
       alldotw.write("digraph dependencies {" + Dump.newLine());
       alldotw.write("  node [shape = box, fontsize=10.0];" + Dump.newLine());
 
-      recusivelyWriteContent(bw, alldotw, archives);
+      boolean odd = true;
+      boolean hasDot = testDot();
+
+      for (Archive archive : archives)
+      {
+         String archiveName = archive.getName();
+         int finalDot = archiveName.lastIndexOf(".");
+         String extension = archiveName.substring(finalDot + 1);
+
+         if (odd)
+         {
+            bw.write("  <tr class=\"rowodd\">" + Dump.newLine());
+         }
+         else
+         {
+            bw.write("  <tr class=\"roweven\">" + Dump.newLine());
+         }
+         bw.write("     <td><a href=\"../" + extension + "/" + archiveName +
+               ".html\">" + archiveName + "</a></td>" + Dump.newLine());
+
+         // Archive level dependencies
+         bw.write("     <td>");
+
+         SortedSet<String> result = new TreeSet<String>();
+
+         for (String require : getRequires(archive))
+         {
+
+            boolean found = false;
+            Iterator<Archive> ait = archives.iterator();
+            while (!found && ait.hasNext())
+            {
+               Archive a = ait.next();
+
+               if (a.doesProvide(require) && (getCLS() == null || getCLS().isVisible(archive, a)))
+               {
+                  result.add(a.getName());
+                  found = true;
+               }
+            }
+         }
+
+         if (result.size() == 0)
+         {
+            bw.write("&nbsp;");
+         }
+         else
+         {
+            bw.write("<a href=\"" + archiveName + "/" + archiveName + ".dot\">.dot</a>");
+            if (hasDot)
+            {
+               bw.write("&nbsp;");
+               bw.write("<a href=\"" + archiveName + "/" + archiveName + ".png\">.png</a>");
+            }
+
+            File doutput = new File(getOutputDirectory(), archiveName);
+            doutput.mkdirs();
+
+            String dotName = doutput.getAbsolutePath() + File.separator + archiveName + ".dot";
+            String pngName = doutput.getAbsolutePath() + File.separator + archiveName + ".png";
+
+            FileWriter dotfw = new FileWriter(dotName);
+            BufferedWriter dotw = new BufferedWriter(dotfw, 8192);
+
+            dotw.write("digraph " + dotName(archiveName) + "_dependencies {" + Dump.newLine());
+            dotw.write("  node [shape = box, fontsize=10.0];" + Dump.newLine());
+
+            for (String aResult : result)
+            {
+
+               alldotw.write("  " + dotName(archiveName) + " -> " + dotName(aResult) + ";" + Dump.newLine());
+               dotw.write("  " + dotName(archiveName) + " -> " + dotName(aResult) + ";" + Dump.newLine());
+            }
+
+            dotw.write("}" + Dump.newLine());
+
+            dotw.flush();
+            dotw.close();
+
+            if (enableDot && hasDot)
+            {
+               generatePicture(dotName, pngName, doutput);
+            }
+         }
+
+         bw.write("</td>" + Dump.newLine());
+
+         // Package level dependencies
+         bw.write("     <td>");
+
+         if (archive.getPackageDependencies().size() == 0)
+         {
+            bw.write("&nbsp;");
+         }
+         else
+         {
+            bw.write("<a href=\"" + archiveName + "/" + archiveName + "-package.dot\">.dot</a>");
+            if (hasDot)
+            {
+               bw.write("&nbsp;");
+               bw.write("<a href=\"" + archiveName + "/" + archiveName + "-package.png\">.png</a>");
+            }
+
+            File doutput = new File(getOutputDirectory(), archiveName);
+            doutput.mkdirs();
+
+            String dotName = doutput.getAbsolutePath() + File.separator + archiveName + "-package.dot";
+            String pngName = doutput.getAbsolutePath() + File.separator + archiveName + "-package.png";
+
+            FileWriter dotfw = new FileWriter(dotName);
+            BufferedWriter dotw = new BufferedWriter(dotfw, 8192);
+
+            dotw.write("digraph " + dotName(archiveName) + "_package_dependencies {" + Dump.newLine());
+            dotw.write("  node [shape = box, fontsize=10.0];" + Dump.newLine());
+
+            for (Map.Entry<String, SortedSet<String>> entry : archive.getPackageDependencies().entrySet())
+            {
+
+               String pkg = dotName(entry.getKey());
+               SortedSet<String> deps = entry.getValue();
+
+               for (String dep : deps)
+               {
+                  dotw.write("  " + pkg + " -> " + dotName(dep) + ";" + Dump.newLine());
+               }
+            }
+
+            dotw.write("}" + Dump.newLine());
+
+            dotw.flush();
+            dotw.close();
+
+            if (enableDot && hasDot)
+            {
+               generatePicture(dotName, pngName, doutput);
+            }
+         }
+
+         bw.write("</td>" + Dump.newLine());
+
+         bw.write("  </tr>" + Dump.newLine());
+
+         odd = !odd;
+      }
+
 
       alldotw.write("}" + Dump.newLine());
 
@@ -113,163 +257,30 @@ public class GraphvizReport extends CLSReport
       bw.write("</table>" + Dump.newLine());
    }
 
-   private void recusivelyWriteContent(BufferedWriter bw, BufferedWriter alldotw, Collection<Archive> archives) throws
-         IOException
+   private SortedSet<String> getRequires(Archive archive)
    {
-      boolean hasDot = testDot();
-      boolean odd = true;
+      SortedSet<String> requires = new TreeSet<String>();
 
-      for (Archive archive : archives)
+      if (archive instanceof NestableArchive)
       {
+         NestableArchive nestableArchive = (NestableArchive) archive;
+         List<Archive> subArchives = nestableArchive.getSubArchives();
 
-         if (archive instanceof NestableArchive)
+         for (Archive sa : subArchives)
          {
-            NestableArchive nestableArchive = (NestableArchive) archive;
-            recusivelyWriteContent(bw, alldotw, nestableArchive.getSubArchives());
+            requires.addAll(getRequires(sa));
          }
-         else if (archive instanceof ClassesArchive)
-         {
-            // No op.
-         }
-         else
-         {
-            if (odd)
-            {
-               bw.write("  <tr class=\"rowodd\">" + Dump.newLine());
-            }
-            else
-            {
-               bw.write("  <tr class=\"roweven\">" + Dump.newLine());
-            }
-            bw.write("     <td><a href=\"../jar/" + archive.getName() +
-                     ".html\">" + archive.getName() + "</a></td>" + Dump.newLine());
-
-            // Archive level dependencies
-            bw.write("     <td>");
-
-            SortedSet<String> result = new TreeSet<String>();
-
-            for (String require : archive.getRequires())
-            {
-
-               boolean found = false;
-               Iterator<Archive> ait = archives.iterator();
-               while (!found && ait.hasNext())
-               {
-                  Archive a = ait.next();
-
-                  if (a.doesProvide(require) && (getCLS() == null || getCLS().isVisible(archive, a)))
-                  {
-                     result.add(a.getName());
-                     found = true;
-                  }
-               }
-            }
-
-            if (result.size() == 0)
-            {
-               bw.write("&nbsp;");
-            }
-            else
-            {
-               bw.write("<a href=\"" + archive.getName() + "/" + archive.getName() + ".dot\">.dot</a>");
-               if (hasDot)
-               {
-                  bw.write("&nbsp;");
-                  bw.write("<a href=\"" + archive.getName() + "/" + archive.getName() + ".png\">.png</a>");
-               }
-
-               File doutput = new File(getOutputDirectory(), archive.getName());
-               doutput.mkdirs();
-
-               String dotName = doutput.getAbsolutePath() + File.separator + archive.getName() + ".dot";
-               String pngName = doutput.getAbsolutePath() + File.separator + archive.getName() + ".png";
-
-               FileWriter dotfw = new FileWriter(dotName);
-               BufferedWriter dotw = new BufferedWriter(dotfw, 8192);
-
-               dotw.write("digraph " + dotName(archive.getName()) + "_dependencies {" + Dump.newLine());
-               dotw.write("  node [shape = box, fontsize=10.0];" + Dump.newLine());
-
-               for (String aResult : result)
-               {
-
-                  alldotw.write("  " + dotName(archive.getName()) + " -> " + dotName(aResult) + ";" + Dump.newLine());
-                  dotw.write("  " + dotName(archive.getName()) + " -> " + dotName(aResult) + ";" + Dump.newLine());
-               }
-
-               dotw.write("}" + Dump.newLine());
-
-               dotw.flush();
-               dotw.close();
-
-               if (enableDot && hasDot)
-               {
-                  generatePicture(dotName, pngName, doutput);
-               }
-            }
-
-            bw.write("</td>" + Dump.newLine());
-
-            // Package level dependencies
-            bw.write("     <td>");
-
-            if (archive.getPackageDependencies().size() == 0)
-            {
-               bw.write("&nbsp;");
-            }
-            else
-            {
-               bw.write("<a href=\"" + archive.getName() + "/" + archive.getName() + "-package.dot\">.dot</a>");
-               if (hasDot)
-               {
-                  bw.write("&nbsp;");
-                  bw.write("<a href=\"" + archive.getName() + "/" + archive.getName() + "-package.png\">.png</a>");
-               }
-
-               File doutput = new File(getOutputDirectory(), archive.getName());
-               doutput.mkdirs();
-
-               String dotName = doutput.getAbsolutePath() + File.separator + archive.getName() + "-package.dot";
-               String pngName = doutput.getAbsolutePath() + File.separator + archive.getName() + "-package.png";
-
-               FileWriter dotfw = new FileWriter(dotName);
-               BufferedWriter dotw = new BufferedWriter(dotfw, 8192);
-
-               dotw.write("digraph " + dotName(archive.getName()) + "_package_dependencies {" + Dump.newLine());
-               dotw.write("  node [shape = box, fontsize=10.0];" + Dump.newLine());
-
-               for (Map.Entry<String, SortedSet<String>> entry : archive.getPackageDependencies().entrySet())
-               {
-
-                  String pkg = dotName(entry.getKey());
-                  SortedSet<String> deps = entry.getValue();
-
-                  for (String dep : deps)
-                  {
-                     dotw.write("  " + pkg + " -> " + dotName(dep) + ";" + Dump.newLine());
-                  }
-               }
-
-               dotw.write("}" + Dump.newLine());
-
-               dotw.flush();
-               dotw.close();
-
-               if (enableDot && hasDot)
-               {
-                  generatePicture(dotName, pngName, doutput);
-               }
-            }
-
-            bw.write("</td>" + Dump.newLine());
-
-            bw.write("  </tr>" + Dump.newLine());
-
-            odd = !odd;
-         }
+         requires.addAll(nestableArchive.getRequires());
       }
-
+      else if (archive instanceof ClassesArchive)
+      {
+         // No op
+      }
+      else
+      {
+         requires.addAll(archive.getRequires());
+      }
+      return requires;
    }
 
    /**

@@ -53,10 +53,10 @@ export PATH
 
     </section>
 
-    <section id="subversion">
-      <title>Subversion</title>
-      <para>You must have Subversion 1.5+ installed on your system.</para>
-      <para>Remember to ensure that "svn" are in your path (or symlinked).</para>
+    <section id="git">
+      <title>GitHub</title>
+      <para>You must have git installed on your system.</para>
+      <para>Remember to ensure that "git" are in your path (or symlinked).</para>
     </section>
  
   </section>
@@ -64,35 +64,16 @@ export PATH
   <section id="obtainingthesource">
     <title>Obtaining the source code</title>
 
-    <section id="anonsvn">
-      <title>Anonymous SVN access</title>
-      <para>The anonymous SVN repository is located under:</para>
-
-      <programlisting>
-svn co http://anonsvn.jboss.org/repos/tattletale/ tattletale-trunk
-      </programlisting>
+    <section id="github">
+      <title>GitHub</title>
+       <para>You can clone the repository onto your system by the following command. This automatically creates a directory 'tattletale' within your current directory. Please note that this would be a read-only directory.</para>
+       
+       <programlisting>
+git clone git://github.com/jesperpedersen/tattletale.git
+       </programlisting>
+       
+       <para>Should you want to edit the sources yourself, it is best to create your own fork of the repository and then clone that particular fork on your command line. Should you need help with Git and GitHub then read the help files (http://help.github.com/)</para>
       
-    </section>
-
-    <section id="developersvn">
-      <title>Developer SVN access</title>
-      <para>The developer SVN repository is located under:</para>
-      
-      <programlisting>
-svn co https://svn.jboss.org/repos/tattletale/trunk/ tattletale-trunk
-      </programlisting>
-      
-    </section>
-
-    <section id="svnmodules">
-      <title>SVN modules</title>
-      <para>We have the following modules for the project:</para>
-      <itemizedlist>
-         <listitem>
-            <para>trunk</para>
-            <para>The head of development targeting the next upcoming release.</para>
-         </listitem>
-      </itemizedlist>
     </section>
 
   </section>
