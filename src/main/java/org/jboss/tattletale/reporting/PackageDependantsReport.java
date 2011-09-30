@@ -65,7 +65,7 @@ public class PackageDependantsReport extends CLSReport
     * @param bw the writer to use
     * @exception IOException if an error occurs
     */
-   protected void writeHtmlBodyContent(BufferedWriter bw) throws IOException
+   public void writeHtmlBodyContent(BufferedWriter bw) throws IOException
    {
       bw.write("<table>" + Dump.newLine());
 
@@ -182,7 +182,7 @@ public class PackageDependantsReport extends CLSReport
     * @param bw the writer to use
     * @throws IOException if an errror occurs
     */
-   protected void writeHtmlBodyHeader(BufferedWriter bw) throws IOException
+   public void writeHtmlBodyHeader(BufferedWriter bw) throws IOException
    {
       bw.write("<body>" + Dump.newLine());
       bw.write(Dump.newLine());

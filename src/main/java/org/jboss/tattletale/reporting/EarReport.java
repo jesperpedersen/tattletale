@@ -22,37 +22,34 @@
 
 package org.jboss.tattletale.reporting;
 
-import org.jboss.tattletale.core.Archive;
-import org.jboss.tattletale.core.Location;
+import org.jboss.tattletale.core.NestableArchive;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
-import java.util.Iterator;
-import java.util.Map;
 
-import javassist.bytecode.ClassFile;
 
 
 /**
  * This type of report is to .ear files as to {@link JarReport} is to .jar files.
  * @author Navin Surtani
  */
-public class EarReport extends ArchiveReport
+public class EarReport extends NestableReport
 {
    /** DIRECTORY */
    private static final String DIRECTORY = "ear";
+
+   /** File name */
    private String fileName;
 
    /**
     * Constructor
     * @param archive  The archive
     */
-   public EarReport(Archive archive)
+   public EarReport(NestableArchive archive)
    {
       super(DIRECTORY, ReportSeverity.INFO, archive);
       StringBuffer sb = new StringBuffer(archive.getName());
       setFilename(sb.append(".html").toString());
-
    }
 
    /**
@@ -74,215 +71,6 @@ public class EarReport extends ArchiveReport
    private String getFilename()
    {
       return fileName;
-   }
-
-   @Override
-   protected void writeHtmlBodyContent(BufferedWriter bw) throws IOException
-   {
-      bw.write("<table>" + Dump.newLine());
-
-      bw.write("  <tr class=\"rowodd\">" + Dump.newLine());
-      bw.write("     <td>Name</td>" + Dump.newLine());
-      bw.write("     <td>" + archive.getName() + "</td>" + Dump.newLine());
-      bw.write("  </tr>" + Dump.newLine());
-
-      bw.write("  <tr class=\"roweven\">" + Dump.newLine());
-      bw.write("     <td>Class Version</td>" + Dump.newLine());
-      bw.write("     <td>");
-
-      if (ClassFile.JAVA_6 == archive.getVersion())
-      {
-         bw.write("Java 6");
-      }
-      else if (ClassFile.JAVA_5 == archive.getVersion())
-      {
-         bw.write("Java 5");
-      }
-      else if (ClassFile.JAVA_4 == archive.getVersion())
-      {
-         bw.write("J2SE 1.4");
-      }
-      else if (ClassFile.JAVA_3 == archive.getVersion())
-      {
-         bw.write("J2SE 1.3");
-      }
-      else if (ClassFile.JAVA_2 == archive.getVersion())
-      {
-         bw.write("J2SE 1.2");
-      }
-      else if (ClassFile.JAVA_1 == archive.getVersion())
-      {
-         bw.write("JSE 1.0 / JSE 1.1");
-      }
-
-      bw.write("</td>" + Dump.newLine());
-      bw.write("  </tr>" + Dump.newLine());
-
-      bw.write("  <tr class=\"rowodd\">" + Dump.newLine());
-      bw.write("     <td>Locations</td>" + Dump.newLine());
-      bw.write("     <td>");
-
-      bw.write("       <table>" + Dump.newLine());
-
-      for (Location location : archive.getLocations())
-      {
-
-         bw.write("      <tr>" + Dump.newLine());
-
-         bw.write("        <td>" + location.getFilename() + "</td>" + Dump.newLine());
-         bw.write("        <td>");
-         if (location.getVersion() != null)
-         {
-            bw.write(location.getVersion());
-         }
-         else
-         {
-            bw.write("<i>Not listed</i>");
-         }
-         bw.write("</td>" + Dump.newLine());
-
-         bw.write("      </tr>" + Dump.newLine());
-      }
-
-      bw.write("       </table>" + Dump.newLine());
-
-      bw.write("</td>" + Dump.newLine());
-      bw.write("  </tr>" + Dump.newLine());
-
-      bw.write("  <tr class=\"roweven\">" + Dump.newLine());
-      bw.write("     <td>Profiles</td>" + Dump.newLine());
-      bw.write("     <td>");
-
-      if (archive.getProfiles() != null)
-      {
-         Iterator<String> pit = archive.getProfiles().iterator();
-         while (pit.hasNext())
-         {
-            String p = pit.next();
-
-            bw.write(p);
-
-            if (pit.hasNext())
-            {
-               bw.write("<br>");
-            }
-         }
-      }
-
-      bw.write("  <tr class=\"rowodd\">" + Dump.newLine());
-      bw.write("     <td>Manifest</td>" + Dump.newLine());
-      bw.write("     <td>");
-
-      if (archive.getManifest() != null)
-      {
-         Iterator<String> mit = archive.getManifest().iterator();
-         while (mit.hasNext())
-         {
-            String m = mit.next();
-
-            bw.write(m);
-
-            if (mit.hasNext())
-            {
-               bw.write("<br>");
-            }
-         }
-      }
-
-      bw.write("</td>" + Dump.newLine());
-      bw.write("  </tr>" + Dump.newLine());
-
-      bw.write("  <tr class=\"roweven\">" + Dump.newLine());
-      bw.write("     <td>Signing information</td>" + Dump.newLine());
-      bw.write("     <td>");
-
-      if (archive.getSign() != null)
-      {
-         Iterator<String> sit = archive.getSign().iterator();
-         while (sit.hasNext())
-         {
-            String s = sit.next();
-
-            bw.write(s);
-
-            if (sit.hasNext())
-            {
-               bw.write("<br>");
-            }
-         }
-      }
-
-      bw.write("</td>" + Dump.newLine());
-      bw.write("  </tr>" + Dump.newLine());
-
-      bw.write("  <tr class=\"rowodd\">" + Dump.newLine());
-      bw.write("     <td>Requires</td>" + Dump.newLine());
-      bw.write("     <td>");
-
-      Iterator<String> rit = archive.getRequires().iterator();
-      while (rit.hasNext())
-      {
-         String require = rit.next();
-
-         bw.write(require);
-
-         if (rit.hasNext())
-         {
-            bw.write("<br>");
-         }
-      }
-
-      bw.write("</td>" + Dump.newLine());
-      bw.write("  </tr>" + Dump.newLine());
-
-      bw.write("  <tr class=\"roweven\">" + Dump.newLine());
-      bw.write("     <td>Provides</td>" + Dump.newLine());
-      bw.write("     <td>");
-
-      bw.write("       <table>");
-
-      for (Map.Entry<String, Long> entry : archive.getProvides().entrySet())
-      {
-
-         String name = entry.getKey();
-         Long serialVersionUID = entry.getValue();
-
-         bw.write("         <tr>" + Dump.newLine());
-         bw.write("           <td>" + name + "</td>" + Dump.newLine());
-
-         if (serialVersionUID != null)
-         {
-            bw.write("           <td>" + serialVersionUID + "</td>" + Dump.newLine());
-         }
-         else
-         {
-            bw.write("           <td>&nbsp;</td>" + Dump.newLine());
-         }
-         bw.write("         </tr>" + Dump.newLine());
-      }
-      bw.write("       </table>");
-
-      bw.write("</td>" + Dump.newLine());
-      bw.write("  </tr>" + Dump.newLine());
-
-      bw.write("</table>" + Dump.newLine());
-   }
-
-/**
-    * write out the header of the report's content
-    *
-    * @param bw the writer to use
-    * @throws IOException if an error occurs
-    */
-   protected void writeHtmlBodyHeader(BufferedWriter bw) throws IOException
-   {
-      bw.write("<body>" + Dump.newLine());
-      bw.write(Dump.newLine());
-
-      bw.write("<h1>" + archive.getName() + "</h1>" + Dump.newLine());
-
-      bw.write("<a href=\"../index.html\">Main</a>" + Dump.newLine());
-      bw.write("<p>" + Dump.newLine());
    }
 
    private void setFilename(String fileName)

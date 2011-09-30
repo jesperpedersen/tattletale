@@ -27,6 +27,7 @@ import org.jboss.tattletale.analyzers.DirectoryScanner;
 import org.jboss.tattletale.core.Archive;
 import org.jboss.tattletale.core.ArchiveTypes;
 import org.jboss.tattletale.core.Location;
+import org.jboss.tattletale.core.NestableArchive;
 import org.jboss.tattletale.profiles.AbstractProfile;
 import org.jboss.tattletale.profiles.CDI10;
 import org.jboss.tattletale.profiles.JBossAS7Profile;
@@ -1035,7 +1036,8 @@ public class Main
       {
          if (a.getType() == ArchiveTypes.WAR)
          {
-            reportSetBuilder.addReport(new WarReport(a));
+            NestableArchive na = (NestableArchive) a;
+            reportSetBuilder.addReport(new WarReport(na));
          }
          else if (a.getType() == ArchiveTypes.JAR)
          {
@@ -1043,7 +1045,8 @@ public class Main
          }
          else if (a.getType() == ArchiveTypes.EAR)
          {
-            reportSetBuilder.addReport(new EarReport(a));
+            NestableArchive na = (NestableArchive) a;
+            reportSetBuilder.addReport(new EarReport(na));
          }
       }
    }
