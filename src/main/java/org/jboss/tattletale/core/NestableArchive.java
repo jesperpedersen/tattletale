@@ -93,6 +93,7 @@ public abstract class NestableArchive extends Archive
             classDependencies, packageDependencies, blacklistedDependencies, location);
 
       this.subArchives = subArchives;
+      addParentArchive(subArchives);
    }
 
    /**
@@ -118,5 +119,13 @@ public abstract class NestableArchive extends Archive
       }
 
       subArchives.add(value);
+   }
+
+   private void addParentArchive(List<Archive> subArchives)
+   {
+      for (Archive archive : subArchives)
+      {
+         archive.setParentArchive(this);
+      }
    }
 }

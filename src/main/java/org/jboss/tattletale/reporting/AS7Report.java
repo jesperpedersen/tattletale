@@ -66,7 +66,7 @@ public class AS7Report extends CLSReport
     * @throws IOException - if there is an issue with the html writing
     */
    @Override
-   protected void writeHtmlBodyHeader(BufferedWriter bw) throws IOException
+   public void writeHtmlBodyHeader(BufferedWriter bw) throws IOException
    {
       bw.write("<body>" + Dump.newLine());
       bw.write(Dump.newLine());
@@ -84,7 +84,7 @@ public class AS7Report extends CLSReport
     * @throws IOException - if there is an issue with the html writing
     */
    @Override
-   protected void writeHtmlBodyContent(BufferedWriter bw) throws IOException
+   public void writeHtmlBodyContent(BufferedWriter bw) throws IOException
    {
       bw.write("<table>" + Dump.newLine());
       bw.write("  <tr>" + Dump.newLine());

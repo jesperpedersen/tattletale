@@ -272,7 +272,7 @@ public abstract class AbstractReport implements Report
     * @param bw the buffered writer
     * @throws IOException if an error occurs
     */
-   protected void writeHtmlHead(BufferedWriter bw) throws IOException
+   public void writeHtmlHead(BufferedWriter bw) throws IOException
    {
       bw.write("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\"" +
                "\"http://www.w3.org/TR/html4/loose.dtd\">" + Dump.newLine());
@@ -290,7 +290,7 @@ public abstract class AbstractReport implements Report
     * @param bw the writer to use
     * @throws IOException if an error occurs
     */
-   protected abstract void writeHtmlBodyHeader(BufferedWriter bw) throws IOException;
+   public abstract void writeHtmlBodyHeader(BufferedWriter bw) throws IOException;
 
    /**
     * write out the report's content
@@ -298,7 +298,7 @@ public abstract class AbstractReport implements Report
     * @param bw the writer to use
     * @throws IOException if an error occurs
     */
-   protected abstract void writeHtmlBodyContent(BufferedWriter bw) throws IOException;
+   public abstract void writeHtmlBodyContent(BufferedWriter bw) throws IOException;
 
    /**
     * write out the footer of the report's content
@@ -306,7 +306,7 @@ public abstract class AbstractReport implements Report
     * @param bw the writer to use
     * @throws IOException if an error occurs
     */
-   protected void writeHtmlBodyFooter(BufferedWriter bw) throws IOException
+   public void writeHtmlBodyFooter(BufferedWriter bw) throws IOException
    {
       bw.write(Dump.newLine());
       bw.write("<p/>" + Dump.newLine());
@@ -321,9 +321,9 @@ public abstract class AbstractReport implements Report
     * write out the footer of the html page.
     *
     * @param bw the writer to use
-    * @throws IOException if an errror occurs
+    * @throws IOException if an error occurs
     */
-   protected void writeHtmlFooter(BufferedWriter bw) throws IOException
+   public void writeHtmlFooter(BufferedWriter bw) throws IOException
    {
       bw.write("</html>" + Dump.newLine());
    }

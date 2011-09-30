@@ -80,6 +80,9 @@ public abstract class Archive implements Serializable, Comparable
    /** Module identifier */
    private String moduleIdentifier;
 
+   /** Parent archive if it is a sub-archive */
+   private Archive parentArchive = null;
+
    /**
     * Constructor
     *
@@ -485,4 +488,23 @@ public abstract class Archive implements Serializable, Comparable
       return sb.toString();
    }
 
+   /**
+    * Simple getter.
+    *
+    * @return - the parent archive.
+    */
+   public Archive getParentArchive()
+   {
+      return parentArchive;
+   }
+
+   /**
+    * Simple setter,
+    *
+    * @param parentArchive - the parent archive.
+    */
+   public void setParentArchive(Archive parentArchive)
+   {
+      this.parentArchive = parentArchive;
+   }
 }

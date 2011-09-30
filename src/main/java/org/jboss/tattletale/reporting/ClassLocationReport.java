@@ -68,7 +68,7 @@ public class ClassLocationReport extends AbstractReport
     * @throws IOException if an error occurs
     */
    @Override
-   protected void writeHtmlBodyContent(BufferedWriter bw) throws IOException
+   public void writeHtmlBodyContent(BufferedWriter bw) throws IOException
    {
       bw.write("<table>" + Dump.newLine());
 
@@ -136,7 +136,7 @@ public class ClassLocationReport extends AbstractReport
    }
 
    @Override
-   protected void writeHtmlBodyHeader(BufferedWriter bw) throws IOException
+   public void writeHtmlBodyHeader(BufferedWriter bw) throws IOException
    {
       bw.write("<body>" + Dump.newLine());
       bw.write(Dump.newLine());

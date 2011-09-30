@@ -65,7 +65,7 @@ public class PackageDependsOnReport extends CLSReport
     * @throws IOException if an errror occurs
     */
    @Override
-   protected void writeHtmlBodyHeader(BufferedWriter bw) throws IOException
+   public void writeHtmlBodyHeader(BufferedWriter bw) throws IOException
    {
       bw.write("<body>" + Dump.newLine());
       bw.write(Dump.newLine());
@@ -83,7 +83,7 @@ public class PackageDependsOnReport extends CLSReport
     * @exception IOException if an error occurs
     */
    @Override
-   protected void writeHtmlBodyContent(BufferedWriter bw) throws IOException
+   public void writeHtmlBodyContent(BufferedWriter bw) throws IOException
    {
       bw.write("<table>" + Dump.newLine());
 

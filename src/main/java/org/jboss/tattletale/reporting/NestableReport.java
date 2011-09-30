@@ -19,11 +19,13 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
+
 package org.jboss.tattletale.reporting;
 
-import org.jboss.tattletale.Version;
 import org.jboss.tattletale.core.Archive;
+import org.jboss.tattletale.core.ArchiveTypes;
 import org.jboss.tattletale.core.Location;
+import org.jboss.tattletale.core.NestableArchive;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -32,146 +34,64 @@ import java.util.Map;
 
 import javassist.bytecode.ClassFile;
 
+
 /**
- * JAR report
+ * Report type used when generating an {@link ArchiveReport} for a {@link org.jboss.tattletale.core.NestableArchive}.
  *
- * @author Jesper Pedersen <jesper.pedersen@jboss.org>
- * @author <a href="mailto:torben.jaeger@jit-consulting.de">Torben Jaeger</a>
+ * @author Navin Surtani
  */
-public class JarReport extends ArchiveReport
+public abstract class NestableReport extends ArchiveReport
 {
-   /** DIRECTORY */
-   private static final String DIRECTORY = "jar";
-
-   /** File name */
-   private String filename;
-
-   /** The level of depth from the main output directory that this jar report would sit */
-   private int depth;
+   private NestableArchive nestableArchive;
 
    /**
     * Constructor
     *
-    * @param archive The archive
+    * @param id                  The report id
+    * @param severity            The severity
+    * @param nestableArchive     The nestable archive
     */
-   public JarReport(Archive archive)
+   public NestableReport(String id, int severity, NestableArchive nestableArchive)
    {
-      this(archive, 1);
+      super(id, severity, nestableArchive);
+      this.nestableArchive = nestableArchive;
    }
-
-   /**
-    * Constructor
-    *
-    * @param archive The archive
-    * @param depth   The level of depth at which this report would lie
-    */
-   public JarReport(Archive archive, int depth)
-   {
-      super(DIRECTORY, ReportSeverity.INFO, archive);
-
-      StringBuffer sb = new StringBuffer(archive.getName());
-      setFilename(sb.append(".html").toString());
-      this.depth = depth;
-   }
-
-   /**
-    * write the header of a html file.
-    *
-    * @param bw the buffered writer
-    * @throws IOException if an error occurs
-    */
 
    @Override
-   public void writeHtmlHead(BufferedWriter bw) throws IOException
-   {
-      if (depth == 1)
-      {
-         super.writeHtmlHead(bw);
-      }
-      else
-      {
-         bw.write("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\"" +
-                  "\"http://www.w3.org/TR/html4/loose.dtd\">" + Dump.newLine());
-         bw.write("<html>" + Dump.newLine());
-         bw.write("<head>" + Dump.newLine());
-         bw.write("  <title>" + Version.FULL_VERSION + ": " + getName() + "</title>" + Dump.newLine());
-         bw.write("  <meta http-equiv=\"Content-Type\" content=\"text/html;charset=utf-8\">" + Dump.newLine());
-         bw.write("  <link rel=\"stylesheet\" type=\"text/css\" href=\"");
-         for (int i = 1; i <= depth; i++)
-         {
-            bw.write("../");
-         }
-         bw.write("style.css\">" + Dump.newLine());
-         bw.write("</head>" + Dump.newLine());
-
-      }
-   }
-
-
-   /**
-    * Get the name of the directory
-    *
-    * @return The directory
-    */
-   @Override
-   public String getDirectory()
-   {
-      return DIRECTORY;
-   }
-
-   /**
-    * returns a Jar report specific writer.
-    * Jar reports don't use a index.html but a html per archive.
-    *
-    * @return the BufferedWriter
-    * @throws IOException if an error occurs
-    */
-   @Override
-   BufferedWriter getBufferedWriter() throws IOException
-   {
-      return getBufferedWriter(getFilename());
-   }
-
-   /**
-    * write out the report's content
-    *
-    * @param bw the writer to use
-    * @throws IOException if an error occurs
-    */
    public void writeHtmlBodyContent(BufferedWriter bw) throws IOException
    {
       bw.write("<table>" + Dump.newLine());
 
       bw.write("  <tr class=\"rowodd\">" + Dump.newLine());
       bw.write("     <td>Name</td>" + Dump.newLine());
-      bw.write("     <td>" + archive.getName() + "</td>" + Dump.newLine());
+      bw.write("     <td>" + nestableArchive.getName() + "</td>" + Dump.newLine());
       bw.write("  </tr>" + Dump.newLine());
 
       bw.write("  <tr class=\"roweven\">" + Dump.newLine());
       bw.write("     <td>Class Version</td>" + Dump.newLine());
       bw.write("     <td>");
 
-      if (ClassFile.JAVA_6 == archive.getVersion())
+      if (ClassFile.JAVA_6 == nestableArchive.getVersion())
       {
          bw.write("Java 6");
       }
-      else if (ClassFile.JAVA_5 == archive.getVersion())
+      else if (ClassFile.JAVA_5 == nestableArchive.getVersion())
       {
          bw.write("Java 5");
       }
-      else if (ClassFile.JAVA_4 == archive.getVersion())
+      else if (ClassFile.JAVA_4 == nestableArchive.getVersion())
       {
          bw.write("J2SE 1.4");
       }
-      else if (ClassFile.JAVA_3 == archive.getVersion())
+      else if (ClassFile.JAVA_3 == nestableArchive.getVersion())
       {
          bw.write("J2SE 1.3");
       }
-      else if (ClassFile.JAVA_2 == archive.getVersion())
+      else if (ClassFile.JAVA_2 == nestableArchive.getVersion())
       {
          bw.write("J2SE 1.2");
       }
-      else if (ClassFile.JAVA_1 == archive.getVersion())
+      else if (ClassFile.JAVA_1 == nestableArchive.getVersion())
       {
          bw.write("JSE 1.0 / JSE 1.1");
       }
@@ -185,7 +105,7 @@ public class JarReport extends ArchiveReport
 
       bw.write("       <table>" + Dump.newLine());
 
-      for (Location location : archive.getLocations())
+      for (Location location : nestableArchive.getLocations())
       {
 
          bw.write("      <tr>" + Dump.newLine());
@@ -214,9 +134,9 @@ public class JarReport extends ArchiveReport
       bw.write("     <td>Profiles</td>" + Dump.newLine());
       bw.write("     <td>");
 
-      if (archive.getProfiles() != null)
+      if (nestableArchive.getProfiles() != null)
       {
-         Iterator<String> pit = archive.getProfiles().iterator();
+         Iterator<String> pit = nestableArchive.getProfiles().iterator();
          while (pit.hasNext())
          {
             String p = pit.next();
@@ -234,9 +154,9 @@ public class JarReport extends ArchiveReport
       bw.write("     <td>Manifest</td>" + Dump.newLine());
       bw.write("     <td>");
 
-      if (archive.getManifest() != null)
+      if (nestableArchive.getManifest() != null)
       {
-         Iterator<String> mit = archive.getManifest().iterator();
+         Iterator<String> mit = nestableArchive.getManifest().iterator();
          while (mit.hasNext())
          {
             String m = mit.next();
@@ -257,9 +177,9 @@ public class JarReport extends ArchiveReport
       bw.write("     <td>Signing information</td>" + Dump.newLine());
       bw.write("     <td>");
 
-      if (archive.getSign() != null)
+      if (nestableArchive.getSign() != null)
       {
-         Iterator<String> sit = archive.getSign().iterator();
+         Iterator<String> sit = nestableArchive.getSign().iterator();
          while (sit.hasNext())
          {
             String s = sit.next();
@@ -280,7 +200,7 @@ public class JarReport extends ArchiveReport
       bw.write("     <td>Requires</td>" + Dump.newLine());
       bw.write("     <td>");
 
-      Iterator<String> rit = archive.getRequires().iterator();
+      Iterator<String> rit = nestableArchive.getRequires().iterator();
       while (rit.hasNext())
       {
          String require = rit.next();
@@ -296,13 +216,14 @@ public class JarReport extends ArchiveReport
       bw.write("</td>" + Dump.newLine());
       bw.write("  </tr>" + Dump.newLine());
 
+      // Table of Provides.
       bw.write("  <tr class=\"roweven\">" + Dump.newLine());
       bw.write("     <td>Provides</td>" + Dump.newLine());
-      bw.write("     <td>");
+      bw.write("     <td>" + Dump.newLine());
 
-      bw.write("       <table>");
+      bw.write("       <table>" + Dump.newLine());
 
-      for (Map.Entry<String, Long> entry : archive.getProvides().entrySet())
+      for (Map.Entry<String, Long> entry : nestableArchive.getProvides().entrySet())
       {
 
          String name = entry.getKey();
@@ -321,15 +242,72 @@ public class JarReport extends ArchiveReport
          }
          bw.write("         </tr>" + Dump.newLine());
       }
-      bw.write("       </table>");
+      bw.write("       </table>" + Dump.newLine());
 
       bw.write("</td>" + Dump.newLine());
       bw.write("  </tr>" + Dump.newLine());
 
+      // Sub-archives
+      bw.write("  <tr class=\"rowodd\">" + Dump.newLine());
+      bw.write("     <td>Sub-Archives</td>" + Dump.newLine());
+      bw.write("     <td>" + Dump.newLine());
+
+      bw.write("        <table>" + Dump.newLine());
+
+      // The base output path for all of the sub archives.
+      String outputPath = getOutputDirectory().getPath();
+
+      for (Archive subArchive : nestableArchive.getSubArchives())
+      {
+         String archiveName = subArchive.getName();
+         int finalDot = archiveName.lastIndexOf(".");
+         String extension = archiveName.substring(finalDot + 1);
+
+         ArchiveReport report = null;
+         int depth = 1;
+
+         if (subArchive.getType() == ArchiveTypes.JAR)
+         {
+
+            if (subArchive.getParentArchive() != null && subArchive.getParentArchive().getParentArchive() != null)
+            {
+               depth = 3;
+            }
+            else if (subArchive.getParentArchive() != null)
+            {
+               depth = 2;
+            }
+            report = new JarReport(subArchive, depth);
+         }
+         else if (subArchive.getType() == ArchiveTypes.WAR)
+         {
+            NestableArchive nestedSubArchive = (NestableArchive) subArchive;
+
+            if (subArchive.getParentArchive() != null)
+            {
+               depth = 2;
+            }
+            report = new WarReport(nestedSubArchive, 2);
+         }
+
+         if (!archiveName.contains("WEB-INF/classes"))
+         {
+            report.generate(outputPath);
+            bw.write("        <tr>" + Dump.newLine());
+            bw.write("           <td><a href=\"./" + extension + "/" + archiveName + ".html\">" + archiveName
+                  + "</a></td>" + Dump.newLine());
+            bw.write("        </tr>" + Dump.newLine());
+
+         }
+      }
+      bw.write("        </table>" + Dump.newLine());
+      bw.write("     </td>" + Dump.newLine());
+      bw.write("  </tr>");
+
       bw.write("</table>" + Dump.newLine());
    }
 
-   /**
+/**
     * write out the header of the report's content
     *
     * @param bw the writer to use
@@ -340,19 +318,9 @@ public class JarReport extends ArchiveReport
       bw.write("<body>" + Dump.newLine());
       bw.write(Dump.newLine());
 
-      bw.write("<h1>" + archive.getName() + "</h1>" + Dump.newLine());
+      bw.write("<h1>" + nestableArchive.getName() + "</h1>" + Dump.newLine());
 
       bw.write("<a href=\"../index.html\">Main</a>" + Dump.newLine());
       bw.write("<p>" + Dump.newLine());
-   }
-
-   private String getFilename()
-   {
-      return filename;
-   }
-
-   private void setFilename(String filename)
-   {
-      this.filename = filename;
    }
 }
