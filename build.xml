@@ -384,7 +384,10 @@
 
         <move todir="${build.dir}/${name}-${major}.${minor}.${patch}.${type}"
               includeEmptyDirs="false">
-            <fileset dir="${dist.dir}"/>
+            <fileset dir="${dist.dir}">
+              <include name="**/*"/>
+              <exclude name="**/${tattletale-tools.jar}"/>
+            </fileset>
         </move>
 
         <zip destfile="${name}-${major}.${minor}.${patch}.${type}.zip"
