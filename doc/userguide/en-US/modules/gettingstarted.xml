@@ -14,13 +14,13 @@
      <para>Once downloaded extract the files by executing:</para>
 
      <programlisting>
-unzip jboss-tattletale-1.1.0.GA.zip
+unzip jboss-tattletale-1.2.0.Beta1.zip
      </programlisting>
 
      <para>or</para>
 
      <programlisting>
-tar xzf jboss-tattletale-1.1.0.GA.tar.gz
+tar xzf jboss-tattletale-1.2.0.Beta1.tar.gz
      </programlisting>
 
      <para>depending on which archive type you downloaded.</para>
@@ -33,7 +33,7 @@ tar xzf jboss-tattletale-1.1.0.GA.tar.gz
        <para>The JBoss Tattletale project is published in the JBoss Maven2 repository:</para>
        
        <programlisting>
-repository.jboss.org
+https://repository.jboss.org/nexus/content/groups/public/org/jboss/tattletale/
        </programlisting>
 
        <para>under the group id of: org.jboss.tattletale</para>
@@ -55,7 +55,7 @@ repository.jboss.org
        <para>Developer snapshots are published on the JBoss Snapshots Maven2 server:</para>
 
        <programlisting>
-snapshots.jboss.org
+https://repository.jboss.org/nexus/content/repositories/snapshots/
        </programlisting>
 
      </section>
@@ -74,8 +74,8 @@ git clone git://github.com/jesperpedersen/tattletale.git
        
        <para>Should you want to edit the sources yourself, it is best to create your own fork of the repository and then clone that particular fork on your command line. Should you need help with Git and GitHub then read the help files (http://help.github.com/)</para>
       
-       <para>The project is compiled using Java Development Kit 1.5 or higher, Apache Ant 1.7 or higher and
-          Apache Ivy 2.1 or higher. Using</para>
+       <para>The project is compiled using Java Development Kit 1.5 or higher, Apache Ant 1.8 or higher and
+          Apache Ivy 2.2 or higher. Using</para>
 
        <programlisting>
 ant &lt;target&gt;

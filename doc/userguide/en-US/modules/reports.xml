@@ -824,6 +824,34 @@ noversion=myjar1.jar,myjar2.jar
 
       </section>
 
+      <!-- JBossAS7 report -->
+      <section id="jbossas7">
+        <title>JBoss AS7</title>
+
+        <para>The JBoss AS7 report will list the <code>jboss-deployment-structure.xml</code> file for archives.</para>
+
+        <table frame="all">
+          <title>JBoss AS7 report</title>
+          <tgroup cols="2" align="left" colsep="1" rowsep="1">
+            <colspec colname="c1"/>
+            <colspec colname="c2" colwidth="4*"/>
+            <thead>
+              <row>
+                <entry align="left">Name</entry>
+                <entry align="left">File</entry>
+              </row>
+            </thead>
+            <tbody>
+              <row>
+                <entry>The archive name</entry>
+                <entry>The XML file</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </table>
+
+      </section>
+
    </section>
 
    <section id="archive">
@@ -879,44 +907,61 @@ noversion=myjar1.jar,myjar2.jar
           </tgroup>
         </table>
       </section>
+
+      <!-- WAR -->
+      <section id="war">
+        <title>Web ARchive (WAR)</title>
+
+        <para>The Web ARchive (WAR) report will provide you with an overview of the archive, like the JAR report.</para>
+
+      </section>
+
+      <!-- EAR -->
+      <section id="ear">
+        <title>Java Enterprise ARchive (EAR)</title>
+
+        <para>The Java Enterprise ARchive (EAR) report will provide you with an overview of the archive, like the JAR report.</para>
+
+      </section>
+
    </section>
 
-	<section id="Custom Reports">
-		<title>Custom Reports</title>
+   <section id="Custom Reports">
+     <title>Custom Reports</title>
 		
-		<para>
-			As a user, you can define your own custom report types to tattletale. However, there are some restrictions to this and there is 
-			some required configuration. These are as follows: 
-		</para>
-		
-		<itemizedlist>
-			<listitem>
-				<para>Your custom report class has to be an implementation of org.jboss.tattletale.reporting.Report</para>
-			</listitem>
-			
-			<listitem>
-				<para>
-					You have to define your required reports in jboss-tattletale.properties. Each key string has to be of the form 
-					'customreport.{int}' where int has to start with 1 and increase by 1 with each extra custom report that is required.
-				</para>
-				
-				<para>For example</para>
-				
-				<programlisting>
-					customreport.1=my.custom.package.customreport
-				</programlisting>
-			</listitem>
-			
-			<listitem>
-				<para>
-					At runtime, as long as your custom jar file is in the classpath your custom report will be generated. 
-					If you were running from the command line for example:
-				</para>
-				
-				<programlisting>
-					java -classpath tattletale.jar:customreporting.jar org.jboss.tattletale.Main [directory-of-source-jar] [output-directory]
-				</programlisting>
-			</listitem>			
-		</itemizedlist>	
-	</section>
+     <para>
+       As a user, you can define your own custom report types to tattletale. However, there are some restrictions to this and there is 
+       some required configuration. These are as follows: 
+     </para>
+     
+     <itemizedlist>
+       <listitem>
+         <para>Your custom report class has to be an implementation of org.jboss.tattletale.reporting.Report</para>
+       </listitem>
+       
+       <listitem>
+         <para>
+           You have to define your required reports in jboss-tattletale.properties. Each key string has to be of the form 
+           'customreport.{int}' where int has to start with 1 and increase by 1 with each extra custom report that is required.
+         </para>
+         
+         <para>For example</para>
+         
+         <programlisting>
+           customreport.1=my.custom.package.customreport
+         </programlisting>
+       </listitem>
+       
+       <listitem>
+         <para>
+           At runtime, as long as your custom jar file is in the classpath your custom report will be generated. 
+           If you were running from the command line for example:
+         </para>
+         
+         <programlisting>
+java -classpath tattletale.jar:customreporting.jar org.jboss.tattletale.Main [directory-of-source-jar] [output-directory]
+         </programlisting>
+       </listitem>			
+     </itemizedlist>	
+   </section>
 </chapter>

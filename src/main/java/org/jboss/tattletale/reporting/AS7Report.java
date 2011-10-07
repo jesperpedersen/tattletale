@@ -47,7 +47,7 @@ import java.util.TreeSet;
 public class AS7Report extends CLSReport
 {
    /** NAME **/
-   private static final String NAME = "JBoss AS-7";
+   private static final String NAME = "JBoss AS7";
 
    /** DIRECTORY */
    private static final String DIRECTORY = "jboss-as7";

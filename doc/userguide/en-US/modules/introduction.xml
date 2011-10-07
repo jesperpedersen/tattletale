@@ -48,6 +48,9 @@
      <listitem>
        <para>Get the OSGi status of your project</para>
      </listitem>
+     <listitem>
+       <para>And generate the same reports for your .WAR and .EAR archives</para>
+     </listitem>
    </itemizedlist>
 
    <para>JBoss Tattletale will recursive scan the directory pass as the argument for JAR files and then
