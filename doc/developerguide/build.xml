@@ -8,8 +8,8 @@
   <import file="${docant.dir}/support.xml"/>
 
   <property name="srcDir" value="." />
-  <property name="srcDocName" value="master" />
-  <property name="srcDocNameFile" value="${srcDocName}.xml" />
+  <property name="srcDocName" value="developerguide" />
+  <property name="srcDocNameFile" value="master.xml" />
   <property name="pdfName" value="JBossTattletale-DevelopersGuide.pdf" />
 
   <target name="docant-init" >
