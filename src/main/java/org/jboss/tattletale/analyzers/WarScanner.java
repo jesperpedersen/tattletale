@@ -77,6 +77,8 @@ public class WarScanner extends AbstractScanner
    public Archive scan(File war, Map<String, SortedSet<String>> gProvides, List<Profile> known,
                        Set<String> blacklisted)
    {
+      if (war == null || !war.exists())
+         return null;
 
       WarArchive warArchive = null;
       List<Archive> subArchiveList = new ArrayList<Archive>();
@@ -89,7 +91,7 @@ public class WarScanner extends AbstractScanner
          String canonicalPath = war.getCanonicalPath();
          warFile = new JarFile(war);
          File extractedDir = Extractor.extract(warFile);
-         Integer classVersion = null;
+         Integer classVersion = Integer.valueOf(0);
          SortedSet<String> requires = new TreeSet<String>();
          SortedMap<String, Long> provides = new TreeMap<String, Long>();
          SortedSet<String> profiles = new TreeSet<String>();
@@ -171,7 +173,8 @@ public class WarScanner extends AbstractScanner
             {
                File jarFile = new File(extractedDir.getCanonicalPath(), entryName);
                Archive jarArchive = jarScanner.scan(jarFile, gProvides, known, blacklisted);
-               subArchiveList.add(jarArchive);
+               if (jarArchive != null)
+                  subArchiveList.add(jarArchive);
             }
          }
          if (provides.size() == 0 && subArchiveList.size() == 0)
@@ -194,12 +197,15 @@ public class WarScanner extends AbstractScanner
 
          String classesName = name + "/WEB-INF/classes";
          ClassesArchive classesArchive = new ClassesArchive(classesName, classVersion, lManifest, lSign, requires,
-               provides, classDependencies, packageDependencies, blacklistedDependencies, location);
+                                                            provides, classDependencies, packageDependencies, 
+                                                            blacklistedDependencies, location);
          subArchiveList.add(classesArchive);
 
          warArchive = new WarArchive(name, classVersion, lManifest, lSign, requires, provides,
-               classDependencies, packageDependencies, blacklistedDependencies, location, subArchiveList);
+                                     classDependencies, packageDependencies, blacklistedDependencies,
+                                     location, subArchiveList);
          super.addProfilesToArchive(warArchive, profiles);
+
          Iterator<String> it = provides.keySet().iterator();
          while (it.hasNext())
          {
@@ -217,10 +223,6 @@ public class WarScanner extends AbstractScanner
             }
             requires.remove(provide);
          }
-      }
-      catch (IOException ioe)
-      {
-         ioe.printStackTrace();
       }
       catch (Exception e)
       {

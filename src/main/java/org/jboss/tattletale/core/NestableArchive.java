@@ -22,6 +22,7 @@
 package org.jboss.tattletale.core;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.SortedMap;
 import java.util.SortedSet;
@@ -103,7 +104,7 @@ public abstract class NestableArchive extends Archive
     */
    public List<Archive> getSubArchives()
    {
-      return subArchives;
+      return subArchives != null ? subArchives : Collections.unmodifiableList(new ArrayList<Archive>(1));
    }
 
    /**
@@ -113,19 +114,25 @@ public abstract class NestableArchive extends Archive
     */
    public void addSubArchive(Archive value)
    {
-      if (subArchives == null)
+      if (value != null)
       {
-         subArchives = new ArrayList<Archive>(1);
-      }
+         if (subArchives == null)
+         {
+            subArchives = new ArrayList<Archive>(1);
+         }
 
-      subArchives.add(value);
+         subArchives.add(value);
+      }
    }
 
    private void addParentArchive(List<Archive> subArchives)
    {
-      for (Archive archive : subArchives)
+      if (subArchives != null)
       {
-         archive.setParentArchive(this);
+         for (Archive archive : subArchives)
+         {
+            archive.setParentArchive(this);
+         }
       }
    }
 }

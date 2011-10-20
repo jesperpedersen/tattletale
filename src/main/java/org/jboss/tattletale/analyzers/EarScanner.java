@@ -82,6 +82,9 @@ public class EarScanner extends AbstractScanner
    public Archive scan(File ear, Map<String, SortedSet<String>> gProvides, List<Profile> known,
                        Set<String> blacklisted) throws IOException
    {
+      if (ear == null || !ear.exists())
+         return null;
+
       EarArchive earArchive = null;
       List<Archive> subArchiveList = new ArrayList<Archive>();
       ArchiveScanner jarScanner = new JarScanner();
@@ -93,7 +96,7 @@ public class EarScanner extends AbstractScanner
          String canonicalPath = ear.getCanonicalPath();
          earFile = new JarFile(ear);
          File extractedDir = Extractor.extract(earFile);
-         Integer classVersion = null;
+         Integer classVersion = Integer.valueOf(0);
          SortedSet<String> requires = new TreeSet<String>();
          SortedMap<String, Long> provides = new TreeMap<String, Long>();
          SortedSet<String> profiles = new TreeSet<String>();
@@ -175,13 +178,15 @@ public class EarScanner extends AbstractScanner
             {
                File jarFile = new File(extractedDir.getCanonicalPath(), entryName);
                Archive jarArchive = jarScanner.scan(jarFile, gProvides, known, blacklisted);
-               subArchiveList.add(jarArchive);
+               if (jarArchive != null)
+                  subArchiveList.add(jarArchive);
             }
             else if (entryName.endsWith(".war"))
             {
                File warFile = new File(extractedDir.getCanonicalPath(), entryName);
                Archive warArchive = warScanner.scan(warFile, gProvides, known, blacklisted);
-               subArchiveList.add(warArchive);
+               if (warArchive != null)
+                  subArchiveList.add(warArchive);
             }
          }
 

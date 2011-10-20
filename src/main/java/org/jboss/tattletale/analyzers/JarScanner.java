@@ -83,7 +83,7 @@ public class JarScanner extends AbstractScanner
       {
          String canonicalPath = file.getCanonicalPath();
          jarFile = new JarFile(file);
-         Integer classVersion = null;
+         Integer classVersion = Integer.valueOf(0);
          SortedSet<String> requires = new TreeSet<String>();
          SortedMap<String, Long> provides = new TreeMap<String, Long>();
          SortedSet<String> profiles = new TreeSet<String>();
