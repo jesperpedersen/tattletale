@@ -91,7 +91,7 @@ public class WarScanner extends AbstractScanner
          String canonicalPath = war.getCanonicalPath();
          warFile = new JarFile(war);
          File extractedDir = Extractor.extract(warFile);
-         Integer classVersion = Integer.valueOf(0);
+         Integer classVersion = null;
          SortedSet<String> requires = new TreeSet<String>();
          SortedMap<String, Long> provides = new TreeMap<String, Long>();
          SortedSet<String> profiles = new TreeSet<String>();
@@ -194,6 +194,13 @@ public class WarScanner extends AbstractScanner
          }
 
          Location location = new Location(canonicalPath, version);
+
+         if (subArchiveList.size() > 0 && classVersion == null)
+         {
+            classVersion = subArchiveList.get(0).getVersion();
+         }
+         if (classVersion == null)
+            classVersion = Integer.valueOf(0);
 
          String classesName = name + "/WEB-INF/classes";
          ClassesArchive classesArchive = new ClassesArchive(classesName, classVersion, lManifest, lSign, requires,

@@ -96,7 +96,7 @@ public class EarScanner extends AbstractScanner
          String canonicalPath = ear.getCanonicalPath();
          earFile = new JarFile(ear);
          File extractedDir = Extractor.extract(earFile);
-         Integer classVersion = Integer.valueOf(0);
+         Integer classVersion = null;
          SortedSet<String> requires = new TreeSet<String>();
          SortedMap<String, Long> provides = new TreeMap<String, Long>();
          SortedSet<String> profiles = new TreeSet<String>();
@@ -210,10 +210,12 @@ public class EarScanner extends AbstractScanner
          // Obtain the class version if it is null. In other words, if there aren't any .class files in a
          // WEB-INF/classes directory. This would get the class version from the first archive in the list of sub
          // archives.
-         if (subArchiveList != null && classVersion == null)
+         if (subArchiveList.size() > 0 && classVersion == null)
          {
             classVersion = subArchiveList.get(0).getVersion();
          }
+         if (classVersion == null)
+            classVersion = Integer.valueOf(0);
 
          earArchive = new EarArchive(name, classVersion, lManifest, lSign, requires, provides, classDependencies,
                packageDependencies, blacklistedDependencies, location, subArchiveList);

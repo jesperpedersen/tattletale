@@ -83,7 +83,7 @@ public class JarScanner extends AbstractScanner
       {
          String canonicalPath = file.getCanonicalPath();
          jarFile = new JarFile(file);
-         Integer classVersion = Integer.valueOf(0);
+         Integer classVersion = null;
          SortedSet<String> requires = new TreeSet<String>();
          SortedMap<String, Long> provides = new TreeMap<String, Long>();
          SortedSet<String> profiles = new TreeSet<String>();
@@ -175,6 +175,9 @@ public class JarScanner extends AbstractScanner
             lManifest = readManifest(manifest);
          }
          Location location = new Location(canonicalPath, version);
+
+         if (classVersion == null)
+            classVersion = Integer.valueOf(0);
 
          archive = new JarArchive(name, classVersion, lManifest, lSign, requires, provides,
                      classDependencies, packageDependencies, blacklistedDependencies, location);
