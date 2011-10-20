@@ -570,7 +570,7 @@ public class Main
          }
       }
 
-      StringTokenizer st = new StringTokenizer(source, ":");
+      StringTokenizer st = new StringTokenizer(source, "#");
 
       List<File> fileList = new ArrayList<File>();
       Analyzer analyzer = new Analyzer();
@@ -1021,7 +1021,7 @@ public class Main
    /** The usage method */
    private static void usage()
    {
-      System.out.println("Usage: Tattletale [-exclude=<excludes>]" + " <source>[:<source>]* [output-directory]");
+      System.out.println("Usage: Tattletale [-exclude=<excludes>]" + " <source>[#<source>]* [output-directory]");
    }
 
    /**

@@ -426,10 +426,10 @@ myreport=myfilter
      exclude directories or file on the command line - see the configuration file for syntax.</para>
      
      <para>Tattletale can also be run against specific compiled Archives. These can be singular or multiple files provided 
-     in the command line and separated using a : delimeter.</para>
+     in the command line and separated using a # delimeter.</para>
      
      <programlisting>
-     java -Xmx512m -jar tattletale.jar myApp.jar:yourApp.war:amazingApp.ear report
+     java -Xmx512m -jar tattletale.jar myApp.jar#yourApp.war#amazingApp.ear report
      </programlisting>
      
      <para>The main file will be generated under the report directory as index.html.</para>
