@@ -95,7 +95,7 @@ public class EarScanner extends AbstractScanner
       {
          String canonicalPath = ear.getCanonicalPath();
          earFile = new JarFile(ear);
-         File extractedDir = Extractor.extract(earFile);
+         File extractedDir = ear.isFile() ? Extractor.extract(earFile) : ear;
          Integer classVersion = null;
          SortedSet<String> requires = new TreeSet<String>();
          SortedMap<String, Long> provides = new TreeMap<String, Long>();

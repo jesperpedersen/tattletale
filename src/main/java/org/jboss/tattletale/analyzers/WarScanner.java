@@ -90,7 +90,7 @@ public class WarScanner extends AbstractScanner
 
          String canonicalPath = war.getCanonicalPath();
          warFile = new JarFile(war);
-         File extractedDir = Extractor.extract(warFile);
+         File extractedDir = war.isFile() ? Extractor.extract(warFile) : war;
          Integer classVersion = null;
          SortedSet<String> requires = new TreeSet<String>();
          SortedMap<String, Long> provides = new TreeMap<String, Long>();

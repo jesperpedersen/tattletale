@@ -38,42 +38,41 @@ import java.util.jar.JarFile;
  *
  * @author Navin Surtani
  */
-
 public class Extractor
 {
-
-   /** Extract a JAR type file
+   /** 
+    * Extract a JAR type file
     *
-    * @param war  The war/ear file
-    * @return     The root of the extracted JAR file
-    * @exception  IOException Thrown if an error occurs
+    * @param jarFile The war/ear file
+    * @return The root of the extracted JAR file
+    * @exception IOException Thrown if an error occurs
     */
-   public static File extract(JarFile war) throws IOException
+   public static File extract(JarFile jarFile) throws IOException
    {
-      String basedir = System.getProperty("java.io.tmpdir");
-      String warName = war.getName();
+      String basedir = new File(System.getProperty("java.io.tmpdir")).getCanonicalPath();
+      String fileName = jarFile.getName();
       File target;
 
-      if (warName.startsWith(basedir))
+      if (fileName.startsWith(basedir))
       {
-         target = new File(warName);
+         target = new File(fileName);
       }
       else
       {
-         target = new File(basedir, warName);
+         target = new File(basedir, fileName);
       }
-
 
       if (target.exists())
       {
          recursiveDelete(target);
       }
+
       if (!target.mkdirs())
       {
          throw new IOException("Could not create " + target);
       }
 
-      Enumeration<JarEntry> entries = war.entries();
+      Enumeration<JarEntry> entries = jarFile.entries();
       while (entries.hasMoreElements())
       {
          JarEntry je = entries.nextElement();
@@ -93,7 +92,7 @@ public class Extractor
 
             try
             {
-               in = new BufferedInputStream(war.getInputStream(je));
+               in = new BufferedInputStream(jarFile.getInputStream(je));
                out = new BufferedOutputStream(new FileOutputStream(copy));
 
                byte[] buffer = new byte[4096];
@@ -146,6 +145,7 @@ public class Extractor
       }
       return target;
    }
+
    private static void recursiveDelete(File file) throws IOException
    {
       if (file != null && file.exists())
