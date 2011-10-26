@@ -50,7 +50,7 @@ public class Extractor
    public static File extract(JarFile jarFile) throws IOException
    {
       String basedir = new File(System.getProperty("java.io.tmpdir")).getCanonicalPath();
-      String fileName = jarFile.getName();
+      String fileName = new File(jarFile.getName()).getCanonicalPath();
       File target;
 
       if (fileName.startsWith(basedir))
