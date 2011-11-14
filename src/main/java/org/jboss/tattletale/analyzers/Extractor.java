@@ -30,6 +30,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Enumeration;
+import java.util.Locale;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
@@ -59,6 +60,12 @@ public class Extractor
       }
       else
       {
+         if (fileName.indexOf(":") != -1 &&
+             System.getProperty("os.name").toLowerCase(Locale.US).indexOf("windows") != -1)
+         {
+            fileName = fileName.substring(fileName.indexOf(":") + 1);
+         }
+
          target = new File(basedir, fileName);
       }
 
