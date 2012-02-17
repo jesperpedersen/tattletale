@@ -69,6 +69,7 @@ import org.jboss.tattletale.reporting.TransitiveDependantsReport;
 import org.jboss.tattletale.reporting.TransitiveDependsOnReport;
 import org.jboss.tattletale.reporting.UnusedJarReport;
 import org.jboss.tattletale.reporting.WarReport;
+import org.jboss.tattletale.utils.Configuration;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -384,11 +385,11 @@ public class Main
 
       if (configuration != null)
       {
-         config = loadConfiguration();
+         config = Configuration.loadFromFile(configuration);
       }
       else
       {
-         config = loadDefaultConfiguration();
+         config = Configuration.load("jboss-tattletale.properties");
       }
 
       if (filter != null)
