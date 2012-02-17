@@ -132,6 +132,9 @@ public class Main
    /** Fail on error */
    private boolean failOnError;
 
+   /** Delete output directory */
+   private boolean deleteOutputDirectory;
+
    /** Reports */
    private String reports;
 
@@ -163,6 +166,7 @@ public class Main
       this.failOnInfo = false;
       this.failOnWarn = false;
       this.failOnError = false;
+      this.deleteOutputDirectory = true;
       this.reports = null;
       this.scan = ".jar,.war,.ear";
 
@@ -335,6 +339,16 @@ public class Main
    public void setFailOnError(boolean b)
    {
       this.failOnError = b;
+   }
+
+   /**
+    * Set delete output directory
+    *
+    * @param b The value
+    */
+   public void setDeleteOutputDirectory(boolean b)
+   {
+      this.deleteOutputDirectory = b;
    }
 
    /**
@@ -1075,6 +1089,7 @@ public class Main
             main.setFailOnInfo(false);
             main.setFailOnWarn(false);
             main.setFailOnError(false);
+            main.setDeleteOutputDirectory(true);
 
             main.execute();
          }
@@ -1305,9 +1320,19 @@ public class Main
          // Verify output directory exists & create if it does not
          File outputDirFile = new File(outputDir);
 
-         if (outputDirFile.exists() && !outputDirFile.equals(new File(".")))
+         if (outputDirFile.exists())
          {
-            recursiveDelete(outputDirFile);
+            if (deleteOutputDirectory)
+            {
+               if (!outputDirFile.equals(new File(".")))
+               {
+                  recursiveDelete(outputDirFile);
+               }
+            }
+            else
+            {
+               throw new IOException("Directory: " + outputDir + " exists");
+            }
          }
 
          if (!outputDirFile.equals(new File(".")) && !outputDirFile.mkdirs())

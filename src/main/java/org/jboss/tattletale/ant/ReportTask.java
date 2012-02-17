@@ -54,6 +54,9 @@ public class ReportTask extends AbstractReportTask
    /** Fail on error */
    private boolean failOnError;
 
+   /** Delete output directory */
+   private boolean deleteOutputDirectory;
+
    /** Reports */
    private String reports;
 
@@ -70,6 +73,7 @@ public class ReportTask extends AbstractReportTask
       this.failOnInfo = false;
       this.failOnWarn = false;
       this.failOnError = false;
+      this.deleteOutputDirectory = true;
       this.reports = null;
       this.scan = null;
    }
@@ -215,6 +219,26 @@ public class ReportTask extends AbstractReportTask
    }
 
    /**
+    * Get delete output directory
+    *
+    * @return The value
+    */
+   public boolean getDeleteOutputDirectory()
+   {
+      return deleteOutputDirectory;
+   }
+
+   /**
+    * Set delete output directory
+    *
+    * @param b The value
+    */
+   public void setDeleteOutputDirectory(boolean b)
+   {
+      this.deleteOutputDirectory = b;
+   }
+
+   /**
     * Get the reports
     *
     * @return The value
@@ -277,6 +301,7 @@ public class ReportTask extends AbstractReportTask
          main.setFailOnInfo(getFailOnInfo());
          main.setFailOnWarn(getFailOnWarn());
          main.setFailOnError(getFailOnError());
+         main.setDeleteOutputDirectory(getDeleteOutputDirectory());
          main.setReports(getReports());
          main.setScan(getScan());
 

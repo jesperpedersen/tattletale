@@ -57,6 +57,9 @@ public class ReportMojo extends TattletaleMojo
    /** Fail on error */
    private boolean failOnError;
 
+   /** Delete output directory */
+   private boolean deleteOutputDirectory;
+
    /** Scan */
    private String scan;
 
@@ -70,6 +73,7 @@ public class ReportMojo extends TattletaleMojo
       this.failOnInfo = false;
       this.failOnWarn = false;
       this.failOnError = false;
+      this.deleteOutputDirectory = true;
       this.reports = null;
       this.scan = null;
    }
@@ -235,6 +239,26 @@ public class ReportMojo extends TattletaleMojo
    }
 
    /**
+    * Get delete output directory
+    *
+    * @return The value
+    */
+   public boolean getDeleteOutputDirectory()
+   {
+      return deleteOutputDirectory;
+   }
+
+   /**
+    * Set delete output directory
+    *
+    * @param b The value
+    */
+   public void setDeleteOutputDirectory(boolean b)
+   {
+      this.deleteOutputDirectory = b;
+   }
+
+   /**
     * Get the scan
     *
     * @return The value
@@ -341,6 +365,7 @@ public class ReportMojo extends TattletaleMojo
          main.setFailOnInfo(getFailOnInfo());
          main.setFailOnWarn(getFailOnWarn());
          main.setFailOnError(getFailOnError());
+         main.setDeleteOutputDirectory(getDeleteOutputDirectory());
 
          main.setScan(getScan());
 

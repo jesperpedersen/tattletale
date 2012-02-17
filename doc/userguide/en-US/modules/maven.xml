@@ -291,6 +291,13 @@ mvn clean package
              </entry>
            </row>
            <row>
+             <entry><code>deleteOutputDirectory</code></entry>
+             <entry>
+               Should the output directory be deleted
+               <para>Default: <code>true</code></para>
+             </entry>
+           </row>
+           <row>
              <entry><code>scan</code></entry>
              <entry>
                A comma separated list of file extensions that should be scanned
