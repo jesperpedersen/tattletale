@@ -127,7 +127,11 @@ public class JBossAS7Profile extends AbstractProfile implements ExtendedProfile
             StringTokenizer tokenizer = new StringTokenizer(s, ",");
             String className = tokenizer.nextToken();
             String archiveName = tokenizer.nextToken();
-            String moduleIdentifier = tokenizer.nextToken();
+            String moduleIdentifier = "";
+
+            if (tokenizer.hasMoreTokens())
+               moduleIdentifier = tokenizer.nextToken();
+
             ProfileArchive profileArchive = profileMapping.get(archiveName);
 
             if (profileArchive == null)
