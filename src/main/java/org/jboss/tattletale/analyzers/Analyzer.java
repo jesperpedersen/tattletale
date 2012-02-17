@@ -52,10 +52,8 @@ public class Analyzer
       {
          return new EarScanner();
       }
-      else
-      {
-         throw new IllegalArgumentException("The file parameter passed does not have the correct file extension.");
-      }
+
+      return null;
    }
 
 }

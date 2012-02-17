@@ -605,20 +605,24 @@ public class Main
       for (File file : fileList)
       {
          ArchiveScanner scanner = analyzer.getScanner(file);
-         Archive archive = scanner.scan(file, gProvides, known, blacklistedSet);
-         if (archive != null)
-         {
-            SortedSet<Location> locations = locationsMap.get(archive.getName());
-            if (locations == null)
-            {
-               locations = new TreeSet<Location>();
-            }
-            locations.addAll(archive.getLocations());
-            locationsMap.put(archive.getName(), locations);
 
-            if (!archives.contains(archive))
+         if (scanner != null)
+         {
+            Archive archive = scanner.scan(file, gProvides, known, blacklistedSet);
+            if (archive != null)
             {
-               archives.add(archive);
+               SortedSet<Location> locations = locationsMap.get(archive.getName());
+               if (locations == null)
+               {
+                  locations = new TreeSet<Location>();
+               }
+               locations.addAll(archive.getLocations());
+               locationsMap.put(archive.getName(), locations);
+
+               if (!archives.contains(archive))
+               {
+                  archives.add(archive);
+               }
             }
          }
       }
